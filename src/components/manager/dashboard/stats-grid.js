@@ -17,11 +17,11 @@ export function StatsGrid() {
   if (isLoading) {
     return (
       _jsx("div", {
-        className: "grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4",
+        className: "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4",
         children: Array.from({ length: 4 }).map((_, i) =>
           _jsx("div", {
-            className: "rounded-xl bg-white p-5 shadow-sm",
-            children: _jsx(Skeleton, { className: "h-24 w-full" }),
+            className: "rounded-2xl border border-[#EDEDED]/60 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.03)]",
+            children: _jsx(Skeleton, { className: "h-[120px] w-full rounded-xl" }),
           }, i)
         ),
       })
@@ -37,7 +37,7 @@ export function StatsGrid() {
 
   return (
     _jsx("div", {
-      className: "grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4",
+      className: "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4",
       children: stats.map((stat, index) =>
         _jsx(StatCard, {
           label: stat.label,

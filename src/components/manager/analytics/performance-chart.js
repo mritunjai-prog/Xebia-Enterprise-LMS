@@ -20,19 +20,19 @@ function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
     _jsxs("div", {
-      className: "rounded-lg border-0 bg-white p-3 shadow-lg",
+      className: "rounded-xl border border-[#EDEDED]/60 bg-white p-3.5 shadow-[0_8px_24px_rgba(0,0,0,0.06)]",
       children: [
         _jsx("p", {
-          className: "mb-1 text-xs font-semibold text-[#000000]",
+          className: "mb-2 text-xs font-bold text-[#5A5A5A] uppercase tracking-wider",
           children: label,
         }),
         _jsxs("p", {
-          className: "text-xs text-[#5A5A5A]",
-          children: ["Avg. Score: ", _jsx("span", { className: "font-semibold", children: payload[0].value }), "%"],
+          className: "text-sm font-medium text-[#5A5A5A] py-0.5",
+          children: ["Avg. Score: ", _jsxs("span", { className: "font-bold text-[#000000]", children: [payload[0].value, "%"] })],
         }),
         _jsxs("p", {
-          className: "text-xs text-[#5A5A5A]",
-          children: ["Students: ", payload[0].payload.students.toLocaleString()],
+          className: "text-sm font-medium text-[#5A5A5A] py-0.5",
+          children: ["Students: ", _jsx("span", { className: "font-bold text-[#000000]", children: payload[0].payload.students.toLocaleString() })],
         }),
       ],
     })
@@ -48,45 +48,48 @@ export function PerformanceChart() {
       animate: { opacity: 1, y: 0 },
       transition: { duration: 0.4, delay: 0.2 },
       children: _jsxs(Card, {
-        className: "border-0 bg-white shadow-sm",
+        className: "overflow-hidden rounded-2xl border border-[#EDEDED]/60 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.03)]",
         children: [
           _jsx(CardHeader, {
-            className: "pb-2",
+            className: "border-b border-[#EDEDED]/40 bg-[#F7F7F8]/30 px-6 py-5",
             children: _jsx(CardTitle, {
-              className: "text-base font-semibold text-[#000000]",
+              className: "text-[17px] font-bold text-[#000000]",
               children: "Top Performing Courses",
             }),
           }),
           _jsx(CardContent, {
+            className: "p-6",
             children: isLoading
-              ? _jsx(Skeleton, { className: "h-[320px] w-full rounded-lg" })
+              ? _jsx(Skeleton, { className: "h-[320px] w-full rounded-xl" })
               : _jsx(ResponsiveContainer, {
                   width: "100%",
                   height: 320,
                   children: _jsxs(BarChart, {
                     data,
-                    margin: { top: 5, right: 10, left: -10, bottom: 0 },
+                    margin: { top: 10, right: 10, left: -20, bottom: 0 },
                     children: [
-                      _jsx(CartesianGrid, { strokeDasharray: "3 3", stroke: "#EDEDED", vertical: false }),
+                      _jsx(CartesianGrid, { strokeDasharray: "4 4", stroke: "#EDEDED", vertical: false }),
                       _jsx(XAxis, {
                         dataKey: "course",
                         axisLine: false,
                         tickLine: false,
-                        tick: { fill: "#5A5A5A", fontSize: 11 },
+                        tick: { fill: "#888888", fontSize: 11, fontWeight: 500 },
                         interval: 0,
                         angle: -15,
                         textAnchor: "end",
+                        dy: 5,
                       }),
                       _jsx(YAxis, {
                         domain: [60, 100],
                         axisLine: false,
                         tickLine: false,
-                        tick: { fill: "#5A5A5A", fontSize: 12 },
+                        tick: { fill: "#888888", fontSize: 12, fontWeight: 500 },
+                        dx: -10,
                       }),
-                      _jsx(Tooltip, { content: _jsx(CustomTooltip, {}), cursor: { fill: "#EDEDED", opacity: 0.5 } }),
+                      _jsx(Tooltip, { content: _jsx(CustomTooltip, {}), cursor: { fill: "#EDEDED", opacity: 0.4 } }),
                       _jsx(Bar, {
                         dataKey: "avgScore",
-                        radius: [6, 6, 0, 0],
+                        radius: [8, 8, 0, 0],
                         maxBarSize: 45,
                         children: data?.map((_, i) =>
                           _jsx(Cell, { fill: barColors[i % barColors.length] }, i)

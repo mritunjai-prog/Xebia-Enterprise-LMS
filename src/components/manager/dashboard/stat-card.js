@@ -13,11 +13,12 @@ export function StatCard({ label, value, suffix = "", trend, icon: Icon, index =
       transition: { duration: 0.4, delay: index * 0.1, ease: "easeOut" },
       children: _jsx(Card, {
         className: `
-          group relative overflow-hidden border-0 bg-white shadow-sm
-          transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md
+          group relative overflow-hidden border border-[#EDEDED]/60 bg-white
+          rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.03)]
+          transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]
         `,
         children: _jsxs(CardContent, {
-          className: "p-5",
+          className: "p-6",
           children: [
             /* Top row: icon + trend */
             _jsxs("div", {
@@ -25,22 +26,23 @@ export function StatCard({ label, value, suffix = "", trend, icon: Icon, index =
               children: [
                 _jsx("div", {
                   className: `
-                    flex h-11 w-11 items-center justify-center rounded-xl
-                    bg-[#6C1D5F]/8 transition-colors group-hover:bg-[#6C1D5F]/12
+                    flex h-12 w-12 items-center justify-center rounded-2xl
+                    bg-gradient-to-br from-[#6C1D5F]/10 to-[#6C1D5F]/5
+                    transition-all duration-300 group-hover:scale-110 group-hover:from-[#6C1D5F]/15 group-hover:to-[#6C1D5F]/10
                   `,
                   children: _jsx(Icon, {
-                    className: "h-5 w-5 text-[#6C1D5F]",
+                    className: "h-6 w-6 text-[#6C1D5F]",
                   }),
                 }),
                 _jsxs("div", {
                   className: `
-                    flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold
-                    ${isPositive ? "bg-[#00A99D]/10 text-[#00A99D]" : "bg-red-50 text-red-500"}
+                    flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold tracking-wide
+                    ${isPositive ? "bg-[#00A99D]/10 text-[#00A99D]" : "bg-red-50 text-red-600"}
                   `,
                   children: [
                     isPositive
-                      ? _jsx(TrendingUp, { className: "h-3 w-3" })
-                      : _jsx(TrendingDown, { className: "h-3 w-3" }),
+                      ? _jsx(TrendingUp, { className: "h-3.5 w-3.5" })
+                      : _jsx(TrendingDown, { className: "h-3.5 w-3.5" }),
                     _jsxs("span", {
                       children: [isPositive ? "+" : "", trend, "%"],
                     }),
@@ -51,7 +53,7 @@ export function StatCard({ label, value, suffix = "", trend, icon: Icon, index =
 
             /* Value */
             _jsx("p", {
-              className: "mt-4 text-3xl font-bold tracking-tight text-[#000000]",
+              className: "mt-5 text-[32px] font-extrabold tracking-tight text-[#000000]",
               children: typeof value === "number"
                 ? value.toLocaleString() + suffix
                 : value + suffix,
@@ -59,14 +61,14 @@ export function StatCard({ label, value, suffix = "", trend, icon: Icon, index =
 
             /* Label */
             _jsx("p", {
-              className: "mt-1 text-sm text-[#5A5A5A]",
+              className: "mt-1 text-sm font-medium text-[#5A5A5A]",
               children: label,
             }),
 
             /* Decorative gradient bar */
             _jsx("div", {
               className: `
-                absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r
+                absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r
                 from-[#6C1D5F] via-[#8A177D] to-[#00A99D]
                 opacity-0 transition-opacity duration-300 group-hover:opacity-100
               `,
