@@ -9,6 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ManagerRouteRouteImport } from './routes/manager/route'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as ManagerIndexRouteImport } from './routes/manager/index'
+import { Route as ManagerUsersRouteImport } from './routes/manager/users'
+import { Route as ManagerFeedbackRouteImport } from './routes/manager/feedback'
+import { Route as ManagerApprovalsRouteImport } from './routes/manager/approvals'
+import { Route as ManagerAnalyticsRouteImport } from './routes/manager/analytics'
+
+const ManagerRouteRoute = ManagerRouteRouteImport.update({
+  id: '/manager',
+  path: '/manager',
 import { Route as TrainerRouteImport } from './routes/trainer'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrainerIndexRouteImport } from './routes/trainer/index'
@@ -31,6 +42,30 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManagerIndexRoute = ManagerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ManagerRouteRoute,
+} as any)
+const ManagerUsersRoute = ManagerUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => ManagerRouteRoute,
+} as any)
+const ManagerFeedbackRoute = ManagerFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => ManagerRouteRoute,
+} as any)
+const ManagerApprovalsRoute = ManagerApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => ManagerRouteRoute,
+} as any)
+const ManagerAnalyticsRoute = ManagerAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => ManagerRouteRoute,
 const TrainerIndexRoute = TrainerIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -80,6 +115,20 @@ const TrainerCoursesCourseIdRoute = TrainerCoursesCourseIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/manager': typeof ManagerRouteRouteWithChildren
+  '/manager/analytics': typeof ManagerAnalyticsRoute
+  '/manager/approvals': typeof ManagerApprovalsRoute
+  '/manager/feedback': typeof ManagerFeedbackRoute
+  '/manager/users': typeof ManagerUsersRoute
+  '/manager/': typeof ManagerIndexRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/manager/analytics': typeof ManagerAnalyticsRoute
+  '/manager/approvals': typeof ManagerApprovalsRoute
+  '/manager/feedback': typeof ManagerFeedbackRoute
+  '/manager/users': typeof ManagerUsersRoute
+  '/manager': typeof ManagerIndexRoute
   '/trainer': typeof TrainerRouteWithChildren
   '/trainer/': typeof TrainerIndexRoute
   '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
@@ -106,6 +155,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/manager': typeof ManagerRouteRouteWithChildren
+  '/manager/analytics': typeof ManagerAnalyticsRoute
+  '/manager/approvals': typeof ManagerApprovalsRoute
+  '/manager/feedback': typeof ManagerFeedbackRoute
+  '/manager/users': typeof ManagerUsersRoute
+  '/manager/': typeof ManagerIndexRoute
   '/trainer': typeof TrainerRouteWithChildren
   '/trainer/': typeof TrainerIndexRoute
   '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
@@ -121,6 +176,29 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/manager'
+    | '/manager/analytics'
+    | '/manager/approvals'
+    | '/manager/feedback'
+    | '/manager/users'
+    | '/manager/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/manager/analytics'
+    | '/manager/approvals'
+    | '/manager/feedback'
+    | '/manager/users'
+    | '/manager'
+  id:
+    | '__root__'
+    | '/'
+    | '/manager'
+    | '/manager/analytics'
+    | '/manager/approvals'
+    | '/manager/feedback'
+    | '/manager/users'
+    | '/manager/'
     | '/trainer'
     | '/trainer/'
     | '/trainer/courses/$courseId'
@@ -160,11 +238,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ManagerRouteRoute: typeof ManagerRouteRouteWithChildren
   TrainerRoute: typeof TrainerRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/manager': {
+      id: '/manager'
+      path: '/manager'
+      fullPath: '/manager'
+      preLoaderRoute: typeof ManagerRouteRouteImport
     '/trainer': {
       id: '/trainer'
       path: '/trainer'
@@ -179,6 +263,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/manager/': {
+      id: '/manager/'
+      path: '/'
+      fullPath: '/manager/'
+      preLoaderRoute: typeof ManagerIndexRouteImport
+      parentRoute: typeof ManagerRouteRoute
+    }
+    '/manager/users': {
+      id: '/manager/users'
+      path: '/users'
+      fullPath: '/manager/users'
+      preLoaderRoute: typeof ManagerUsersRouteImport
+      parentRoute: typeof ManagerRouteRoute
+    }
+    '/manager/feedback': {
+      id: '/manager/feedback'
+      path: '/feedback'
+      fullPath: '/manager/feedback'
+      preLoaderRoute: typeof ManagerFeedbackRouteImport
+      parentRoute: typeof ManagerRouteRoute
+    }
+    '/manager/approvals': {
+      id: '/manager/approvals'
+      path: '/approvals'
+      fullPath: '/manager/approvals'
+      preLoaderRoute: typeof ManagerApprovalsRouteImport
+      parentRoute: typeof ManagerRouteRoute
+    }
+    '/manager/analytics': {
+      id: '/manager/analytics'
+      path: '/analytics'
+      fullPath: '/manager/analytics'
+      preLoaderRoute: typeof ManagerAnalyticsRouteImport
+      parentRoute: typeof ManagerRouteRoute
+    }
+  }
+}
+
+interface ManagerRouteRouteChildren {
+  ManagerAnalyticsRoute: typeof ManagerAnalyticsRoute
+  ManagerApprovalsRoute: typeof ManagerApprovalsRoute
+  ManagerFeedbackRoute: typeof ManagerFeedbackRoute
+  ManagerUsersRoute: typeof ManagerUsersRoute
+  ManagerIndexRoute: typeof ManagerIndexRoute
+}
+
+const ManagerRouteRouteChildren: ManagerRouteRouteChildren = {
+  ManagerAnalyticsRoute: ManagerAnalyticsRoute,
+  ManagerApprovalsRoute: ManagerApprovalsRoute,
+  ManagerFeedbackRoute: ManagerFeedbackRoute,
+  ManagerUsersRoute: ManagerUsersRoute,
+  ManagerIndexRoute: ManagerIndexRoute,
+}
+
+const ManagerRouteRouteWithChildren = ManagerRouteRoute._addFileChildren(
+  ManagerRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  ManagerRouteRoute: ManagerRouteRouteWithChildren,
     '/trainer/': {
       id: '/trainer/'
       path: '/'
