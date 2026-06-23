@@ -1,6 +1,7 @@
 import React from 'react';
 import { Organization, ApprovalRequest } from '../../types';
 import { clsx } from 'clsx';
+import { useAppStore } from '../../store/useAppStore';
 
 interface BottomRowProps {
   orgs: Organization[];
@@ -8,17 +9,19 @@ interface BottomRowProps {
 }
 
 export const BottomRow: React.FC<BottomRowProps> = ({ orgs, approvals }) => {
+  const { setActiveSidebarItem, addToast } = useAppStore();
+  
   return (
     <div className="bottom-row">
       <div className="card">
         <div className="card-header">
           <div className="card-title">Recent Organizations</div>
-          <button className="btn-outline" style={{fontSize: '12px', padding: '5px 11px'}}>View All</button>
+          <button className="btn-outline" style={{fontSize: '12px', padding: '5px 11px'}} onClick={() => setActiveSidebarItem('Organizations')}>View All</button>
         </div>
         <div className="section-tabs">
           <div className="stab active">All</div>
-          <div className="stab">Universities</div>
-          <div className="stab">Companies</div>
+          <div className="stab" onClick={() => setActiveSidebarItem('Universities')}>Universities</div>
+          <div className="stab" onClick={() => setActiveSidebarItem('Companies')}>Companies</div>
         </div>
         <div className="table-wrap">
           <table>
@@ -55,8 +58,8 @@ export const BottomRow: React.FC<BottomRowProps> = ({ orgs, approvals }) => {
                   </td>
                   <td>
                     <div className="action-btns">
-                      <button className="action-btn">View</button>
-                      <button className="action-btn">Edit</button>
+                      <button className="action-btn" onClick={() => addToast('Opening org details...', 'info')}>View</button>
+                      <button className="action-btn" onClick={() => addToast('Opening org editor...', 'info')}>Edit</button>
                     </div>
                   </td>
                 </tr>
@@ -69,7 +72,7 @@ export const BottomRow: React.FC<BottomRowProps> = ({ orgs, approvals }) => {
       <div className="card">
         <div className="card-header">
           <div className="card-title">Approval Queue</div>
-          <span style={{background: 'rgba(255,98,0,0.1)', color: 'var(--orange)', fontSize: '11.5px', fontWeight: 700, padding: '3px 9px', borderRadius: '20px'}}>
+          <span style={{background: 'rgba(255,98,0,0.1)', color: 'var(--orange)', fontSize: '11.5px', fontWeight: 700, padding: '3px 9px', borderRadius: '20px', cursor:'pointer'}} onClick={() => setActiveSidebarItem('Approvals')}>
             {approvals.length} Pending
           </span>
         </div>
@@ -88,9 +91,9 @@ export const BottomRow: React.FC<BottomRowProps> = ({ orgs, approvals }) => {
                 </div>
               </div>
               <div className="approval-actions">
-                <button className="appr-btn approve">✓ Approve</button>
-                <button className="appr-btn reject">✕ Reject</button>
-                <button className="action-btn" style={{fontSize: '11.5px', padding: '5px 10px'}}>Comment</button>
+                <button className="appr-btn approve" onClick={() => addToast('Manage approvals from the Approvals center.', 'info')}>✓ Approve</button>
+                <button className="appr-btn reject" onClick={() => addToast('Manage approvals from the Approvals center.', 'info')}>✕ Reject</button>
+                <button className="action-btn" style={{fontSize: '11.5px', padding: '5px 10px'}} onClick={() => addToast('Opening comments...', 'info')}>Comment</button>
               </div>
             </div>
           ))}

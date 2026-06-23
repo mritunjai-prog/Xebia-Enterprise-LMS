@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useAppStore } from '../../store/useAppStore';
 
 export const ChartsRow = () => {
+  const [activeTab, setActiveTab] = useState('Monthly');
+  const { addToast } = useAppStore();
+
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+    if (tab !== 'Monthly') {
+      addToast(`${tab} data is being processed, showing latest monthly metrics.`, 'info');
+    }
+  };
+
   return (
     <div className="charts-row">
       <div className="card">
@@ -10,8 +21,8 @@ export const ChartsRow = () => {
             <div className="card-meta">New enrollments by month, 2025</div>
           </div>
           <div className="card-tabs">
-            <div className="card-tab active">Monthly</div>
-            <div className="card-tab">Quarterly</div>
+            <div className={`card-tab ${activeTab === 'Monthly' ? 'active' : ''}`} onClick={() => handleTabClick('Monthly')}>Monthly</div>
+            <div className={`card-tab ${activeTab === 'Quarterly' ? 'active' : ''}`} onClick={() => handleTabClick('Quarterly')}>Quarterly</div>
           </div>
         </div>
         <div className="chart-area">

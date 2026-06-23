@@ -2,10 +2,21 @@ export interface Organization {
   id: string;
   name: string;
   domain: string;
-  type: 'University' | 'Company';
+  type: 'University' | 'Company' | 'College';
   status: 'Active' | 'Pending' | 'Inactive';
   abbr: string;
   color: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'Admin' | 'Manager' | 'Trainer' | 'Organiser' | 'Student';
+  tenant: string;
+  status: 'Active' | 'Inactive';
+  lastLogin: string;
+  avatarColor: string;
 }
 
 export interface KPIStats {

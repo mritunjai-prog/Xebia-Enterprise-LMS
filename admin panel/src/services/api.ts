@@ -1,4 +1,4 @@
-import { DashboardData } from '../types';
+import { DashboardData, Organization, User } from '../types';
 
 export const mockDashboardData: DashboardData = {
   kpi: {
@@ -24,13 +24,72 @@ export const mockDashboardData: DashboardData = {
   ]
 };
 
-// Simulation of an API service layer
+const mockUsers: User[] = [
+  { id: 'u1', name: 'Amit Kumar', email: 'amit@iitb.ac.in', role: 'Trainer', tenant: 'IIT Bombay', status: 'Active', lastLogin: '10m ago', avatarColor: '#6C1D5F' },
+  { id: 'u2', name: 'Sarah Jones', email: 'sarah@tcs.com', role: 'Manager', tenant: 'Tata Consultancy', status: 'Active', lastLogin: '1h ago', avatarColor: '#533754' },
+  { id: 'u3', name: 'Ravi Singh', email: 'ravi@du.ac.in', role: 'Student', tenant: 'Delhi University', status: 'Inactive', lastLogin: '2d ago', avatarColor: '#4A1E47' },
+  { id: 'u4', name: 'Neha Gupta', email: 'neha@tcs.com', role: 'Student', tenant: 'Tata Consultancy', status: 'Active', lastLogin: 'Just now', avatarColor: '#01AC9F' },
+];
+
+const mockOrgs: Organization[] = [
+  ...mockDashboardData.recentOrgs,
+  { id: '5', name: 'Stanford Univ.', domain: 'stanford.edu', type: 'University', status: 'Active', abbr: 'SU', color: '#84117C' },
+  { id: '6', name: 'Google Cloud Training', domain: 'google.com', type: 'Company', status: 'Active', abbr: 'GC', color: '#FF6200' },
+];
+
+// Helper to simulate network delay
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const api = {
   dashboard: {
     getOverview: async (): Promise<DashboardData> => {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(mockDashboardData), 400); // Network delay simulation
-      });
+      await delay(400);
+      return mockDashboardData;
+    }
+  },
+  organizations: {
+    list: async (): Promise<Organization[]> => {
+      await delay(400);
+      return [...mockOrgs];
+    },
+    create: async (org: Partial<Organization>): Promise<Organization> => {
+      await delay(600);
+      return {
+        id: Math.random().toString(),
+        name: org.name || 'New Org',
+        domain: org.domain || 'example.com',
+        type: org.type || 'Company',
+        status: 'Active',
+        abbr: org.name ? org.name.substring(0, 2).toUpperCase() : 'NO',
+        color: '#6C1D5F',
+        ...org
+      } as Organization;
+    }
+  },
+  users: {
+    list: async (): Promise<User[]> => {
+      await delay(400);
+      return [...mockUsers];
+    },
+    create: async (user: Partial<User>): Promise<User> => {
+      await delay(600);
+      return {
+        id: Math.random().toString(),
+        name: user.name || 'New User',
+        email: user.email || 'user@example.com',
+        role: user.role || 'Student',
+        tenant: user.tenant || 'Global',
+        status: 'Active',
+        lastLogin: 'Never',
+        avatarColor: '#01AC9F',
+        ...user
+      } as User;
+    }
+  },
+  approvals: {
+    process: async (id: string, action: 'approve' | 'reject'): Promise<boolean> => {
+      await delay(500);
+      return true;
     }
   }
 };

@@ -6,7 +6,7 @@ import { BottomRow } from './BottomRow';
 import { IconExport, IconAdd } from '../../components/Icons';
 
 export default function Dashboard() {
-  const { dashboardData, isLoading, fetchDashboardData } = useAppStore();
+  const { dashboardData, isLoading, fetchDashboardData, addToast, setActiveSidebarItem } = useAppStore();
 
   useEffect(() => {
     fetchDashboardData();
@@ -28,11 +28,11 @@ export default function Dashboard() {
           <div className="page-subtitle">Platform overview — all tenants · June 2025</div>
         </div>
         <div className="page-actions">
-          <button className="btn-outline">
+          <button className="btn-outline" onClick={() => addToast('Exporting report as PDF...', 'info')}>
             <IconExport />
             Export Report
           </button>
-          <button className="btn-primary">
+          <button className="btn-primary" onClick={() => setActiveSidebarItem('Organizations')}>
             <IconAdd />
             Add Organization
           </button>

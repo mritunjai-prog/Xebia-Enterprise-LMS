@@ -31,20 +31,31 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, badge, badgeColor, hasCh
   </div>
 );
 
-const NavChild: React.FC<{ label: string; isActive?: boolean }> = ({ label, isActive }) => (
-  <div className={clsx("nav-child", isActive && "active")}>
+const NavChild: React.FC<{ label: string; isActive?: boolean; onClick?: () => void }> = ({ label, isActive, onClick }) => (
+  <div onClick={onClick} className={clsx("nav-child", isActive && "active")}>
     {label}
   </div>
 );
 
 export function Sidebar() {
+  const { activeSidebarItem, setActiveSidebarItem } = useAppStore();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     orgs: true,
     courses: true
   });
 
-  const toggleSection = (key: string) => {
+  const toggleSection = (key: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const handleNavClick = (label: string, isParent: boolean = false, key?: string) => {
+    setActiveSidebarItem(label);
+    if (isParent && key) {
+      if (!openSections[key]) {
+        toggleSection(key);
+      }
+    }
   };
 
   return (
@@ -60,7 +71,12 @@ export function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        <NavItem icon={<IconDashboard className="nav-icon" />} label="Dashboard" isActive />
+        <NavItem 
+          icon={<IconDashboard className="nav-icon" />} 
+          label="Dashboard" 
+          isActive={activeSidebarItem === 'Dashboard'} 
+          onClick={() => handleNavClick('Dashboard')}
+        />
 
         <div className="nav-section">Organizations</div>
         <NavItem 
@@ -68,13 +84,14 @@ export function Sidebar() {
           label="Organizations" 
           hasChildren 
           isOpen={openSections.orgs}
-          onClick={() => toggleSection('orgs')}
+          isActive={['Organizations', 'Universities', 'Colleges', 'Companies'].includes(activeSidebarItem)}
+          onClick={() => handleNavClick('Organizations', true, 'orgs')}
         />
         {openSections.orgs && (
           <div className="nav-children">
-            <NavChild label="Universities" isActive />
-            <NavChild label="Colleges" />
-            <NavChild label="Companies" />
+            <NavChild label="Universities" isActive={activeSidebarItem === 'Universities'} onClick={() => handleNavClick('Universities')} />
+            <NavChild label="Colleges" isActive={activeSidebarItem === 'Colleges'} onClick={() => handleNavClick('Colleges')} />
+            <NavChild label="Companies" isActive={activeSidebarItem === 'Companies'} onClick={() => handleNavClick('Companies')} />
           </div>
         )}
 
@@ -84,10 +101,14 @@ export function Sidebar() {
           label="Users" 
           badge="2.4k" 
           badgeColor="green" 
+          isActive={activeSidebarItem === 'Users'}
+          onClick={() => handleNavClick('Users')}
         />
         <NavItem 
           icon={<IconRoles className="nav-icon" />} 
           label="Roles & Permissions" 
+          isActive={activeSidebarItem === 'Roles & Permissions'}
+          onClick={() => handleNavClick('Roles & Permissions')}
         />
 
         <div className="nav-section">Learning</div>
@@ -96,23 +117,24 @@ export function Sidebar() {
           label="Courses" 
           hasChildren
           isOpen={openSections.courses}
-          onClick={() => toggleSection('courses')}
+          isActive={['Courses', 'Course List', 'Content Builder'].includes(activeSidebarItem)}
+          onClick={() => handleNavClick('Courses', true, 'courses')}
         />
         {openSections.courses && (
           <div className="nav-children">
-            <NavChild label="Course List" />
-            <NavChild label="Content Builder" />
+            <NavChild label="Course List" isActive={activeSidebarItem === 'Course List'} onClick={() => handleNavClick('Course List')} />
+            <NavChild label="Content Builder" isActive={activeSidebarItem === 'Content Builder'} onClick={() => handleNavClick('Content Builder')} />
           </div>
         )}
-        <NavItem icon={<IconBatch className="nav-icon" />} label="Batch & Enrollment" />
-        <NavItem icon={<IconAssessments className="nav-icon" />} label="Assessments" />
+        <NavItem icon={<IconBatch className="nav-icon" />} label="Batch & Enrollment" isActive={activeSidebarItem === 'Batch & Enrollment'} onClick={() => handleNavClick('Batch & Enrollment')} />
+        <NavItem icon={<IconAssessments className="nav-icon" />} label="Assessments" isActive={activeSidebarItem === 'Assessments'} onClick={() => handleNavClick('Assessments')} />
 
         <div className="nav-section">Operations</div>
-        <NavItem icon={<IconApprovals className="nav-icon" />} label="Approvals" badge="14" />
-        <NavItem icon={<IconNotifications className="nav-icon" />} label="Notifications" badge="3" />
-        <NavItem icon={<IconReports className="nav-icon" />} label="Reports" />
-        <NavItem icon={<IconAuditLogs className="nav-icon" />} label="Audit Logs" />
-        <NavItem icon={<IconSettings className="nav-icon" />} label="Settings" />
+        <NavItem icon={<IconApprovals className="nav-icon" />} label="Approvals" badge="14" isActive={activeSidebarItem === 'Approvals'} onClick={() => handleNavClick('Approvals')} />
+        <NavItem icon={<IconNotifications className="nav-icon" />} label="Notifications" badge="3" isActive={activeSidebarItem === 'Notifications'} onClick={() => handleNavClick('Notifications')} />
+        <NavItem icon={<IconReports className="nav-icon" />} label="Reports" isActive={activeSidebarItem === 'Reports'} onClick={() => handleNavClick('Reports')} />
+        <NavItem icon={<IconAuditLogs className="nav-icon" />} label="Audit Logs" isActive={activeSidebarItem === 'Audit Logs'} onClick={() => handleNavClick('Audit Logs')} />
+        <NavItem icon={<IconSettings className="nav-icon" />} label="Settings" isActive={activeSidebarItem === 'Settings'} onClick={() => handleNavClick('Settings')} />
       </nav>
 
       <div className="sidebar-footer">
