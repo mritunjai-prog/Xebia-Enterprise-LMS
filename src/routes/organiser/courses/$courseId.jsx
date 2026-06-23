@@ -1,0 +1,523 @@
+import { useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowLeft,
+  Save,
+  Plus,
+  GripVertical,
+  FileText,
+  Video,
+  MoreVertical,
+  ChevronDown,
+  ChevronUp,
+  X,
+  Target,
+  FileSpreadsheet,
+  HelpCircle,
+  CheckCircle,
+  Trash2,
+  Edit3,
+} from "lucide-react";
+import { toast } from "sonner";
+import { ModuleHeroBanner } from "@/components/module-hero-banner";
+
+export const Route = createFileRoute("/organiser/courses/$courseId")({
+  component: CourseBuilderView,
+});
+
+const initialSyllabus = [
+  {
+    id: "m1",
+    title: "Module 1: Monolith vs Microservices",
+    objectives: "Understand microservices core principles, identify service boundaries, and compare orchestration patterns.",
+    items: [
+      { id: "i1", type: "video", title: "Video: Journey of Monoliths to Services", duration: "18 mins" },
+      { id: "i2", type: "pdf", title: "PDF: Domain Driven Design Patterns Cheat Sheet", size: "2.4 MB" },
+      { id: "i3", type: "test", title: "Practical: Service Boundaries Designing Lab", questions: 5 },
+    ],
+  },
+  {
+    id: "m2",
+    title: "Module 2: Inter-Service Communications",
+    objectives: "Learn synchronous REST/gRPC vs asynchronous messaging using RabbitMQ and Apache Kafka.",
+    items: [
+      { id: "i4", type: "video", title: "Video: gRPC Protocols in High-Performance Apps", duration: "25 mins" },
+      { id: "i5", type: "ppt", title: "PPT: Message Queues Comparison Layout", slides: 24 },
+      { id: "i6", type: "table", title: "Grid: REST vs gRPC vs GraphQL Tradeoffs", rows: 12 },
+    ],
+  },
+];
+
+function CourseBuilderView() {
+  const { courseId } = Route.useParams();
+  const [syllabus, setSyllabus] = useState(initialSyllabus);
+  const [activeModuleId, setActiveModuleId] = useState(null); // for editing objectives or adding content
+  const [isAddModuleOpen, setIsAddModuleOpen] = useState(false);
+  const [isAddItemOpen, setIsAddItemOpen] = useState(false);
+  const [isEditingObjectives, setIsEditingObjectives] = useState(false);
+
+  // Forms State
+  const [moduleTitle, setModuleTitle] = useState("");
+  const [moduleObjectives, setModuleObjectives] = useState("");
+  const [itemName, setItemName] = useState("");
+  const [itemType, setItemType] = useState("video");
+  const [itemDetail, setItemDetail] = useState(""); // duration, size, slides
+  const [saveLoading, setSaveLoading] = useState(false);
+
+  const handleSaveSyllabus = () => {
+    setSaveLoading(true);
+    setTimeout(() => {
+      setSaveLoading(false);
+      toast.success("Syllabus configuration saved successfully!");
+    }, 1500);
+  };
+
+  const addModule = (e) => {
+    e.preventDefault();
+    if (!moduleTitle) return;
+    const newMod = {
+      id: `m${syllabus.length + 1}`,
+      title: `Module ${syllabus.length + 1}: ${moduleTitle}`,
+      objectives: moduleObjectives || "Define target learning objectives.",
+      items: [],
+    };
+    setSyllabus([...syllabus, newMod]);
+    setModuleTitle("");
+    setModuleObjectives("");
+    setIsAddModuleOpen(false);
+    toast.success("New module added to outline!");
+  };
+
+  const deleteModule = (modId) => {
+    setSyllabus(syllabus.filter(m => m.id !== modId));
+    toast.error("Module removed from syllabus");
+  };
+
+  const addItemToModule = (e) => {
+    e.preventDefault();
+    if (!itemName || !activeModuleId) return;
+
+    setSyllabus(syllabus.map(mod => {
+      if (mod.id === activeModuleId) {
+        const newItem = {
+          id: `i${Date.now()}`,
+          type: itemType,
+          title: `${itemType.toUpperCase()}: ${itemName}`,
+        };
+        if (itemType === "video") newItem.duration = itemDetail || "10 mins";
+        if (itemType === "pdf") newItem.size = itemDetail || "1.5 MB";
+        if (itemType === "ppt") newItem.slides = parseInt(itemDetail) || 15;
+        if (itemType === "test") newItem.questions = parseInt(itemDetail) || 10;
+        
+        return {
+          ...mod,
+          items: [...mod.items, newItem],
+        };
+      }
+      return mod;
+    }));
+
+    setItemName("");
+    setItemDetail("");
+    setIsAddItemOpen(false);
+    toast.success("Asset attached to module!");
+  };
+
+  const removeItemFromModule = (modId, itemId) => {
+    setSyllabus(syllabus.map(mod => {
+      if (mod.id === modId) {
+        return {
+          ...mod,
+          items: mod.items.filter(item => item.id !== itemId),
+        };
+      }
+      return mod;
+    }));
+    toast.error("Asset detached from module");
+  };
+
+  const moveModule = (index, direction) => {
+    if (direction === "up" && index === 0) return;
+    if (direction === "down" && index === syllabus.length - 1) return;
+
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    const nextSyllabus = [...syllabus];
+    const temp = nextSyllabus[index];
+    nextSyllabus[index] = nextSyllabus[newIndex];
+    nextSyllabus[newIndex] = temp;
+    
+    // Auto-update module titles numbers to match order
+    const updatedSyllabus = nextSyllabus.map((m, idx) => {
+      const parts = m.title.split(": ");
+      const coreTitle = parts.slice(1).join(": ");
+      return {
+        ...m,
+        title: `Module ${idx + 1}: ${coreTitle || parts[0]}`,
+      };
+    });
+
+    setSyllabus(updatedSyllabus);
+    toast.info("Outline hierarchy updated");
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      {/* Hero Banner */}
+      <ModuleHeroBanner
+        breadcrumb="Dashboard / Courses / Builder"
+        title="Course Builder Workspace"
+        subtitle={`Course ID: ${courseId} — CS-308 Syllabus Structure Editor`}
+        actions={
+          <>
+            <Link
+              to="/organiser/courses"
+              className="h-10 w-10 rounded-xl border bg-card/80 hover:bg-secondary grid place-items-center transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+            </Link>
+            <button
+              onClick={handleSaveSyllabus}
+              disabled={saveLoading}
+              className="btn-hero px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer"
+            >
+              <Save className="w-4 h-4" /> {saveLoading ? "Saving Changes..." : "Commit Outline Changes"}
+            </button>
+          </>
+        }
+      />
+
+      {/* Course outline builder and metadata panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Outline Workspace */}
+        <div className="lg:col-span-2 glass rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-lg font-bold text-foreground">Syllabus Structure</h2>
+              <p className="text-xs text-muted-foreground">Draft and configure learning modules, objectives, and content attachments.</p>
+            </div>
+            <button
+              onClick={() => setIsAddModuleOpen(true)}
+              className="text-xs font-bold bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1.5 rounded-xl flex items-center gap-1.5 cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5" /> Add Module
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {syllabus.map((mod, index) => (
+              <div key={mod.id} className="border border-border/40 rounded-xl overflow-hidden glass-strong">
+                {/* Module title header bar */}
+                <div className="flex items-center gap-3 p-4 bg-secondary/20 border-b border-border/30">
+                  <div className="flex flex-col gap-1">
+                    <button
+                      onClick={() => moveModule(index, "up")}
+                      disabled={index === 0}
+                      className="text-muted-foreground hover:text-foreground disabled:opacity-20 cursor-pointer"
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => moveModule(index, "down")}
+                      disabled={index === syllabus.length - 1}
+                      className="text-muted-foreground hover:text-foreground disabled:opacity-20 cursor-pointer"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-sm text-foreground truncate">{mod.title}</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Target className="w-3 h-3 text-primary" />
+                      <p className="text-xs text-muted-foreground line-clamp-1 italic">{mod.objectives}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        setActiveModuleId(mod.id);
+                        setModuleObjectives(mod.objectives);
+                        setIsEditingObjectives(true);
+                      }}
+                      className="h-8 w-8 rounded-lg hover:bg-secondary grid place-items-center text-muted-foreground hover:text-foreground cursor-pointer"
+                      title="Edit objectives"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => deleteModule(mod.id)}
+                      className="h-8 w-8 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 grid place-items-center cursor-pointer"
+                      title="Remove module"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Submodule Items attached */}
+                <div className="p-3 space-y-2 bg-card/30">
+                  {mod.items.length > 0 ? (
+                    mod.items.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between p-2.5 rounded-lg glass border border-border/30 hover:border-primary/20 group"
+                      >
+                        <div className="flex items-center gap-3">
+                          {item.type === "video" && <Video className="w-4 h-4 text-pink-500" />}
+                          {item.type === "pdf" && <FileText className="w-4 h-4 text-blue-500" />}
+                          {item.type === "ppt" && <FileSpreadsheet className="w-4 h-4 text-amber-500" />}
+                          {item.type === "test" && <HelpCircle className="w-4 h-4 text-cyan-500" />}
+                          <span className="text-xs font-semibold text-foreground">{item.title}</span>
+                          <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">
+                            {item.duration || item.size || `${item.slides} slides` || `${item.questions} Qs`}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => removeItemFromModule(mod.id, item.id)}
+                          className="h-7 w-7 rounded bg-secondary opacity-0 group-hover:opacity-100 hover:bg-red-500/10 hover:text-red-500 grid place-items-center transition-all cursor-pointer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-muted-foreground/60 italic text-center py-4">No content attached to this module yet.</p>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      setActiveModuleId(mod.id);
+                      setIsAddItemOpen(true);
+                    }}
+                    className="w-full py-2 border border-dashed border-border/50 hover:border-primary/55 rounded-lg text-xs font-bold text-muted-foreground hover:text-primary transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-1 bg-background/20"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Attach Content Material
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Info panel on course metadata */}
+        <div className="space-y-6">
+          <div className="glass rounded-2xl p-6">
+            <h2 className="text-lg font-bold text-foreground mb-4">Course Properties</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="text-[10px] font-bold text-muted-foreground uppercase">Cover Thumbnail</label>
+                <div className="h-28 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 border flex items-center justify-center text-white font-extrabold uppercase text-lg shadow-sm mt-1">
+                  CS-308 COVER
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase">Syllabus Status</span>
+                  <span className="block text-sm font-semibold text-foreground mt-0.5">Published Draft</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase">Assigned University</span>
+                  <span className="block text-sm font-semibold text-foreground mt-0.5">Central Academy</span>
+                </div>
+              </div>
+              <hr className="border-border/40" />
+              <h3 className="text-xs font-bold text-muted-foreground uppercase">Author Guidelines</h3>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Every module must contain at least one practical/theory-based quiz.</li>
+                <li>Limit video lectures to under 30 minutes for higher student retention.</li>
+                <li>Support documents using PDFs or PPTs must be attached as library items first.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Add Module Modal */}
+      <AnimatePresence>
+        {isAddModuleOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/50 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="w-full max-w-lg glass rounded-2xl p-6 relative"
+            >
+              <button
+                onClick={() => setIsAddModuleOpen(false)}
+                className="absolute top-4 right-4 h-8 w-8 rounded-full border hover:bg-secondary grid place-items-center cursor-pointer"
+              >
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+
+              <h2 className="text-xl font-bold font-display mb-4">Add Course Module</h2>
+              <form onSubmit={addModule}>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-1">Module Title</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="e.g. Services Discovery & API Gateways"
+                      value={moduleTitle}
+                      onChange={(e) => setModuleTitle(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-xl bg-background outline-none text-sm focus:border-primary"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-1">Learning Objectives</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Describe what learners will gain..."
+                      value={moduleObjectives}
+                      onChange={(e) => setModuleObjectives(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-xl bg-background outline-none text-sm focus:border-primary"
+                    />
+                  </div>
+                  <button type="submit" className="w-full btn-hero py-2.5 rounded-xl text-sm font-semibold mt-2 cursor-pointer">
+                    Append to Syllabus Outline
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Add Item Modal */}
+      <AnimatePresence>
+        {isAddItemOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/50 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="w-full max-w-lg glass rounded-2xl p-6 relative"
+            >
+              <button
+                onClick={() => setIsAddItemOpen(false)}
+                className="absolute top-4 right-4 h-8 w-8 rounded-full border hover:bg-secondary grid place-items-center cursor-pointer"
+              >
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+
+              <h2 className="text-xl font-bold font-display mb-4">Attach Content Asset</h2>
+              <form onSubmit={addItemToModule}>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-1">Asset Name</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="e.g. Eureka Registration flow"
+                      value={itemName}
+                      onChange={(e) => setItemName(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-xl bg-background outline-none text-sm focus:border-primary"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-bold text-muted-foreground uppercase block mb-1">Material Type</label>
+                      <select
+                        value={itemType}
+                        onChange={(e) => setItemType(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-xl bg-background outline-none text-sm cursor-pointer focus:border-primary"
+                      >
+                        <option value="video">Video Lesson</option>
+                        <option value="pdf">PDF Ebook</option>
+                        <option value="ppt">PPT Slide Deck</option>
+                        <option value="test">Theoretical Quiz</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-muted-foreground uppercase block mb-1">Detail Metric</label>
+                      <input
+                        required
+                        type="text"
+                        placeholder={
+                          itemType === "video" ? "e.g. 15 mins" :
+                          itemType === "pdf" ? "e.g. 1.2 MB" :
+                          itemType === "ppt" ? "e.g. 30 slides" : "e.g. 10 questions"
+                        }
+                        value={itemDetail}
+                        onChange={(e) => setItemDetail(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-xl bg-background outline-none text-sm focus:border-primary"
+                      />
+                    </div>
+                  </div>
+                  <button type="submit" className="w-full btn-hero py-2.5 rounded-xl text-sm font-semibold mt-2 cursor-pointer">
+                    Attach Asset Material
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Objectives Modal */}
+      <AnimatePresence>
+        {isEditingObjectives && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/50 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="w-full max-w-lg glass rounded-2xl p-6 relative"
+            >
+              <button
+                onClick={() => setIsEditingObjectives(false)}
+                className="absolute top-4 right-4 h-8 w-8 rounded-full border hover:bg-secondary grid place-items-center cursor-pointer"
+              >
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+
+              <h2 className="text-xl font-bold font-display mb-4">Edit Module Objectives</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-muted-foreground uppercase block mb-1">Objectives Description</label>
+                  <textarea
+                    rows={4}
+                    value={moduleObjectives}
+                    onChange={(e) => setModuleObjectives(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-xl bg-background outline-none text-sm focus:border-primary"
+                  />
+                </div>
+                <button
+                  onClick={() => {
+                    setSyllabus(syllabus.map(m => m.id === activeModuleId ? { ...m, objectives: moduleObjectives } : m));
+                    setIsEditingObjectives(false);
+                    toast.success("Objectives updated!");
+                  }}
+                  className="w-full btn-hero py-2.5 rounded-xl text-sm font-semibold mt-2 cursor-pointer"
+                >
+                  Save Objectives
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+    </div>
+  );
+}
