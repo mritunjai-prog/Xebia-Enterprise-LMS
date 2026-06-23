@@ -9,38 +9,46 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OrganiserRouteImport } from './routes/organiser'
 import { Route as ManagerRouteRouteImport } from './routes/manager/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrganiserIndexRouteImport } from './routes/organiser/index'
 import { Route as ManagerIndexRouteImport } from './routes/manager/index'
 import { Route as ManagerUsersRouteImport } from './routes/manager/users'
 import { Route as ManagerFeedbackRouteImport } from './routes/manager/feedback'
 import { Route as ManagerApprovalsRouteImport } from './routes/manager/approvals'
 import { Route as ManagerAnalyticsRouteImport } from './routes/manager/analytics'
+import { Route as OrganiserVideoLessonsIndexRouteImport } from './routes/organiser/video-lessons/index'
+import { Route as OrganiserStudentsIndexRouteImport } from './routes/organiser/students/index'
+import { Route as OrganiserSettingsIndexRouteImport } from './routes/organiser/settings/index'
+import { Route as OrganiserReportsIndexRouteImport } from './routes/organiser/reports/index'
+import { Route as OrganiserNotificationsIndexRouteImport } from './routes/organiser/notifications/index'
+import { Route as OrganiserDiscussionsIndexRouteImport } from './routes/organiser/discussions/index'
+import { Route as OrganiserCoursesIndexRouteImport } from './routes/organiser/courses/index'
+import { Route as OrganiserContentLibraryIndexRouteImport } from './routes/organiser/content-library/index'
+import { Route as OrganiserBatchesIndexRouteImport } from './routes/organiser/batches/index'
+import { Route as OrganiserAssessmentsIndexRouteImport } from './routes/organiser/assessments/index'
+import { Route as OrganiserCoursesCourseIdRouteImport } from './routes/organiser/courses/$courseId'
 
+const OrganiserRoute = OrganiserRouteImport.update({
+  id: '/organiser',
+  path: '/organiser',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ManagerRouteRoute = ManagerRouteRouteImport.update({
   id: '/manager',
   path: '/manager',
-import { Route as TrainerRouteImport } from './routes/trainer'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as TrainerIndexRouteImport } from './routes/trainer/index'
-import { Route as TrainerStudentsIndexRouteImport } from './routes/trainer/students/index'
-import { Route as TrainerReportsIndexRouteImport } from './routes/trainer/reports/index'
-import { Route as TrainerNotificationsIndexRouteImport } from './routes/trainer/notifications/index'
-import { Route as TrainerDiscussionsIndexRouteImport } from './routes/trainer/discussions/index'
-import { Route as TrainerCoursesIndexRouteImport } from './routes/trainer/courses/index'
-import { Route as TrainerBatchesIndexRouteImport } from './routes/trainer/batches/index'
-import { Route as TrainerAssessmentsIndexRouteImport } from './routes/trainer/assessments/index'
-import { Route as TrainerCoursesCourseIdRouteImport } from './routes/trainer/courses/$courseId'
-
-const TrainerRoute = TrainerRouteImport.update({
-  id: '/trainer',
-  path: '/trainer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const OrganiserIndexRoute = OrganiserIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OrganiserRoute,
 } as any)
 const ManagerIndexRoute = ManagerIndexRouteImport.update({
   id: '/',
@@ -66,61 +74,90 @@ const ManagerAnalyticsRoute = ManagerAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
   getParentRoute: () => ManagerRouteRoute,
-const TrainerIndexRoute = TrainerIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TrainerRoute,
 } as any)
-const TrainerStudentsIndexRoute = TrainerStudentsIndexRouteImport.update({
+const OrganiserVideoLessonsIndexRoute =
+  OrganiserVideoLessonsIndexRouteImport.update({
+    id: '/video-lessons/',
+    path: '/video-lessons/',
+    getParentRoute: () => OrganiserRoute,
+  } as any)
+const OrganiserStudentsIndexRoute = OrganiserStudentsIndexRouteImport.update({
   id: '/students/',
   path: '/students/',
-  getParentRoute: () => TrainerRoute,
+  getParentRoute: () => OrganiserRoute,
 } as any)
-const TrainerReportsIndexRoute = TrainerReportsIndexRouteImport.update({
+const OrganiserSettingsIndexRoute = OrganiserSettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => OrganiserRoute,
+} as any)
+const OrganiserReportsIndexRoute = OrganiserReportsIndexRouteImport.update({
   id: '/reports/',
   path: '/reports/',
-  getParentRoute: () => TrainerRoute,
+  getParentRoute: () => OrganiserRoute,
 } as any)
-const TrainerNotificationsIndexRoute =
-  TrainerNotificationsIndexRouteImport.update({
+const OrganiserNotificationsIndexRoute =
+  OrganiserNotificationsIndexRouteImport.update({
     id: '/notifications/',
     path: '/notifications/',
-    getParentRoute: () => TrainerRoute,
+    getParentRoute: () => OrganiserRoute,
   } as any)
-const TrainerDiscussionsIndexRoute = TrainerDiscussionsIndexRouteImport.update({
-  id: '/discussions/',
-  path: '/discussions/',
-  getParentRoute: () => TrainerRoute,
-} as any)
-const TrainerCoursesIndexRoute = TrainerCoursesIndexRouteImport.update({
+const OrganiserDiscussionsIndexRoute =
+  OrganiserDiscussionsIndexRouteImport.update({
+    id: '/discussions/',
+    path: '/discussions/',
+    getParentRoute: () => OrganiserRoute,
+  } as any)
+const OrganiserCoursesIndexRoute = OrganiserCoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
-  getParentRoute: () => TrainerRoute,
+  getParentRoute: () => OrganiserRoute,
 } as any)
-const TrainerBatchesIndexRoute = TrainerBatchesIndexRouteImport.update({
+const OrganiserContentLibraryIndexRoute =
+  OrganiserContentLibraryIndexRouteImport.update({
+    id: '/content-library/',
+    path: '/content-library/',
+    getParentRoute: () => OrganiserRoute,
+  } as any)
+const OrganiserBatchesIndexRoute = OrganiserBatchesIndexRouteImport.update({
   id: '/batches/',
   path: '/batches/',
-  getParentRoute: () => TrainerRoute,
+  getParentRoute: () => OrganiserRoute,
 } as any)
-const TrainerAssessmentsIndexRoute = TrainerAssessmentsIndexRouteImport.update({
-  id: '/assessments/',
-  path: '/assessments/',
-  getParentRoute: () => TrainerRoute,
-} as any)
-const TrainerCoursesCourseIdRoute = TrainerCoursesCourseIdRouteImport.update({
-  id: '/courses/$courseId',
-  path: '/courses/$courseId',
-  getParentRoute: () => TrainerRoute,
-} as any)
+const OrganiserAssessmentsIndexRoute =
+  OrganiserAssessmentsIndexRouteImport.update({
+    id: '/assessments/',
+    path: '/assessments/',
+    getParentRoute: () => OrganiserRoute,
+  } as any)
+const OrganiserCoursesCourseIdRoute =
+  OrganiserCoursesCourseIdRouteImport.update({
+    id: '/courses/$courseId',
+    path: '/courses/$courseId',
+    getParentRoute: () => OrganiserRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/manager': typeof ManagerRouteRouteWithChildren
+  '/organiser': typeof OrganiserRouteWithChildren
   '/manager/analytics': typeof ManagerAnalyticsRoute
   '/manager/approvals': typeof ManagerApprovalsRoute
   '/manager/feedback': typeof ManagerFeedbackRoute
   '/manager/users': typeof ManagerUsersRoute
   '/manager/': typeof ManagerIndexRoute
+  '/organiser/': typeof OrganiserIndexRoute
+  '/organiser/courses/$courseId': typeof OrganiserCoursesCourseIdRoute
+  '/organiser/assessments/': typeof OrganiserAssessmentsIndexRoute
+  '/organiser/batches/': typeof OrganiserBatchesIndexRoute
+  '/organiser/content-library/': typeof OrganiserContentLibraryIndexRoute
+  '/organiser/courses/': typeof OrganiserCoursesIndexRoute
+  '/organiser/discussions/': typeof OrganiserDiscussionsIndexRoute
+  '/organiser/notifications/': typeof OrganiserNotificationsIndexRoute
+  '/organiser/reports/': typeof OrganiserReportsIndexRoute
+  '/organiser/settings/': typeof OrganiserSettingsIndexRoute
+  '/organiser/students/': typeof OrganiserStudentsIndexRoute
+  '/organiser/video-lessons/': typeof OrganiserVideoLessonsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -129,59 +166,65 @@ export interface FileRoutesByTo {
   '/manager/feedback': typeof ManagerFeedbackRoute
   '/manager/users': typeof ManagerUsersRoute
   '/manager': typeof ManagerIndexRoute
-  '/trainer': typeof TrainerRouteWithChildren
-  '/trainer/': typeof TrainerIndexRoute
-  '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
-  '/trainer/assessments/': typeof TrainerAssessmentsIndexRoute
-  '/trainer/batches/': typeof TrainerBatchesIndexRoute
-  '/trainer/courses/': typeof TrainerCoursesIndexRoute
-  '/trainer/discussions/': typeof TrainerDiscussionsIndexRoute
-  '/trainer/notifications/': typeof TrainerNotificationsIndexRoute
-  '/trainer/reports/': typeof TrainerReportsIndexRoute
-  '/trainer/students/': typeof TrainerStudentsIndexRoute
-}
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/trainer': typeof TrainerIndexRoute
-  '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
-  '/trainer/assessments': typeof TrainerAssessmentsIndexRoute
-  '/trainer/batches': typeof TrainerBatchesIndexRoute
-  '/trainer/courses': typeof TrainerCoursesIndexRoute
-  '/trainer/discussions': typeof TrainerDiscussionsIndexRoute
-  '/trainer/notifications': typeof TrainerNotificationsIndexRoute
-  '/trainer/reports': typeof TrainerReportsIndexRoute
-  '/trainer/students': typeof TrainerStudentsIndexRoute
+  '/organiser': typeof OrganiserIndexRoute
+  '/organiser/courses/$courseId': typeof OrganiserCoursesCourseIdRoute
+  '/organiser/assessments': typeof OrganiserAssessmentsIndexRoute
+  '/organiser/batches': typeof OrganiserBatchesIndexRoute
+  '/organiser/content-library': typeof OrganiserContentLibraryIndexRoute
+  '/organiser/courses': typeof OrganiserCoursesIndexRoute
+  '/organiser/discussions': typeof OrganiserDiscussionsIndexRoute
+  '/organiser/notifications': typeof OrganiserNotificationsIndexRoute
+  '/organiser/reports': typeof OrganiserReportsIndexRoute
+  '/organiser/settings': typeof OrganiserSettingsIndexRoute
+  '/organiser/students': typeof OrganiserStudentsIndexRoute
+  '/organiser/video-lessons': typeof OrganiserVideoLessonsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/manager': typeof ManagerRouteRouteWithChildren
+  '/organiser': typeof OrganiserRouteWithChildren
   '/manager/analytics': typeof ManagerAnalyticsRoute
   '/manager/approvals': typeof ManagerApprovalsRoute
   '/manager/feedback': typeof ManagerFeedbackRoute
   '/manager/users': typeof ManagerUsersRoute
   '/manager/': typeof ManagerIndexRoute
-  '/trainer': typeof TrainerRouteWithChildren
-  '/trainer/': typeof TrainerIndexRoute
-  '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
-  '/trainer/assessments/': typeof TrainerAssessmentsIndexRoute
-  '/trainer/batches/': typeof TrainerBatchesIndexRoute
-  '/trainer/courses/': typeof TrainerCoursesIndexRoute
-  '/trainer/discussions/': typeof TrainerDiscussionsIndexRoute
-  '/trainer/notifications/': typeof TrainerNotificationsIndexRoute
-  '/trainer/reports/': typeof TrainerReportsIndexRoute
-  '/trainer/students/': typeof TrainerStudentsIndexRoute
+  '/organiser/': typeof OrganiserIndexRoute
+  '/organiser/courses/$courseId': typeof OrganiserCoursesCourseIdRoute
+  '/organiser/assessments/': typeof OrganiserAssessmentsIndexRoute
+  '/organiser/batches/': typeof OrganiserBatchesIndexRoute
+  '/organiser/content-library/': typeof OrganiserContentLibraryIndexRoute
+  '/organiser/courses/': typeof OrganiserCoursesIndexRoute
+  '/organiser/discussions/': typeof OrganiserDiscussionsIndexRoute
+  '/organiser/notifications/': typeof OrganiserNotificationsIndexRoute
+  '/organiser/reports/': typeof OrganiserReportsIndexRoute
+  '/organiser/settings/': typeof OrganiserSettingsIndexRoute
+  '/organiser/students/': typeof OrganiserStudentsIndexRoute
+  '/organiser/video-lessons/': typeof OrganiserVideoLessonsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/manager'
+    | '/organiser'
     | '/manager/analytics'
     | '/manager/approvals'
     | '/manager/feedback'
     | '/manager/users'
     | '/manager/'
+    | '/organiser/'
+    | '/organiser/courses/$courseId'
+    | '/organiser/assessments/'
+    | '/organiser/batches/'
+    | '/organiser/content-library/'
+    | '/organiser/courses/'
+    | '/organiser/discussions/'
+    | '/organiser/notifications/'
+    | '/organiser/reports/'
+    | '/organiser/settings/'
+    | '/organiser/students/'
+    | '/organiser/video-lessons/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -190,70 +233,62 @@ export interface FileRouteTypes {
     | '/manager/feedback'
     | '/manager/users'
     | '/manager'
+    | '/organiser'
+    | '/organiser/courses/$courseId'
+    | '/organiser/assessments'
+    | '/organiser/batches'
+    | '/organiser/content-library'
+    | '/organiser/courses'
+    | '/organiser/discussions'
+    | '/organiser/notifications'
+    | '/organiser/reports'
+    | '/organiser/settings'
+    | '/organiser/students'
+    | '/organiser/video-lessons'
   id:
     | '__root__'
     | '/'
     | '/manager'
+    | '/organiser'
     | '/manager/analytics'
     | '/manager/approvals'
     | '/manager/feedback'
     | '/manager/users'
     | '/manager/'
-    | '/trainer'
-    | '/trainer/'
-    | '/trainer/courses/$courseId'
-    | '/trainer/assessments/'
-    | '/trainer/batches/'
-    | '/trainer/courses/'
-    | '/trainer/discussions/'
-    | '/trainer/notifications/'
-    | '/trainer/reports/'
-    | '/trainer/students/'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/trainer'
-    | '/trainer/courses/$courseId'
-    | '/trainer/assessments'
-    | '/trainer/batches'
-    | '/trainer/courses'
-    | '/trainer/discussions'
-    | '/trainer/notifications'
-    | '/trainer/reports'
-    | '/trainer/students'
-  id:
-    | '__root__'
-    | '/'
-    | '/trainer'
-    | '/trainer/'
-    | '/trainer/courses/$courseId'
-    | '/trainer/assessments/'
-    | '/trainer/batches/'
-    | '/trainer/courses/'
-    | '/trainer/discussions/'
-    | '/trainer/notifications/'
-    | '/trainer/reports/'
-    | '/trainer/students/'
+    | '/organiser/'
+    | '/organiser/courses/$courseId'
+    | '/organiser/assessments/'
+    | '/organiser/batches/'
+    | '/organiser/content-library/'
+    | '/organiser/courses/'
+    | '/organiser/discussions/'
+    | '/organiser/notifications/'
+    | '/organiser/reports/'
+    | '/organiser/settings/'
+    | '/organiser/students/'
+    | '/organiser/video-lessons/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ManagerRouteRoute: typeof ManagerRouteRouteWithChildren
-  TrainerRoute: typeof TrainerRouteWithChildren
+  OrganiserRoute: typeof OrganiserRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/organiser': {
+      id: '/organiser'
+      path: '/organiser'
+      fullPath: '/organiser'
+      preLoaderRoute: typeof OrganiserRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/manager': {
       id: '/manager'
       path: '/manager'
       fullPath: '/manager'
       preLoaderRoute: typeof ManagerRouteRouteImport
-    '/trainer': {
-      id: '/trainer'
-      path: '/trainer'
-      fullPath: '/trainer'
-      preLoaderRoute: typeof TrainerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -262,6 +297,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/organiser/': {
+      id: '/organiser/'
+      path: '/'
+      fullPath: '/organiser/'
+      preLoaderRoute: typeof OrganiserIndexRouteImport
+      parentRoute: typeof OrganiserRoute
     }
     '/manager/': {
       id: '/manager/'
@@ -298,6 +340,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerAnalyticsRouteImport
       parentRoute: typeof ManagerRouteRoute
     }
+    '/organiser/video-lessons/': {
+      id: '/organiser/video-lessons/'
+      path: '/video-lessons'
+      fullPath: '/organiser/video-lessons/'
+      preLoaderRoute: typeof OrganiserVideoLessonsIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/students/': {
+      id: '/organiser/students/'
+      path: '/students'
+      fullPath: '/organiser/students/'
+      preLoaderRoute: typeof OrganiserStudentsIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/settings/': {
+      id: '/organiser/settings/'
+      path: '/settings'
+      fullPath: '/organiser/settings/'
+      preLoaderRoute: typeof OrganiserSettingsIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/reports/': {
+      id: '/organiser/reports/'
+      path: '/reports'
+      fullPath: '/organiser/reports/'
+      preLoaderRoute: typeof OrganiserReportsIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/notifications/': {
+      id: '/organiser/notifications/'
+      path: '/notifications'
+      fullPath: '/organiser/notifications/'
+      preLoaderRoute: typeof OrganiserNotificationsIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/discussions/': {
+      id: '/organiser/discussions/'
+      path: '/discussions'
+      fullPath: '/organiser/discussions/'
+      preLoaderRoute: typeof OrganiserDiscussionsIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/courses/': {
+      id: '/organiser/courses/'
+      path: '/courses'
+      fullPath: '/organiser/courses/'
+      preLoaderRoute: typeof OrganiserCoursesIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/content-library/': {
+      id: '/organiser/content-library/'
+      path: '/content-library'
+      fullPath: '/organiser/content-library/'
+      preLoaderRoute: typeof OrganiserContentLibraryIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/batches/': {
+      id: '/organiser/batches/'
+      path: '/batches'
+      fullPath: '/organiser/batches/'
+      preLoaderRoute: typeof OrganiserBatchesIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/assessments/': {
+      id: '/organiser/assessments/'
+      path: '/assessments'
+      fullPath: '/organiser/assessments/'
+      preLoaderRoute: typeof OrganiserAssessmentsIndexRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
+    '/organiser/courses/$courseId': {
+      id: '/organiser/courses/$courseId'
+      path: '/courses/$courseId'
+      fullPath: '/organiser/courses/$courseId'
+      preLoaderRoute: typeof OrganiserCoursesCourseIdRouteImport
+      parentRoute: typeof OrganiserRoute
+    }
   }
 }
 
@@ -321,105 +440,44 @@ const ManagerRouteRouteWithChildren = ManagerRouteRoute._addFileChildren(
   ManagerRouteRouteChildren,
 )
 
+interface OrganiserRouteChildren {
+  OrganiserIndexRoute: typeof OrganiserIndexRoute
+  OrganiserCoursesCourseIdRoute: typeof OrganiserCoursesCourseIdRoute
+  OrganiserAssessmentsIndexRoute: typeof OrganiserAssessmentsIndexRoute
+  OrganiserBatchesIndexRoute: typeof OrganiserBatchesIndexRoute
+  OrganiserContentLibraryIndexRoute: typeof OrganiserContentLibraryIndexRoute
+  OrganiserCoursesIndexRoute: typeof OrganiserCoursesIndexRoute
+  OrganiserDiscussionsIndexRoute: typeof OrganiserDiscussionsIndexRoute
+  OrganiserNotificationsIndexRoute: typeof OrganiserNotificationsIndexRoute
+  OrganiserReportsIndexRoute: typeof OrganiserReportsIndexRoute
+  OrganiserSettingsIndexRoute: typeof OrganiserSettingsIndexRoute
+  OrganiserStudentsIndexRoute: typeof OrganiserStudentsIndexRoute
+  OrganiserVideoLessonsIndexRoute: typeof OrganiserVideoLessonsIndexRoute
+}
+
+const OrganiserRouteChildren: OrganiserRouteChildren = {
+  OrganiserIndexRoute: OrganiserIndexRoute,
+  OrganiserCoursesCourseIdRoute: OrganiserCoursesCourseIdRoute,
+  OrganiserAssessmentsIndexRoute: OrganiserAssessmentsIndexRoute,
+  OrganiserBatchesIndexRoute: OrganiserBatchesIndexRoute,
+  OrganiserContentLibraryIndexRoute: OrganiserContentLibraryIndexRoute,
+  OrganiserCoursesIndexRoute: OrganiserCoursesIndexRoute,
+  OrganiserDiscussionsIndexRoute: OrganiserDiscussionsIndexRoute,
+  OrganiserNotificationsIndexRoute: OrganiserNotificationsIndexRoute,
+  OrganiserReportsIndexRoute: OrganiserReportsIndexRoute,
+  OrganiserSettingsIndexRoute: OrganiserSettingsIndexRoute,
+  OrganiserStudentsIndexRoute: OrganiserStudentsIndexRoute,
+  OrganiserVideoLessonsIndexRoute: OrganiserVideoLessonsIndexRoute,
+}
+
+const OrganiserRouteWithChildren = OrganiserRoute._addFileChildren(
+  OrganiserRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ManagerRouteRoute: ManagerRouteRouteWithChildren,
-    '/trainer/': {
-      id: '/trainer/'
-      path: '/'
-      fullPath: '/trainer/'
-      preLoaderRoute: typeof TrainerIndexRouteImport
-      parentRoute: typeof TrainerRoute
-    }
-    '/trainer/students/': {
-      id: '/trainer/students/'
-      path: '/students'
-      fullPath: '/trainer/students/'
-      preLoaderRoute: typeof TrainerStudentsIndexRouteImport
-      parentRoute: typeof TrainerRoute
-    }
-    '/trainer/reports/': {
-      id: '/trainer/reports/'
-      path: '/reports'
-      fullPath: '/trainer/reports/'
-      preLoaderRoute: typeof TrainerReportsIndexRouteImport
-      parentRoute: typeof TrainerRoute
-    }
-    '/trainer/notifications/': {
-      id: '/trainer/notifications/'
-      path: '/notifications'
-      fullPath: '/trainer/notifications/'
-      preLoaderRoute: typeof TrainerNotificationsIndexRouteImport
-      parentRoute: typeof TrainerRoute
-    }
-    '/trainer/discussions/': {
-      id: '/trainer/discussions/'
-      path: '/discussions'
-      fullPath: '/trainer/discussions/'
-      preLoaderRoute: typeof TrainerDiscussionsIndexRouteImport
-      parentRoute: typeof TrainerRoute
-    }
-    '/trainer/courses/': {
-      id: '/trainer/courses/'
-      path: '/courses'
-      fullPath: '/trainer/courses/'
-      preLoaderRoute: typeof TrainerCoursesIndexRouteImport
-      parentRoute: typeof TrainerRoute
-    }
-    '/trainer/batches/': {
-      id: '/trainer/batches/'
-      path: '/batches'
-      fullPath: '/trainer/batches/'
-      preLoaderRoute: typeof TrainerBatchesIndexRouteImport
-      parentRoute: typeof TrainerRoute
-    }
-    '/trainer/assessments/': {
-      id: '/trainer/assessments/'
-      path: '/assessments'
-      fullPath: '/trainer/assessments/'
-      preLoaderRoute: typeof TrainerAssessmentsIndexRouteImport
-      parentRoute: typeof TrainerRoute
-    }
-    '/trainer/courses/$courseId': {
-      id: '/trainer/courses/$courseId'
-      path: '/courses/$courseId'
-      fullPath: '/trainer/courses/$courseId'
-      preLoaderRoute: typeof TrainerCoursesCourseIdRouteImport
-      parentRoute: typeof TrainerRoute
-    }
-  }
-}
-
-interface TrainerRouteChildren {
-  TrainerIndexRoute: typeof TrainerIndexRoute
-  TrainerCoursesCourseIdRoute: typeof TrainerCoursesCourseIdRoute
-  TrainerAssessmentsIndexRoute: typeof TrainerAssessmentsIndexRoute
-  TrainerBatchesIndexRoute: typeof TrainerBatchesIndexRoute
-  TrainerCoursesIndexRoute: typeof TrainerCoursesIndexRoute
-  TrainerDiscussionsIndexRoute: typeof TrainerDiscussionsIndexRoute
-  TrainerNotificationsIndexRoute: typeof TrainerNotificationsIndexRoute
-  TrainerReportsIndexRoute: typeof TrainerReportsIndexRoute
-  TrainerStudentsIndexRoute: typeof TrainerStudentsIndexRoute
-}
-
-const TrainerRouteChildren: TrainerRouteChildren = {
-  TrainerIndexRoute: TrainerIndexRoute,
-  TrainerCoursesCourseIdRoute: TrainerCoursesCourseIdRoute,
-  TrainerAssessmentsIndexRoute: TrainerAssessmentsIndexRoute,
-  TrainerBatchesIndexRoute: TrainerBatchesIndexRoute,
-  TrainerCoursesIndexRoute: TrainerCoursesIndexRoute,
-  TrainerDiscussionsIndexRoute: TrainerDiscussionsIndexRoute,
-  TrainerNotificationsIndexRoute: TrainerNotificationsIndexRoute,
-  TrainerReportsIndexRoute: TrainerReportsIndexRoute,
-  TrainerStudentsIndexRoute: TrainerStudentsIndexRoute,
-}
-
-const TrainerRouteWithChildren =
-  TrainerRoute._addFileChildren(TrainerRouteChildren)
-
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  TrainerRoute: TrainerRouteWithChildren,
+  OrganiserRoute: OrganiserRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
