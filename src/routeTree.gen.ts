@@ -9,38 +9,169 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrainerRouteImport } from './routes/trainer'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TrainerIndexRouteImport } from './routes/trainer/index'
+import { Route as TrainerStudentsIndexRouteImport } from './routes/trainer/students/index'
+import { Route as TrainerReportsIndexRouteImport } from './routes/trainer/reports/index'
+import { Route as TrainerNotificationsIndexRouteImport } from './routes/trainer/notifications/index'
+import { Route as TrainerDiscussionsIndexRouteImport } from './routes/trainer/discussions/index'
+import { Route as TrainerCoursesIndexRouteImport } from './routes/trainer/courses/index'
+import { Route as TrainerBatchesIndexRouteImport } from './routes/trainer/batches/index'
+import { Route as TrainerAssessmentsIndexRouteImport } from './routes/trainer/assessments/index'
+import { Route as TrainerCoursesCourseIdRouteImport } from './routes/trainer/courses/$courseId'
 
+const TrainerRoute = TrainerRouteImport.update({
+  id: '/trainer',
+  path: '/trainer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrainerIndexRoute = TrainerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TrainerRoute,
+} as any)
+const TrainerStudentsIndexRoute = TrainerStudentsIndexRouteImport.update({
+  id: '/students/',
+  path: '/students/',
+  getParentRoute: () => TrainerRoute,
+} as any)
+const TrainerReportsIndexRoute = TrainerReportsIndexRouteImport.update({
+  id: '/reports/',
+  path: '/reports/',
+  getParentRoute: () => TrainerRoute,
+} as any)
+const TrainerNotificationsIndexRoute =
+  TrainerNotificationsIndexRouteImport.update({
+    id: '/notifications/',
+    path: '/notifications/',
+    getParentRoute: () => TrainerRoute,
+  } as any)
+const TrainerDiscussionsIndexRoute = TrainerDiscussionsIndexRouteImport.update({
+  id: '/discussions/',
+  path: '/discussions/',
+  getParentRoute: () => TrainerRoute,
+} as any)
+const TrainerCoursesIndexRoute = TrainerCoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => TrainerRoute,
+} as any)
+const TrainerBatchesIndexRoute = TrainerBatchesIndexRouteImport.update({
+  id: '/batches/',
+  path: '/batches/',
+  getParentRoute: () => TrainerRoute,
+} as any)
+const TrainerAssessmentsIndexRoute = TrainerAssessmentsIndexRouteImport.update({
+  id: '/assessments/',
+  path: '/assessments/',
+  getParentRoute: () => TrainerRoute,
+} as any)
+const TrainerCoursesCourseIdRoute = TrainerCoursesCourseIdRouteImport.update({
+  id: '/courses/$courseId',
+  path: '/courses/$courseId',
+  getParentRoute: () => TrainerRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/trainer': typeof TrainerRouteWithChildren
+  '/trainer/': typeof TrainerIndexRoute
+  '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
+  '/trainer/assessments/': typeof TrainerAssessmentsIndexRoute
+  '/trainer/batches/': typeof TrainerBatchesIndexRoute
+  '/trainer/courses/': typeof TrainerCoursesIndexRoute
+  '/trainer/discussions/': typeof TrainerDiscussionsIndexRoute
+  '/trainer/notifications/': typeof TrainerNotificationsIndexRoute
+  '/trainer/reports/': typeof TrainerReportsIndexRoute
+  '/trainer/students/': typeof TrainerStudentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/trainer': typeof TrainerIndexRoute
+  '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
+  '/trainer/assessments': typeof TrainerAssessmentsIndexRoute
+  '/trainer/batches': typeof TrainerBatchesIndexRoute
+  '/trainer/courses': typeof TrainerCoursesIndexRoute
+  '/trainer/discussions': typeof TrainerDiscussionsIndexRoute
+  '/trainer/notifications': typeof TrainerNotificationsIndexRoute
+  '/trainer/reports': typeof TrainerReportsIndexRoute
+  '/trainer/students': typeof TrainerStudentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/trainer': typeof TrainerRouteWithChildren
+  '/trainer/': typeof TrainerIndexRoute
+  '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
+  '/trainer/assessments/': typeof TrainerAssessmentsIndexRoute
+  '/trainer/batches/': typeof TrainerBatchesIndexRoute
+  '/trainer/courses/': typeof TrainerCoursesIndexRoute
+  '/trainer/discussions/': typeof TrainerDiscussionsIndexRoute
+  '/trainer/notifications/': typeof TrainerNotificationsIndexRoute
+  '/trainer/reports/': typeof TrainerReportsIndexRoute
+  '/trainer/students/': typeof TrainerStudentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/trainer'
+    | '/trainer/'
+    | '/trainer/courses/$courseId'
+    | '/trainer/assessments/'
+    | '/trainer/batches/'
+    | '/trainer/courses/'
+    | '/trainer/discussions/'
+    | '/trainer/notifications/'
+    | '/trainer/reports/'
+    | '/trainer/students/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/trainer'
+    | '/trainer/courses/$courseId'
+    | '/trainer/assessments'
+    | '/trainer/batches'
+    | '/trainer/courses'
+    | '/trainer/discussions'
+    | '/trainer/notifications'
+    | '/trainer/reports'
+    | '/trainer/students'
+  id:
+    | '__root__'
+    | '/'
+    | '/trainer'
+    | '/trainer/'
+    | '/trainer/courses/$courseId'
+    | '/trainer/assessments/'
+    | '/trainer/batches/'
+    | '/trainer/courses/'
+    | '/trainer/discussions/'
+    | '/trainer/notifications/'
+    | '/trainer/reports/'
+    | '/trainer/students/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TrainerRoute: typeof TrainerRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trainer': {
+      id: '/trainer'
+      path: '/trainer'
+      fullPath: '/trainer'
+      preLoaderRoute: typeof TrainerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +179,102 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trainer/': {
+      id: '/trainer/'
+      path: '/'
+      fullPath: '/trainer/'
+      preLoaderRoute: typeof TrainerIndexRouteImport
+      parentRoute: typeof TrainerRoute
+    }
+    '/trainer/students/': {
+      id: '/trainer/students/'
+      path: '/students'
+      fullPath: '/trainer/students/'
+      preLoaderRoute: typeof TrainerStudentsIndexRouteImport
+      parentRoute: typeof TrainerRoute
+    }
+    '/trainer/reports/': {
+      id: '/trainer/reports/'
+      path: '/reports'
+      fullPath: '/trainer/reports/'
+      preLoaderRoute: typeof TrainerReportsIndexRouteImport
+      parentRoute: typeof TrainerRoute
+    }
+    '/trainer/notifications/': {
+      id: '/trainer/notifications/'
+      path: '/notifications'
+      fullPath: '/trainer/notifications/'
+      preLoaderRoute: typeof TrainerNotificationsIndexRouteImport
+      parentRoute: typeof TrainerRoute
+    }
+    '/trainer/discussions/': {
+      id: '/trainer/discussions/'
+      path: '/discussions'
+      fullPath: '/trainer/discussions/'
+      preLoaderRoute: typeof TrainerDiscussionsIndexRouteImport
+      parentRoute: typeof TrainerRoute
+    }
+    '/trainer/courses/': {
+      id: '/trainer/courses/'
+      path: '/courses'
+      fullPath: '/trainer/courses/'
+      preLoaderRoute: typeof TrainerCoursesIndexRouteImport
+      parentRoute: typeof TrainerRoute
+    }
+    '/trainer/batches/': {
+      id: '/trainer/batches/'
+      path: '/batches'
+      fullPath: '/trainer/batches/'
+      preLoaderRoute: typeof TrainerBatchesIndexRouteImport
+      parentRoute: typeof TrainerRoute
+    }
+    '/trainer/assessments/': {
+      id: '/trainer/assessments/'
+      path: '/assessments'
+      fullPath: '/trainer/assessments/'
+      preLoaderRoute: typeof TrainerAssessmentsIndexRouteImport
+      parentRoute: typeof TrainerRoute
+    }
+    '/trainer/courses/$courseId': {
+      id: '/trainer/courses/$courseId'
+      path: '/courses/$courseId'
+      fullPath: '/trainer/courses/$courseId'
+      preLoaderRoute: typeof TrainerCoursesCourseIdRouteImport
+      parentRoute: typeof TrainerRoute
+    }
   }
 }
 
+interface TrainerRouteChildren {
+  TrainerIndexRoute: typeof TrainerIndexRoute
+  TrainerCoursesCourseIdRoute: typeof TrainerCoursesCourseIdRoute
+  TrainerAssessmentsIndexRoute: typeof TrainerAssessmentsIndexRoute
+  TrainerBatchesIndexRoute: typeof TrainerBatchesIndexRoute
+  TrainerCoursesIndexRoute: typeof TrainerCoursesIndexRoute
+  TrainerDiscussionsIndexRoute: typeof TrainerDiscussionsIndexRoute
+  TrainerNotificationsIndexRoute: typeof TrainerNotificationsIndexRoute
+  TrainerReportsIndexRoute: typeof TrainerReportsIndexRoute
+  TrainerStudentsIndexRoute: typeof TrainerStudentsIndexRoute
+}
+
+const TrainerRouteChildren: TrainerRouteChildren = {
+  TrainerIndexRoute: TrainerIndexRoute,
+  TrainerCoursesCourseIdRoute: TrainerCoursesCourseIdRoute,
+  TrainerAssessmentsIndexRoute: TrainerAssessmentsIndexRoute,
+  TrainerBatchesIndexRoute: TrainerBatchesIndexRoute,
+  TrainerCoursesIndexRoute: TrainerCoursesIndexRoute,
+  TrainerDiscussionsIndexRoute: TrainerDiscussionsIndexRoute,
+  TrainerNotificationsIndexRoute: TrainerNotificationsIndexRoute,
+  TrainerReportsIndexRoute: TrainerReportsIndexRoute,
+  TrainerStudentsIndexRoute: TrainerStudentsIndexRoute,
+}
+
+const TrainerRouteWithChildren =
+  TrainerRoute._addFileChildren(TrainerRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TrainerRoute: TrainerRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

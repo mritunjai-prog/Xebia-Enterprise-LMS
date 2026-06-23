@@ -18,13 +18,13 @@ export function CursorTrail() {
     const mouse = { x: 0, y: 0, active: false };
     const points = [];
     const maxPoints = 10; // Length of the watery trail
-    
+
     // Dynamic resizing
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-    
+
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
@@ -63,11 +63,11 @@ export function CursorTrail() {
       if (points.length > 0) {
         // Draw watery trail
         ctx.beginPath();
-        
+
         // Update point positions (simulate inertia and fluid motion)
         for (let i = 0; i < points.length; i++) {
           const pt = points[i];
-          
+
           // Interpolate towards the next point for smooth liquid curves
           if (i < points.length - 1) {
             const nextPt = points[i + 1];
@@ -115,14 +115,14 @@ export function CursorTrail() {
           const pt = points[i];
           const ratio = i / points.length;
           const size = pt.size * ratio * (1 - pt.age / 100);
-          
+
           if (size <= 0) continue;
 
           // Water drop gradient
           const grad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, size);
           grad.addColorStop(0, "rgba(255, 255, 255, 0.6)");
           grad.addColorStop(0.3, "rgba(167, 139, 250, 0.4)"); // violet-400
-          grad.addColorStop(0.7, "rgba(59, 130, 246, 0.15)");  // blue-500
+          grad.addColorStop(0.7, "rgba(59, 130, 246, 0.15)"); // blue-500
           grad.addColorStop(1, "rgba(59, 130, 246, 0)");
 
           ctx.fillStyle = grad;
