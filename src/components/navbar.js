@@ -41,13 +41,7 @@ export function Navbar() {
                   suppressHydrationWarning: true,
                   src: logoPurple,
                   alt: "Xebia",
-                  className: "h-9 w-9 rounded-full dark:hidden",
-                }),
-                _jsx("img", {
-                  suppressHydrationWarning: true,
-                  src: logoWhite,
-                  alt: "Xebia",
-                  className: "hidden h-9 w-9 rounded-full bg-white p-0.5 dark:block",
+                  className: "h-9 w-9 rounded-full dark:brightness-0 dark:invert",
                 }),
                 _jsxs("span", {
                   className: "hidden sm:block font-display font-bold text-sm leading-tight",
