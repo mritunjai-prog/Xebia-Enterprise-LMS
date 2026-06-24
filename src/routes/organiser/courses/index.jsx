@@ -81,6 +81,7 @@ function CourseListView() {
   const [newTitle, setNewTitle] = useState("");
   const [newCode, setNewCode] = useState("");
   const [newSubject, setNewSubject] = useState("");
+  const [newCategory, setNewCategory] = useState("");
   const [newScope, setNewScope] = useState("");
   const [newDuration, setNewDuration] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -114,6 +115,7 @@ function CourseListView() {
       setNewTitle("");
       setNewCode("");
       setNewSubject("");
+      setNewCategory("");
       setNewScope("");
       setNewDuration("");
 
@@ -420,6 +422,25 @@ function CourseListView() {
                           <option value="Corporate Learning Hub">Corporate Hub</option>
                         </select>
                       </div>
+                      <div>
+                        <label className="text-xs font-bold text-muted-foreground uppercase block mb-1">Category</label>
+                        <select
+                          required
+                          value={newCategory}
+                          onChange={(e) => setNewCategory(e.target.value)}
+                          className="w-full px-3 py-2 border rounded-xl bg-background outline-none text-sm cursor-pointer focus:border-primary"
+                        >
+                          <option value="" disabled>Select Category</option>
+                          <option value="Programming">Programming</option>
+                          <option value="Web Development">Web Development</option>
+                          <option value="Architecture">Architecture</option>
+                          <option value="Data Science">Data Science</option>
+                          <option value="DevOps">DevOps</option>
+                          <option value="Soft Skills">Soft Skills</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4">
                       <div>
                         <label className="text-xs font-bold text-muted-foreground uppercase block mb-1">Duration (Hours)</label>
                         <input

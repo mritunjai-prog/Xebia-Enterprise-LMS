@@ -100,8 +100,8 @@ export function Navbar() {
                   ],
                 }),
                 _jsx(ThemeToggle, {}),
-                _jsx("a", {
-                  href: "#signin",
+                _jsx(Link, {
+                  to: "/login",
                   className:
                     "ring-focus hidden md:inline-flex h-10 items-center rounded-full px-4 text-sm font-medium hover:bg-secondary transition",
                   children: "Sign In",
@@ -153,8 +153,8 @@ export function Navbar() {
                   _jsxs("li", {
                     className: "grid grid-cols-2 gap-2 pt-2",
                     children: [
-                      _jsx("a", {
-                        href: "#signin",
+                      _jsx(Link, {
+                        to: "/login",
                         className:
                           "ring-focus h-11 grid place-items-center rounded-xl border font-medium",
                         children: "Sign In",

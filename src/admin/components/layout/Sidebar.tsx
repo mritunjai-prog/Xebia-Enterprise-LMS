@@ -114,6 +114,12 @@ export function Sidebar() {
         <div className="nav-section">Learning</div>
         <NavItem 
           icon={<IconCourses className="nav-icon" />} 
+          label="Categories" 
+          isActive={activeSidebarItem === 'Categories'}
+          onClick={() => handleNavClick('Categories')}
+        />
+        <NavItem 
+          icon={<IconCourses className="nav-icon" />} 
           label="Courses" 
           hasChildren
           isOpen={openSections.courses}
