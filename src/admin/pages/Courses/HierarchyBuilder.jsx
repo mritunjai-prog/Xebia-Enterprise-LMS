@@ -32,8 +32,8 @@ export default function HierarchyBuilder() {
   const router = useRouter();
   const { addToast } = useAppStore();
   const [modules, setModules] = useState(initialModules);
-  const [expandedModules, setExpandedModules] = useState<string[]>(['m1']);
-  const [expandedSubmodules, setExpandedSubmodules] = useState<string[]>(['sm1']);
+  const [expandedModules, setExpandedModules] = useState(['m1']);
+  const [expandedSubmodules, setExpandedSubmodules] = useState(['sm1']);
 
   // Modals State
   const [isModuleModalOpen, setIsModuleModalOpen] = useState(false);
@@ -41,23 +41,23 @@ export default function HierarchyBuilder() {
   const [isContentModalOpen, setIsContentModalOpen] = useState(false);
   
   // Target IDs for adding children
-  const [targetModuleId, setTargetModuleId] = useState<string | null>(null);
-  const [targetSubmoduleId, setTargetSubmoduleId] = useState<string | null>(null);
+  const [targetModuleId, setTargetModuleId] = useState(null);
+  const [targetSubmoduleId, setTargetSubmoduleId] = useState(null);
 
   // Form States mapping to Entity logic
   const [moduleForm, setModuleForm] = useState({ title: '', description: '', orderIndex: 1 });
   const [submoduleForm, setSubmoduleForm] = useState({ title: '', description: '', metaTitle: '', metaDescription: '', canonicalUrl: '' });
   const [contentForm, setContentForm] = useState({ type: 'VIDEO', title: '', videoUrl: '', textContent: '', documentUrl: '' });
 
-  const toggleModule = (id: string) => {
+  const toggleModule = (id) => {
     setExpandedModules(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
 
-  const toggleSubmodule = (id: string) => {
+  const toggleSubmodule = (id) => {
     setExpandedSubmodules(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
 
-  const handleAddModule = (e: React.FormEvent) => {
+  const handleAddModule = (e) => {
     e.preventDefault();
     const newModule = {
       id: `m${Date.now()}`,
@@ -70,7 +70,7 @@ export default function HierarchyBuilder() {
     addToast('Module Created Successfully', 'success');
   };
 
-  const handleAddSubmodule = (e: React.FormEvent) => {
+  const handleAddSubmodule = (e) => {
     e.preventDefault();
     if (!targetModuleId) return;
     
@@ -92,7 +92,7 @@ export default function HierarchyBuilder() {
     addToast('Submodule Initialized with SEO Metadata', 'success');
   };
 
-  const handleAddContent = (e: React.FormEvent) => {
+  const handleAddContent = (e) => {
     e.preventDefault();
     if (!targetModuleId || !targetSubmoduleId) return;
     
@@ -121,7 +121,7 @@ export default function HierarchyBuilder() {
     addToast('Content Block Attached to Submodule', 'success');
   };
 
-  const getContentIcon = (type: string) => {
+  const getContentIcon = (type) => {
     switch(type) {
       case 'VIDEO': return <Video className="w-4 h-4 text-red-500" />;
       case 'TEXT': return <FileText className="w-4 h-4 text-blue-500" />;

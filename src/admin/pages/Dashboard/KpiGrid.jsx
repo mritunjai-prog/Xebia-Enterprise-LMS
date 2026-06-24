@@ -1,23 +1,14 @@
 import React from 'react';
-import { KPIStats } from '../../types';
+
 import { clsx } from 'clsx';
 import {
   IconOrganizations, IconUsers, IconRoles, IconCourses, 
   IconBatch, IconAssessments, IconApprovals, IconReports, IconSettings
 } from '../../components/Icons';
 
-interface KpiGridProps {
-  data: KPIStats;
-}
 
-const KpiCard = ({ icon, color, badge, title, value, isNegativeMode = false }: {
-  icon: React.ReactNode;
-  color: 'purple' | 'emerald' | 'orange';
-  badge: { value: number; isNegative?: boolean };
-  title: string;
-  value: string | number;
-  isNegativeMode?: boolean;
-}) => {
+
+const KpiCard = ({ icon, color, badge, title, value, isNegativeMode = false }) => {
   const isUp = badge.isNegative ? false : true; 
   // For pending approvals, an increase could be considered "down" theoretically but the HTML showed it as down visually for pending approvals.
   // Wait, let's just stick to what the original HTML did dynamically using up/down classes.
@@ -39,7 +30,7 @@ const KpiCard = ({ icon, color, badge, title, value, isNegativeMode = false }: {
   );
 };
 
-export const KpiGrid: React.FC<KpiGridProps> = ({ data }) => {
+export const KpiGrid = ({ data }) => {
   return (
     <div className="kpi-grid">
       <KpiCard 

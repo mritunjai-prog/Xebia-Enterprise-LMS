@@ -2,9 +2,7 @@ import React from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
-interface AppShellProps {
-  children: React.ReactNode;
-}
+
 
 export function AppShell({ children }: AppShellProps) {
   return (

@@ -25,7 +25,7 @@ export default function Organizations() {
     return org.type === 'Company';
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     await createOrganization(formData);
     setIsModalOpen(false);

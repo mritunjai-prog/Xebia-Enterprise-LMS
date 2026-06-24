@@ -7,18 +7,9 @@ import {
 } from '../Icons';
 import { useAppStore } from '../../store/useAppStore';
 
-interface NavItemProps {
-  icon: React.ReactNode;
-  label: string;
-  badge?: string;
-  badgeColor?: 'orange' | 'green';
-  hasChildren?: boolean;
-  isActive?: boolean;
-  isOpen?: boolean;
-  onClick?: () => void;
-}
 
-const NavItem: React.FC<NavItemProps> = ({ icon, label, badge, badgeColor, hasChildren, isActive, isOpen, onClick }) => (
+
+const NavItem = ({ icon, label, badge, badgeColor, hasChildren, isActive, isOpen, onClick }) => (
   <div onClick={onClick} className={clsx("nav-item", isActive && "active")}>
     {icon}
     {label}
@@ -31,7 +22,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, badge, badgeColor, hasCh
   </div>
 );
 
-const NavChild: React.FC<{ label: string; isActive?: boolean; onClick?: () => void }> = ({ label, isActive, onClick }) => (
+const NavChild = ({ label, isActive, onClick }) => (
   <div onClick={onClick} className={clsx("nav-child", isActive && "active")}>
     {label}
   </div>
@@ -39,17 +30,17 @@ const NavChild: React.FC<{ label: string; isActive?: boolean; onClick?: () => vo
 
 export function Sidebar() {
   const { activeSidebarItem, setActiveSidebarItem } = useAppStore();
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+  const [openSections, setOpenSections] = useState({
     orgs: true,
     courses: true
   });
 
-  const toggleSection = (key: string, e?: React.MouseEvent) => {
+  const toggleSection = (key, e) => {
     if (e) e.stopPropagation();
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleNavClick = (label: string, isParent: boolean = false, key?: string) => {
+  const handleNavClick = (label, isParent = false, key) => {
     setActiveSidebarItem(label);
     if (isParent && key) {
       if (!openSections[key]) {

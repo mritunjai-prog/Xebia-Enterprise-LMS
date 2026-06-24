@@ -1,14 +1,11 @@
 import React from 'react';
-import { Organization, ApprovalRequest } from '../../types';
+
 import { clsx } from 'clsx';
 import { useAppStore } from '../../store/useAppStore';
 
-interface BottomRowProps {
-  orgs: Organization[];
-  approvals: ApprovalRequest[];
-}
 
-export const BottomRow: React.FC<BottomRowProps> = ({ orgs, approvals }) => {
+
+export const BottomRow = ({ orgs, approvals }) => {
   const { setActiveSidebarItem, addToast } = useAppStore();
   
   return (

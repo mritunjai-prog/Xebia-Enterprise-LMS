@@ -1,55 +1,10 @@
 import { create } from 'zustand';
-import { DashboardData, Organization, User, ApprovalRequest } from '../types';
+
 import { api } from '../services/api';
 
-interface Toast {
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'info';
-}
 
-interface AppState {
-  // UI State
-  isSidebarCollapsed: boolean;
-  activeTenant: string;
-  activeSidebarItem: string;
-  toasts: Toast[];
 
-  // Modal States
-  modals: {
-    addOrg: boolean;
-    quickCreate: boolean;
-    addUser: boolean;
-  };
-
-  // Data State
-  dashboardData: DashboardData | null;
-  organizations: Organization[];
-  users: User[];
-  approvals: ApprovalRequest[];
-  isLoading: boolean;
-  isLoadingOrgs: boolean;
-  isLoadingUsers: boolean;
-
-  // Actions
-  toggleSidebar: () => void;
-  setTenant: (tenant: string) => void;
-  setActiveSidebarItem: (item: string) => void;
-  addToast: (message: string, type?: 'success' | 'error' | 'info') => void;
-  removeToast: (id: string) => void;
-  openModal: (modal: keyof AppState['modals']) => void;
-  closeModal: (modal: keyof AppState['modals']) => void;
-
-  // Data Actions
-  fetchDashboardData: () => Promise<void>;
-  fetchOrganizations: () => Promise<void>;
-  fetchUsers: () => Promise<void>;
-  processApproval: (id: string, action: 'approve' | 'reject') => Promise<void>;
-  createOrganization: (org: Partial<Organization>) => Promise<void>;
-  createUser: (user: Partial<User>) => Promise<void>;
-}
-
-export const useAppStore = create<AppState>((set, get) => ({
+export const useAppStore = create((set, get) => ({
   isSidebarCollapsed: false,
   activeTenant: 'Global · All Tenants',
   activeSidebarItem: 'Dashboard',

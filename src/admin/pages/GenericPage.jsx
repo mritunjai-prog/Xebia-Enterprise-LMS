@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function GenericPage({ title, subtitle }: { title: string, subtitle?: string }) {
+export default function GenericPage({ title, subtitle }) {
   return (
     <>
       <div className="page-header">

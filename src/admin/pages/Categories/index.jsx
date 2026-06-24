@@ -37,7 +37,7 @@ export default function Categories() {
     return matchesTab && matchesSearch;
   });
 
-  const handleEdit = (category: typeof initialCategories[0]) => {
+  const handleEdit = (category) => {
     setFormData(category);
     setIsEditMode(true);
     setIsModalOpen(true);
@@ -49,7 +49,7 @@ export default function Categories() {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (isEditMode) {
       setCategories(categories.map(c => c.id === formData.id ? { ...formData, count: c.count } : c));

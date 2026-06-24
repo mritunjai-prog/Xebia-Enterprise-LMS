@@ -19,7 +19,7 @@ export default function Users() {
     fetchUsers();
   }, [fetchUsers]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     await createUser(formData);
     setIsModalOpen(false);

@@ -1,17 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-}
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+
+export const Modal = ({ isOpen, onClose, title, children }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleEscape = (e) => {
       if (e.key === 'Escape') onClose();
     };
     if (isOpen) {

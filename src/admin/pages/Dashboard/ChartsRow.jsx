@@ -5,7 +5,7 @@ export const ChartsRow = () => {
   const [activeTab, setActiveTab] = useState('Monthly');
   const { addToast } = useAppStore();
 
-  const handleTabClick = (tab: string) => {
+  const handleTabClick = (tab) => {
     setActiveTab(tab);
     if (tab !== 'Monthly') {
       addToast(`${tab} data is being processed, showing latest monthly metrics.`, 'info');

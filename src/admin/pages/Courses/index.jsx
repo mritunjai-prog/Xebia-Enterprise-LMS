@@ -51,17 +51,17 @@ export default function Courses() {
     setIsEditorOpen(true);
   };
 
-  const handleEdit = (course: any) => {
+  const handleEdit = (course) => {
     setFormData({ ...formData, ...course });
     setIsEditMode(true);
     setEditorTab('basic');
     setIsEditorOpen(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (isEditMode) {
-      setCourses(courses.map(c => c.id === formData.id ? { ...formData, enrollments: (c as any).enrollments } : c));
+      setCourses(courses.map(c => c.id === formData.id ? { ...formData, enrollments: (c ).enrollments } : c));
       addToast(`Course "${formData.title}" updated.`, 'success');
     } else {
       const newCourse = { ...formData, id: `C${Math.floor(Math.random() * 900) + 100}`, enrollments: 0, totalViews: 0 };
@@ -71,8 +71,8 @@ export default function Courses() {
     setIsEditorOpen(false);
   };
 
-  const navigateToBuilder = (courseId: string) => {
-    router.navigate({ to: `/admin/courses/builder`, search: { id: courseId } } as any);
+  const navigateToBuilder = (courseId) => {
+    router.navigate({ to: `/admin/courses/builder`, search } );
   };
 
   return (
@@ -141,7 +141,7 @@ export default function Courses() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/20">
-              {filteredCourses.map((course: any) => (
+              {filteredCourses.map((course) => (
                 <tr key={course.id} className="hover:bg-secondary/10 transition-colors group">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
@@ -260,7 +260,7 @@ export default function Courses() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                           <div>
                             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1.5">Category</label>
-                            <select required className="w-full px-4 py-2.5 bg-background border border-border/50 rounded-xl text-sm outline-none focus:border-blue-500 cursor-pointer" value={(formData as any).category || ''} onChange={e => setFormData({...formData, category: e.target.value} as any)}>
+                            <select required className="w-full px-4 py-2.5 bg-background border border-border/50 rounded-xl text-sm outline-none focus:border-blue-500 cursor-pointer" value={(formData ).category || ''} onChange={e => setFormData({...formData, category: e.target.value} )}>
                               <option value="" disabled>Select Category</option>
                               <option value="Programming">Programming</option>
                               <option value="Architecture">Architecture</option>
@@ -286,8 +286,8 @@ export default function Courses() {
                           <div>
                             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1.5">Brand Color</label>
                             <div className="flex gap-3 h-[42px] items-center px-3 bg-background border border-border/50 rounded-xl focus-within:border-blue-500 transition-colors">
-                              <input required type="color" className="h-6 w-6 rounded cursor-pointer border-0 p-0 bg-transparent" value={(formData as any).color || '#3B82F6'} onChange={e => setFormData({...formData, color: e.target.value} as any)} />
-                              <span className="text-sm font-mono text-foreground font-semibold">{(formData as any).color || '#3B82F6'}</span>
+                              <input required type="color" className="h-6 w-6 rounded cursor-pointer border-0 p-0 bg-transparent" value={(formData ).color || '#3B82F6'} onChange={e => setFormData({...formData, color: e.target.value} )} />
+                              <span className="text-sm font-mono text-foreground font-semibold">{(formData ).color || '#3B82F6'}</span>
                             </div>
                           </div>
                         </div>
