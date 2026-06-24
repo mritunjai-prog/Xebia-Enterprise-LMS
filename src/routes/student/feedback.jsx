@@ -1,10 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -31,17 +44,20 @@ function FeedbackPage() {
     <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-500">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Submit Feedback</h1>
-        <p className="text-muted-foreground mt-1">Help us improve by sharing your learning experience.</p>
+        <p className="text-muted-foreground mt-1">
+          Help us improve by sharing your learning experience.
+        </p>
       </div>
 
       <Card className="glass">
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Course & Trainer Feedback</CardTitle>
-            <CardDescription>All feedback is anonymous and used solely for improvement.</CardDescription>
+            <CardDescription>
+              All feedback is anonymous and used solely for improvement.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            
             <div className="space-y-2">
               <Label htmlFor="course">Select Course</Label>
               <Select name="course" required>
@@ -73,8 +89,8 @@ function FeedbackPage() {
                     onMouseLeave={() => setHoverRating(0)}
                     onClick={() => setRating(star)}
                   >
-                    <Star 
-                      className={`w-8 h-8 ${star <= (hoverRating || rating) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} 
+                    <Star
+                      className={`w-8 h-8 ${star <= (hoverRating || rating) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"}`}
                     />
                   </button>
                 ))}
@@ -83,18 +99,21 @@ function FeedbackPage() {
 
             <div className="space-y-2">
               <Label htmlFor="feedback">Detailed Feedback</Label>
-              <Textarea 
-                id="feedback" 
+              <Textarea
+                id="feedback"
                 name="feedback"
-                placeholder="What did you like? What could be improved?" 
+                placeholder="What did you like? What could be improved?"
                 className="min-h-[150px] resize-y"
                 required
               />
             </div>
-
           </CardContent>
           <CardFooter className="bg-muted/30 pt-6">
-            <Button type="submit" className="w-full sm:w-auto btn-hero" disabled={rating === 0}>
+            <Button
+              type="submit"
+              className="w-full sm:w-auto btn-hero transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              disabled={rating === 0}
+            >
               Submit Feedback
             </Button>
           </CardFooter>

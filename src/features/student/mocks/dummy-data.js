@@ -4,6 +4,10 @@ export const studentProfile = {
   role: "Student",
   university: "Xebia University",
   batch: "Batch 2026 - Frontend Engineering",
+  email: "vinit@example.com",
+  id: "S123456",
+  phone: "+1-555-1234",
+  enrollmentDate: "2026-01-10",
 };
 
 export const enrolledCourses = [

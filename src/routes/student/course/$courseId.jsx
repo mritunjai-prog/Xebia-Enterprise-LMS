@@ -16,26 +16,25 @@ export const Route = createFileRoute("/student/course/$courseId")({
 function CourseVideoPlayer() {
   const { courseId } = Route.useParams();
   // For demo purposes, we fallback to the first course if ID doesn't match perfectly.
-  const course = enrolledCourses.find(c => c.id === courseId) || enrolledCourses[0];
+  const course = enrolledCourses.find((c) => c.id === courseId) || enrolledCourses[0];
   const [commentText, setCommentText] = useState("");
 
   const handlePostComment = (e) => {
     e.preventDefault();
-    if(!commentText.trim()) return;
+    if (!commentText.trim()) return;
     toast.success("Comment posted successfully!");
     setCommentText("");
   };
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in duration-500">
-      
       {/* Video Player Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">
           <div className="relative aspect-video rounded-xl overflow-hidden bg-black flex items-center justify-center group shadow-elegant">
-            <img 
-              src={course.image} 
-              alt="Video Thumbnail" 
+            <img
+              src={course.image}
+              alt="Video Thumbnail"
               className="absolute inset-0 w-full h-full object-cover opacity-60"
             />
             <button className="z-10 h-16 w-16 rounded-full bg-primary/90 text-primary-foreground flex items-center justify-center transform group-hover:scale-110 transition-transform">
@@ -48,10 +47,12 @@ function CourseVideoPlayer() {
               </div>
             </div>
           </div>
-          
+
           <div>
             <h1 className="text-2xl font-bold tracking-tight">{course.title}</h1>
-            <p className="text-muted-foreground text-sm mt-1">Current Module: {course.lastWatched}</p>
+            <p className="text-muted-foreground text-sm mt-1">
+              Current Module: {course.lastWatched}
+            </p>
           </div>
 
           <Card className="glass">
@@ -62,14 +63,13 @@ function CourseVideoPlayer() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              
               <form onSubmit={handlePostComment} className="flex gap-3">
                 <Avatar className="h-10 w-10 border">
                   <AvatarImage src="https://i.pravatar.cc/150?u=vinit" />
                   <AvatarFallback>VN</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 space-y-2">
-                  <Textarea 
+                  <Textarea
                     placeholder="Ask a question or share your thoughts..."
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
@@ -122,7 +122,6 @@ function CourseVideoPlayer() {
                   </div>
                 ))}
               </div>
-
             </CardContent>
           </Card>
         </div>
@@ -149,18 +148,31 @@ function CourseVideoPlayer() {
               <div className="pt-4 mt-4 border-t border-border/50 space-y-2">
                 <h3 className="font-medium text-sm mb-3">Module List</h3>
                 {[1, 2, 3, 4, 5].map((idx) => (
-                  <div 
-                    key={idx} 
+                  <div
+                    key={idx}
                     className={`p-3 rounded-lg border text-sm flex items-center justify-between cursor-pointer transition-colors ${
-                      idx === 3 ? 'bg-primary/10 border-primary/30 text-primary font-medium' : 
-                      idx < 3 ? 'bg-muted/30 border-border text-muted-foreground' : 'hover:bg-muted/50 border-transparent'
+                      idx === 3
+                        ? "bg-primary/10 border-primary/30 text-primary font-medium"
+                        : idx < 3
+                          ? "bg-muted/30 border-border text-muted-foreground"
+                          : "hover:bg-muted/50 border-transparent"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      {idx < 3 ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <PlayCircle className="h-4 w-4" />}
-                      <span>Module {idx}: {idx === 3 ? course.lastWatched : `Topic ${idx}`}</span>
+                      {idx < 3 ? (
+                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <PlayCircle className="h-4 w-4" />
+                      )}
+                      <span>
+                        Module {idx}: {idx === 3 ? course.lastWatched : `Topic ${idx}`}
+                      </span>
                     </div>
-                    {idx === 3 && <span className="text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full">Playing</span>}
+                    {idx === 3 && (
+                      <span className="text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                        Playing
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>

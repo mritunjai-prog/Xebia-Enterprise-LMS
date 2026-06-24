@@ -1,41 +1,62 @@
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, User, Menu } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { studentProfile, notifications } from "@/features/student/mocks/dummy-data";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@tanstack/react-router";
+import { useDarkMode } from "@/features/student/hooks/use-dark-mode";
 
-export function StudentNavbar() {
-  const unreadCount = notifications.filter(n => !n.read).length;
+
+export function StudentNavbar({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen }) {
+  const unreadCount = notifications.filter((n) => !n.read).length;
+  const isDark = useDarkMode();
+  const initials = studentProfile.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-md transition-all sm:px-6">
-      <div className="flex items-center gap-2 mr-2">
-        <SidebarTrigger className="-ml-1" />
-      </div>
+      {/* Sidebar Toggle & Mobile Logo */}
+      <div className="flex items-center gap-2 mr-4">
+        <button
+          onClick={() => {
+            if (window.innerWidth < 768) {
+              setIsMobileOpen(!isMobileOpen);
+            } else {
+              setIsCollapsed(!isCollapsed);
+            }
+          }}
+          className="flex h-10 w-10 items-center justify-center rounded-full glass hover:scale-105 transition-transform focus:outline-none"
+          aria-label="Toggle Sidebar"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
 
-      {/* Logo for mobile/tablet where sidebar might be collapsed */}
-      <div className="flex md:hidden items-center gap-2 mr-4">
-        <Link to="/student" className="flex items-center gap-2">
-          <img
-            src="/logo-purple.png"
-            alt="Xebia"
-            className="h-8 w-8 rounded-full dark:brightness-0 dark:invert"
-          />
-          <span className="font-display font-bold text-sm leading-tight text-primary">
-            Xebia
-          </span>
-        </Link>
+        <div className="flex md:hidden items-center gap-2">
+          <Link
+            to="/student"
+            className="flex items-center gap-2"
+            style={{ textDecoration: "none" }}
+          >
+            <img
+              src={isDark ? "/logo-white.png" : "/logo-purple.png"}
+              alt="Xebia Logo"
+              className="h-8 w-auto object-contain"
+            />
+            <span className="font-bold tracking-wide text-sm text-foreground">
+              Xebia LMS
+            </span>
+          </Link>
+        </div>
       </div>
 
       {/* Search Bar */}
@@ -54,7 +75,10 @@ export function StudentNavbar() {
         {/* Notifications Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="relative flex h-10 w-10 items-center justify-center rounded-full glass hover:scale-105 transition-transform ring-focus">
+            <button
+              className="relative flex h-10 w-10 items-center justify-center rounded-full glass hover:scale-105 transition-transform ring-focus"
+              aria-label="Notifications"
+            >
               <Bell className="h-5 w-5" />
               {unreadCount > 0 && (
                 <Badge className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive p-0 text-[10px]">
@@ -64,10 +88,13 @@ export function StudentNavbar() {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <div className="px-3 py-2 font-semibold text-sm">Notifications</div>
             <DropdownMenuSeparator />
             {notifications.slice(0, 3).map((notification) => (
-              <DropdownMenuItem key={notification.id} className="flex flex-col items-start gap-1 p-3">
+              <DropdownMenuItem
+                key={notification.id}
+                className="flex flex-col items-start gap-1 p-3"
+              >
                 <div className="flex w-full items-center justify-between gap-2">
                   <span className="font-semibold text-sm">{notification.title}</span>
                   <span className="text-xs text-muted-foreground">{notification.timestamp}</span>
@@ -76,44 +103,51 @@ export function StudentNavbar() {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="w-full text-center text-sm font-medium text-primary cursor-pointer justify-center">
-              View all notifications
+            <DropdownMenuItem asChild className="cursor-pointer justify-center">
+              <Link
+                to="/student/notifications"
+                className="w-full text-center text-sm font-medium text-primary"
+              >
+                View all notifications
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         <ThemeToggle />
 
-        {/* User Profile */}
+        {/* User Profile Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 rounded-full outline-none ring-focus p-1 hover:bg-muted/50 transition-colors">
-              <Avatar className="h-9 w-9 border-2 border-primary/20">
-                <AvatarImage src={studentProfile.avatar} alt={studentProfile.name} />
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  {studentProfile.name.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="hidden flex-col items-start text-sm sm:flex mr-2">
-                <span className="font-semibold leading-none">{studentProfile.name}</span>
+            <button
+              className="flex items-center gap-2 rounded-full outline-none ring-focus p-1 hover:bg-muted/50 transition-all hover:shadow-sm"
+              aria-label="User menu"
+            >
+              <div className="h-9 w-9 flex items-center justify-center rounded-full text-sm font-bold bg-primary text-primary-foreground shadow-sm shadow-primary/30">
+                {initials || <User className="h-4 w-4" />}
+              </div>
+              <div className="hidden flex-col items-start text-sm sm:flex mr-2 text-left">
+                <span className="font-semibold leading-none text-foreground">{studentProfile.name}</span>
                 <span className="text-xs text-muted-foreground mt-1 leading-none">
                   {studentProfile.role}
                 </span>
               </div>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
+          <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link to="/student" className="w-full">Profile</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link to="/student" className="w-full">Settings</Link>
+              <Link to="/student/profile" className="w-full">
+                My Profile
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild className="text-destructive focus:bg-destructive/10 cursor-pointer">
-              <Link to="/" className="w-full">Log out</Link>
+            <DropdownMenuItem
+              asChild
+              className="text-destructive focus:bg-destructive/10 cursor-pointer"
+            >
+              <Link to="/" className="w-full">
+                Log out
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
