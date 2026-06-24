@@ -8,10 +8,10 @@ import { Search, Filter, MoreVertical, Edit3, Trash2, FolderCode, ShieldAlert, C
 
 // Mock initial categories data (matches CategoryEntity schema)
 const initialCategories = [
-  { id: 'cat-1', name: 'Programming & Software Development', icon: '💻', color: '#3B82F6', description: 'Core programming languages and engineering principles.', status: 'Active', count: 12 },
-  { id: 'cat-2', name: 'Cloud & DevOps Architecture', icon: '☁️', color: '#10B981', description: 'Cloud infrastructure, CI/CD, and site reliability.', status: 'Active', count: 8 },
-  { id: 'cat-3', name: 'Data Science & Machine Learning', icon: '🧠', color: '#8B5CF6', description: 'AI, big data, analytics, and ML models.', status: 'Active', count: 5 },
-  { id: 'cat-4', name: 'Cybersecurity & Compliance', icon: '🛡️', color: '#EF4444', description: 'Network security, cryptography, and risk management.', status: 'Inactive', count: 0 },
+  { id: 'cat-1', name: 'Programming & Software Development', icon: '💻', color: '#3B82F6', description: 'Core programming languages and engineering principles.', status: 'Active', count: 12, createdAt: 'Oct 12, 2023' },
+  { id: 'cat-2', name: 'Cloud & DevOps Architecture', icon: '☁️', color: '#10B981', description: 'Cloud infrastructure, CI/CD, and site reliability.', status: 'Active', count: 8, createdAt: 'Nov 05, 2023' },
+  { id: 'cat-3', name: 'Data Science & Machine Learning', icon: '🧠', color: '#8B5CF6', description: 'AI, big data, analytics, and ML models.', status: 'Active', count: 5, createdAt: 'Dec 20, 2023' },
+  { id: 'cat-4', name: 'Cybersecurity & Compliance', icon: '🛡️', color: '#EF4444', description: 'Network security, cryptography, and risk management.', status: 'Inactive', count: 0, createdAt: 'Jan 14, 2024' },
 ];
 
 export default function Categories() {
@@ -32,6 +32,7 @@ export default function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [activeTab, setActiveTab] = useState('All');
+  const [sortBy, setSortBy] = useState('Recently Created');
   const [search, setSearch] = useState('');
   
   const [formData, setFormData] = useState({
@@ -47,12 +48,23 @@ export default function Categories() {
     const matchesTab = activeTab === 'All' ? true : cat.status === activeTab;
     const matchesSearch = cat.name.toLowerCase().includes(search.toLowerCase());
     return matchesTab && matchesSearch;
+  }).sort((a, b) => {
+    if (sortBy === 'Name (A-Z)') return a.name.localeCompare(b.name);
+    if (sortBy === 'Name (Z-A)') return b.name.localeCompare(a.name);
+    return 0; // 'Recently Created' relies on default insertion order
   });
 
   const handleEdit = (category) => {
     setFormData(category);
     setIsEditMode(true);
     setIsModalOpen(true);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this category?')) {
+      setCategories(categories.filter(c => c.id !== id));
+      addToast('Category deleted successfully.', 'success');
+    }
   };
 
   const handleCreateNew = () => {
@@ -64,10 +76,10 @@ export default function Categories() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isEditMode) {
-      setCategories(categories.map(c => c.id === formData.id ? { ...formData, count: c.count } : c));
+      setCategories(categories.map(c => c.id === formData.id ? { ...formData, count: c.count, createdAt: c.createdAt } : c));
       addToast(`Category "${formData.name}" updated successfully.`, 'success');
     } else {
-      const newCategory = { ...formData, id: `cat-${Math.floor(Math.random() * 9000) + 1000}`, count: 0 };
+      const newCategory = { ...formData, id: `cat-${Math.floor(Math.random() * 9000) + 1000}`, count: 0, createdAt: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) };
       setCategories([newCategory, ...categories]);
       addToast(`Category "${newCategory.name}" created successfully.`, 'success');
     }
@@ -102,96 +114,137 @@ export default function Categories() {
 
       {/* Controls & Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3 glass rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-4 items-center justify-between border border-border/40 shadow-sm">
-          <div className="flex bg-secondary/50 p-1 rounded-xl w-full sm:w-auto">
-            {['All', 'Active', 'Inactive'].map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={clsx(
-                  "px-4 py-1.5 rounded-lg text-sm font-semibold transition-all cursor-pointer flex-1 sm:flex-none",
-                  activeTab === tab ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-                )}
+        <div className="lg:col-span-4 glass rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-4 items-center justify-between border border-border/40 shadow-sm">
+          <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-muted-foreground" />
+              <select
+                value={activeTab}
+                onChange={(e) => setActiveTab(e.target.value)}
+                className="px-3 py-2 bg-background border border-border/50 rounded-xl text-sm font-semibold outline-none focus:border-indigo-500 transition-colors cursor-pointer"
               >
-                {tab}
-              </button>
-            ))}
+                <option value="All">Status: All</option>
+                <option value="Active">Status: Active</option>
+                <option value="Inactive">Status: Inactive</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-3 py-2 bg-background border border-border/50 rounded-xl text-sm font-semibold outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+              >
+                <option value="Recently Created">Sort: Recently Created</option>
+                <option value="Name (A-Z)">Sort: Name (A-Z)</option>
+                <option value="Name (Z-A)">Sort: Name (Z-A)</option>
+              </select>
+            </div>
           </div>
-          <div className="relative w-full sm:max-w-xs">
+          <div className="relative w-full sm:max-w-md ml-auto">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search domains..."
+              placeholder="Search categories..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-background border border-border/50 rounded-xl text-sm outline-none focus:border-indigo-500 transition-colors"
             />
           </div>
         </div>
-        <div className="glass rounded-2xl p-5 border border-border/40 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-            <Cpu className="w-6 h-6 text-indigo-500" />
-          </div>
-          <div>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Total Domains</p>
-            <p className="text-2xl font-black text-foreground">{categories.length}</p>
-          </div>
-        </div>
       </div>
 
-      {/* Data Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <AnimatePresence>
-          {filteredCategories.map((cat, index) => (
-            <motion.div
-              key={cat.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2, delay: index * 0.05 }}
-              className="glass border border-border/40 rounded-2xl overflow-hidden hover:border-border/80 transition-all group"
-            >
-              <div className="h-2 w-full" style={{ backgroundColor: cat.color }}></div>
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-sm" style={{ backgroundColor: `${cat.color}15`, border: `1px solid ${cat.color}30` }}>
-                    {cat.icon}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={clsx(
-                      "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                      cat.status === 'Active' ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-red-500/10 text-red-600 border border-red-500/20"
-                    )}>
-                      {cat.status === 'Active' ? <CheckCircle className="w-3 h-3" /> : <ShieldAlert className="w-3 h-3" />}
-                      {cat.status}
-                    </span>
-                    <button onClick={() => handleEdit(cat)} className="h-8 w-8 rounded-lg hover:bg-secondary grid place-items-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer opacity-0 group-hover:opacity-100">
-                      <Edit3 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-                <h3 className="text-lg font-bold text-foreground mb-1 line-clamp-1">{cat.name}</h3>
-                <p className="text-xs text-muted-foreground font-mono mb-3">{cat.id}</p>
-                <p className="text-sm text-muted-foreground line-clamp-2 h-10 mb-5">
-                  {cat.description}
-                </p>
-                <div className="flex items-center justify-between pt-4 border-t border-border/40">
-                  <span className="text-xs font-semibold text-muted-foreground">Courses Attached</span>
-                  <span className="text-sm font-bold text-foreground bg-secondary/80 px-2.5 py-0.5 rounded-md">{cat.count}</span>
-                </div>
+      {/* Data Table */}
+      <div className="bg-background border border-border/40 rounded-2xl shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse whitespace-nowrap">
+            <thead>
+              <tr className="bg-secondary/50 border-b border-border/40">
+                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground">Icon & Name</th>
+                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground">Description</th>
+                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground text-center">Total Courses</th>
+                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground text-center">Status</th>
+                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground text-center">Created Date</th>
+                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground text-right w-24">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <AnimatePresence>
+                {filteredCategories.map((cat, index) => (
+                  <motion.tr
+                    key={cat.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                    className="border-b border-border/40 hover:bg-secondary/20 transition-colors group"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-sm shrink-0" style={{ backgroundColor: `${cat.color}15`, border: `1px solid ${cat.color}30` }}>
+                          {cat.icon.startsWith('http') ? <img src={cat.icon} alt={cat.name} className="w-6 h-6 object-contain" /> : cat.icon}
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold text-foreground line-clamp-1">{cat.name}</h3>
+                          <p className="text-xs text-muted-foreground font-mono mt-0.5">{cat.id}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 max-w-xs whitespace-normal">
+                      <p className="text-sm text-muted-foreground line-clamp-1">{cat.description}</p>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="text-sm font-bold text-foreground bg-secondary/80 px-2.5 py-1 rounded-md">{cat.count}</span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className={clsx(
+                        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider justify-center",
+                        cat.status === 'Active' ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-orange-500/10 text-orange-600 border border-orange-500/20"
+                      )}>
+                        {cat.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="text-sm text-muted-foreground">{cat.createdAt || 'Oct 12, 2023'}</span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => handleEdit(cat)} className="h-8 w-8 rounded-lg hover:bg-secondary grid place-items-center text-muted-foreground hover:text-indigo-500 transition-colors cursor-pointer" title="Edit">
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleDelete(cat.id)} className="h-8 w-8 rounded-lg hover:bg-secondary grid place-items-center text-muted-foreground hover:text-red-500 transition-colors cursor-pointer" title="Delete">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
+            </tbody>
+          </table>
+          {filteredCategories.length === 0 && (
+            <div className="py-12 flex flex-col items-center justify-center text-center">
+              <div className="w-16 h-16 rounded-2xl bg-secondary/50 flex items-center justify-center mb-4">
+                <Search className="w-8 h-8 text-muted-foreground" />
               </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-        {filteredCategories.length === 0 && (
-          <div className="col-span-full py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-16 h-16 rounded-2xl bg-secondary/50 flex items-center justify-center mb-4">
-              <Search className="w-8 h-8 text-muted-foreground" />
+              <h3 className="text-lg font-bold text-foreground">No Categories Found</h3>
+              <p className="text-sm text-muted-foreground max-w-sm mt-1">Try adjusting your search or filters to find what you're looking for.</p>
             </div>
-            <h3 className="text-lg font-bold text-foreground">No Categories Found</h3>
-            <p className="text-sm text-muted-foreground max-w-sm mt-1">Try adjusting your search or filters to find what you're looking for.</p>
+          )}
+        </div>
+        <div className="px-6 py-4 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 bg-secondary/10">
+          <span className="text-sm text-muted-foreground">
+            Showing 1 to {filteredCategories.length} of {categories.length} categories
+          </span>
+          <div className="flex items-center gap-2">
+            <button className="w-8 h-8 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors cursor-pointer" disabled>
+              <span className="text-xs font-bold">&lt;</span>
+            </button>
+            <button className="w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center font-bold text-sm shadow-sm cursor-pointer">1</button>
+            <button className="w-8 h-8 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors cursor-pointer" disabled>
+              <span className="text-xs font-bold">&gt;</span>
+            </button>
           </div>
-        )}
+        </div>
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditMode ? "Edit Domain Category" : "Create New Category"}>

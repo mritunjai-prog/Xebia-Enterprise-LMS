@@ -3,7 +3,7 @@ import { useAppStore } from '../../store/useAppStore';
 import { IconAdd } from '../../components/Icons';
 import { clsx } from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, BookOpen, Clock, Users, ShieldAlert, Edit3, Globe, Settings, BarChart3, Image as ImageIcon, CheckCircle, ChevronRight, X, PlayCircle, Eye, Activity, Layers, BookMarked, Video, Star, TrendingUp, Award, Zap, LayoutGrid, List } from 'lucide-react';
+import { Search, BookOpen, Clock, Users, ShieldAlert, Edit3, Trash2, Globe, Settings, BarChart3, Image as ImageIcon, CheckCircle, ChevronRight, X, PlayCircle, Eye, Activity, Layers, BookMarked, Video, Star, TrendingUp, Award, Zap, LayoutGrid, List } from 'lucide-react';
 import { useRouter } from '@tanstack/react-router';
 
 const mockCourses = [
@@ -109,6 +109,13 @@ export default function Courses() {
     setIsEditMode(true);
     setEditorTab('basic');
     setIsEditorOpen(true);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this course?')) {
+      setCourses(courses.filter(c => c.id !== id));
+      addToast('Course deleted successfully.', 'success');
+    }
   };
 
   const handleSubmit = (e) => {
@@ -284,6 +291,9 @@ export default function Courses() {
                       </button>
                       <button onClick={() => handleEdit(course)} className="h-8 w-8 rounded-lg bg-secondary border border-border/50 hover:bg-secondary/80 grid place-items-center text-foreground transition-colors cursor-pointer" title="Edit">
                         <Edit3 className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => handleDelete(course.id)} className="h-8 w-8 rounded-lg bg-secondary border border-border/50 hover:bg-secondary/80 grid place-items-center text-red-500 hover:text-red-600 transition-colors cursor-pointer" title="Delete">
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </td>
@@ -988,14 +998,9 @@ export default function Courses() {
               </div>
 
               {/* Footer */}
-              <div className="px-5 py-3.5 border-t border-border/40 bg-secondary/10 flex items-center justify-between shrink-0">
-                <button onClick={() => setViewCourse(null)} className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Close</button>
-                <button
-                  onClick={() => setViewCourse(null)}
-                  className="px-6 py-2 rounded-xl text-sm font-bold text-white transition-all cursor-pointer shadow-lg"
-                  style={{background: viewCourse.color||'#6C1D5F', boxShadow:'0 4px 14px ' + (viewCourse.color||'#6C1D5F') + '55'}}
-                >
-                  Enroll Now
+              <div className="px-5 py-3.5 border-t border-border/40 bg-secondary/10 flex items-center justify-end shrink-0">
+                <button onClick={() => setViewCourse(null)} className="px-6 py-2 rounded-xl text-sm font-bold bg-background hover:bg-secondary/80 border border-border/50 text-foreground transition-all cursor-pointer shadow-sm">
+                  Close
                 </button>
               </div>
             </motion.div>

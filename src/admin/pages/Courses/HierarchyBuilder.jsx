@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, Plus, Settings, Video, FileText, Code, Link as LinkIcon, Trash2, GripVertical, CheckCircle2, Save, X, Layers, Image as ImageIcon, Globe } from 'lucide-react';
+import { ChevronLeft, Plus, Settings, Video, FileText, Code, Link as LinkIcon, Trash2, Edit3, GripVertical, CheckCircle2, Save, X, Layers, Image as ImageIcon, Globe } from 'lucide-react';
 import { useRouter } from '@tanstack/react-router';
 import { useAppStore } from '../../store/useAppStore';
 
@@ -52,9 +52,12 @@ export default function HierarchyBuilder() {
   const [isSubmoduleModalOpen, setIsSubmoduleModalOpen] = useState(false);
   const [isContentModalOpen, setIsContentModalOpen] = useState(false);
   
-  // Target IDs for adding children
   const [targetModuleId, setTargetModuleId] = useState(null);
   const [targetSubmoduleId, setTargetSubmoduleId] = useState(null);
+
+  const [editModuleId, setEditModuleId] = useState(null);
+  const [editSubmoduleId, setEditSubmoduleId] = useState(null);
+  const [editContentId, setEditContentId] = useState(null);
 
   // Form States mapping to Entity logic
   const [moduleForm, setModuleForm] = useState({ title: '', description: '', orderIndex: 1, isActive: true, slug: '' });
@@ -71,6 +74,13 @@ export default function HierarchyBuilder() {
 
   const handleAddModule = (e) => {
     e.preventDefault();
+    if (editModuleId) {
+      setModules(modules.map(mod => mod.id === editModuleId ? { ...mod, ...moduleForm } : mod));
+      setEditModuleId(null);
+      setIsModuleModalOpen(false);
+      addToast('Module Updated Successfully', 'success');
+      return;
+    }
     const newModule = {
       id: `m${Date.now()}`,
       ...moduleForm,
@@ -86,6 +96,19 @@ export default function HierarchyBuilder() {
     e.preventDefault();
     if (!targetModuleId) return;
     
+    if (editSubmoduleId) {
+      setModules(modules.map(mod => {
+        if (mod.id === targetModuleId) {
+          return { ...mod, submodules: mod.submodules.map(sub => sub.id === editSubmoduleId ? { ...sub, ...submoduleForm } : sub) };
+        }
+        return mod;
+      }));
+      setEditSubmoduleId(null);
+      setIsSubmoduleModalOpen(false);
+      addToast('Submodule Updated Successfully', 'success');
+      return;
+    }
+
     const newSubmodule = {
       id: `sm${Date.now()}`,
       ...submoduleForm,
@@ -108,6 +131,27 @@ export default function HierarchyBuilder() {
     e.preventDefault();
     if (!targetModuleId || !targetSubmoduleId) return;
     
+    if (editContentId) {
+      setModules(modules.map(mod => {
+        if (mod.id === targetModuleId) {
+          return {
+            ...mod,
+            submodules: mod.submodules.map(sub => {
+              if (sub.id === targetSubmoduleId) {
+                return { ...sub, contentBlocks: sub.contentBlocks.map(c => c.id === editContentId ? { ...c, ...contentForm } : c) };
+              }
+              return sub;
+            })
+          };
+        }
+        return mod;
+      }));
+      setEditContentId(null);
+      setIsContentModalOpen(false);
+      addToast('Content Block Updated Successfully', 'success');
+      return;
+    }
+
     const newContent = {
       id: `c${Date.now()}`,
       ...contentForm,
@@ -140,6 +184,45 @@ export default function HierarchyBuilder() {
       case 'CODE': return <Code className="w-4 h-4 text-purple-500" />;
       case 'PDF': return <ImageIcon className="w-4 h-4 text-amber-500" />;
       default: return <LinkIcon className="w-4 h-4 text-emerald-500" />;
+    }
+  };
+
+  const handleDeleteModule = (moduleId) => {
+    if (window.confirm('Are you sure you want to delete this module?')) {
+      setModules(modules.filter(m => m.id !== moduleId));
+      addToast('Module deleted successfully.', 'success');
+    }
+  };
+
+  const handleDeleteSubmodule = (moduleId, submoduleId) => {
+    if (window.confirm('Are you sure you want to delete this submodule?')) {
+      setModules(modules.map(mod => {
+        if (mod.id === moduleId) {
+          return { ...mod, submodules: mod.submodules.filter(sub => sub.id !== submoduleId) };
+        }
+        return mod;
+      }));
+      addToast('Submodule deleted successfully.', 'success');
+    }
+  };
+
+  const handleDeleteContent = (moduleId, submoduleId, contentId) => {
+    if (window.confirm('Are you sure you want to delete this content?')) {
+      setModules(modules.map(mod => {
+        if (mod.id === moduleId) {
+          return {
+            ...mod,
+            submodules: mod.submodules.map(sub => {
+              if (sub.id === submoduleId) {
+                return { ...sub, contentBlocks: sub.contentBlocks.filter(c => c.id !== contentId) };
+              }
+              return sub;
+            })
+          };
+        }
+        return mod;
+      }));
+      addToast('Content deleted successfully.', 'success');
     }
   };
 
@@ -201,7 +284,34 @@ export default function HierarchyBuilder() {
                     >
                       + Add Submodule
                     </button>
-                    <button className="p-2 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"><Trash2 className="w-4 h-4" /></button>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditModuleId(module.id);
+                        setModuleForm({
+                          title: module.title || '',
+                          description: module.description || '',
+                          orderIndex: module.orderIndex || 1,
+                          isActive: module.isActive !== false,
+                          slug: module.slug || ''
+                        });
+                        setIsModuleModalOpen(true);
+                      }}
+                      className="p-2 rounded-lg text-muted-foreground hover:text-indigo-500 hover:bg-indigo-500/10 transition-colors cursor-pointer"
+                      title="Edit Module"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteModule(module.id);
+                      }}
+                      className="p-2 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                      title="Delete Module"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
 
@@ -235,19 +345,53 @@ export default function HierarchyBuilder() {
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
-                                  <button 
-                                    onClick={() => {
-                                      setTargetModuleId(module.id);
-                                      setTargetSubmoduleId(submod.id);
-                                      setContentForm({ type: 'VIDEO', title: '', videoUrl: '', textContent: '', documentUrl: '' });
-                                      setIsContentModalOpen(true);
-                                    }}
-                                    className="px-3 py-1.5 rounded-lg border border-border/60 bg-background text-xs font-bold hover:bg-secondary transition-colors cursor-pointer"
-                                  >
-                                    + Attach Content Block
-                                  </button>
-                                  <button className="p-1.5 rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
-                                </div>
+                                    <button 
+                                      onClick={() => {
+                                        setTargetModuleId(module.id);
+                                        setTargetSubmoduleId(submod.id);
+                                        setContentForm({ type: 'VIDEO', title: '', videoUrl: '', textContent: '', documentUrl: '' });
+                                        setIsContentModalOpen(true);
+                                      }}
+                                      className="px-3 py-1.5 rounded-lg border border-border/60 bg-background text-xs font-bold hover:bg-secondary transition-colors cursor-pointer"
+                                    >
+                                      + Attach Content Block
+                                    </button>
+                                    <button 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setTargetModuleId(module.id);
+                                        setEditSubmoduleId(submod.id);
+                                        setSubmoduleForm({
+                                          title: submod.title || '',
+                                          description: submod.description || '',
+                                          slug: submod.slug || '',
+                                          metaTitle: submod.metaTitle || '',
+                                          metaDescription: submod.metaDescription || '',
+                                          canonicalUrl: submod.canonicalUrl || '',
+                                          ogTitle: submod.ogTitle || '',
+                                          ogDescription: submod.ogDescription || '',
+                                          ogImage: submod.ogImage || '',
+                                          submoduleOrder: submod.submoduleOrder || 1,
+                                          isActive: submod.isActive !== false
+                                        });
+                                        setIsSubmoduleModalOpen(true);
+                                      }}
+                                      className="p-1.5 rounded-md text-muted-foreground hover:text-indigo-500 hover:bg-indigo-500/10 transition-colors cursor-pointer"
+                                      title="Edit Submodule"
+                                    >
+                                      <Edit3 className="w-4 h-4" />
+                                    </button>
+                                    <button 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteSubmodule(module.id, submod.id);
+                                      }}
+                                      className="p-1.5 rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                                      title="Delete Submodule"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </button>
+                                  </div>
                               </div>
 
                               {/* Content Blocks */}
@@ -270,7 +414,38 @@ export default function HierarchyBuilder() {
                                                 <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">{content.type}</p>
                                               </div>
                                             </div>
-                                            <button className="opacity-0 group-hover:opacity-100 p-1.5 text-muted-foreground hover:text-red-500 transition-all cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                                            <div className="flex items-center gap-1 opacity-100">
+                                              <button 
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setTargetModuleId(module.id);
+                                                  setTargetSubmoduleId(submod.id);
+                                                  setEditContentId(content.id);
+                                                  setContentForm({
+                                                    type: content.type || 'VIDEO',
+                                                    title: content.title || '',
+                                                    videoUrl: content.videoUrl || '',
+                                                    textContent: content.textContent || '',
+                                                    documentUrl: content.documentUrl || ''
+                                                  });
+                                                  setIsContentModalOpen(true);
+                                                }}
+                                                className="p-1.5 text-muted-foreground hover:text-indigo-500 hover:bg-indigo-500/10 rounded-md transition-all cursor-pointer"
+                                                title="Edit Content"
+                                              >
+                                                <Edit3 className="w-4 h-4" />
+                                              </button>
+                                              <button 
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  handleDeleteContent(module.id, submod.id, content.id);
+                                                }}
+                                                className="p-1.5 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-md transition-all cursor-pointer"
+                                                title="Delete Content"
+                                              >
+                                                <Trash2 className="w-4 h-4" />
+                                              </button>
+                                            </div>
                                           </div>
                                         ))
                                       )}

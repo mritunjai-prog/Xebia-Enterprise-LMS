@@ -112,17 +112,9 @@ export function Sidebar() {
         <NavItem 
           icon={<IconCourses className="nav-icon" />} 
           label="Courses" 
-          hasChildren
-          isOpen={openSections.courses}
-          isActive={['Courses', 'Course List', 'Content Builder'].includes(activeSidebarItem)}
-          onClick={() => handleNavClick('Courses', true, 'courses')}
+          isActive={activeSidebarItem === 'Courses'}
+          onClick={() => handleNavClick('Courses')}
         />
-        {openSections.courses && (
-          <div className="nav-children">
-            <NavChild label="Course List" isActive={activeSidebarItem === 'Course List'} onClick={() => handleNavClick('Course List')} />
-            <NavChild label="Content Builder" isActive={activeSidebarItem === 'Content Builder'} onClick={() => handleNavClick('Content Builder')} />
-          </div>
-        )}
         <NavItem icon={<IconBatch className="nav-icon" />} label="Batch & Enrollment" isActive={activeSidebarItem === 'Batch & Enrollment'} onClick={() => handleNavClick('Batch & Enrollment')} />
         <NavItem icon={<IconAssessments className="nav-icon" />} label="Assessments" isActive={activeSidebarItem === 'Assessments'} onClick={() => handleNavClick('Assessments')} />
 
