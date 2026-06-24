@@ -148,6 +148,27 @@
   --chart-5: #855889;
 }
 
+/* ── Native select / option dark mode ───────────────────── */
+select {
+  color: var(--foreground);
+}
+.dark select {
+  color-scheme: dark;
+  color: oklch(0.97 0.01 320);
+}
+/* Make option dropdowns dark in dark mode (works in Firefox & Edge) */
+.dark option,
+.dark optgroup {
+  background-color: oklch(0.2 0.04 290) !important;
+  color: oklch(0.97 0.01 320) !important;
+}
+/* Chromium: target select elements that have a solid bg (modal forms) */
+html.dark select[class*="bg-background"],
+html.dark select[class*="bg-card"] {
+  background-color: oklch(0.2 0.04 290) !important;
+  color: oklch(0.97 0.01 320) !important;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
