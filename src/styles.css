@@ -41,85 +41,111 @@
 :root {
   --radius: 1rem;
 
-  /* Xebia purple-led brand */
-  --background: oklch(0.99 0.005 320);
-  --foreground: oklch(0.18 0.04 320);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.04 320);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.04 320);
+  /* Main Colors from palette */
+  --background: #F7F8FC; /* Blueish Grey */
+  --foreground: #000000; /* Black */
+  
+  --card: #FFFFFF; /* White */
+  --card-foreground: #000000;
+  
+  --popover: #FFFFFF;
+  --popover-foreground: #000000;
 
-  --primary: oklch(0.38 0.14 335); /* Xebia purple #6B1F5C-ish */
-  --primary-foreground: oklch(0.99 0.005 320);
-  --primary-glow: oklch(0.62 0.22 330); /* magenta glow */
+  --primary: #6C1D5F; /* Tranquil Velvet */
+  --primary-foreground: #FFFFFF;
+  --primary-glow: #84117C; /* Bright Tr. Velvet */
 
-  --secondary: oklch(0.96 0.01 320);
-  --secondary-foreground: oklch(0.22 0.05 330);
-  --muted: oklch(0.96 0.01 320);
-  --muted-foreground: oklch(0.5 0.03 320);
-  --accent: oklch(0.78 0.14 200); /* cyan */
-  --accent-foreground: oklch(0.18 0.04 320);
-  --accent-2: oklch(0.76 0.14 165); /* teal */
+  --secondary: #DADCEA; /* Medium Bl.Grey */
+  --secondary-foreground: #4A1E47; /* Tranquil Velvet Dark */
+  
+  --muted: #DEDEDE; /* Light Grey */
+  --muted-foreground: #5A5A5A; /* Dark Grey */
+  
+  --accent: #84117C; /* Bright Tr. Velvet */
+  --accent-foreground: #FFFFFF;
+  
+  --accent-2: #01AC9F; /* Emerald */
 
-  --destructive: oklch(0.6 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.92 0.01 320);
-  --input: oklch(0.92 0.01 320);
-  --ring: oklch(0.55 0.18 330);
+  --destructive: #FF6200; /* CTA Orange */
+  --destructive-foreground: #FFFFFF;
+  
+  --border: #DADCEA;
+  --input: #DADCEA;
+  --ring: #6C1D5F;
 
   /* Tokens */
   --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-border: rgba(255, 255, 255, 0.55);
-  --glass-shadow: 0 10px 40px -10px rgba(76, 17, 80, 0.18);
+  --glass-shadow: 0 10px 40px -10px rgba(108, 29, 95, 0.18);
 
   --gradient-brand: linear-gradient(
     135deg,
-    oklch(0.38 0.14 335),
-    oklch(0.55 0.22 320),
-    oklch(0.7 0.18 200)
+    #6C1D5F,
+    #84117C,
+    #01AC9F
   );
   --gradient-hero:
-    radial-gradient(60% 60% at 20% 10%, oklch(0.88 0.1 320 / 0.55), transparent 60%),
-    radial-gradient(50% 50% at 90% 20%, oklch(0.85 0.12 200 / 0.45), transparent 60%),
-    radial-gradient(60% 60% at 50% 100%, oklch(0.85 0.12 165 / 0.35), transparent 60%);
-  --shadow-glow: 0 20px 60px -20px oklch(0.38 0.14 335 / 0.45);
-  --shadow-elegant: 0 30px 80px -30px oklch(0.18 0.04 320 / 0.25);
+    radial-gradient(60% 60% at 20% 10%, rgba(108, 29, 95, 0.15), transparent 60%),
+    radial-gradient(50% 50% at 90% 20%, rgba(132, 17, 124, 0.15), transparent 60%),
+    radial-gradient(60% 60% at 50% 100%, rgba(1, 172, 159, 0.15), transparent 60%);
+  --shadow-glow: 0 20px 60px -20px rgba(108, 29, 95, 0.45);
+  --shadow-elegant: 0 30px 80px -30px rgba(0, 0, 0, 0.15);
+
+  /* Chart Colors */
+  --chart-1: #5C4F61;
+  --chart-2: #855889;
+  --chart-3: #533754;
+  --chart-4: #91759E;
+  --chart-5: #4A1E47;
 }
 
 .dark {
-  --background: oklch(0.14 0.03 280);
-  --foreground: oklch(0.97 0.01 320);
-  --card: oklch(0.2 0.04 290);
-  --card-foreground: oklch(0.97 0.01 320);
-  --popover: oklch(0.2 0.04 290);
-  --popover-foreground: oklch(0.97 0.01 320);
+  --background: #000000; /* Black from neutral palette */
+  --foreground: #F7F8FC;
+  
+  --card: #151515; /* Very dark grey for cards to contrast against black */
+  --card-foreground: #F7F8FC;
+  
+  --popover: #151515;
+  --popover-foreground: #F7F8FC;
 
-  --primary: oklch(0.72 0.18 320);
-  --primary-foreground: oklch(0.14 0.03 280);
-  --primary-glow: oklch(0.78 0.2 320);
+  --primary: #84117C; /* Bright Tr. Velvet for better contrast */
+  --primary-foreground: #FFFFFF;
+  --primary-glow: #6C1D5F;
 
-  --secondary: oklch(0.24 0.04 290);
-  --secondary-foreground: oklch(0.97 0.01 320);
-  --muted: oklch(0.24 0.04 290);
-  --muted-foreground: oklch(0.72 0.03 320);
-  --accent: oklch(0.8 0.16 200);
-  --accent-foreground: oklch(0.14 0.03 280);
-  --accent-2: oklch(0.8 0.16 165);
+  --secondary: #4A1E47; /* Tranquil Velvet Dark */
+  --secondary-foreground: #D3CCEC;
+  
+  --muted: #5A5A5A; /* Dark Grey from neutral palette */
+  --muted-foreground: #DEDEDE; /* Light Grey from neutral palette */
+  
+  --accent: #01AC9F; /* Emerald */
+  --accent-foreground: #FFFFFF;
+  
+  --accent-2: #6C1D5F;
 
-  --destructive: oklch(0.65 0.22 25);
-  --destructive-foreground: oklch(0.97 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.72 0.18 320);
+  --destructive: #FF6200; /* CTA Orange */
+  --destructive-foreground: #FFFFFF;
+  
+  --border: #5A5A5A; /* Dark Grey */
+  --input: #5A5A5A;
+  --ring: #84117C;
 
-  --glass-bg: rgba(15, 23, 42, 0.55);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  --glass-bg: rgba(20, 20, 20, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8);
 
   --gradient-hero:
-    radial-gradient(60% 60% at 20% 10%, oklch(0.45 0.18 320 / 0.45), transparent 60%),
-    radial-gradient(50% 50% at 90% 20%, oklch(0.45 0.18 200 / 0.35), transparent 60%),
-    radial-gradient(60% 60% at 50% 100%, oklch(0.45 0.18 165 / 0.3), transparent 60%);
+    radial-gradient(60% 60% at 20% 10%, rgba(132, 17, 124, 0.2), transparent 60%),
+    radial-gradient(50% 50% at 90% 20%, rgba(1, 172, 159, 0.15), transparent 60%),
+    radial-gradient(60% 60% at 50% 100%, rgba(108, 29, 95, 0.2), transparent 60%);
+
+  /* Chart Colors for dark mode - Keep same as light mode or use the palette */
+  --chart-1: #9D92B2;
+  --chart-2: #D3CCEC;
+  --chart-3: #B8AFCF;
+  --chart-4: #91759E;
+  --chart-5: #855889;
 }
 
 /* ── Native select / option dark mode ───────────────────── */
