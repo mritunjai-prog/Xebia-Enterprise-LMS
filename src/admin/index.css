@@ -228,3 +228,48 @@ tr:hover td { background: rgba(247,248,252,0.9); }
 
 svg { vertical-align: bottom; }
 
+
+
+/* =====================================================
+   DARK MODE - applies when html has class="dark"
+   ===================================================== */
+.dark {
+  --bg: #0f0f13;
+  --white: #1a1a24;
+  --border: #2e2e3e;
+  --light-gray: #252535;
+  --dark-gray: #9a9ab0;
+  --black: #f0f0f8;
+}
+.dark .shell { background: var(--bg); }
+.dark .header { background: #15151f; border-bottom-color: var(--border); }
+.dark .header-search input { background: #0f0f13; border-color: var(--border); color: var(--black); }
+.dark .header-btn { background: #1e1e2d; border-color: var(--border); color: var(--dark-gray); }
+.dark .header-btn:hover { background: #252535; border-color: var(--primary); color: var(--primary); }
+.dark .header-btn .notif-dot { border-color: #15151f; }
+.dark .tenant-switcher { background: #1e1e2d; border-color: var(--border); color: var(--dark-gray); }
+.dark .breadcrumb { color: var(--dark-gray); }
+.dark .breadcrumb-cur { color: var(--black); }
+.dark .content { background: var(--bg); }
+.dark .card { background: #15151f; border-color: var(--border); }
+.dark .kpi-card { background: #15151f; border: 1px solid var(--border); }
+.dark .kpi-label { color: var(--dark-gray); }
+.dark th { background: #15151f; color: var(--dark-gray); border-bottom-color: var(--border); }
+.dark td { color: var(--black); }
+.dark .btn-outline { background: #1e1e2d; border-color: var(--border); color: var(--dark-gray); }
+.dark .overlay { background: rgba(0,0,0,0.75); }
+.dark .modal { background: #15151f; border: 1px solid var(--border); }
+.dark .modal-title { color: var(--black); }
+.dark .modal-close { color: var(--dark-gray); }
+.dark .modal-close:hover { background: #1e1e2d; }
+.dark .form-input { background: #0f0f13; border-color: var(--border); color: var(--black); }
+.dark .form-select { background: #0f0f13; border-color: var(--border); color: var(--black); }
+.dark .form-label { color: var(--black); }
+.dark .toast { background: #1e1e2d; color: var(--black); }
+.dark .action-btn { background: #1e1e2d; border-color: var(--border); color: var(--dark-gray); }
+.dark .action-btn:hover { background: #252535; }
+.dark .stab { color: var(--dark-gray); }
+.dark .stab.active { color: var(--primary); }
+.dark .cell-sub { color: var(--dark-gray); }
+.dark .page-title { color: var(--black); }
+.dark .page-subtitle { color: var(--dark-gray); }

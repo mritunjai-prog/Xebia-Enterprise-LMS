@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { IconAdd } from '../../components/Icons';
 import { clsx } from 'clsx';
@@ -16,7 +16,19 @@ const initialCategories = [
 
 export default function Categories() {
   const { addToast } = useAppStore();
-  const [categories, setCategories] = useState(initialCategories);
+  const [categories, setCategories] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('lms_categories_v1');
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) {}
+      }
+    }
+    return initialCategories;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('lms_categories_v1', JSON.stringify(categories));
+  }, [categories]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [activeTab, setActiveTab] = useState('All');
@@ -198,11 +210,12 @@ export default function Categories() {
                   <label className="shrink-0 bg-secondary hover:bg-secondary/80 flex items-center justify-center px-4 rounded-xl cursor-pointer transition-colors border border-border/50 text-xs font-bold" title="Upload Image">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                     <input type="file" className="hidden" accept="image/*" onChange={(e) => {
-                      if(e.target.files && e.target.files[0]) {
-                        const url = URL.createObjectURL(e.target.files[0]);
-                        setFormData({...formData, icon: url});
-                      }
-                    }} />
+                                  if(e.target.files && e.target.files[0]) {
+                                    const reader = new FileReader();
+                                    reader.onload = (ev) => setFormData({...formData, icon: ev.target.result});
+                                    reader.readAsDataURL(e.target.files[0]);
+                                  }
+                                }} />
                   </label>
                 </div>
               </div>

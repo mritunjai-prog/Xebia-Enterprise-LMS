@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 
 
 export const Modal = ({ isOpen, onClose, title, children }) => {
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef(null);
 
   useEffect(() => {
     const handleEscape = (e) => {

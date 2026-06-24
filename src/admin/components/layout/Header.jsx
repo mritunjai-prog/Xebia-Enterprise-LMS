@@ -1,9 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { IconSearch, IconExpand, IconAdd, IconBell, IconProfile } from '../Icons';
 
 export function Header() {
   const { activeTenant, addToast, activeSidebarItem } = useAppStore();
+
+  const [isDark, setIsDark] = useState(() =>
+    typeof window !== 'undefined' && document.documentElement.classList.contains('dark')
+  );
+
+  const toggleDark = () => {
+    const html = document.documentElement;
+    if (html.classList.contains('dark')) {
+      html.classList.remove('dark');
+      localStorage.setItem('lms_theme', 'light');
+      setIsDark(false);
+    } else {
+      html.classList.add('dark');
+      localStorage.setItem('lms_theme', 'dark');
+      setIsDark(true);
+    }
+  };
+
+  useEffect(() => {
+    const saved = localStorage.getItem('lms_theme');
+    if (saved === 'dark') {
+      document.documentElement.classList.add('dark');
+      setIsDark(true);
+    } else if (saved === 'light') {
+      document.documentElement.classList.remove('dark');
+      setIsDark(false);
+    }
+  }, []);
 
   return (
     <header className="header">
@@ -34,6 +62,15 @@ export function Header() {
           <IconBell />
           <span className="notif-dot"></span>
         </div>
+
+        <button
+          onClick={toggleDark}
+          className="header-btn"
+          title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          style={{ fontSize: '16px' }}
+        >
+          {isDark ? '☀️' : '🌙'}
+        </button>
         
         <div className="header-btn" onClick={() => addToast('Profile menu coming soon.', 'info')}>
           <IconProfile />
