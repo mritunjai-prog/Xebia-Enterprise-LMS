@@ -1,0 +1,1 @@
+import{c as e,f as t,l as n,p as r,s as i}from"./index-CGI_wlCp.js";var a=i({chartName:`BarChart`,GraphicalChild:r,defaultTooltipEventType:`axis`,validateTooltipEventTypes:[`axis`,`item`],axisComponents:[{axisType:`xAxis`,AxisComp:n},{axisType:`yAxis`,AxisComp:e}],formatAxisMap:t});export{a as t};

@@ -1,0 +1,1 @@
+import{t as e}from"./useStore-C8tgD6R3.js";import{t}from"./useRouter-DsjH8G0p.js";import{zt as n}from"./index-CGI_wlCp.js";function r(r){let i=t();return e(i.stores.location,n(r,i))}export{r as t};

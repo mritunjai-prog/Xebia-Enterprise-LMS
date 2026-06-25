@@ -5,6 +5,7 @@ import { clsx } from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, BookOpen, Clock, Users, ShieldAlert, Edit3, Trash2, Globe, Settings, BarChart3, Image as ImageIcon, CheckCircle, ChevronRight, X, PlayCircle, Eye, Activity, Layers, BookMarked, Video, Star, TrendingUp, Award, Zap, LayoutGrid, List } from 'lucide-react';
 import { useRouter } from '@tanstack/react-router';
+import { CourseService } from '../../../services/api';
 
 const mockCourses = [
   {
@@ -51,6 +52,20 @@ export default function Courses() {
     }
     return mockCourses;
   });
+
+  useEffect(() => {
+    async function loadCourses() {
+      try {
+        const data = await CourseService.getCourses();
+        if (data && data.length > 0) {
+          setCourses(data);
+        }
+      } catch (err) {
+        console.warn('Backend connection failed, using local/mock data.', err);
+      }
+    }
+    loadCourses();
+  }, []);
 
   const [categories, setCategories] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -128,20 +143,35 @@ export default function Courses() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.slug || !formData.category || !formData.icon || !formData.color) {
       addToast("Please fill out all required fields in the Basic Info tab.", "error");
       setEditorTab('basic');
       return;
     }
-    if (isEditMode) {
-      setCourses(courses.map(c => c.id === formData.id ? { ...formData, enrollments: (c ).enrollments } : c));
-      addToast(`Course "${formData.title}" updated.`, 'success');
-    } else {
-      const newCourse = { ...formData, id: `C${Math.floor(Math.random() * 900) + 100}`, enrollments: 0, totalViews: 0 };
-      setCourses([newCourse, ...courses]);
-      addToast(`Course "${newCourse.title}" created.`, 'success');
+    
+    try {
+      if (isEditMode) {
+        // Mocking PUT since our API spec only shows POST /courses
+        setCourses(courses.map(c => c.id === formData.id ? { ...formData, enrollments: (c ).enrollments } : c));
+        addToast(`Course "${formData.title}" updated.`, 'success');
+      } else {
+        const newCoursePayload = { ...formData, enrollments: 0, totalViews: 0 };
+        const savedCourse = await CourseService.createCourse(newCoursePayload);
+        setCourses([savedCourse || { ...newCoursePayload, id: `C${Math.floor(Math.random() * 900) + 100}` }, ...courses]);
+        addToast(`Course "${newCoursePayload.title}" created.`, 'success');
+      }
+    } catch (err) {
+      console.warn('Backend save failed, saving locally.', err);
+      if (isEditMode) {
+        setCourses(courses.map(c => c.id === formData.id ? { ...formData, enrollments: (c ).enrollments } : c));
+        addToast(`Course "${formData.title}" updated (Locally).`, 'success');
+      } else {
+        const newCourse = { ...formData, id: `C${Math.floor(Math.random() * 900) + 100}`, enrollments: 0, totalViews: 0 };
+        setCourses([newCourse, ...courses]);
+        addToast(`Course "${newCourse.title}" created (Locally).`, 'success');
+      }
     }
     setIsEditorOpen(false);
   };
