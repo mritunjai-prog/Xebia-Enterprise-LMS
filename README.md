@@ -99,24 +99,38 @@ Ensure you have the following installed:
 
 ### Installation
 
+Because this repository operates as a **Monorepo** containing both the React Frontend and the Spring Boot Backend microservices, you must boot the backend infrastructure before the UI.
+
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/mritunjai-prog/Xebia-Enterprise-LMS.git
    cd Xebia-Enterprise-LMS
    ```
 
-2. **Install Frontend Dependencies:**
+2. **Boot the Backend (Java + Docker):**
+   *Ensure Docker Desktop is running and Maven is installed on your system.*
+   ```bash
+   cd backend
+   
+   # Compile all 13 Java microservices into .jar files
+   mvn clean package -DskipTests
+   
+   # Boot the databases and microservices simultaneously
+   docker compose up --build -d
+   ```
+   *Wait ~2 minutes for all 16 containers to reach a `Healthy` state.*
+
+3. **Start the Frontend (React/Vite):**
+   Open a new terminal window at the root of the project (`Xebia-Enterprise-LMS`):
    ```bash
    npm install
-   ```
-
-3. **Start the Development Server:**
-   ```bash
    npm run dev
    ```
 
-4. **View the Application:**
-   Open your browser and navigate to `http://localhost:8080/`.
+4. **Access the Portal:**
+   - **Frontend UI**: `http://localhost:3000/`
+   - **Backend API Gateway**: `http://localhost:8080/api`
+   - **Database Access**: Connect to `localhost:5432` (User: `lms`, Pass: `lms`)
 
 ---
 

@@ -43,15 +43,7 @@ const mockCourses = [
 export default function Courses() {
   const { addToast } = useAppStore();
   const router = useRouter();
-  const [courses, setCourses] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('lms_courses_v1');
-      if (saved) {
-        try { return JSON.parse(saved); } catch (e) {}
-      }
-    }
-    return mockCourses;
-  });
+  const [courses, setCourses] = useState([]);
 
   useEffect(() => {
     async function loadCourses() {
@@ -61,7 +53,8 @@ export default function Courses() {
           setCourses(data);
         }
       } catch (err) {
-        console.warn('Backend connection failed, using local/mock data.', err);
+        console.error('Backend connection failed. Is the server running?', err);
+        addToast("Failed to fetch courses from the backend API.", "error");
       }
     }
     loadCourses();
@@ -153,27 +146,18 @@ export default function Courses() {
     
     try {
       if (isEditMode) {
-        // Mocking PUT since our API spec only shows POST /courses
-        setCourses(courses.map(c => c.id === formData.id ? { ...formData, enrollments: (c ).enrollments } : c));
-        addToast(`Course "${formData.title}" updated.`, 'success');
+        addToast(`Course "${formData.title}" updated (Mock PUT).`, 'success');
       } else {
         const newCoursePayload = { ...formData, enrollments: 0, totalViews: 0 };
         const savedCourse = await CourseService.createCourse(newCoursePayload);
-        setCourses([savedCourse || { ...newCoursePayload, id: `C${Math.floor(Math.random() * 900) + 100}` }, ...courses]);
-        addToast(`Course "${newCoursePayload.title}" created.`, 'success');
+        setCourses([savedCourse, ...courses]);
+        addToast(`Course "${newCoursePayload.title}" created via API!`, 'success');
       }
+      setIsEditorOpen(false);
     } catch (err) {
-      console.warn('Backend save failed, saving locally.', err);
-      if (isEditMode) {
-        setCourses(courses.map(c => c.id === formData.id ? { ...formData, enrollments: (c ).enrollments } : c));
-        addToast(`Course "${formData.title}" updated (Locally).`, 'success');
-      } else {
-        const newCourse = { ...formData, id: `C${Math.floor(Math.random() * 900) + 100}`, enrollments: 0, totalViews: 0 };
-        setCourses([newCourse, ...courses]);
-        addToast(`Course "${newCourse.title}" created (Locally).`, 'success');
-      }
+      console.error('Backend save failed.', err);
+      addToast("Failed to save course to backend API.", "error");
     }
-    setIsEditorOpen(false);
   };
 
   const navigateToBuilder = (courseId) => {
