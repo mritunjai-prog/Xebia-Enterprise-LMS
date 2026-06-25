@@ -1,0 +1,3 @@
+server.port: ${SERVER_PORT:8090}
+spring.application.name: engagement-service
+management.endpoints.web.exposure.include: health,info,metrics

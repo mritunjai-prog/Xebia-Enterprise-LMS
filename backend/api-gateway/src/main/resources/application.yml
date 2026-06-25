@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: api-gateway
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  cloud:
+    gateway:
+      default-filters:
+        - AddResponseHeader=X-Gateway, enterprise-lms
+
+lms:
+  jwt:
+    issuer: ${JWT_ISSUER:enterprise-lms}
+    secret: ${JWT_SECRET:replace-with-at-least-32-characters}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
