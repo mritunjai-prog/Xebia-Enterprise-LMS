@@ -32,6 +32,17 @@ import { Route as ManagerUsersRouteImport } from './routes/manager/users'
 import { Route as ManagerFeedbackRouteImport } from './routes/manager/feedback'
 import { Route as ManagerApprovalsRouteImport } from './routes/manager/approvals'
 import { Route as ManagerAnalyticsRouteImport } from './routes/manager/analytics'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminRolesRouteImport } from './routes/admin/roles'
+import { Route as AdminReportsRouteImport } from './routes/admin/reports'
+import { Route as AdminOrganizationsRouteImport } from './routes/admin/organizations'
+import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
+import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
+import { Route as AdminBatchRouteImport } from './routes/admin/batch'
+import { Route as AdminAuditRouteImport } from './routes/admin/audit'
+import { Route as AdminAssessmentsRouteImport } from './routes/admin/assessments'
+import { Route as AdminApprovalsRouteImport } from './routes/admin/approvals'
 import { Route as TrainerStudentsIndexRouteImport } from './routes/trainer/students/index'
 import { Route as TrainerReportsIndexRouteImport } from './routes/trainer/reports/index'
 import { Route as TrainerNotificationsIndexRouteImport } from './routes/trainer/notifications/index'
@@ -50,9 +61,13 @@ import { Route as OrganiserContentLibraryIndexRouteImport } from './routes/organ
 import { Route as OrganiserBatchesIndexRouteImport } from './routes/organiser/batches/index'
 import { Route as OrganiserAssessmentsIndexRouteImport } from './routes/organiser/assessments/index'
 import { Route as ManagerCoursesIndexRouteImport } from './routes/manager/courses/index'
+import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
 import { Route as TrainerCoursesCourseIdRouteImport } from './routes/trainer/courses/$courseId'
 import { Route as StudentCourseCourseIdRouteImport } from './routes/student/course/$courseId'
 import { Route as OrganiserCoursesCourseIdRouteImport } from './routes/organiser/courses/$courseId'
+import { Route as AdminOrganizationsUniversitiesRouteImport } from './routes/admin/organizations/universities'
+import { Route as AdminOrganizationsCompaniesRouteImport } from './routes/admin/organizations/companies'
+import { Route as AdminOrganizationsCollegesRouteImport } from './routes/admin/organizations/colleges'
 import { Route as AdminCoursesBuilderRouteImport } from './routes/admin/courses/builder'
 
 const TrainerRoute = TrainerRouteImport.update({
@@ -170,6 +185,61 @@ const ManagerAnalyticsRoute = ManagerAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => ManagerRouteRoute,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRolesRoute = AdminRolesRouteImport.update({
+  id: '/roles',
+  path: '/roles',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOrganizationsRoute = AdminOrganizationsRouteImport.update({
+  id: '/organizations',
+  path: '/organizations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBatchRoute = AdminBatchRouteImport.update({
+  id: '/batch',
+  path: '/batch',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAssessmentsRoute = AdminAssessmentsRouteImport.update({
+  id: '/assessments',
+  path: '/assessments',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminApprovalsRoute = AdminApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => AdminRoute,
+} as any)
 const TrainerStudentsIndexRoute = TrainerStudentsIndexRouteImport.update({
   id: '/students/',
   path: '/students/',
@@ -266,6 +336,11 @@ const ManagerCoursesIndexRoute = ManagerCoursesIndexRouteImport.update({
   path: '/courses/',
   getParentRoute: () => ManagerRouteRoute,
 } as any)
+const AdminCoursesIndexRoute = AdminCoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const TrainerCoursesCourseIdRoute = TrainerCoursesCourseIdRouteImport.update({
   id: '/courses/$courseId',
   path: '/courses/$courseId',
@@ -282,6 +357,24 @@ const OrganiserCoursesCourseIdRoute =
     path: '/courses/$courseId',
     getParentRoute: () => OrganiserRoute,
   } as any)
+const AdminOrganizationsUniversitiesRoute =
+  AdminOrganizationsUniversitiesRouteImport.update({
+    id: '/universities',
+    path: '/universities',
+    getParentRoute: () => AdminOrganizationsRoute,
+  } as any)
+const AdminOrganizationsCompaniesRoute =
+  AdminOrganizationsCompaniesRouteImport.update({
+    id: '/companies',
+    path: '/companies',
+    getParentRoute: () => AdminOrganizationsRoute,
+  } as any)
+const AdminOrganizationsCollegesRoute =
+  AdminOrganizationsCollegesRouteImport.update({
+    id: '/colleges',
+    path: '/colleges',
+    getParentRoute: () => AdminOrganizationsRoute,
+  } as any)
 const AdminCoursesBuilderRoute = AdminCoursesBuilderRouteImport.update({
   id: '/courses/builder',
   path: '/courses/builder',
@@ -296,6 +389,17 @@ export interface FileRoutesByFullPath {
   '/organiser': typeof OrganiserRouteWithChildren
   '/student': typeof StudentRouteWithChildren
   '/trainer': typeof TrainerRouteWithChildren
+  '/admin/approvals': typeof AdminApprovalsRoute
+  '/admin/assessments': typeof AdminAssessmentsRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/batch': typeof AdminBatchRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/organizations': typeof AdminOrganizationsRouteWithChildren
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/roles': typeof AdminRolesRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/manager/analytics': typeof ManagerAnalyticsRoute
   '/manager/approvals': typeof ManagerApprovalsRoute
   '/manager/feedback': typeof ManagerFeedbackRoute
@@ -313,9 +417,13 @@ export interface FileRoutesByFullPath {
   '/student/': typeof StudentIndexRoute
   '/trainer/': typeof TrainerIndexRoute
   '/admin/courses/builder': typeof AdminCoursesBuilderRoute
+  '/admin/organizations/colleges': typeof AdminOrganizationsCollegesRoute
+  '/admin/organizations/companies': typeof AdminOrganizationsCompaniesRoute
+  '/admin/organizations/universities': typeof AdminOrganizationsUniversitiesRoute
   '/organiser/courses/$courseId': typeof OrganiserCoursesCourseIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
   '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
+  '/admin/courses/': typeof AdminCoursesIndexRoute
   '/manager/courses/': typeof ManagerCoursesIndexRoute
   '/organiser/assessments/': typeof OrganiserAssessmentsIndexRoute
   '/organiser/batches/': typeof OrganiserBatchesIndexRoute
@@ -338,6 +446,17 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/admin/approvals': typeof AdminApprovalsRoute
+  '/admin/assessments': typeof AdminAssessmentsRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/batch': typeof AdminBatchRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/organizations': typeof AdminOrganizationsRouteWithChildren
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/roles': typeof AdminRolesRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/manager/analytics': typeof ManagerAnalyticsRoute
   '/manager/approvals': typeof ManagerApprovalsRoute
   '/manager/feedback': typeof ManagerFeedbackRoute
@@ -355,9 +474,13 @@ export interface FileRoutesByTo {
   '/student': typeof StudentIndexRoute
   '/trainer': typeof TrainerIndexRoute
   '/admin/courses/builder': typeof AdminCoursesBuilderRoute
+  '/admin/organizations/colleges': typeof AdminOrganizationsCollegesRoute
+  '/admin/organizations/companies': typeof AdminOrganizationsCompaniesRoute
+  '/admin/organizations/universities': typeof AdminOrganizationsUniversitiesRoute
   '/organiser/courses/$courseId': typeof OrganiserCoursesCourseIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
   '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
+  '/admin/courses': typeof AdminCoursesIndexRoute
   '/manager/courses': typeof ManagerCoursesIndexRoute
   '/organiser/assessments': typeof OrganiserAssessmentsIndexRoute
   '/organiser/batches': typeof OrganiserBatchesIndexRoute
@@ -386,6 +509,17 @@ export interface FileRoutesById {
   '/organiser': typeof OrganiserRouteWithChildren
   '/student': typeof StudentRouteWithChildren
   '/trainer': typeof TrainerRouteWithChildren
+  '/admin/approvals': typeof AdminApprovalsRoute
+  '/admin/assessments': typeof AdminAssessmentsRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/batch': typeof AdminBatchRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/organizations': typeof AdminOrganizationsRouteWithChildren
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/roles': typeof AdminRolesRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/manager/analytics': typeof ManagerAnalyticsRoute
   '/manager/approvals': typeof ManagerApprovalsRoute
   '/manager/feedback': typeof ManagerFeedbackRoute
@@ -403,9 +537,13 @@ export interface FileRoutesById {
   '/student/': typeof StudentIndexRoute
   '/trainer/': typeof TrainerIndexRoute
   '/admin/courses/builder': typeof AdminCoursesBuilderRoute
+  '/admin/organizations/colleges': typeof AdminOrganizationsCollegesRoute
+  '/admin/organizations/companies': typeof AdminOrganizationsCompaniesRoute
+  '/admin/organizations/universities': typeof AdminOrganizationsUniversitiesRoute
   '/organiser/courses/$courseId': typeof OrganiserCoursesCourseIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
   '/trainer/courses/$courseId': typeof TrainerCoursesCourseIdRoute
+  '/admin/courses/': typeof AdminCoursesIndexRoute
   '/manager/courses/': typeof ManagerCoursesIndexRoute
   '/organiser/assessments/': typeof OrganiserAssessmentsIndexRoute
   '/organiser/batches/': typeof OrganiserBatchesIndexRoute
@@ -435,6 +573,17 @@ export interface FileRouteTypes {
     | '/organiser'
     | '/student'
     | '/trainer'
+    | '/admin/approvals'
+    | '/admin/assessments'
+    | '/admin/audit'
+    | '/admin/batch'
+    | '/admin/categories'
+    | '/admin/notifications'
+    | '/admin/organizations'
+    | '/admin/reports'
+    | '/admin/roles'
+    | '/admin/settings'
+    | '/admin/users'
     | '/manager/analytics'
     | '/manager/approvals'
     | '/manager/feedback'
@@ -452,9 +601,13 @@ export interface FileRouteTypes {
     | '/student/'
     | '/trainer/'
     | '/admin/courses/builder'
+    | '/admin/organizations/colleges'
+    | '/admin/organizations/companies'
+    | '/admin/organizations/universities'
     | '/organiser/courses/$courseId'
     | '/student/course/$courseId'
     | '/trainer/courses/$courseId'
+    | '/admin/courses/'
     | '/manager/courses/'
     | '/organiser/assessments/'
     | '/organiser/batches/'
@@ -477,6 +630,17 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/admin/approvals'
+    | '/admin/assessments'
+    | '/admin/audit'
+    | '/admin/batch'
+    | '/admin/categories'
+    | '/admin/notifications'
+    | '/admin/organizations'
+    | '/admin/reports'
+    | '/admin/roles'
+    | '/admin/settings'
+    | '/admin/users'
     | '/manager/analytics'
     | '/manager/approvals'
     | '/manager/feedback'
@@ -494,9 +658,13 @@ export interface FileRouteTypes {
     | '/student'
     | '/trainer'
     | '/admin/courses/builder'
+    | '/admin/organizations/colleges'
+    | '/admin/organizations/companies'
+    | '/admin/organizations/universities'
     | '/organiser/courses/$courseId'
     | '/student/course/$courseId'
     | '/trainer/courses/$courseId'
+    | '/admin/courses'
     | '/manager/courses'
     | '/organiser/assessments'
     | '/organiser/batches'
@@ -524,6 +692,17 @@ export interface FileRouteTypes {
     | '/organiser'
     | '/student'
     | '/trainer'
+    | '/admin/approvals'
+    | '/admin/assessments'
+    | '/admin/audit'
+    | '/admin/batch'
+    | '/admin/categories'
+    | '/admin/notifications'
+    | '/admin/organizations'
+    | '/admin/reports'
+    | '/admin/roles'
+    | '/admin/settings'
+    | '/admin/users'
     | '/manager/analytics'
     | '/manager/approvals'
     | '/manager/feedback'
@@ -541,9 +720,13 @@ export interface FileRouteTypes {
     | '/student/'
     | '/trainer/'
     | '/admin/courses/builder'
+    | '/admin/organizations/colleges'
+    | '/admin/organizations/companies'
+    | '/admin/organizations/universities'
     | '/organiser/courses/$courseId'
     | '/student/course/$courseId'
     | '/trainer/courses/$courseId'
+    | '/admin/courses/'
     | '/manager/courses/'
     | '/organiser/assessments/'
     | '/organiser/batches/'
@@ -737,6 +920,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerAnalyticsRouteImport
       parentRoute: typeof ManagerRouteRoute
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/roles': {
+      id: '/admin/roles'
+      path: '/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AdminRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/organizations': {
+      id: '/admin/organizations'
+      path: '/organizations'
+      fullPath: '/admin/organizations'
+      preLoaderRoute: typeof AdminOrganizationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/batch': {
+      id: '/admin/batch'
+      path: '/batch'
+      fullPath: '/admin/batch'
+      preLoaderRoute: typeof AdminBatchRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/assessments': {
+      id: '/admin/assessments'
+      path: '/assessments'
+      fullPath: '/admin/assessments'
+      preLoaderRoute: typeof AdminAssessmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/approvals': {
+      id: '/admin/approvals'
+      path: '/approvals'
+      fullPath: '/admin/approvals'
+      preLoaderRoute: typeof AdminApprovalsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/trainer/students/': {
       id: '/trainer/students/'
       path: '/students'
@@ -863,6 +1123,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerCoursesIndexRouteImport
       parentRoute: typeof ManagerRouteRoute
     }
+    '/admin/courses/': {
+      id: '/admin/courses/'
+      path: '/courses'
+      fullPath: '/admin/courses/'
+      preLoaderRoute: typeof AdminCoursesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/trainer/courses/$courseId': {
       id: '/trainer/courses/$courseId'
       path: '/courses/$courseId'
@@ -883,6 +1150,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/organiser/courses/$courseId'
       preLoaderRoute: typeof OrganiserCoursesCourseIdRouteImport
       parentRoute: typeof OrganiserRoute
+    }
+    '/admin/organizations/universities': {
+      id: '/admin/organizations/universities'
+      path: '/universities'
+      fullPath: '/admin/organizations/universities'
+      preLoaderRoute: typeof AdminOrganizationsUniversitiesRouteImport
+      parentRoute: typeof AdminOrganizationsRoute
+    }
+    '/admin/organizations/companies': {
+      id: '/admin/organizations/companies'
+      path: '/companies'
+      fullPath: '/admin/organizations/companies'
+      preLoaderRoute: typeof AdminOrganizationsCompaniesRouteImport
+      parentRoute: typeof AdminOrganizationsRoute
+    }
+    '/admin/organizations/colleges': {
+      id: '/admin/organizations/colleges'
+      path: '/colleges'
+      fullPath: '/admin/organizations/colleges'
+      preLoaderRoute: typeof AdminOrganizationsCollegesRouteImport
+      parentRoute: typeof AdminOrganizationsRoute
     }
     '/admin/courses/builder': {
       id: '/admin/courses/builder'
@@ -916,14 +1204,53 @@ const ManagerRouteRouteWithChildren = ManagerRouteRoute._addFileChildren(
   ManagerRouteRouteChildren,
 )
 
+interface AdminOrganizationsRouteChildren {
+  AdminOrganizationsCollegesRoute: typeof AdminOrganizationsCollegesRoute
+  AdminOrganizationsCompaniesRoute: typeof AdminOrganizationsCompaniesRoute
+  AdminOrganizationsUniversitiesRoute: typeof AdminOrganizationsUniversitiesRoute
+}
+
+const AdminOrganizationsRouteChildren: AdminOrganizationsRouteChildren = {
+  AdminOrganizationsCollegesRoute: AdminOrganizationsCollegesRoute,
+  AdminOrganizationsCompaniesRoute: AdminOrganizationsCompaniesRoute,
+  AdminOrganizationsUniversitiesRoute: AdminOrganizationsUniversitiesRoute,
+}
+
+const AdminOrganizationsRouteWithChildren =
+  AdminOrganizationsRoute._addFileChildren(AdminOrganizationsRouteChildren)
+
 interface AdminRouteChildren {
+  AdminApprovalsRoute: typeof AdminApprovalsRoute
+  AdminAssessmentsRoute: typeof AdminAssessmentsRoute
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminBatchRoute: typeof AdminBatchRoute
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminOrganizationsRoute: typeof AdminOrganizationsRouteWithChildren
+  AdminReportsRoute: typeof AdminReportsRoute
+  AdminRolesRoute: typeof AdminRolesRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminCoursesBuilderRoute: typeof AdminCoursesBuilderRoute
+  AdminCoursesIndexRoute: typeof AdminCoursesIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminApprovalsRoute: AdminApprovalsRoute,
+  AdminAssessmentsRoute: AdminAssessmentsRoute,
+  AdminAuditRoute: AdminAuditRoute,
+  AdminBatchRoute: AdminBatchRoute,
+  AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminOrganizationsRoute: AdminOrganizationsRouteWithChildren,
+  AdminReportsRoute: AdminReportsRoute,
+  AdminRolesRoute: AdminRolesRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminCoursesBuilderRoute: AdminCoursesBuilderRoute,
+  AdminCoursesIndexRoute: AdminCoursesIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

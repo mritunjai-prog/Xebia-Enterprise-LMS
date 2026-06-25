@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { clsx } from 'clsx';
+import { useRouter, useLocation } from '@tanstack/react-router';
 import {
   IconDashboard, IconOrganizations, IconExpand, IconUsers, IconRoles,
   IconCourses, IconBatch, IconAssessments, IconApprovals, IconNotifications,
   IconReports, IconAuditLogs, IconSettings, IconMoreHorizontal
 } from '../Icons';
-import { useAppStore } from '../../store/useAppStore';
-
-
 
 const NavItem = ({ icon, label, badge, badgeColor, hasChildren, isActive, isOpen, onClick }) => (
   <div onClick={onClick} className={clsx("nav-item", isActive && "active")}>
@@ -29,7 +27,9 @@ const NavChild = ({ label, isActive, onClick }) => (
 );
 
 export function Sidebar() {
-  const { activeSidebarItem, setActiveSidebarItem } = useAppStore();
+  const router = useRouter();
+  const location = useLocation();
+  const currentPath = location.pathname;
   const [openSections, setOpenSections] = useState({
     orgs: true,
     courses: true
@@ -40,8 +40,8 @@ export function Sidebar() {
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleNavClick = (label, isParent = false, key) => {
-    setActiveSidebarItem(label);
+  const handleNavClick = (path, isParent = false, key) => {
+    router.navigate({ to: path });
     if (isParent && key) {
       if (!openSections[key]) {
         toggleSection(key);
@@ -65,8 +65,8 @@ export function Sidebar() {
         <NavItem 
           icon={<IconDashboard className="nav-icon" />} 
           label="Dashboard" 
-          isActive={activeSidebarItem === 'Dashboard'} 
-          onClick={() => handleNavClick('Dashboard')}
+          isActive={currentPath === '/admin' || currentPath === '/admin/'} 
+          onClick={() => handleNavClick('/admin')}
         />
 
         <div className="nav-section">Organizations</div>
@@ -75,14 +75,14 @@ export function Sidebar() {
           label="Organizations" 
           hasChildren 
           isOpen={openSections.orgs}
-          isActive={['Organizations', 'Universities', 'Colleges', 'Companies'].includes(activeSidebarItem)}
-          onClick={() => handleNavClick('Organizations', true, 'orgs')}
+          isActive={currentPath.startsWith('/admin/organizations')}
+          onClick={() => handleNavClick('/admin/organizations', true, 'orgs')}
         />
         {openSections.orgs && (
           <div className="nav-children">
-            <NavChild label="Universities" isActive={activeSidebarItem === 'Universities'} onClick={() => handleNavClick('Universities')} />
-            <NavChild label="Colleges" isActive={activeSidebarItem === 'Colleges'} onClick={() => handleNavClick('Colleges')} />
-            <NavChild label="Companies" isActive={activeSidebarItem === 'Companies'} onClick={() => handleNavClick('Companies')} />
+            <NavChild label="Universities" isActive={currentPath === '/admin/organizations/universities'} onClick={() => handleNavClick('/admin/organizations/universities')} />
+            <NavChild label="Colleges" isActive={currentPath === '/admin/organizations/colleges'} onClick={() => handleNavClick('/admin/organizations/colleges')} />
+            <NavChild label="Companies" isActive={currentPath === '/admin/organizations/companies'} onClick={() => handleNavClick('/admin/organizations/companies')} />
           </div>
         )}
 
@@ -92,38 +92,38 @@ export function Sidebar() {
           label="Users" 
           badge="2.4k" 
           badgeColor="green" 
-          isActive={activeSidebarItem === 'Users'}
-          onClick={() => handleNavClick('Users')}
+          isActive={currentPath === '/admin/users'}
+          onClick={() => handleNavClick('/admin/users')}
         />
         <NavItem 
           icon={<IconRoles className="nav-icon" />} 
           label="Roles & Permissions" 
-          isActive={activeSidebarItem === 'Roles & Permissions'}
-          onClick={() => handleNavClick('Roles & Permissions')}
+          isActive={currentPath === '/admin/roles'}
+          onClick={() => handleNavClick('/admin/roles')}
         />
 
         <div className="nav-section">Learning</div>
         <NavItem 
           icon={<IconCourses className="nav-icon" />} 
           label="Categories" 
-          isActive={activeSidebarItem === 'Categories'}
-          onClick={() => handleNavClick('Categories')}
+          isActive={currentPath === '/admin/categories'}
+          onClick={() => handleNavClick('/admin/categories')}
         />
         <NavItem 
           icon={<IconCourses className="nav-icon" />} 
           label="Courses" 
-          isActive={activeSidebarItem === 'Courses'}
-          onClick={() => handleNavClick('Courses')}
+          isActive={currentPath === '/admin/courses' || currentPath.startsWith('/admin/courses/')}
+          onClick={() => handleNavClick('/admin/courses')}
         />
-        <NavItem icon={<IconBatch className="nav-icon" />} label="Batch & Enrollment" isActive={activeSidebarItem === 'Batch & Enrollment'} onClick={() => handleNavClick('Batch & Enrollment')} />
-        <NavItem icon={<IconAssessments className="nav-icon" />} label="Assessments" isActive={activeSidebarItem === 'Assessments'} onClick={() => handleNavClick('Assessments')} />
+        <NavItem icon={<IconBatch className="nav-icon" />} label="Batch & Enrollment" isActive={currentPath === '/admin/batch'} onClick={() => handleNavClick('/admin/batch')} />
+        <NavItem icon={<IconAssessments className="nav-icon" />} label="Assessments" isActive={currentPath === '/admin/assessments'} onClick={() => handleNavClick('/admin/assessments')} />
 
         <div className="nav-section">Operations</div>
-        <NavItem icon={<IconApprovals className="nav-icon" />} label="Approvals" badge="14" isActive={activeSidebarItem === 'Approvals'} onClick={() => handleNavClick('Approvals')} />
-        <NavItem icon={<IconNotifications className="nav-icon" />} label="Notifications" badge="3" isActive={activeSidebarItem === 'Notifications'} onClick={() => handleNavClick('Notifications')} />
-        <NavItem icon={<IconReports className="nav-icon" />} label="Reports" isActive={activeSidebarItem === 'Reports'} onClick={() => handleNavClick('Reports')} />
-        <NavItem icon={<IconAuditLogs className="nav-icon" />} label="Audit Logs" isActive={activeSidebarItem === 'Audit Logs'} onClick={() => handleNavClick('Audit Logs')} />
-        <NavItem icon={<IconSettings className="nav-icon" />} label="Settings" isActive={activeSidebarItem === 'Settings'} onClick={() => handleNavClick('Settings')} />
+        <NavItem icon={<IconApprovals className="nav-icon" />} label="Approvals" badge="14" isActive={currentPath === '/admin/approvals'} onClick={() => handleNavClick('/admin/approvals')} />
+        <NavItem icon={<IconNotifications className="nav-icon" />} label="Notifications" badge="3" isActive={currentPath === '/admin/notifications'} onClick={() => handleNavClick('/admin/notifications')} />
+        <NavItem icon={<IconReports className="nav-icon" />} label="Reports" isActive={currentPath === '/admin/reports'} onClick={() => handleNavClick('/admin/reports')} />
+        <NavItem icon={<IconAuditLogs className="nav-icon" />} label="Audit Logs" isActive={currentPath === '/admin/audit'} onClick={() => handleNavClick('/admin/audit')} />
+        <NavItem icon={<IconSettings className="nav-icon" />} label="Settings" isActive={currentPath === '/admin/settings'} onClick={() => handleNavClick('/admin/settings')} />
       </nav>
 
       <div className="sidebar-footer">

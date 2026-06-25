@@ -4,7 +4,7 @@ import { IconAdd } from '../../components/Icons';
 import { clsx } from 'clsx';
 import { Modal } from '../../components/ui/Modal';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, MoreVertical, Edit3, Trash2, FolderCode, ShieldAlert, Cpu, CheckCircle } from 'lucide-react';
+import { Search, Filter, MoreVertical, Edit3, Trash2, FolderCode, ShieldAlert, Cpu, CheckCircle, X, Layers, Calendar, Activity, Tag, Palette, Database, BookOpen } from 'lucide-react';
 
 // Mock initial categories data (matches CategoryEntity schema)
 const initialCategories = [
@@ -26,10 +26,21 @@ export default function Categories() {
     return initialCategories;
   });
 
+  const [courses, setCourses] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('lms_courses_v1');
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) {}
+      }
+    }
+    return [];
+  });
+
   useEffect(() => {
     localStorage.setItem('lms_categories_v1', JSON.stringify(categories));
   }, [categories]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewCategory, setViewCategory] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [activeTab, setActiveTab] = useState('All');
   const [sortBy, setSortBy] = useState('Recently Created');
@@ -44,7 +55,12 @@ export default function Categories() {
     status: 'Active'
   });
 
-  const filteredCategories = categories.filter(cat => {
+  const categoriesWithCount = categories.map(cat => {
+    const linkedCourses = courses.filter(c => c.category === cat.name);
+    return { ...cat, actualCount: linkedCourses.length, linkedCourses };
+  });
+
+  const filteredCategories = categoriesWithCount.filter(cat => {
     const matchesTab = activeTab === 'All' ? true : cat.status === activeTab;
     const matchesSearch = cat.name.toLowerCase().includes(search.toLowerCase());
     return matchesTab && matchesSearch;
@@ -184,7 +200,7 @@ export default function Categories() {
                           {cat.icon.startsWith('http') ? <img src={cat.icon} alt={cat.name} className="w-6 h-6 object-contain" /> : cat.icon}
                         </div>
                         <div>
-                          <h3 className="text-sm font-bold text-foreground line-clamp-1">{cat.name}</h3>
+                          <h3 onClick={() => setViewCategory(cat)} className="text-sm font-bold text-foreground line-clamp-1 cursor-pointer hover:text-indigo-500 transition-colors">{cat.name}</h3>
                           <p className="text-xs text-muted-foreground font-mono mt-0.5">{cat.id}</p>
                         </div>
                       </div>
@@ -193,7 +209,7 @@ export default function Categories() {
                       <p className="text-sm text-muted-foreground line-clamp-1">{cat.description}</p>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-sm font-bold text-foreground bg-secondary/80 px-2.5 py-1 rounded-md">{cat.count}</span>
+                      <span className="text-sm font-bold text-foreground bg-secondary/80 px-2.5 py-1 rounded-md">{cat.actualCount}</span>
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span className={clsx(
@@ -300,6 +316,168 @@ export default function Categories() {
           </div>
         </form>
       </Modal>
+
+      {/* Category Detail View Modal */}
+      <AnimatePresence>
+        {viewCategory && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm" onClick={() => setViewCategory(null)}>
+            <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }} className="w-full max-w-3xl max-h-[90vh] glass rounded-2xl overflow-hidden flex flex-col border border-border/40 shadow-2xl" onClick={e => e.stopPropagation()}>
+              
+              {/* Hero Banner (Category specific styling) */}
+              <div className="relative h-32 shrink-0 overflow-hidden rounded-t-2xl">
+                <div className="absolute inset-0" style={{background:`linear-gradient(135deg,${viewCategory.color||'#6366f1'}dd,${viewCategory.color||'#6366f1'}77)`}} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                
+                {/* Badges */}
+                <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                  <span className={clsx("px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm text-white", viewCategory.status === 'Active' ? 'bg-emerald-500/80' : 'bg-orange-500/80')}>
+                    Status: {viewCategory.status}
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-black/40 text-white backdrop-blur-sm uppercase tracking-wider border border-white/10">Taxonomy Node</span>
+                </div>
+
+                {/* Close Button */}
+                <button onClick={() => setViewCategory(null)} className="absolute top-4 right-4 h-8 w-8 rounded-full bg-black/40 backdrop-blur-sm grid place-items-center hover:bg-black/60 cursor-pointer z-10 transition-colors">
+                  <X className="w-4 h-4 text-white" />
+                </button>
+
+                {/* Bottom: Icon & Title */}
+                <div className="absolute bottom-0 left-0 right-0 p-5 flex items-end gap-3 translate-y-3">
+                  <div className="w-16 h-16 rounded-2xl shrink-0 overflow-hidden border-2 border-white/20 shadow-xl bg-black/30 backdrop-blur-md flex items-center justify-center text-4xl">
+                    {viewCategory.icon && viewCategory.icon.startsWith('http') ? <img src={viewCategory.icon} className="w-full h-full object-cover" alt="" /> : viewCategory.icon || '📁'}
+                  </div>
+                  <div className="flex-1 min-w-0 pb-3">
+                    <h2 className="text-2xl font-black text-white leading-tight font-display tracking-tight drop-shadow-md">{viewCategory.name}</h2>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Bar */}
+              <div className="flex items-center gap-2 px-5 py-4 border-b border-border/40 bg-secondary/30 shrink-0 mt-2">
+                <button onClick={() => { setViewCategory(null); handleEdit(viewCategory); }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border border-border/50 bg-background hover:bg-secondary text-foreground transition-all shadow-sm cursor-pointer">
+                  <Edit3 className="w-4 h-4 text-indigo-500" /> Edit Category
+                </button>
+                <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-sm shadow-indigo-500/20 hover:opacity-90 cursor-pointer" style={{background: viewCategory.color || '#6366f1'}}>
+                  <BookOpen className="w-4 h-4" /> Manage Linked Courses
+                </button>
+              </div>
+
+              {/* Stats Bar */}
+              <div className="grid grid-cols-3 divide-x divide-border/40 border-b border-border/40 shrink-0 bg-background/50">
+                <div className="flex flex-col items-center justify-center py-4 gap-1">
+                  <Layers className="w-4 h-4 text-indigo-500 mb-0.5" />
+                  <span className="text-xl font-black text-foreground leading-tight">{viewCategory.actualCount || 0}</span>
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Linked Courses</span>
+                </div>
+                <div className="flex flex-col items-center justify-center py-4 gap-1">
+                  <Activity className="w-4 h-4 text-emerald-500 mb-0.5" />
+                  <span className="text-xl font-black text-foreground leading-tight">Primary</span>
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Taxonomy Level</span>
+                </div>
+                <div className="flex flex-col items-center justify-center py-4 gap-1">
+                  <Calendar className="w-4 h-4 text-blue-500 mb-0.5" />
+                  <span className="text-xl font-black text-foreground leading-tight">{viewCategory.createdAt?.split(',')[0] || 'Unknown'}</span>
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Created Date</span>
+                </div>
+              </div>
+
+              {/* Main Split Content */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="grid grid-cols-1 md:grid-cols-5 h-full">
+                  
+                  {/* Left: General & Design (3/5) */}
+                  <div className="col-span-3 p-6 space-y-6 md:border-r border-border/40 bg-background/30">
+                    <div>
+                      <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2 mb-3">
+                        <FolderCode className="w-4 h-4 text-indigo-500" /> General Information
+                      </h3>
+                      <p className="text-sm text-foreground/90 leading-relaxed bg-secondary/20 p-4 rounded-xl border border-border/30">
+                        {viewCategory.description || <span className="italic text-muted-foreground">No description available for this category.</span>}
+                      </p>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2 mb-3">
+                        <Palette className="w-4 h-4 text-pink-500" /> Design Specifications
+                      </h3>
+                      <div className="flex items-center gap-4 bg-secondary/20 p-4 rounded-xl border border-border/30">
+                        <div className="w-12 h-12 rounded-lg border border-border/50 shadow-sm shrink-0" style={{backgroundColor: viewCategory.color || '#6366f1'}}></div>
+                        <div>
+                          <p className="text-sm font-bold text-foreground">Brand Color</p>
+                          <p className="text-xs font-mono text-muted-foreground mt-0.5 uppercase">{viewCategory.color || '#6366f1'}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2 mb-3">
+                        <BookOpen className="w-4 h-4 text-emerald-500" /> Linked Courses ({viewCategory.actualCount})
+                      </h3>
+                      {viewCategory.linkedCourses && viewCategory.linkedCourses.length > 0 ? (
+                        <div className="space-y-3">
+                          {viewCategory.linkedCourses.map(course => (
+                            <div key={course.id} className="flex items-center gap-3 bg-secondary/20 p-3 rounded-xl border border-border/30 hover:bg-secondary/40 transition-colors">
+                              <div className="w-10 h-10 rounded-lg shrink-0 overflow-hidden bg-background border border-border/50 flex items-center justify-center text-lg">
+                                {course.thumbnail ? <img src={course.thumbnail} className="w-full h-full object-cover" alt="" /> 
+                                : course.icon && course.icon.startsWith('http') ? <img src={course.icon} className="w-full h-full object-cover" alt="" />
+                                : course.icon || '📚'}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <h4 className="text-sm font-bold text-foreground truncate">{course.title}</h4>
+                                <p className="text-xs text-muted-foreground truncate">{course.level || 'Beginner'} • {course.duration || 'N/A'}</p>
+                              </div>
+                              <div className="shrink-0">
+                                {course.isPublished ? (
+                                  <span className="text-[9px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-500 border border-blue-500/20 px-2 py-0.5 rounded-full">Published</span>
+                                ) : (
+                                  <span className="text-[9px] font-bold uppercase tracking-wider bg-orange-500/10 text-orange-500 border border-orange-500/20 px-2 py-0.5 rounded-full">Draft</span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-muted-foreground italic bg-secondary/20 p-4 rounded-xl border border-border/30">
+                          No courses have been linked to this category yet.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right: System Meta (2/5) */}
+                  <div className="col-span-2 p-6 bg-secondary/10">
+                    <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2 mb-4">
+                      <Database className="w-4 h-4 text-orange-500" /> System Metadata
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div className="bg-background border border-border/40 rounded-xl p-3 shadow-sm">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Category ID</p>
+                        <p className="text-sm font-mono text-foreground">{viewCategory.id}</p>
+                      </div>
+                      
+                      <div className="bg-background border border-border/40 rounded-xl p-3 shadow-sm">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Visibility Status</p>
+                        <div className="flex items-center gap-1.5">
+                          <span className={clsx("w-2 h-2 rounded-full", viewCategory.status === 'Active' ? 'bg-emerald-500' : 'bg-orange-500')} />
+                          <p className="text-sm font-bold text-foreground">{viewCategory.status === 'Active' ? 'Visible in Catalog' : 'Hidden from Users'}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-background border border-border/40 rounded-xl p-3 shadow-sm">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Entity Created</p>
+                        <p className="text-sm font-semibold text-foreground">{viewCategory.createdAt || 'N/A'}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

@@ -52,6 +52,16 @@ export default function Courses() {
     return mockCourses;
   });
 
+  const [categories, setCategories] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('lms_categories_v1');
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) {}
+      }
+    }
+    return [];
+  });
+
   useEffect(() => {
     localStorage.setItem('lms_courses_v1', JSON.stringify(courses));
   }, [courses]);
@@ -373,10 +383,17 @@ export default function Courses() {
                             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1.5">Category</label>
                             <select className="w-full px-4 py-2.5 bg-background border border-border/50 rounded-xl text-sm outline-none focus:border-blue-500 cursor-pointer" value={(formData ).category || ''} onChange={e => setFormData({...formData, category: e.target.value} )}>
                               <option value="" disabled>Select Category</option>
-                              <option value="Programming">Programming</option>
-                              <option value="Architecture">Architecture</option>
-                              <option value="Cloud & DevOps">Cloud & DevOps</option>
-                              <option value="Data Science">Data Science</option>
+                              {categories.map(c => (
+                                <option key={c.id} value={c.name}>{c.name}</option>
+                              ))}
+                              {categories.length === 0 && (
+                                <>
+                                  <option value="Programming">Programming</option>
+                                  <option value="Architecture">Architecture</option>
+                                  <option value="Cloud & DevOps">Cloud & DevOps</option>
+                                  <option value="Data Science">Data Science</option>
+                                </>
+                              )}
                             </select>
                           </div>
                           <div>
