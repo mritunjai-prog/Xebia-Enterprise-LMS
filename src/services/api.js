@@ -4,10 +4,10 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080
  * Standard fetch wrapper that automatically handles JSON and error states
  */
 async function fetchApi(endpoint, options = {}) {
-  const token = localStorage.getItem('lms_token'); // Mock token retrieval
   const headers = {
     'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    'X-Tenant-Id': '123e4567-e89b-12d3-a456-426614174000',
+    'X-User-Id': '123e4567-e89b-12d3-a456-426614174000',
     ...options.headers,
   };
 
@@ -17,6 +17,7 @@ async function fetchApi(endpoint, options = {}) {
   });
 
   if (!response.ok) {
+
     let errorMsg = 'An error occurred while fetching data';
     try {
       const errorData = await response.json();
@@ -35,9 +36,39 @@ async function fetchApi(endpoint, options = {}) {
 export const CourseService = {
   getCourses: () => fetchApi('/courses'),
   getCourseById: (id) => fetchApi(`/courses/${id}`),
+  getCourseHierarchy: async (id) => {
+    const dto = await fetchApi(`/courses/${id}/hierarchy`);
+    if (!dto) return null;
+    const mappedCourse = { ...dto.course };
+    mappedCourse.modules = (dto.modules || []).map(mDto => ({
+      ...mDto.module,
+      submodules: (mDto.submodules || []).map(sDto => ({
+        ...sDto.submodule,
+        contentBlocks: sDto.contentBlocks || []
+      }))
+    }));
+    mappedCourse.modulesCount = mappedCourse.modules.length;
+    mappedCourse.submodulesCount = mappedCourse.modules.reduce((acc, m) => acc + (m.submodules?.length || 0), 0);
+    return mappedCourse;
+  },
+  getCourseBySlug: async (slug) => {
+    try {
+      const all = await fetchApi('/courses');
+      // If course doesn't have a slug, match by lowercased title
+      const course = all.find(c => c.slug === slug || (c.title && c.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug));
+      if (!course) throw new Error("Course not found");
+      return course;
+    } catch (err) {
+      console.warn("Falling back to mock for getCourseBySlug", err);
+      throw err;
+    }
+  },
   createCourse: (data) => fetchApi('/courses', { method: 'POST', body: JSON.stringify(data) }),
+  updateCourse: (id, data) => fetchApi(`/courses/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteCourse: (id) => fetchApi(`/courses/${id}`, { method: 'DELETE' }),
   addModule: (courseId, data) => fetchApi(`/courses/${courseId}/modules`, { method: 'POST', body: JSON.stringify(data) }),
   addSubmodule: (courseId, moduleId, data) => fetchApi(`/courses/${courseId}/modules/${moduleId}/submodules`, { method: 'POST', body: JSON.stringify(data) }),
+  addContentItem: (courseId, data) => fetchApi(`/courses/${courseId}/content-items`, { method: 'POST', body: JSON.stringify(data) }),
 };
 
 export const BatchService = {
@@ -51,5 +82,41 @@ export const AuthService = {
   getProfile: () => fetchApi('/iam/me'),
 };
 
-// NOTE: Categories API is missing from the backend spec. 
-// It will remain on localStorage until the backend implements /api/categories.
+export const CategoryService = {
+  getCategories: async () => {
+    return await fetchApi('/categories');
+  },
+  getCategoryById: async (id) => {
+    try {
+      const all = await fetchApi('/categories');
+      const cat = all.find(c => String(c.id) === String(id));
+      if (!cat) throw new Error("Category not found");
+      return cat;
+    } catch (err) {
+      console.warn("Falling back to mock for getCategoryById", err);
+      throw err;
+    }
+  },
+  getCategoryBySlug: async (slug) => {
+    try {
+      const all = await fetchApi('/categories');
+      // Some categories might have actual slug fields. If not, match by name.
+      const cat = all.find(c => c.slug === slug || (c.name && c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug));
+      if (!cat) throw new Error("Category not found");
+      return cat;
+    } catch (err) {
+      console.warn("Falling back to mock for getCategoryBySlug", err);
+      throw err;
+    }
+  },
+  createCategory: async (data) => {
+    return await fetchApi('/categories', { method: 'POST', body: JSON.stringify(data) });
+  },
+  updateCategory: async (id, data) => {
+    return await fetchApi(`/categories/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+  },
+  deleteCategory: async (id) => {
+    await fetchApi(`/categories/${id}`, { method: 'DELETE' });
+    return true;
+  },
+};

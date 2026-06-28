@@ -1,483 +1,471 @@
 import React, { useState, useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
-import { IconAdd } from '../../components/Icons';
-import { clsx } from 'clsx';
-import { Modal } from '../../components/ui/Modal';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, MoreVertical, Edit3, Trash2, FolderCode, ShieldAlert, Cpu, CheckCircle, X, Layers, Calendar, Activity, Tag, Palette, Database, BookOpen } from 'lucide-react';
+import {
+  Search, Tag, Edit3, Trash2, CheckCircle, XCircle,
+  BookOpen, Plus, LayoutGrid, List as ListIcon, Users,
+  ChevronLeft, ChevronRight, Activity
+} from 'lucide-react';
+import { CategoryService, CourseService } from '../../../services/api';
+import CreateCategory from './CreateCategory';
+import { clsx } from 'clsx';
+import { Link } from '@tanstack/react-router';
 
-// Mock initial categories data (matches CategoryEntity schema)
-const initialCategories = [
-  { id: 'cat-1', name: 'Programming & Software Development', icon: '💻', color: '#3B82F6', description: 'Core programming languages and engineering principles.', status: 'Active', count: 12, createdAt: 'Oct 12, 2023' },
-  { id: 'cat-2', name: 'Cloud & DevOps Architecture', icon: '☁️', color: '#10B981', description: 'Cloud infrastructure, CI/CD, and site reliability.', status: 'Active', count: 8, createdAt: 'Nov 05, 2023' },
-  { id: 'cat-3', name: 'Data Science & Machine Learning', icon: '🧠', color: '#8B5CF6', description: 'AI, big data, analytics, and ML models.', status: 'Active', count: 5, createdAt: 'Dec 20, 2023' },
-  { id: 'cat-4', name: 'Cybersecurity & Compliance', icon: '🛡️', color: '#EF4444', description: 'Network security, cryptography, and risk management.', status: 'Inactive', count: 0, createdAt: 'Jan 14, 2024' },
-];
+const ITEMS_PER_PAGE = 12; // Standardized to 12 for grid
 
 export default function Categories() {
   const { addToast } = useAppStore();
-  const [categories, setCategories] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('lms_categories_v1');
-      if (saved) {
-        try { return JSON.parse(saved); } catch (e) {}
-      }
-    }
-    return initialCategories;
-  });
-
+  const [categories, setCategories] = useState([]);
   const [courses, setCourses] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('lms_courses_v1');
-      if (saved) {
-        try { return JSON.parse(saved); } catch (e) {}
-      }
+      if (saved) { try { return JSON.parse(saved); } catch (e) {} }
     }
     return [];
   });
 
   useEffect(() => {
-    localStorage.setItem('lms_categories_v1', JSON.stringify(categories));
-  }, [categories]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [viewCategory, setViewCategory] = useState(null);
+    const fetchData = async () => {
+      try {
+        const [categoriesData, coursesData] = await Promise.all([
+          CategoryService.getCategories(),
+          CourseService.getCourses().catch(() => []) // fail gracefully if course API isn't ready
+        ]);
+        setCategories(categoriesData);
+        if (coursesData && coursesData.length > 0) {
+          setCourses(coursesData);
+        }
+      } catch {
+        addToast('Failed to load categories', 'error');
+      }
+    };
+    fetchData();
+  }, [addToast]);
+
+  const [showCreatePage, setShowCreatePage] = useState(false);
+  const [editData, setEditData] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [activeTab, setActiveTab] = useState('All');
-  const [sortBy, setSortBy] = useState('Recently Created');
+  const [statusFilter, setStatusFilter] = useState('All Status');
+  const [sortBy, setSortBy] = useState('Sort: Name A-Z');
   const [search, setSearch] = useState('');
   
-  const [formData, setFormData] = useState({
-    id: '',
-    name: '',
-    icon: '',
-    color: '#3B82F6',
-    description: '',
-    status: 'Active'
+  useEffect(() => {
+    if (window.location.search.includes('create=true')) {
+      setShowCreatePage(true);
+      // Clean up the URL
+      window.history.replaceState({}, '', '/categories');
+    }
+  }, []);
+  const [viewMode, setViewMode] = useState(() => {
+    return localStorage.getItem('categoriesViewMode') || 'grid';
   });
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    localStorage.setItem('categoriesViewMode', viewMode);
+  }, [viewMode]);
 
   const categoriesWithCount = categories.map(cat => {
-    const linkedCourses = courses.filter(c => c.category === cat.name);
-    return { ...cat, actualCount: linkedCourses.length, linkedCourses };
+    const linkedCourses = courses.filter(c => c.categoryId === cat.id);
+    return { ...cat, actualCount: linkedCourses.length };
   });
 
   const filteredCategories = categoriesWithCount.filter(cat => {
-    const matchesTab = activeTab === 'All' ? true : cat.status === activeTab;
-    const matchesSearch = cat.name.toLowerCase().includes(search.toLowerCase());
-    return matchesTab && matchesSearch;
+    const matchesStatus =
+      statusFilter === 'All Status' ? true :
+      statusFilter === 'Active' ? cat.active : !cat.active;
+    const matchesSearch = (cat.name || '').toLowerCase().includes(search.toLowerCase());
+    return matchesStatus && matchesSearch;
   }).sort((a, b) => {
-    if (sortBy === 'Name (A-Z)') return a.name.localeCompare(b.name);
-    if (sortBy === 'Name (Z-A)') return b.name.localeCompare(a.name);
-    return 0; // 'Recently Created' relies on default insertion order
+    if (sortBy === 'Sort: Name A-Z') return (a.name || '').localeCompare(b.name || '');
+    if (sortBy === 'Sort: Name Z-A') return (b.name || '').localeCompare(a.name || '');
+    if (sortBy === 'Sort: Recently Created') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+    return 0;
   });
 
+  const totalPages = Math.ceil(filteredCategories.length / ITEMS_PER_PAGE);
+  const paginatedCategories = filteredCategories.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   const handleEdit = (category) => {
-    setFormData(category);
-    setIsEditMode(true);
-    setIsModalOpen(true);
+    setEditData(category);
+    setShowCreatePage(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this category?')) {
-      setCategories(categories.filter(c => c.id !== id));
-      addToast('Category deleted successfully.', 'success');
+      try {
+        await CategoryService.deleteCategory(id);
+        setCategories(categories.filter(c => c.id !== id));
+        addToast('Category deleted successfully.', 'success');
+      } catch (error) {
+        addToast(error.message || 'Failed to delete category', 'error');
+      }
     }
   };
 
   const handleCreateNew = () => {
-    setFormData({ id: '', name: '', icon: '📚', color: '#3B82F6', description: '', status: 'Active' });
-    setIsEditMode(false);
-    setIsModalOpen(true);
+    setEditData(null);
+    setShowCreatePage(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isEditMode) {
-      setCategories(categories.map(c => c.id === formData.id ? { ...formData, count: c.count, createdAt: c.createdAt } : c));
-      addToast(`Category "${formData.name}" updated successfully.`, 'success');
-    } else {
-      const newCategory = { ...formData, id: `cat-${Math.floor(Math.random() * 9000) + 1000}`, count: 0, createdAt: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) };
-      setCategories([newCategory, ...categories]);
-      addToast(`Category "${newCategory.name}" created successfully.`, 'success');
-    }
-    setIsModalOpen(false);
-  };
+  const totalCategories = categories.length;
+  const activeCount = categories.filter(c => c.active).length;
+  const inactiveCount = categories.filter(c => !c.active).length;
+  const totalCourses = courses.length;
+
+  const mockStudents = [1840, 1250, 980, 1360, 870, 430, 790, 520];
+
+  if (showCreatePage) {
+    return (
+      <CreateCategory
+        editData={editData}
+        onBack={() => {
+          setShowCreatePage(false);
+          setEditData(null);
+          CategoryService.getCategories().then(data => setCategories(data)).catch(() => {});
+        }}
+      />
+    );
+  }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-6">
-      
-      {/* Hero Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900 via-slate-900 to-black p-8 border border-white/10 shadow-2xl">
-        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-          <FolderCode className="w-48 h-48 text-indigo-400" />
+    <div className="space-y-8 animate-in fade-in duration-200 pb-12">
+
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Categories</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">Organize your courses into structured domains.</p>
         </div>
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-bold uppercase tracking-widest text-indigo-400">Global Settings</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500/50"></span>
-              <span className="text-xs font-bold uppercase tracking-widest text-white/50">Curriculum</span>
+        <button
+          onClick={handleCreateNew}
+          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#6C1D5F] hover:bg-[#5a184f] text-white text-sm font-semibold rounded-xl transition-all shadow-[0_2px_10px_-2px_rgba(108,29,95,0.4)] hover:shadow-[0_4px_14px_-2px_rgba(108,29,95,0.5)] hover:-translate-y-0.5"
+        >
+          <Plus className="w-4 h-4" /> Create Category
+        </button>
+      </div>
+
+      {/* Premium KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          { label: 'Total Categories', value: totalCategories, icon: Tag, color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-100 dark:bg-pink-500/10', ring: 'ring-pink-100 dark:ring-pink-500/20' },
+          { label: 'Active', value: activeCount, icon: CheckCircle, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-500/10', ring: 'ring-emerald-100 dark:ring-emerald-500/20' },
+          { label: 'Inactive', value: inactiveCount, icon: XCircle, color: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-500/10', ring: 'ring-orange-100 dark:ring-orange-500/20' },
+          { label: 'Total Courses', value: totalCourses, icon: BookOpen, color: 'text-[#6C1D5F] dark:text-purple-400', bg: 'bg-[#6C1D5F]/10 dark:bg-purple-500/10', ring: 'ring-[#6C1D5F]/10 dark:ring-purple-500/20' },
+        ].map(({ label, value, icon: Icon, color, bg, ring }) => (
+          <div key={label} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 flex items-center gap-5 hover:shadow-md transition-shadow">
+            <div className={clsx('w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ring-8', bg, color, ring)}>
+              <Icon className="w-6 h-6" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2 font-display">Category Management</h1>
-            <p className="text-indigo-200/80 max-w-xl text-sm">
-              Configure top-level learning domains and course groupings. These categories dictate the primary taxonomy of the entire platform catalog.
-            </p>
+            <div>
+              <p className="text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{label}</p>
+              <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mt-1 tracking-tight">{value}</h3>
+            </div>
           </div>
-          <button onClick={handleCreateNew} className="shrink-0 flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg shadow-indigo-500/25 cursor-pointer">
-            <IconAdd className="w-5 h-5" /> Create Category
-          </button>
+        ))}
+      </div>
+
+      {/* Toolbar */}
+      <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl shadow-sm p-2 flex flex-col lg:flex-row items-center gap-2">
+        <div className="relative flex-1 w-full min-w-[240px]">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+          <input
+            type="text"
+            placeholder="Search categories by name..."
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
+            className="w-full pl-10 pr-4 py-2.5 bg-transparent border-none text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:ring-0"
+          />
+        </div>
+
+        <div className="w-px h-8 bg-gray-200 dark:bg-[#2e2e3e] hidden lg:block mx-2"></div>
+
+        <div className="flex items-center gap-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 hide-scrollbar">
+          <div className="relative shrink-0">
+            <select
+              value={statusFilter}
+              onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
+              className="appearance-none pl-4 pr-9 py-2 bg-gray-50 dark:bg-[#1a1a24] hover:bg-gray-100 dark:hover:bg-[#252535] border border-transparent dark:border-[#2e2e3e] rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all cursor-pointer min-w-[130px]"
+            >
+              <option>All Status</option>
+              <option>Active</option>
+              <option>Inactive</option>
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </div>
+
+          <div className="relative shrink-0">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="appearance-none pl-4 pr-9 py-2 bg-gray-50 dark:bg-[#1a1a24] hover:bg-gray-100 dark:hover:bg-[#252535] border border-transparent dark:border-[#2e2e3e] rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all cursor-pointer min-w-[160px]"
+            >
+              <option>Sort: Name A-Z</option>
+              <option>Sort: Name Z-A</option>
+              <option>Sort: Recently Created</option>
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </div>
+
+          <div className="w-px h-8 bg-gray-200 dark:bg-[#2e2e3e] mx-2 shrink-0"></div>
+
+          <div className="flex bg-gray-100 dark:bg-[#1a1a24] rounded-xl p-1 shrink-0">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={clsx('p-2 rounded-lg transition-all', viewMode === 'grid' ? 'bg-white dark:bg-[#252535] text-[#6C1D5F] dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300')}
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={clsx('p-2 rounded-lg transition-all', viewMode === 'list' ? 'bg-white dark:bg-[#252535] text-[#6C1D5F] dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300')}
+            >
+              <ListIcon className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Controls & Metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-4 glass rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-4 items-center justify-between border border-border/40 shadow-sm">
-          <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <select
-                value={activeTab}
-                onChange={(e) => setActiveTab(e.target.value)}
-                className="px-3 py-2 bg-background border border-border/50 rounded-xl text-sm font-semibold outline-none focus:border-indigo-500 transition-colors cursor-pointer"
-              >
-                <option value="All">Status: All</option>
-                <option value="Active">Status: Active</option>
-                <option value="Inactive">Status: Inactive</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-3 py-2 bg-background border border-border/50 rounded-xl text-sm font-semibold outline-none focus:border-indigo-500 transition-colors cursor-pointer"
-              >
-                <option value="Recently Created">Sort: Recently Created</option>
-                <option value="Name (A-Z)">Sort: Name (A-Z)</option>
-                <option value="Name (Z-A)">Sort: Name (Z-A)</option>
-              </select>
-            </div>
-          </div>
-          <div className="relative w-full sm:max-w-md ml-auto">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search categories..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-background border border-border/50 rounded-xl text-sm outline-none focus:border-indigo-500 transition-colors"
-            />
-          </div>
-        </div>
-      </div>
+      {/* Grid View */}
+      {viewMode === 'grid' && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <AnimatePresence>
+            {paginatedCategories.map((cat, index) => {
+              const color = cat.color || '#6C1D5F';
+              const slug = cat.slug || (cat.name || '').toLowerCase().replace(/\s+/g, '-');
+              const students = cat.students || mockStudents[index % mockStudents.length] || 0;
+              const courseCount = cat.actualCount || cat.courseCount || 0;
 
-      {/* Data Table */}
-      <div className="bg-background border border-border/40 rounded-2xl shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse whitespace-nowrap">
-            <thead>
-              <tr className="bg-secondary/50 border-b border-border/40">
-                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground">Icon & Name</th>
-                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground">Description</th>
-                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground text-center">Total Courses</th>
-                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground text-center">Status</th>
-                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground text-center">Created Date</th>
-                <th className="px-6 py-4 font-bold text-[11px] uppercase tracking-wider text-muted-foreground text-right w-24">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <AnimatePresence>
-                {filteredCategories.map((cat, index) => (
-                  <motion.tr
-                    key={cat.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2, delay: index * 0.05 }}
-                    className="border-b border-border/40 hover:bg-secondary/20 transition-colors group"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-sm shrink-0" style={{ backgroundColor: `${cat.color}15`, border: `1px solid ${cat.color}30` }}>
-                          {cat.icon.startsWith('http') ? <img src={cat.icon} alt={cat.name} className="w-6 h-6 object-contain" /> : cat.icon}
-                        </div>
-                        <div>
-                          <h3 onClick={() => setViewCategory(cat)} className="text-sm font-bold text-foreground line-clamp-1 cursor-pointer hover:text-indigo-500 transition-colors">{cat.name}</h3>
-                          <p className="text-xs text-muted-foreground font-mono mt-0.5">{cat.id}</p>
-                        </div>
+              return (
+                <motion.div
+                  key={cat.id}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2, delay: index * 0.03 }}
+                  className="group bg-white dark:bg-[#15151f] rounded-2xl shadow-sm overflow-hidden flex flex-col h-full hover:shadow-2xl hover:shadow-[#6C1D5F]/10 hover:-translate-y-1.5 transition-all duration-200 relative cursor-pointer"
+                  style={{ border: `3px solid ${color}` }}
+                >
+
+                    {/* Cover Image, Emoji, or Solid Color */}
+                    <div 
+                      className="w-full aspect-video shrink-0 overflow-hidden cursor-pointer relative flex items-center justify-center" 
+                      style={{ backgroundColor: (cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('blob:'))) ? 'var(--tw-bg-opacity)' : color }}
+                      onClick={(e) => {
+                        if (e.target.closest('button')) return;
+                        window.location.href = `/categories/${slug}`;
+                      }}
+                    >
+                      {cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('blob:')) ? (
+                        <img src={cat.icon} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/1200x675/ffffff/94a3b8?text=${encodeURIComponent(cat.name)}`; }} />
+                      ) : cat.icon ? (
+                        <span className="text-[400px] leading-none absolute flex items-center justify-center w-full h-full group-hover:scale-105 transition-transform duration-200">{cat.icon}</span>
+                      ) : null}
+                      <div className="absolute top-4 right-4">
+                        <span className={clsx(
+                          'text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm',
+                          cat.active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                        )}>
+                          {cat.active ? 'Active' : 'Inactive'}
+                        </span>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 max-w-xs whitespace-normal">
-                      <p className="text-sm text-muted-foreground line-clamp-1">{cat.description}</p>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className="text-sm font-bold text-foreground bg-secondary/80 px-2.5 py-1 rounded-md">{cat.actualCount}</span>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className={clsx(
-                        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider justify-center",
-                        cat.status === 'Active' ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-orange-500/10 text-orange-600 border border-orange-500/20"
-                      )}>
-                        {cat.status}
+                    </div>
+
+                  <div 
+                    className="flex-1 flex flex-col cursor-pointer p-6 pt-5 bg-white dark:bg-[#15151f]"
+                    onClick={(e) => {
+                    // Prevent navigation if clicking on action buttons
+                    if (e.target.closest('button')) return;
+                    window.location.href = `/categories/${slug}`;
+                  }}>
+
+                    <div className="mb-auto">
+                      <span
+                        className="text-xl font-extrabold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors leading-tight block mb-3"
+                      >
+                        {cat.name}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className="text-sm text-muted-foreground">{cat.createdAt || 'Oct 12, 2023'}</span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => handleEdit(cat)} className="h-8 w-8 rounded-lg hover:bg-secondary grid place-items-center text-muted-foreground hover:text-indigo-500 transition-colors cursor-pointer" title="Edit">
-                          <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => handleDelete(cat.id)} className="h-8 w-8 rounded-lg hover:bg-secondary grid place-items-center text-muted-foreground hover:text-red-500 transition-colors cursor-pointer" title="Delete">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </AnimatePresence>
-            </tbody>
-          </table>
-          {filteredCategories.length === 0 && (
-            <div className="py-12 flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 rounded-2xl bg-secondary/50 flex items-center justify-center mb-4">
-                <Search className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-bold text-foreground">No Categories Found</h3>
-              <p className="text-sm text-muted-foreground max-w-sm mt-1">Try adjusting your search or filters to find what you're looking for.</p>
-            </div>
-          )}
-        </div>
-        <div className="px-6 py-4 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 bg-secondary/10">
-          <span className="text-sm text-muted-foreground">
-            Showing 1 to {filteredCategories.length} of {categories.length} categories
-          </span>
-          <div className="flex items-center gap-2">
-            <button className="w-8 h-8 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors cursor-pointer" disabled>
-              <span className="text-xs font-bold">&lt;</span>
-            </button>
-            <button className="w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center font-bold text-sm shadow-sm cursor-pointer">1</button>
-            <button className="w-8 h-8 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors cursor-pointer" disabled>
-              <span className="text-xs font-bold">&gt;</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditMode ? "Edit Domain Category" : "Create New Category"}>
-        <form onSubmit={handleSubmit} className="mt-2">
-          <div className="space-y-5">
-            <div>
-              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1.5">Category Name</label>
-              <input required type="text" className="w-full px-4 py-2.5 bg-background border border-border/50 rounded-xl text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. Cloud & DevOps" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-5">
-              <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1.5">Icon (Emoji or URL)</label>
-                <div className="flex gap-2">
-                  <input required type="text" className="flex-1 px-4 py-2.5 bg-background border border-border/50 rounded-xl text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. ☁️ or https://..." value={formData.icon} onChange={e => setFormData({...formData, icon: e.target.value})} />
-                  <label className="shrink-0 bg-secondary hover:bg-secondary/80 flex items-center justify-center px-4 rounded-xl cursor-pointer transition-colors border border-border/50 text-xs font-bold" title="Upload Image">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-                    <input type="file" className="hidden" accept="image/*" onChange={(e) => {
-                                  if(e.target.files && e.target.files[0]) {
-                                    const reader = new FileReader();
-                                    reader.onload = (ev) => setFormData({...formData, icon: ev.target.result});
-                                    reader.readAsDataURL(e.target.files[0]);
-                                  }
-                                }} />
-                  </label>
-                </div>
-              </div>
-              <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1.5">Theme Color</label>
-                <div className="flex gap-3 h-[42px] items-center px-3 bg-background border border-border/50 rounded-xl focus-within:border-indigo-500 transition-colors">
-                  <input required type="color" className="h-6 w-6 rounded cursor-pointer border-0 p-0 bg-transparent" value={formData.color} onChange={e => setFormData({...formData, color: e.target.value})} />
-                  <span className="text-sm font-mono text-foreground font-semibold">{formData.color}</span>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1.5">Description</label>
-              <textarea required rows={3} className="w-full px-4 py-2.5 bg-background border border-border/50 rounded-xl text-sm outline-none focus:border-indigo-500 transition-colors resize-none" placeholder="Brief description of the learning domain..." value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
-            </div>
-
-            <div>
-              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1.5">Status</label>
-              <select className="w-full px-4 py-2.5 bg-background border border-border/50 rounded-xl text-sm outline-none focus:border-indigo-500 transition-colors cursor-pointer appearance-none" value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})}>
-                <option value="Active">🟢 Active (Visible in Catalog)</option>
-                <option value="Inactive">🔴 Inactive (Hidden)</option>
-              </select>
-            </div>
-          </div>
-          <div className="flex gap-3 mt-8">
-            <button type="button" className="flex-1 py-2.5 rounded-xl text-sm font-semibold border border-border/50 hover:bg-secondary transition-colors cursor-pointer" onClick={() => setIsModalOpen(false)}>Cancel</button>
-            <button type="submit" className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-indigo-500 hover:bg-indigo-600 text-white transition-colors cursor-pointer shadow-lg shadow-indigo-500/20">{isEditMode ? "Save Changes" : "Create Category"}</button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* Category Detail View Modal */}
-      <AnimatePresence>
-        {viewCategory && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm" onClick={() => setViewCategory(null)}>
-            <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }} className="w-full max-w-3xl max-h-[90vh] glass rounded-2xl overflow-hidden flex flex-col border border-border/40 shadow-2xl" onClick={e => e.stopPropagation()}>
-              
-              {/* Hero Banner (Category specific styling) */}
-              <div className="relative h-32 shrink-0 overflow-hidden rounded-t-2xl">
-                <div className="absolute inset-0" style={{background:`linear-gradient(135deg,${viewCategory.color||'#6366f1'}dd,${viewCategory.color||'#6366f1'}77)`}} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                
-                {/* Badges */}
-                <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                  <span className={clsx("px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm text-white", viewCategory.status === 'Active' ? 'bg-emerald-500/80' : 'bg-orange-500/80')}>
-                    Status: {viewCategory.status}
-                  </span>
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-black/40 text-white backdrop-blur-sm uppercase tracking-wider border border-white/10">Taxonomy Node</span>
-                </div>
-
-                {/* Close Button */}
-                <button onClick={() => setViewCategory(null)} className="absolute top-4 right-4 h-8 w-8 rounded-full bg-black/40 backdrop-blur-sm grid place-items-center hover:bg-black/60 cursor-pointer z-10 transition-colors">
-                  <X className="w-4 h-4 text-white" />
-                </button>
-
-                {/* Bottom: Icon & Title */}
-                <div className="absolute bottom-0 left-0 right-0 p-5 flex items-end gap-3 translate-y-3">
-                  <div className="w-16 h-16 rounded-2xl shrink-0 overflow-hidden border-2 border-white/20 shadow-xl bg-black/30 backdrop-blur-md flex items-center justify-center text-4xl">
-                    {viewCategory.icon && viewCategory.icon.startsWith('http') ? <img src={viewCategory.icon} className="w-full h-full object-cover" alt="" /> : viewCategory.icon || '📁'}
-                  </div>
-                  <div className="flex-1 min-w-0 pb-3">
-                    <h2 className="text-2xl font-black text-white leading-tight font-display tracking-tight drop-shadow-md">{viewCategory.name}</h2>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Bar */}
-              <div className="flex items-center gap-2 px-5 py-4 border-b border-border/40 bg-secondary/30 shrink-0 mt-2">
-                <button onClick={() => { setViewCategory(null); handleEdit(viewCategory); }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border border-border/50 bg-background hover:bg-secondary text-foreground transition-all shadow-sm cursor-pointer">
-                  <Edit3 className="w-4 h-4 text-indigo-500" /> Edit Category
-                </button>
-                <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-sm shadow-indigo-500/20 hover:opacity-90 cursor-pointer" style={{background: viewCategory.color || '#6366f1'}}>
-                  <BookOpen className="w-4 h-4" /> Manage Linked Courses
-                </button>
-              </div>
-
-              {/* Stats Bar */}
-              <div className="grid grid-cols-3 divide-x divide-border/40 border-b border-border/40 shrink-0 bg-background/50">
-                <div className="flex flex-col items-center justify-center py-4 gap-1">
-                  <Layers className="w-4 h-4 text-indigo-500 mb-0.5" />
-                  <span className="text-xl font-black text-foreground leading-tight">{viewCategory.actualCount || 0}</span>
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Linked Courses</span>
-                </div>
-                <div className="flex flex-col items-center justify-center py-4 gap-1">
-                  <Activity className="w-4 h-4 text-emerald-500 mb-0.5" />
-                  <span className="text-xl font-black text-foreground leading-tight">Primary</span>
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Taxonomy Level</span>
-                </div>
-                <div className="flex flex-col items-center justify-center py-4 gap-1">
-                  <Calendar className="w-4 h-4 text-blue-500 mb-0.5" />
-                  <span className="text-xl font-black text-foreground leading-tight">{viewCategory.createdAt?.split(',')[0] || 'Unknown'}</span>
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Created Date</span>
-                </div>
-              </div>
-
-              {/* Main Split Content */}
-              <div className="flex-1 overflow-y-auto">
-                <div className="grid grid-cols-1 md:grid-cols-5 h-full">
-                  
-                  {/* Left: General & Design (3/5) */}
-                  <div className="col-span-3 p-6 space-y-6 md:border-r border-border/40 bg-background/30">
-                    <div>
-                      <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2 mb-3">
-                        <FolderCode className="w-4 h-4 text-indigo-500" /> General Information
-                      </h3>
-                      <p className="text-sm text-foreground/90 leading-relaxed bg-secondary/20 p-4 rounded-xl border border-border/30">
-                        {viewCategory.description || <span className="italic text-muted-foreground">No description available for this category.</span>}
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2 mb-3">
-                        <Palette className="w-4 h-4 text-pink-500" /> Design Specifications
-                      </h3>
-                      <div className="flex items-center gap-4 bg-secondary/20 p-4 rounded-xl border border-border/30">
-                        <div className="w-12 h-12 rounded-lg border border-border/50 shadow-sm shrink-0" style={{backgroundColor: viewCategory.color || '#6366f1'}}></div>
-                        <div>
-                          <p className="text-sm font-bold text-foreground">Brand Color</p>
-                          <p className="text-xs font-mono text-muted-foreground mt-0.5 uppercase">{viewCategory.color || '#6366f1'}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2 mb-3">
-                        <BookOpen className="w-4 h-4 text-emerald-500" /> Linked Courses ({viewCategory.actualCount})
-                      </h3>
-                      {viewCategory.linkedCourses && viewCategory.linkedCourses.length > 0 ? (
-                        <div className="space-y-3">
-                          {viewCategory.linkedCourses.map(course => (
-                            <div key={course.id} className="flex items-center gap-3 bg-secondary/20 p-3 rounded-xl border border-border/30 hover:bg-secondary/40 transition-colors">
-                              <div className="w-10 h-10 rounded-lg shrink-0 overflow-hidden bg-background border border-border/50 flex items-center justify-center text-lg">
-                                {course.thumbnail ? <img src={course.thumbnail} className="w-full h-full object-cover" alt="" /> 
-                                : course.icon && course.icon.startsWith('http') ? <img src={course.icon} className="w-full h-full object-cover" alt="" />
-                                : course.icon || '📚'}
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <h4 className="text-sm font-bold text-foreground truncate">{course.title}</h4>
-                                <p className="text-xs text-muted-foreground truncate">{course.level || 'Beginner'} • {course.duration || 'N/A'}</p>
-                              </div>
-                              <div className="shrink-0">
-                                {course.isPublished ? (
-                                  <span className="text-[9px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-500 border border-blue-500/20 px-2 py-0.5 rounded-full">Published</span>
-                                ) : (
-                                  <span className="text-[9px] font-bold uppercase tracking-wider bg-orange-500/10 text-orange-500 border border-orange-500/20 px-2 py-0.5 rounded-full">Draft</span>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground italic bg-secondary/20 p-4 rounded-xl border border-border/30">
-                          No courses have been linked to this category yet.
+                      {cat.description && (
+                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed mb-4">
+                          {cat.description}
                         </p>
                       )}
                     </div>
-                  </div>
-
-                  {/* Right: System Meta (2/5) */}
-                  <div className="col-span-2 p-6 bg-secondary/10">
-                    <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2 mb-4">
-                      <Database className="w-4 h-4 text-orange-500" /> System Metadata
-                    </h3>
                     
-                    <div className="space-y-4">
-                      <div className="bg-background border border-border/40 rounded-xl p-3 shadow-sm">
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Category ID</p>
-                        <p className="text-sm font-mono text-foreground">{viewCategory.id}</p>
-                      </div>
-                      
-                      <div className="bg-background border border-border/40 rounded-xl p-3 shadow-sm">
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Visibility Status</p>
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-[#2e2e3e] mt-2">
+                      <div className="flex items-center gap-4 text-xs font-semibold text-gray-700 dark:text-gray-300">
                         <div className="flex items-center gap-1.5">
-                          <span className={clsx("w-2 h-2 rounded-full", viewCategory.status === 'Active' ? 'bg-emerald-500' : 'bg-orange-500')} />
-                          <p className="text-sm font-bold text-foreground">{viewCategory.status === 'Active' ? 'Visible in Catalog' : 'Hidden from Users'}</p>
+                          <BookOpen className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                          <span>
+                            {courseCount} 
+                            <span className="font-medium text-gray-500 dark:text-gray-400 ml-1 hidden sm:inline">Courses</span>
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Users className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                          <span>
+                            {students.toLocaleString()}
+                          </span>
                         </div>
                       </div>
-
-                      <div className="bg-background border border-border/40 rounded-xl p-3 shadow-sm">
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Entity Created</p>
-                        <p className="text-sm font-semibold text-foreground">{viewCategory.createdAt || 'N/A'}</p>
+                      <div className="flex items-center gap-1 transition-opacity">
+                        <button onClick={() => handleEdit(cat)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#252535] text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleDelete(cat.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
                   </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      )}
 
-                </div>
-              </div>
+      {/* List View */}
+      {viewMode === 'list' && (
+        <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl shadow-sm overflow-hidden">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-50/80 dark:bg-[#1e1e2d] border-b border-gray-200 dark:border-[#2e2e3e]">
+                <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">Description</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-center">Courses</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-center">Status</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-[#2e2e3e]">
+              <AnimatePresence>
+                {paginatedCategories.map((cat) => {
+                  const color = cat.color || '#6C1D5F';
+                  const slug = cat.slug || (cat.name || '').toLowerCase().replace(/\s+/g, '-');
+                  const courseCount = cat.actualCount || cat.courseCount || 0;
+                  return (
+                    <motion.tr
+                      key={cat.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="group hover:bg-gray-100 dark:hover:bg-[#1a1a24] transition-colors cursor-pointer"
+                      onClick={(e) => {
+                        if (e.target.closest('button')) return;
+                        window.location.href = `/categories/${slug}`;
+                      }}
+                    >
+                      <td className="px-6 py-5">
+                        <div className="flex items-center gap-4">
+                            <div
+                              className="w-16 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm overflow-hidden"
+                              style={{ backgroundColor: `${color}20`, border: `2px solid ${color}` }}
+                            >
+                              {cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('blob:')) ? (
+                                <img src={cat.icon} alt={cat.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <span className="text-4xl leading-none">{cat.icon || '📚'}</span>
+                              )}
+                            </div>
+                          <div>
+                            <span
+                              className="text-sm font-extrabold text-gray-900 dark:text-white group-hover:text-[#6C1D5F] transition-colors"
+                            >
+                              {cat.name}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 max-w-sm hidden sm:table-cell">
+                        <p className="text-[14px] text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">{cat.description}</p>
+                      </td>
+                      <td className="px-6 py-5 text-center">
+                        <span className="inline-flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-lg">
+                          <BookOpen className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                          {courseCount}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 text-center">
+                        <span className={clsx(
+                          'text-xs font-bold px-3 py-1 rounded-md shadow-sm',
+                          cat.active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                        )}>
+                          {cat.active ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <button onClick={() => handleEdit(cat)} className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-[#353545] text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                          <button onClick={() => handleDelete(cat.id)} className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  );
+                })}
+              </AnimatePresence>
+            </tbody>
+          </table>
+          {paginatedCategories.length === 0 && (
+            <div className="px-6 py-16 text-center text-gray-400 text-sm">
+              No categories found.
+            </div>
+          )}
+        </div>
+      )}
 
-            </motion.div>
-          </motion.div>
+      {/* Pagination */}
+      <div className="flex items-center justify-between pt-2">
+        <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+          Showing {filteredCategories.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredCategories.length)} of {filteredCategories.length} categories
+        </span>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-1.5 bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl p-1 shadow-sm">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-[#252535] hover:text-gray-900 dark:hover:text-white disabled:opacity-40 disabled:hover:bg-transparent transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <div className="flex items-center px-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={clsx(
+                    'w-8 h-8 rounded-lg text-sm font-bold transition-colors mx-0.5',
+                    page === currentPage
+                      ? 'bg-[#01AC9F] text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#252535]'
+                  )}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-[#252535] hover:text-gray-900 dark:hover:text-white disabled:opacity-40 disabled:hover:bg-transparent transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         )}
-      </AnimatePresence>
-    </motion.div>
+      </div>
+
+    </div>
   );
 }

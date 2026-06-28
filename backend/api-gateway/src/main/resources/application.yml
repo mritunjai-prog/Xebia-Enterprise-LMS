@@ -12,6 +12,12 @@ spring:
     gateway:
       default-filters:
         - AddResponseHeader=X-Gateway, enterprise-lms
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
 
 lms:
   jwt:

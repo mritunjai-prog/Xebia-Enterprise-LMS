@@ -62,71 +62,22 @@ services:
       SERVER_PORT: 8080
       JWT_SECRET: ${JWT_SECRET:-replace-with-at-least-32-characters}
       REDIS_HOST: redis
-      SERVICES_IAM: http://iam-service:8081
-      SERVICES_ORGANISATION: http://organisation-service:8082
-      SERVICES_USER_MANAGEMENT: http://user-management-service:8083
       SERVICES_COURSE: http://course-service:8084
-      SERVICES_BATCH_ENROLMENT: http://batch-enrolment-service:8085
-      SERVICES_APPROVAL: http://approval-service:8086
-      SERVICES_NOTIFICATION: http://notification-service:8087
-      SERVICES_ASSESSMENT: http://assessment-service:8088
-      SERVICES_MEDIA: http://media-streaming-service:8089
-      SERVICES_ENGAGEMENT: http://engagement-service:8090
-      SERVICES_DOCUMENT: http://document-service:8091
-      SERVICES_AUDIT_REPORTING: http://audit-reporting-service:8092
     ports:
       - "8080:8080"
     depends_on:
       redis:
         condition: service_healthy
-      iam-service:
-        condition: service_started
 
-  iam-service:
-    build: ./iam-service
-    environment: &service-env
+  course-service:
+    build: ./course-service
+    environment:
       DB_URL: jdbc:postgresql://postgres:5432/lms
       DB_USERNAME: lms
       DB_PASSWORD: lms
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       REDIS_HOST: redis
       JWT_SECRET: ${JWT_SECRET:-replace-with-at-least-32-characters}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-AdminChangeMe123!}
-    ports:
-      - "8081:8081"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-
-  organisation-service:
-    build: ./organisation-service
-    environment: *service-env
-    ports:
-      - "8082:8082"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-
-  user-management-service:
-    build: ./user-management-service
-    environment: *service-env
-    ports:
-      - "8083:8083"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-
-  course-service:
-    build: ./course-service
-    environment: *service-env
     ports:
       - "8084:8084"
     depends_on:
@@ -134,72 +85,6 @@ services:
         condition: service_healthy
       kafka:
         condition: service_started
-
-  batch-enrolment-service:
-    build: ./batch-enrolment-service
-    environment: *service-env
-    ports:
-      - "8085:8085"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-
-  approval-service:
-    build: ./approval-service
-    environment: *service-env
-    ports:
-      - "8086:8086"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-
-  notification-service:
-    build: ./notification-service
-    environment: *service-env
-    ports:
-      - "8087:8087"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-
-  assessment-service:
-    build: ./assessment-service
-    environment: *service-env
-    ports:
-      - "8088:8088"
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  media-streaming-service:
-    build: ./media-streaming-service
-    ports:
-      - "8089:8089"
-
-  engagement-service:
-    build: ./engagement-service
-    ports:
-      - "8090:8090"
-
-  document-service:
-    build: ./document-service
-    ports:
-      - "8091:8091"
-
-  audit-reporting-service:
-    build: ./audit-reporting-service
-    environment: *service-env
-    ports:
-      - "8092:8092"
-    depends_on:
-      postgres:
-        condition: service_healthy
 
 volumes:
   postgres-data:

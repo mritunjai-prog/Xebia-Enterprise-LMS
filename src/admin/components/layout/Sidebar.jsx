@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { clsx } from 'clsx';
 import { useRouter, useLocation } from '@tanstack/react-router';
-import {
-  IconDashboard, IconOrganizations, IconExpand, IconUsers, IconRoles,
-  IconCourses, IconBatch, IconAssessments, IconApprovals, IconNotifications,
-  IconReports, IconAuditLogs, IconSettings, IconMoreHorizontal
-} from '../Icons';
+import { BookOpen, Tag, Layers, LogOut, LayoutDashboard, PieChart } from 'lucide-react';
+import { useAppStore } from '../../store/useAppStore';
 
-const NavItem = ({ icon, label, badge, badgeColor, hasChildren, isActive, isOpen, onClick }) => (
-  <div onClick={onClick} className={clsx("nav-item", isActive && "active")}>
-    {icon}
-    {label}
-    {badge && (
-      <span className={clsx("nav-badge", badgeColor === 'green' && "green")}>
-        {badge}
-      </span>
+// We import both logos to switch based on theme
+import logoPurple from '../../../assets/logo-purple.png';
+import logoWhite from '../../../assets/logo-white.png';
+
+const NavItem = ({ icon: Icon, label, isActive, onClick }) => (
+  <div 
+    onClick={onClick} 
+    className={clsx(
+      "flex items-center gap-3 px-4 py-3 mx-4 my-1 rounded-xl cursor-pointer font-medium transition-all duration-200 group text-[14px]",
+      isActive 
+        ? "bg-[#6C1D5F] text-white shadow-md shadow-[#6C1D5F]/20" 
+        : "text-gray-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
     )}
-    {hasChildren && <IconExpand className={clsx("nav-expand", isOpen && "rotate-180")} />}
-  </div>
-);
-
-const NavChild = ({ label, isActive, onClick }) => (
-  <div onClick={onClick} className={clsx("nav-child", isActive && "active")}>
+  >
+    <Icon className={clsx(
+      "w-[20px] h-[20px] shrink-0 transition-transform duration-200 group-hover:scale-110",
+      isActive ? "text-white opacity-100" : "opacity-80 group-hover:opacity-100"
+    )} />
     {label}
   </div>
 );
@@ -30,112 +30,107 @@ export function Sidebar() {
   const router = useRouter();
   const location = useLocation();
   const currentPath = location.pathname;
-  const [openSections, setOpenSections] = useState({
-    orgs: true,
-    courses: true
-  });
+  const { setActiveSidebarItem, theme, adminProfile } = useAppStore(); // Assuming theme is available, or we use CSS
 
-  const toggleSection = (key, e) => {
-    if (e) e.stopPropagation();
-    setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const handleNavClick = (path, isParent = false, key) => {
-    router.navigate({ to: path });
-    if (isParent && key) {
-      if (!openSections[key]) {
-        toggleSection(key);
-      }
+  // Note: we can use a CSS technique to show/hide logos based on dark class on HTML
+  // but since we want to rely on the global dark class:
+  
+  useEffect(() => {
+    if (currentPath === '/') {
+      setActiveSidebarItem('Dashboard');
+    } else if (currentPath.startsWith('/courses')) {
+      setActiveSidebarItem('Courses');
+    } else if (currentPath.startsWith('/categories')) {
+      setActiveSidebarItem('Categories');
+    } else if (currentPath.startsWith('/curriculum')) {
+      setActiveSidebarItem('Curriculum');
+    } else if (currentPath.startsWith('/analytics')) {
+      setActiveSidebarItem('Analytics');
     }
+  }, [currentPath, setActiveSidebarItem]);
+
+  const handleNavClick = (path) => {
+    router.navigate({ to: path });
   };
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-brand">
-        <div className="logo">
-          <div className="logo-mark"><span>X</span></div>
-          <div>
-            <div className="logo-text">Xebia</div>
-            <div className="logo-sub">LMS Admin</div>
+    <aside className="w-[280px] shrink-0 flex flex-col h-full bg-white dark:bg-[#4A1E47] border-r border-gray-200 dark:border-transparent transition-colors overflow-hidden relative shadow-sm dark:shadow-none">
+      
+      {/* Brand */}
+      <div className="pt-9 pb-7 px-8 flex flex-col justify-center border-b border-gray-100 dark:border-white/10">
+        <div className="flex items-center gap-3.5">
+          {/* Light mode logo (purple) */}
+          <img src={logoPurple} alt="Xebia" className="h-11 rounded-full dark:hidden object-contain drop-shadow-sm" />
+          {/* Dark mode logo (white) */}
+          <img src={logoWhite} alt="Xebia" className="h-11 rounded-full hidden dark:block object-contain drop-shadow-sm" />
+          
+          <div className="flex flex-col pt-0.5">
+            <span className="text-[21px] font-extrabold text-gray-900 dark:text-white leading-tight tracking-tight">Xebia LMS</span>
+            <span className="text-[10.5px] font-bold text-[#6C1D5F] dark:text-white/60 tracking-[0.2em] uppercase mt-0.5">Admin Panel</span>
           </div>
         </div>
       </div>
 
-      <nav className="sidebar-nav">
+      {/* Navigation */}
+      <nav className="flex-1 py-6 overflow-y-auto overflow-x-hidden hide-scrollbar">
+        <div className="px-8 pb-3 text-[11px] font-bold tracking-wider text-gray-400 dark:text-white/40 uppercase">Main Menu</div>
+        
         <NavItem 
-          icon={<IconDashboard className="nav-icon" />} 
+          icon={LayoutDashboard}
           label="Dashboard" 
-          isActive={currentPath === '/admin' || currentPath === '/admin/'} 
-          onClick={() => handleNavClick('/admin')}
-        />
-
-        <div className="nav-section">Organizations</div>
-        <NavItem 
-          icon={<IconOrganizations className="nav-icon" />} 
-          label="Organizations" 
-          hasChildren 
-          isOpen={openSections.orgs}
-          isActive={currentPath.startsWith('/admin/organizations')}
-          onClick={() => handleNavClick('/admin/organizations', true, 'orgs')}
-        />
-        {openSections.orgs && (
-          <div className="nav-children">
-            <NavChild label="Universities" isActive={currentPath === '/admin/organizations/universities'} onClick={() => handleNavClick('/admin/organizations/universities')} />
-            <NavChild label="Colleges" isActive={currentPath === '/admin/organizations/colleges'} onClick={() => handleNavClick('/admin/organizations/colleges')} />
-            <NavChild label="Companies" isActive={currentPath === '/admin/organizations/companies'} onClick={() => handleNavClick('/admin/organizations/companies')} />
-          </div>
-        )}
-
-        <div className="nav-section">Users & Access</div>
-        <NavItem 
-          icon={<IconUsers className="nav-icon" />} 
-          label="Users" 
-          badge="2.4k" 
-          badgeColor="green" 
-          isActive={currentPath === '/admin/users'}
-          onClick={() => handleNavClick('/admin/users')}
+          isActive={currentPath === '/'}
+          onClick={() => handleNavClick('/')}
         />
         <NavItem 
-          icon={<IconRoles className="nav-icon" />} 
-          label="Roles & Permissions" 
-          isActive={currentPath === '/admin/roles'}
-          onClick={() => handleNavClick('/admin/roles')}
-        />
-
-        <div className="nav-section">Learning</div>
-        <NavItem 
-          icon={<IconCourses className="nav-icon" />} 
+          icon={Tag} 
           label="Categories" 
-          isActive={currentPath === '/admin/categories'}
-          onClick={() => handleNavClick('/admin/categories')}
+          isActive={currentPath === '/categories' || currentPath === '/categories/' || currentPath.startsWith('/categories/')}
+          onClick={() => handleNavClick('/categories/')}
         />
         <NavItem 
-          icon={<IconCourses className="nav-icon" />} 
+          icon={BookOpen}
           label="Courses" 
-          isActive={currentPath === '/admin/courses' || currentPath.startsWith('/admin/courses/')}
-          onClick={() => handleNavClick('/admin/courses')}
+          isActive={currentPath === '/courses' || currentPath === '/courses/' || currentPath.startsWith('/courses/')}
+          onClick={() => handleNavClick('/courses/')}
         />
-        <NavItem icon={<IconBatch className="nav-icon" />} label="Batch & Enrollment" isActive={currentPath === '/admin/batch'} onClick={() => handleNavClick('/admin/batch')} />
-        <NavItem icon={<IconAssessments className="nav-icon" />} label="Assessments" isActive={currentPath === '/admin/assessments'} onClick={() => handleNavClick('/admin/assessments')} />
-
-        <div className="nav-section">Operations</div>
-        <NavItem icon={<IconApprovals className="nav-icon" />} label="Approvals" badge="14" isActive={currentPath === '/admin/approvals'} onClick={() => handleNavClick('/admin/approvals')} />
-        <NavItem icon={<IconNotifications className="nav-icon" />} label="Notifications" badge="3" isActive={currentPath === '/admin/notifications'} onClick={() => handleNavClick('/admin/notifications')} />
-        <NavItem icon={<IconReports className="nav-icon" />} label="Reports" isActive={currentPath === '/admin/reports'} onClick={() => handleNavClick('/admin/reports')} />
-        <NavItem icon={<IconAuditLogs className="nav-icon" />} label="Audit Logs" isActive={currentPath === '/admin/audit'} onClick={() => handleNavClick('/admin/audit')} />
-        <NavItem icon={<IconSettings className="nav-icon" />} label="Settings" isActive={currentPath === '/admin/settings'} onClick={() => handleNavClick('/admin/settings')} />
+        <NavItem 
+          icon={Layers} 
+          label="Curriculum" 
+          isActive={currentPath === '/curriculum'}
+          onClick={() => handleNavClick('/curriculum')}
+        />
+        <NavItem 
+          icon={PieChart} 
+          label="Analytics" 
+          isActive={currentPath === '/analytics' || currentPath.startsWith('/analytics/')}
+          onClick={() => handleNavClick('/analytics/')}
+        />
       </nav>
 
-      <div className="sidebar-footer">
-        <div className="sidebar-user">
-          <div className="user-avatar">SA</div>
-          <div className="user-info">
-            <div className="user-name">Super Admin</div>
-            <div className="user-role">Platform Administrator</div>
+      {/* Footer */}
+      <div className="p-5 border-t border-gray-100 dark:border-white/10 mt-auto">
+        <div 
+          onClick={() => {
+            localStorage.removeItem('lms_token');
+            window.close();
+          }}
+          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-white/10 cursor-pointer transition-colors group"
+        >
+          <div className="w-10 h-10 rounded-full bg-[#6C1D5F] dark:bg-[#84117C] text-white flex items-center justify-center font-bold text-sm shadow-sm relative overflow-hidden">
+            {adminProfile?.image ? (
+               <img src={adminProfile.image} alt={adminProfile.name} className="absolute inset-0 w-full h-full object-cover" />
+            ) : (
+               <span>{adminProfile?.name?.charAt(0) || 'A'}</span>
+            )}
           </div>
-          <IconMoreHorizontal className="text-white/35" />
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-bold text-gray-900 dark:text-white truncate">{adminProfile?.name || 'Admin User'}</div>
+            <div className="text-xs text-gray-500 dark:text-white/50 truncate">{adminProfile?.email || 'admin@xebia.com'}</div>
+          </div>
+          <LogOut className="w-5 h-5 text-gray-400 dark:text-white/50 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors" />
         </div>
       </div>
+      
     </aside>
   );
 }

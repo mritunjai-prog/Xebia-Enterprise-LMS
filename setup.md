@@ -1,6 +1,6 @@
 # Xebia Enterprise LMS — Setup Guide
 
-Welcome! This guide will walk you through setting up and running the **Xebia Enterprise LMS** on your local machine — both the backend microservices and the frontend.
+Welcome! This guide will walk you through setting up and running the **Xebia Enterprise LMS** on your local machine. We provide instructions for both the frontend and the backend.
 
 ---
 
@@ -12,10 +12,11 @@ Make sure you have the following installed before starting:
 |------|---------|----------|
 | **Git** | Any | https://git-scm.com |
 | **Node.js** | 20+ | https://nodejs.org |
-| **Docker Desktop** | Latest | https://www.docker.com/products/docker-desktop |
-| **Java JDK** | 21+ | https://adoptium.net *(only if running services without Docker)* |
+| **Java JDK** | 21+ | https://adoptium.net |
+| **Docker Desktop** | Latest | https://www.docker.com/products/docker-desktop *(Recommended for Database and Services)* |
+| **Maven** | 3.9+ | https://maven.apache.org/download.cgi *(Only if building Java services manually)* |
 
-> **Windows users:** Make sure Docker Desktop is running before you begin.
+> **Windows users:** If using Docker, ensure Docker Desktop is running before you begin.
 
 ---
 
@@ -28,9 +29,47 @@ cd "Xebia LMS"
 
 ---
 
-## 2. Backend Setup
+## 2. Frontend Setup
 
-The backend is a suite of Java Spring Boot microservices orchestrated via Docker Compose.
+The frontend is a React + TanStack Start application.
+
+### Step 1 — Create the environment file
+
+From the **root** of the repository:
+
+```bash
+copy .env.example .env        # Windows
+# OR
+cp .env.example .env           # macOS / Linux
+```
+
+Open `.env` and add your `VITE_GROQ_API_KEY` for AI features:
+```env
+VITE_API_BASE_URL=http://localhost:8080/api
+VITE_GROQ_API_KEY=your_groq_api_key_here
+```
+
+### Step 2 — Install dependencies
+
+```bash
+npm install
+```
+
+### Step 3 — Start the development server
+
+```bash
+npm run dev
+```
+
+The frontend will start at **http://localhost:3000**
+
+> Make sure the backend is running before using the app, otherwise API calls will fail.
+
+---
+
+## 3. Backend Setup
+
+The backend is a suite of Java Spring Boot microservices. You have two ways to run the backend: **Using Docker (Recommended)** or **Manual Setup (Without Docker)**.
 
 ### Step 1 — Create the environment file
 
@@ -52,49 +91,76 @@ ADMIN_PASSWORD=YourSecurePassword123!
 
 > **Important:** `JWT_SECRET` must be **at least 32 characters** or the services will fail to start.
 
-### Step 2 — Build & Start all backend services
+---
+
+### Option A: Running Backend with Docker (Recommended)
+
+This is the easiest method. It runs all databases, message brokers, and Java microservices automatically.
 
 From inside the `backend/` directory, run:
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
-This will automatically start:
+> ⏳ **First build takes 5–10 minutes** as Maven downloads dependencies.
 
-| Service | Port | Description |
-|---------|------|-------------|
-| **PostgreSQL** | 5432 | Main database |
-| **Redis** | 6379 | Caching & sessions |
-| **Kafka** | 9092 | Event messaging |
-| **MinIO** | 9000 / 9001 | Object storage (file uploads) |
-| **API Gateway** | **8080** | Single entry point for all API calls |
-| **IAM Service** | 8081 | Authentication & JWT |
-| **Organisation Service** | 8082 | Organizations, universities, colleges |
-| **User Management** | 8083 | Users & roles |
-| **Course Service** | 8084 | Courses, modules, categories |
-| **Batch & Enrolment** | 8085 | Batch & enrollment management |
-| **Approval Service** | 8086 | Approval workflows |
-| **Notification Service** | 8087 | Email & push notifications |
-| **Assessment Service** | 8088 | Quizzes & assessments |
-| **Media Streaming** | 8089 | Video streaming |
-| **Engagement Service** | 8090 | Discussions & engagement |
-| **Document Service** | 8091 | Document management |
-| **Audit & Reporting** | 8092 | Audit logs & reports |
+**Stopping the backend:**
+```bash
+docker compose down          # Stop containers (keeps data)
+docker compose down -v       # Stop & wipe all data (fresh start)
+```
 
-> ⏳ **First build takes 5–10 minutes** as Maven downloads all dependencies. Subsequent starts are fast.
+---
 
-### Step 3 — Verify backend is running
+### Option B: Running Backend Without Docker
 
-Once all containers are up, test the API gateway:
+If you prefer not to use Docker for the Java services, you can run them manually. **However, you still need the supporting infrastructure (Database, Redis, Kafka, MinIO).**
+
+#### Step 1: Start ONLY the Database & Infrastructure using Docker
+
+If you have Docker but just want to run Java natively:
+```bash
+# In backend directory
+docker compose up -d postgres redis kafka minio zookeeper
+```
+
+*Alternatively, if you want NO DOCKER AT ALL, you must manually install and run PostgreSQL (Port 5432), Redis (Port 6379), Kafka (Port 9092), and MinIO (Port 9000/9001) on your local machine.*
+
+#### Step 2: Build the Java Services
+
+From the `backend/` directory, build the services using Maven:
+```bash
+# Windows
+.\mvnw.cmd clean package -DskipTests
+# macOS / Linux
+./mvnw clean package -DskipTests
+```
+
+#### Step 3: Run the Services
+
+You must run the services locally in your terminal or IDE. We recommend using an IDE like IntelliJ IDEA.
+Run the main classes in the following order:
+
+1. `api-gateway`: Start `com.xebia.lms.gateway.ApiGatewayApplication`
+2. `course-service`: Start `com.xebia.lms.course.CourseServiceApplication`
+3. Start any other microservices you need (e.g., `user-management`, `organisation-service`, etc).
+
+> The API Gateway must run on port **8080**, and course-service on **8084**.
+
+---
+
+## 4. Verify the Setup
+
+Once all backend services and frontend are up, test the API gateway:
 
 ```bash
 curl http://localhost:8080/actuator/health
-# or open in browser:
-# http://localhost:8080/actuator/health
+# You should see {"status":"UP"}
 ```
 
-You should see `{"status":"UP"}`.
+Open the frontend:
+**http://localhost:3000**
 
 ### Default Admin Credentials
 
@@ -103,94 +169,9 @@ Email:    admin@lms.com
 Password: (whatever you set in ADMIN_PASSWORD, default: AdminChangeMe123!)
 ```
 
-### Stopping the backend
-
-```bash
-docker compose down          # Stop containers (keeps data)
-docker compose down -v       # Stop & wipe all data (fresh start)
-```
-
 ---
 
-## 3. Frontend Setup
-
-The frontend is a React + TanStack Start application.
-
-### Step 1 — Install dependencies
-
-From the **root** of the repository (not inside `backend/`):
-
-```bash
-npm install
-```
-
-### Step 2 — Start the development server
-
-```bash
-npm run dev
-```
-
-The frontend will start at **http://localhost:3000**
-
-> Make sure the backend is already running before accessing the app, otherwise API calls will fail.
-
----
-
-## 4. Full Stack Quick Start (TL;DR)
-
-```bash
-# 1. Clone
-git clone <your-repo-url>
-cd "Xebia LMS"
-
-# 2. Setup backend env
-cd backend
-copy .env.example .env
-# Edit .env and set JWT_SECRET and ADMIN_PASSWORD
-
-# 3. Start all backend services
-docker compose up --build -d
-
-# 4. Go back to root and start frontend
-cd ..
-npm install
-npm run dev
-
-# 5. Open the app
-# http://localhost:3000
-```
-
----
-
-## 5. Architecture Overview
-
-```
-Browser (localhost:3000)
-        │
-        ▼
-  Frontend (React / TanStack)
-        │
-        ▼ HTTP (localhost:8080)
-   API Gateway (Spring Cloud Gateway)
-        │
-        ├──► IAM Service (Auth / JWT)
-        ├──► Course Service (Courses / Categories)
-        ├──► User Management
-        ├──► Organisation Service
-        ├──► Batch & Enrolment
-        ├──► Assessment Service
-        └──► ... (other microservices)
-        
-Infrastructure:
-  PostgreSQL   — Persistent database (all services share one DB, separate schemas)
-  Redis        — Session caching, rate limiting
-  Kafka        — Async event bus (notifications, audit events)
-  MinIO        — Object storage (file & image uploads)
-```
-
----
-
-## 6. Useful URLs
+## 5. Useful URLs
 
 | URL | Description |
 |-----|-------------|
@@ -208,15 +189,10 @@ Password: minio12345
 
 ---
 
-## 7. Common Issues & Fixes
-
-### ❌ Docker not starting services
-- Make sure **Docker Desktop** is open and running.
-- Try: `docker compose down -v` then `docker compose up --build`
+## 6. Common Issues & Fixes
 
 ### ❌ `JWT_SECRET` error on startup
 - Your secret must be **at least 32 characters long**.
-- Example: `my-super-long-secret-key-that-is-32-chars!!`
 
 ### ❌ Frontend shows "Failed to fetch" or API errors
 - Make sure the backend is fully started first.
@@ -229,21 +205,6 @@ Password: minio12345
 ### ❌ npm install fails
 - Make sure you are using **Node.js v20+**: `node --version`
 - Delete `node_modules/` and retry: `rm -rf node_modules && npm install`
-
----
-
-## 8. Tech Stack Summary
-
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 19, TanStack Router, TanStack Start, Framer Motion, Recharts |
-| **API Gateway** | Spring Cloud Gateway |
-| **Backend Services** | Java 21, Spring Boot 3, Spring Data JPA |
-| **Database** | PostgreSQL 16 |
-| **Cache** | Redis 7 |
-| **Messaging** | Apache Kafka 3 |
-| **Object Storage** | MinIO |
-| **Containerization** | Docker Compose |
 
 ---
 

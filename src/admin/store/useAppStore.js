@@ -15,6 +15,15 @@ export const useAppStore = create((set, get) => ({
     addUser: false,
   },
 
+  adminProfile: {
+    name: 'Admin User',
+    email: 'admin@xebia.com',
+    role: 'System Administrator',
+    image: null,
+  },
+  
+  updateAdminProfile: (updates) => set((state) => ({ adminProfile: { ...state.adminProfile, ...updates } })),
+
   dashboardData: null,
   organizations: [],
   users: [],

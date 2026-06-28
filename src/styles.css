@@ -180,6 +180,8 @@ html.dark select[class*="bg-card"] {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
     font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
   }

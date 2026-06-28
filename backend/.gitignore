@@ -57,3 +57,8 @@ jacoco.exec
 tmp/
 temp/
 *.tmp
+
+# Custom local exclusions
+maven/
+.m2/
+logs.txt
