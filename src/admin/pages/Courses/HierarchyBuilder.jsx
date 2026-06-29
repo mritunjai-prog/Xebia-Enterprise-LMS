@@ -49,7 +49,7 @@ export default function HierarchyBuilder({ course }) {
   const { addToast } = useAppStore();
   const [modules, setModules] = useState(() => course?.modules || []);
   
-  useEffect(() => { if (course?.modules) setModules(course.modules); }, [course]);
+  useEffect(() => { setModules(course?.modules || []); }, [course]);
 
   const [selectedModuleId, setSelectedModuleId] = useState(null);
   

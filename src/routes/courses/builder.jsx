@@ -3,8 +3,17 @@ import HierarchyBuilder from "@/admin/pages/Courses/HierarchyBuilder";
 import { CourseService } from "@/services/api";
 
 export const Route = createFileRoute("/courses/builder")({
-  loader: async () => {
+  validateSearch: (search) => ({
+    courseId: search.courseId || '',
+  }),
+  loaderDeps: ({ search: { courseId } }) => ({ courseId }),
+  loader: async ({ deps: { courseId } }) => {
     try {
+      if (courseId) {
+        const hierarchy = await CourseService.getCourseHierarchy(courseId);
+        if (hierarchy) return { course: hierarchy };
+      }
+      
       let courses = await CourseService.getCourses();
       if (!courses || courses.length === 0) {
         // Create a dummy course so the builder has a valid foreign key for modules

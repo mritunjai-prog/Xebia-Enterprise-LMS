@@ -278,8 +278,9 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
                   e.stopPropagation();
                   const file = e.dataTransfer.files?.[0];
                   if (file && file.type.startsWith('image/')) {
-                    const url = URL.createObjectURL(file);
-                    setForm(f => ({ ...f, icon: url }));
+                    const reader = new FileReader();
+                    reader.onloadend = () => setForm(f => ({ ...f, icon: reader.result }));
+                    reader.readAsDataURL(file);
                   }
                 }}
               >
@@ -296,8 +297,9 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      const url = URL.createObjectURL(file);
-                      setForm(f => ({ ...f, icon: url }));
+                      const reader = new FileReader();
+                      reader.onloadend = () => setForm(f => ({ ...f, icon: reader.result }));
+                      reader.readAsDataURL(file);
                     }
                   }}
                 />
@@ -320,8 +322,9 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
                   e.stopPropagation();
                   const file = e.dataTransfer.files?.[0];
                   if (file && file.type.startsWith('image/')) {
-                    const url = URL.createObjectURL(file);
-                    setForm(f => ({ ...f, thumbnail: url }));
+                    const reader = new FileReader();
+                    reader.onloadend = () => setForm(f => ({ ...f, thumbnail: reader.result }));
+                    reader.readAsDataURL(file);
                   }
                 }}
               >
@@ -338,8 +341,9 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      const url = URL.createObjectURL(file);
-                      setForm(f => ({ ...f, thumbnail: url }));
+                      const reader = new FileReader();
+                      reader.onloadend = () => setForm(f => ({ ...f, thumbnail: reader.result }));
+                      reader.readAsDataURL(file);
                     }
                   }}
                 />
@@ -362,8 +366,9 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
                   e.stopPropagation();
                   const file = e.dataTransfer.files?.[0];
                   if (file && file.type.startsWith('image/')) {
-                    const url = URL.createObjectURL(file);
-                    setForm(f => ({ ...f, bannerImage: url }));
+                    const reader = new FileReader();
+                    reader.onloadend = () => setForm(f => ({ ...f, bannerImage: reader.result }));
+                    reader.readAsDataURL(file);
                   }
                 }}
               >
@@ -380,8 +385,9 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      const url = URL.createObjectURL(file);
-                      setForm(f => ({ ...f, bannerImage: url }));
+                      const reader = new FileReader();
+                      reader.onloadend = () => setForm(f => ({ ...f, bannerImage: reader.result }));
+                      reader.readAsDataURL(file);
                     }
                   }}
                 />
