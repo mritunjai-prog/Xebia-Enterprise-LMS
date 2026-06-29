@@ -289,14 +289,15 @@ export default function CreateCategory({ onBack, editData = null }) {
                     e.stopPropagation();
                     const file = e.dataTransfer.files?.[0];
                     if (file && file.type.startsWith('image/')) {
-                      const url = URL.createObjectURL(file);
-                      setForm({ ...form, icon: url });
+                      const reader = new FileReader();
+                      reader.onload = (event) => setForm({ ...form, icon: event.target.result });
+                      reader.readAsDataURL(file);
                     } else {
                       addToast('Please upload a valid image file.', 'error');
                     }
                   }}
                 >
-                  {form.icon && form.icon.startsWith('blob:') ? (
+                  {form.icon && form.icon.startsWith('data:image/') ? (
                     <div className="relative group rounded-full overflow-hidden w-20 h-20 border-2" style={{ borderColor: form.color }}>
                       <img src={form.icon} alt="Preview" className="w-full h-full object-cover z-10 relative pointer-events-none" />
                       <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
@@ -321,8 +322,9 @@ export default function CreateCategory({ onBack, editData = null }) {
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        const url = URL.createObjectURL(file);
-                        setForm({ ...form, icon: url });
+                        const reader = new FileReader();
+                        reader.onload = (event) => setForm({ ...form, icon: event.target.result });
+                        reader.readAsDataURL(file);
                       }
                     }}
                   />
@@ -337,7 +339,7 @@ export default function CreateCategory({ onBack, editData = null }) {
                 <input
                   type="text"
                   placeholder="https://..."
-                  value={form.icon && !form.icon.startsWith('blob:') ? form.icon : ''}
+                  value={form.icon && !form.icon.startsWith('data:image/') ? form.icon : ''}
                   onChange={e => setForm({ ...form, icon: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-[#3a3a4a] bg-white dark:bg-[#15151f] text-gray-900 dark:text-white placeholder-gray-400 rounded-lg text-sm outline-none focus:border-[#6C1D5F] focus:ring-1 focus:ring-[#6C1D5F] mt-2 relative z-10"
                 />

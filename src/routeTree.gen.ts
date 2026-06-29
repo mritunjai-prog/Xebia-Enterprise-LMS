@@ -20,6 +20,12 @@ import { Route as AnalyticsIndexRouteImport } from './routes/analytics/index'
 import { Route as CoursesBuilderRouteImport } from './routes/courses/builder'
 import { Route as CoursesCourseSlugRouteImport } from './routes/courses/$courseSlug'
 import { Route as CategoriesCategorySlugRouteImport } from './routes/categories/$categorySlug'
+import { Route as AdminCurriculumIndexRouteImport } from './routes/admin/curriculum/index'
+import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categories/index'
+import { Route as AdminCurriculumCourseIdRouteImport } from './routes/admin/curriculum/$courseId'
+import { Route as AdminCoursesCourseSlugRouteImport } from './routes/admin/courses/$courseSlug'
+import { Route as AdminCategoriesCategoryIdRouteImport } from './routes/admin/categories/$categoryId'
+import { Route as AdminSubmodulesSubmoduleIdContentRouteImport } from './routes/admin/submodules/$submoduleId/content'
 
 const TrainerRoute = TrainerRouteImport.update({
   id: '/trainer',
@@ -76,6 +82,38 @@ const CategoriesCategorySlugRoute = CategoriesCategorySlugRouteImport.update({
   path: '/categories/$categorySlug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminCurriculumIndexRoute = AdminCurriculumIndexRouteImport.update({
+  id: '/admin/curriculum/',
+  path: '/admin/curriculum/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCategoriesIndexRoute = AdminCategoriesIndexRouteImport.update({
+  id: '/admin/categories/',
+  path: '/admin/categories/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCurriculumCourseIdRoute = AdminCurriculumCourseIdRouteImport.update({
+  id: '/admin/curriculum/$courseId',
+  path: '/admin/curriculum/$courseId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCoursesCourseSlugRoute = AdminCoursesCourseSlugRouteImport.update({
+  id: '/admin/courses/$courseSlug',
+  path: '/admin/courses/$courseSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCategoriesCategoryIdRoute =
+  AdminCategoriesCategoryIdRouteImport.update({
+    id: '/admin/categories/$categoryId',
+    path: '/admin/categories/$categoryId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AdminSubmodulesSubmoduleIdContentRoute =
+  AdminSubmodulesSubmoduleIdContentRouteImport.update({
+    id: '/admin/submodules/$submoduleId/content',
+    path: '/admin/submodules/$submoduleId/content',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -89,6 +127,12 @@ export interface FileRoutesByFullPath {
   '/analytics/': typeof AnalyticsIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/admin/categories/$categoryId': typeof AdminCategoriesCategoryIdRoute
+  '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
+  '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
+  '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/curriculum/': typeof AdminCurriculumIndexRoute
+  '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +146,12 @@ export interface FileRoutesByTo {
   '/analytics': typeof AnalyticsIndexRoute
   '/categories': typeof CategoriesIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/admin/categories/$categoryId': typeof AdminCategoriesCategoryIdRoute
+  '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
+  '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
+  '/admin/categories': typeof AdminCategoriesIndexRoute
+  '/admin/curriculum': typeof AdminCurriculumIndexRoute
+  '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +166,12 @@ export interface FileRoutesById {
   '/analytics/': typeof AnalyticsIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/admin/categories/$categoryId': typeof AdminCategoriesCategoryIdRoute
+  '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
+  '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
+  '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/curriculum/': typeof AdminCurriculumIndexRoute
+  '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +187,12 @@ export interface FileRouteTypes {
     | '/analytics/'
     | '/categories/'
     | '/courses/'
+    | '/admin/categories/$categoryId'
+    | '/admin/courses/$courseSlug'
+    | '/admin/curriculum/$courseId'
+    | '/admin/categories/'
+    | '/admin/curriculum/'
+    | '/admin/submodules/$submoduleId/content'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +206,12 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/categories'
     | '/courses'
+    | '/admin/categories/$categoryId'
+    | '/admin/courses/$courseSlug'
+    | '/admin/curriculum/$courseId'
+    | '/admin/categories'
+    | '/admin/curriculum'
+    | '/admin/submodules/$submoduleId/content'
   id:
     | '__root__'
     | '/'
@@ -157,6 +225,12 @@ export interface FileRouteTypes {
     | '/analytics/'
     | '/categories/'
     | '/courses/'
+    | '/admin/categories/$categoryId'
+    | '/admin/courses/$courseSlug'
+    | '/admin/curriculum/$courseId'
+    | '/admin/categories/'
+    | '/admin/curriculum/'
+    | '/admin/submodules/$submoduleId/content'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -171,6 +245,12 @@ export interface RootRouteChildren {
   AnalyticsIndexRoute: typeof AnalyticsIndexRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  AdminCategoriesCategoryIdRoute: typeof AdminCategoriesCategoryIdRoute
+  AdminCoursesCourseSlugRoute: typeof AdminCoursesCourseSlugRoute
+  AdminCurriculumCourseIdRoute: typeof AdminCurriculumCourseIdRoute
+  AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
+  AdminCurriculumIndexRoute: typeof AdminCurriculumIndexRoute
+  AdminSubmodulesSubmoduleIdContentRoute: typeof AdminSubmodulesSubmoduleIdContentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -252,6 +332,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriesCategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/curriculum/': {
+      id: '/admin/curriculum/'
+      path: '/admin/curriculum'
+      fullPath: '/admin/curriculum/'
+      preLoaderRoute: typeof AdminCurriculumIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/categories/': {
+      id: '/admin/categories/'
+      path: '/admin/categories'
+      fullPath: '/admin/categories/'
+      preLoaderRoute: typeof AdminCategoriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/curriculum/$courseId': {
+      id: '/admin/curriculum/$courseId'
+      path: '/admin/curriculum/$courseId'
+      fullPath: '/admin/curriculum/$courseId'
+      preLoaderRoute: typeof AdminCurriculumCourseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/courses/$courseSlug': {
+      id: '/admin/courses/$courseSlug'
+      path: '/admin/courses/$courseSlug'
+      fullPath: '/admin/courses/$courseSlug'
+      preLoaderRoute: typeof AdminCoursesCourseSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/categories/$categoryId': {
+      id: '/admin/categories/$categoryId'
+      path: '/admin/categories/$categoryId'
+      fullPath: '/admin/categories/$categoryId'
+      preLoaderRoute: typeof AdminCategoriesCategoryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/submodules/$submoduleId/content': {
+      id: '/admin/submodules/$submoduleId/content'
+      path: '/admin/submodules/$submoduleId/content'
+      fullPath: '/admin/submodules/$submoduleId/content'
+      preLoaderRoute: typeof AdminSubmodulesSubmoduleIdContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -267,6 +389,13 @@ const rootRouteChildren: RootRouteChildren = {
   AnalyticsIndexRoute: AnalyticsIndexRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  AdminCategoriesCategoryIdRoute: AdminCategoriesCategoryIdRoute,
+  AdminCoursesCourseSlugRoute: AdminCoursesCourseSlugRoute,
+  AdminCurriculumCourseIdRoute: AdminCurriculumCourseIdRoute,
+  AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
+  AdminCurriculumIndexRoute: AdminCurriculumIndexRoute,
+  AdminSubmodulesSubmoduleIdContentRoute:
+    AdminSubmodulesSubmoduleIdContentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

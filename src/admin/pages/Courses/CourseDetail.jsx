@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
+import { motion } from 'framer-motion';
 
 import { 
   BookOpen, Layers, Play, Settings, Activity, Clock, ArrowLeft, 
@@ -261,7 +263,14 @@ export default function CourseDetail() {
           { label: 'LESSONS', value: course.lessonsCount || 0, icon: FileText, color: 'text-orange-500 bg-orange-500/10' },
           { label: 'DURATION', value: duration, icon: Clock, color: 'text-pink-500 bg-pink-500/10' },
         ].map((stat, idx) => (
-          <div key={idx} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+          <motion.div 
+            key={idx} 
+            className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all perspective-1000"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.1, type: "spring", stiffness: 300, damping: 20 }}
+            whileHover={{ scale: 1.02, rotateX: 2, rotateY: 2 }}
+          >
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${stat.color}`}>
               <stat.icon className="w-5 h-5" />
             </div>
@@ -269,13 +278,13 @@ export default function CourseDetail() {
               <p className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{stat.label}</p>
               <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-0.5">{stat.value}</h3>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       <div className="border-b border-gray-200 dark:border-[#2e2e3e] mt-6">
         <div className="flex gap-8 px-1">
-          {['Overview', 'Curriculum', 'Media', 'Settings', 'Activity'].map((tab) => (
+          {['Overview', 'Curriculum', 'Media', 'Settings', 'Activity', 'Analytics'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -293,10 +302,16 @@ export default function CourseDetail() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
         
-        <div className="lg:col-span-2 space-y-6">
+        <div className={`${activeTab === 'Overview' ? 'lg:col-span-2' : 'lg:col-span-3'} space-y-6`}>
           {activeTab === 'Overview' && (
             <>
-              <div className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 sm:p-8 transition-colors">
+              <motion.div 
+                className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 sm:p-8 transition-colors perspective-1000"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, type: "spring", stiffness: 300, damping: 20 }}
+                whileHover={{ scale: 1.01, rotateX: 1, rotateY: 1 }}
+              >
                 <h3 className="text-xl font-bold text-[#6C1D5F] dark:text-[#84117C] mb-4">General Information</h3>
                 <div className="text-[14px] text-gray-800 dark:text-gray-100 leading-relaxed space-y-4">
                   {(course.subtitle || course.shortDescription) && (
@@ -321,10 +336,16 @@ export default function CourseDetail() {
                     </>
                   )}
                 </div>
-              </div>
+              </motion.div>
 
               {course.learningOutcomes && course.learningOutcomes.length > 0 && (
-                <div className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 sm:p-8 relative overflow-hidden transition-colors">
+                <motion.div 
+                  className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 sm:p-8 relative overflow-hidden transition-colors perspective-1000"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 20 }}
+                  whileHover={{ scale: 1.01, rotateX: -1, rotateY: 1 }}
+                >
                   <h3 className="text-xl font-bold text-[#6C1D5F] dark:text-[#84117C] mb-6 flex items-center gap-2">
                     Learning Outcomes
                     <Star className="w-5 h-5 text-gray-300 dark:text-gray-600 ml-1" />
@@ -339,11 +360,17 @@ export default function CourseDetail() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
               
               {course.prerequisites && course.prerequisites.length > 0 && (
-                <div className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 sm:p-8 relative overflow-hidden transition-colors">
+                <motion.div 
+                  className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 sm:p-8 relative overflow-hidden transition-colors perspective-1000"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 300, damping: 20 }}
+                  whileHover={{ scale: 1.01, rotateX: 1, rotateY: -1 }}
+                >
                   <h3 className="text-xl font-bold text-[#6C1D5F] dark:text-[#84117C] mb-6 flex items-center gap-2">
                     Prerequisites
                     <Check className="w-5 h-5 text-gray-300 dark:text-gray-600 ml-1" />
@@ -358,7 +385,7 @@ export default function CourseDetail() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
             </>
           )}
@@ -440,6 +467,72 @@ export default function CourseDetail() {
                 ))}
               </div>
             </div>
+          )}
+          {activeTab === 'Analytics' && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 sm:p-8"
+            >
+              <h3 className="text-xl font-bold text-[#6C1D5F] dark:text-[#84117C] mb-8 flex items-center gap-2">
+                <Activity className="w-5 h-5" />
+                Course Analytics
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* BarChart for Module Completion */}
+                <motion.div 
+                  whileHover={{ scale: 1.02, rotateX: 2, rotateY: -2 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="perspective-1000"
+                >
+                  <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4">Module Completion Rate</h4>
+                  <div className="h-[250px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={[
+                        { name: 'Mod 1', complete: 95 },
+                        { name: 'Mod 2', complete: 85 },
+                        { name: 'Mod 3', complete: 70 },
+                        { name: 'Mod 4', complete: 45 },
+                        { name: 'Mod 5', complete: 20 },
+                      ]}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} />
+                        <YAxis axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} />
+                        <Tooltip cursor={{fill: '#f3f4f6'}} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
+                        <Bar dataKey="complete" fill="#6C1D5F" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </motion.div>
+
+                {/* RadarChart for Engagement Dimensions */}
+                <motion.div 
+                  whileHover={{ scale: 1.02, rotateX: 2, rotateY: 2 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="perspective-1000"
+                >
+                  <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4">Student Engagement</h4>
+                  <div className="h-[250px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart cx="50%" cy="50%" outerRadius="70%" data={[
+                        { subject: 'Video Watch', A: 120, fullMark: 150 },
+                        { subject: 'Quiz Score', A: 98, fullMark: 150 },
+                        { subject: 'Discussion', A: 86, fullMark: 150 },
+                        { subject: 'Downloads', A: 99, fullMark: 150 },
+                        { subject: 'Feedback', A: 85, fullMark: 150 },
+                      ]}>
+                        <PolarGrid stroke="#eee" />
+                        <PolarAngleAxis dataKey="subject" tick={{fill: '#888', fontSize: 11}} />
+                        <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
+                        <Radar name="Engagement" dataKey="A" stroke="#01AC9F" fill="#01AC9F" fillOpacity={0.4} />
+                        <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
+                      </RadarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
           )}
         </div>
 

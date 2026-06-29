@@ -57,7 +57,10 @@ export default function Categories() {
     }
   }, []);
   const [viewMode, setViewMode] = useState(() => {
-    return localStorage.getItem('categoriesViewMode') || 'grid';
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('categoriesViewMode') || 'grid';
+    }
+    return 'grid';
   });
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -115,8 +118,6 @@ export default function Categories() {
   const activeCount = categories.filter(c => c.active).length;
   const inactiveCount = categories.filter(c => !c.active).length;
   const totalCourses = courses.length;
-
-  const mockStudents = [1840, 1250, 980, 1360, 870, 430, 790, 520];
 
   if (showCreatePage) {
     return (
@@ -240,7 +241,7 @@ export default function Categories() {
             {paginatedCategories.map((cat, index) => {
               const color = cat.color || '#6C1D5F';
               const slug = cat.slug || (cat.name || '').toLowerCase().replace(/\s+/g, '-');
-              const students = cat.students || mockStudents[index % mockStudents.length] || 0;
+              const students = cat.students || 0;
               const courseCount = cat.actualCount || cat.courseCount || 0;
 
               return (
@@ -254,16 +255,15 @@ export default function Categories() {
                   style={{ border: `3px solid ${color}` }}
                 >
 
-                    {/* Cover Image, Emoji, or Solid Color */}
                     <div 
                       className="w-full aspect-video shrink-0 overflow-hidden cursor-pointer relative flex items-center justify-center" 
-                      style={{ backgroundColor: (cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('blob:'))) ? 'var(--tw-bg-opacity)' : color }}
+                      style={{ backgroundColor: (cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('data:image/'))) ? 'var(--tw-bg-opacity)' : color }}
                       onClick={(e) => {
                         if (e.target.closest('button')) return;
                         window.location.href = `/categories/${slug}`;
                       }}
                     >
-                      {cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('blob:')) ? (
+                      {cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('data:image/')) ? (
                         <img src={cat.icon} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/1200x675/ffffff/94a3b8?text=${encodeURIComponent(cat.name)}`; }} />
                       ) : cat.icon ? (
                         <span className="text-[400px] leading-none absolute flex items-center justify-center w-full h-full group-hover:scale-105 transition-transform duration-200">{cat.icon}</span>
@@ -369,7 +369,7 @@ export default function Categories() {
                               className="w-16 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm overflow-hidden"
                               style={{ backgroundColor: `${color}20`, border: `2px solid ${color}` }}
                             >
-                              {cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('blob:')) ? (
+                              {cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('data:image/')) ? (
                                 <img src={cat.icon} alt={cat.name} className="w-full h-full object-cover" />
                               ) : (
                                 <span className="text-4xl leading-none">{cat.icon || '📚'}</span>

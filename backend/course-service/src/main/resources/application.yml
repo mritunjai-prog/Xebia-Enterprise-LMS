@@ -11,6 +11,7 @@ spring:
   flyway:
     schemas: course
     default-schema: course
+    out-of-order: true
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer.value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

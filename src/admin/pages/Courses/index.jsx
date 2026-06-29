@@ -63,7 +63,10 @@ export default function Courses() {
   const [filterStatus, setFilterStatus] = useState('All Status');
   const [filterFavorites, setFilterFavorites] = useState('All Courses');
   const [viewMode, setViewMode] = useState(() => {
-    return localStorage.getItem('coursesViewMode') || 'grid';
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('coursesViewMode') || 'grid';
+    }
+    return 'grid';
   });
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -78,7 +81,22 @@ export default function Courses() {
           CourseService.getCourses(),
           CategoryService.getCategories()
         ]);
-        setCourses(courseData || []);
+        
+        // Fetch hierarchies to get actual module counts without mocking
+        const coursesWithCounts = await Promise.all((courseData || []).map(async (c) => {
+          try {
+            const hierarchy = await CourseService.getCourseHierarchy(c.id);
+            return {
+              ...c,
+              modulesCount: hierarchy?.modulesCount || 0,
+              studentsCount: c.studentsCount || 0 // Assuming backend might add this later, keep it 0 for now
+            };
+          } catch (e) {
+            return { ...c, modulesCount: 0, studentsCount: 0 };
+          }
+        }));
+
+        setCourses(coursesWithCounts);
         setCategories(catData || []);
       } catch (err) {
         addToast('Failed to load courses.', 'error');
@@ -206,7 +224,7 @@ export default function Courses() {
             { label: 'TOTAL COURSES', value: courses.length, desc: 'All courses in library', icon: BookOpen, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-500/10' },
             { label: 'PUBLISHED COURSES', value: courses.filter(c => c.published || c.isPublished).length, desc: 'Courses are live', icon: GraduationCap, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-500/10' },
             { label: 'DRAFT COURSES', value: courses.length - courses.filter(c => c.published || c.isPublished).length, desc: 'Work in progress', icon: FileText, color: 'text-orange-500 dark:text-orange-400', bg: 'bg-orange-50 dark:bg-orange-500/10' },
-            { label: 'TOTAL ENROLLMENTS', value: '1.2K', desc: 'Across all courses', icon: Users, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-500/10' },
+            { label: 'TOTAL ENROLLMENTS', value: courses.reduce((sum, c) => sum + (c.studentsCount || 0), 0), desc: 'Across all courses', icon: Users, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-500/10' },
           ].map((stat, i) => (
             <div key={i} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
               <div className={clsx('w-12 h-12 rounded-2xl flex items-center justify-center shrink-0', stat.bg, stat.color)}>

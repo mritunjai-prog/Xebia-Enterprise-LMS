@@ -94,8 +94,11 @@ export function Header() {
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      const url = URL.createObjectURL(file);
-      setTempProfile({ ...tempProfile, image: url });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setTempProfile({ ...tempProfile, image: reader.result });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -104,8 +107,11 @@ export function Header() {
     setIsDragging(false);
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith('image/')) {
-      const url = URL.createObjectURL(file);
-      setTempProfile({ ...tempProfile, image: url });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setTempProfile({ ...tempProfile, image: reader.result });
+      };
+      reader.readAsDataURL(file);
     } else {
       addToast('Please upload a valid image file.', 'error');
     }

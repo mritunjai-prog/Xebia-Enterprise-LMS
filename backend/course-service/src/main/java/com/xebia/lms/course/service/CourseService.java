@@ -126,8 +126,8 @@ public class CourseService {
         course.setCustomHeadScript(request.customHeadScript());
         course.setCustomBodyScript(request.customBodyScript());
         
-        if (request.totalViews() != null) course.setTotalViews(request.totalViews());
-        if (request.totalClicks() != null) course.setTotalClicks(request.totalClicks());
+        if (request.totalViews() != null) course.setTotalViews(request.totalViews().longValue());
+        if (request.totalClicks() != null) course.setTotalClicks(request.totalClicks().longValue());
         if (request.ctr() != null) course.setCtr(request.ctr());
         if (request.seoScore() != null) course.setSeoScore(request.seoScore());
     }

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, CartesianGrid } from 'recharts';
+import { motion } from 'framer-motion';
 
 import {
   Tag, BookOpen, Clock, ArrowLeft, Users, Star,
@@ -161,7 +163,7 @@ export default function CategoryDetail() {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
             {/* Category Full Icon Image */}
             <div className="flex items-center justify-center shrink-0">
-              {category.icon && !category.icon.startsWith('http') && !category.icon.startsWith('blob:') ? (
+              {category.icon && !category.icon.startsWith('http') && !category.icon.startsWith('blob:') && !category.icon.startsWith('data:') ? (
                 <div 
                   className="w-[140px] h-[140px] sm:w-[180px] sm:h-[180px] flex items-center justify-center shadow-sm overflow-hidden rounded-[20px] relative"
                   style={{ backgroundColor: category.color, border: `4px solid ${category.color}` }}
@@ -242,7 +244,11 @@ export default function CategoryDetail() {
       {/* ─── Stats Cards ─── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Total Courses */}
-        <div className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5 relative overflow-hidden">
+        <motion.div 
+          className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5 relative overflow-hidden perspective-1000"
+          whileHover={{ scale: 1.02, rotateX: 2, rotateY: 2 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
           <div className="flex items-start justify-between">
             <div className="p-2.5 rounded-xl bg-purple-100 dark:bg-purple-950/30">
               <BookOpen className="w-5 h-5 text-purple-600 dark:text-purple-400" />
@@ -250,10 +256,14 @@ export default function CategoryDetail() {
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 font-semibold mt-3 uppercase tracking-wider">Total Courses</p>
           <h3 className="text-3xl font-black text-gray-900 dark:text-white mt-1 tracking-tight">{courses.length}</h3>
-        </div>
+        </motion.div>
 
         {/* Published */}
-        <div className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5 relative overflow-hidden">
+        <motion.div 
+          className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5 relative overflow-hidden perspective-1000"
+          whileHover={{ scale: 1.02, rotateX: 2, rotateY: 2 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
           <div className="flex items-start justify-between">
             <div className="p-2.5 rounded-xl bg-emerald-100 dark:bg-emerald-950/30">
               <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
@@ -261,10 +271,14 @@ export default function CategoryDetail() {
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 font-semibold mt-3 uppercase tracking-wider">Published</p>
           <h3 className="text-3xl font-black text-gray-900 dark:text-white mt-1 tracking-tight">{publishedCourses}</h3>
-        </div>
+        </motion.div>
 
         {/* Draft */}
-        <div className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5 relative overflow-hidden">
+        <motion.div 
+          className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5 relative overflow-hidden perspective-1000"
+          whileHover={{ scale: 1.02, rotateX: 2, rotateY: 2 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
           <div className="flex items-start justify-between">
             <div className="p-2.5 rounded-xl bg-orange-100 dark:bg-orange-950/30">
               <Edit3 className="w-5 h-5 text-orange-500 dark:text-orange-400" />
@@ -272,7 +286,7 @@ export default function CategoryDetail() {
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 font-semibold mt-3 uppercase tracking-wider">Draft</p>
           <h3 className="text-3xl font-black text-gray-900 dark:text-white mt-1 tracking-tight">{draftCourses}</h3>
-        </div>
+        </motion.div>
       </div>
 
       {/* ─── Tab Navigation ─── */}
@@ -303,7 +317,13 @@ export default function CategoryDetail() {
           {activeTab === 'Overview' && (
             <>
               {/* General Information */}
-              <div className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-6">
+              <motion.div 
+                className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-6 perspective-1000"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, type: "spring", stiffness: 300, damping: 20 }}
+                whileHover={{ scale: 1.01, rotateX: 1, rotateY: 1 }}
+              >
                 <h3 className="text-lg font-bold text-[#6C1D5F] dark:text-[#84117C] mb-5">General Information</h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -327,10 +347,16 @@ export default function CategoryDetail() {
                     {category.description || `This category encompasses all modules related to ${category.name}. Courses cover fundamental concepts as well as advanced topics, providing a comprehensive learning experience for enterprise teams.`}
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Recent Courses in Overview */}
-              <div className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-6">
+              <motion.div 
+                className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-6 perspective-1000"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 20 }}
+                whileHover={{ scale: 1.01, rotateX: -1, rotateY: 1 }}
+              >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold text-[#6C1D5F] dark:text-[#84117C]">Recent Courses</h3>
                   <button
@@ -385,7 +411,43 @@ export default function CategoryDetail() {
                     })}
                   </div>
                 )}
-              </div>
+              </motion.div>
+
+              {/* Animated AreaChart for Enrollment Growth */}
+              <motion.div 
+                whileHover={{ scale: 1.02, rotateX: 2, rotateY: -2 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-6 perspective-1000 mt-6"
+              >
+                <h3 className="text-lg font-bold text-[#6C1D5F] dark:text-[#84117C] mb-4">Enrollment Growth</h3>
+                <div className="h-[250px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={[
+                      { name: 'Jan', students: 400 },
+                      { name: 'Feb', students: 600 },
+                      { name: 'Mar', students: 800 },
+                      { name: 'Apr', students: 1200 },
+                      { name: 'May', students: 1500 },
+                      { name: 'Jun', students: 2000 },
+                    ]}>
+                      <defs>
+                        <linearGradient id="colorStudents" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#6C1D5F" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#6C1D5F" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} />
+                      <YAxis axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} />
+                      <Tooltip 
+                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+                        itemStyle={{ color: '#6C1D5F', fontWeight: 'bold' }}
+                      />
+                      <Area type="monotone" dataKey="students" stroke="#6C1D5F" strokeWidth={3} fillOpacity={1} fill="url(#colorStudents)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </motion.div>
             </>
           )}
 
@@ -543,6 +605,55 @@ export default function CategoryDetail() {
               </div>
             </div>
           </div>
+
+          {/* Animated Donut PieChart for Content Distribution */}
+          <motion.div 
+            whileHover={{ scale: 1.02, rotateX: 2, rotateY: 2 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-6 perspective-1000 mt-6"
+          >
+            <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">Content Composition</h3>
+            <div className="h-[200px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: 'Video Lectures', value: 45 },
+                      { name: 'Quizzes', value: 25 },
+                      { name: 'Assignments', value: 20 },
+                      { name: 'Reading Material', value: 10 },
+                    ]}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {[
+                      { name: 'Video Lectures', value: 45 },
+                      { name: 'Quizzes', value: 25 },
+                      { name: 'Assignments', value: 20 },
+                      { name: 'Reading Material', value: 10 },
+                    ].map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={['#6C1D5F', '#01AC9F', '#FF6200', '#F59E0B'][index % 4]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2 justify-center">
+              {['Videos', 'Quizzes', 'Tasks', 'Reading'].map((label, idx) => (
+                <div key={idx} className="flex items-center gap-1 text-[10px] font-bold text-gray-500">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: ['#6C1D5F', '#01AC9F', '#FF6200', '#F59E0B'][idx] }} />
+                  {label}
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>

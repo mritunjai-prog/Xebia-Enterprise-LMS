@@ -15,14 +15,32 @@ export const useAppStore = create((set, get) => ({
     addUser: false,
   },
 
-  adminProfile: {
-    name: 'Admin User',
-    email: 'admin@xebia.com',
-    role: 'System Administrator',
-    image: null,
-  },
+  adminProfile: (() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('lms_admin_profile');
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return {
+      name: 'Admin User',
+      email: 'admin@xebia.com',
+      role: 'System Administrator',
+      image: null,
+    };
+  })(),
   
-  updateAdminProfile: (updates) => set((state) => ({ adminProfile: { ...state.adminProfile, ...updates } })),
+  updateAdminProfile: (updates) => set((state) => {
+    const newProfile = { ...state.adminProfile, ...updates };
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('lms_admin_profile', JSON.stringify(newProfile));
+      } catch (error) {
+        console.warn('Could not save profile to localStorage, it might be too large.', error);
+      }
+    }
+    return { adminProfile: newProfile };
+  }),
 
   dashboardData: null,
   organizations: [],

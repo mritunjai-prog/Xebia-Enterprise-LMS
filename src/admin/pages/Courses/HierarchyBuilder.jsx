@@ -149,6 +149,22 @@ export default function HierarchyBuilder({ course }) {
     </label>
   );
 
+  const mediaCounts = { VIDEO: 0, TEXT: 0, PDF: 0, CODE: 0 };
+  modules.forEach(m => {
+    m.submodules?.forEach(sm => {
+      sm.contentBlocks?.forEach(cb => {
+        if (mediaCounts[cb.type] !== undefined) mediaCounts[cb.type]++;
+      });
+    });
+  });
+  const mediaData = [
+    { name: 'Video', value: mediaCounts.VIDEO, color: CONTENT_COLORS.VIDEO },
+    { name: 'Text', value: mediaCounts.TEXT, color: CONTENT_COLORS.TEXT },
+    { name: 'PDF', value: mediaCounts.PDF, color: CONTENT_COLORS.PDF },
+    { name: 'Code', value: mediaCounts.CODE, color: CONTENT_COLORS.CODE },
+  ].filter(d => d.value > 0);
+  if (mediaData.length === 0) mediaData.push({ name: 'Empty', value: 1, color: '#e5e7eb' });
+
   return (
     <div className="flex flex-col bg-[#F7F8FC] dark:bg-[#0a0a0f] transition-colors rounded-2xl border border-gray-200 dark:border-[#2e2e3e] overflow-hidden" style={{ height: 'calc(100vh - 40px)' }}>
       <div className="h-14 border-b border-border dark:border-[#2e2e3e] bg-white dark:bg-[#15151f] flex items-center justify-between px-6 shrink-0 shadow-sm">
@@ -163,7 +179,84 @@ export default function HierarchyBuilder({ course }) {
         <button className="px-4 py-1.5 rounded-xl text-xs font-bold text-white shadow-sm flex items-center gap-1.5 cursor-pointer hover:opacity-90" style={{ background: BRAND }}><CheckCircle2 className="w-3.5 h-3.5" /> All changes saved</button>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        
+        {/* Analytics Header (Visual Representation) */}
+        {modules.length > 0 && (
+          <div className="h-40 border-b border-border dark:border-[#2e2e3e] bg-[#fafafa] dark:bg-[#0d0d14] shrink-0 p-4 flex gap-4 overflow-hidden">
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} 
+              className="flex-1 bg-white dark:bg-[#15151f] rounded-xl border border-gray-100 dark:border-[#2e2e3e] p-4 flex items-center justify-between shadow-sm perspective-1000"
+              whileHover={{ rotateX: 2, rotateY: 2, scale: 1.01 }}
+            >
+              <div>
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Modules</h3>
+                <div className="text-3xl font-black text-foreground dark:text-white">{modules.length}</div>
+              </div>
+              <Layers className="w-10 h-10 text-[#6C1D5F] opacity-20" />
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+              className="flex-1 bg-white dark:bg-[#15151f] rounded-xl border border-gray-100 dark:border-[#2e2e3e] p-4 flex items-center justify-between shadow-sm perspective-1000"
+              whileHover={{ rotateX: 2, rotateY: 2, scale: 1.01 }}
+            >
+              <div>
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Submodules</h3>
+                <div className="text-3xl font-black text-foreground dark:text-white">{modules.reduce((acc, m) => acc + (m.submodules?.length || 0), 0)}</div>
+              </div>
+              <BookOpen className="w-10 h-10 text-[#01AC9F] opacity-20" />
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+              className="flex-[1.2] bg-white dark:bg-[#15151f] rounded-xl border border-gray-100 dark:border-[#2e2e3e] p-2 shadow-sm flex flex-col justify-center perspective-1000"
+              whileHover={{ rotateX: 2, rotateY: -2, scale: 1.01 }}
+            >
+              <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center mb-1">Hierarchy</h3>
+              <div className="h-[90px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={[
+                    { name: 'Modules', count: modules.length },
+                    { name: 'Submodules', count: modules.reduce((acc, m) => acc + (m.submodules?.length || 0), 0) }
+                  ]} layout="vertical" margin={{ top: 0, right: 10, left: 65, bottom: 0 }}>
+                    <XAxis type="number" hide />
+                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888'}} />
+                    <RechartsTooltip cursor={{fill: '#f3f4f6'}} contentStyle={{ borderRadius: '8px', border: 'none', padding: '4px 8px', fontSize: '11px' }} />
+                    <Bar dataKey="count" fill="#01AC9F" radius={[0, 4, 4, 0]} barSize={12} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+              className="flex-1 bg-white dark:bg-[#15151f] rounded-xl border border-gray-100 dark:border-[#2e2e3e] p-2 shadow-sm flex flex-col justify-center perspective-1000"
+              whileHover={{ rotateX: 2, rotateY: 2, scale: 1.01 }}
+            >
+              <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center mb-1">Media Types</h3>
+              <div className="h-[90px] w-full flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={mediaData}
+                      dataKey="value"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={25}
+                      outerRadius={38}
+                      paddingAngle={2}
+                    >
+                      {mediaData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', padding: '4px 8px', fontSize: '11px' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        <div className="flex-1 flex overflow-hidden">
         {/* LEFT COLUMN: MODULES */}
         <div className="w-1/2 flex flex-col border-r border-border dark:border-[#2e2e3e] bg-[#fafafa] dark:bg-[#0d0d14]">
           <div className="px-6 py-4 flex items-center justify-between bg-white dark:bg-[#15151f] border-b border-border dark:border-[#2e2e3e] shrink-0">
@@ -286,9 +379,12 @@ export default function HierarchyBuilder({ course }) {
                           <button onClick={(e) => { e.stopPropagation(); handleDeleteSubmodule(sm.id); }} className="text-xs font-bold text-orange-500 hover:text-orange-600 flex items-center gap-1"><Trash2 className="w-3.5 h-3.5"/> Delete</button>
                         </div>
                       </div>
-                      <div className="flex flex-col items-center justify-between shrink-0 ml-2">
-                        <ChevronRight className="w-5 h-5 text-gray-400" />
-                        <button onClick={(e) => { e.stopPropagation(); setEditSubmoduleId(sm.id); setSubmoduleForm({...sm, submoduleOrder: sm.position||(smIdx+1)}); setShowSubmoduleForm(true); }} className="w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:bg-gray-50"><Edit3 className="w-4 h-4 text-gray-500" /></button>
+                      <div className="flex flex-col items-center justify-between shrink-0 ml-2 gap-2">
+                        <button onClick={(e) => { e.stopPropagation(); router.navigate({ to: `/admin/submodules/${sm.id}/content`, search: { courseId: course.id, moduleId: selectedModuleId } }); }} className="text-[10px] font-bold px-2 py-1 rounded-md text-white shadow-sm flex items-center gap-1 hover:opacity-90 transition-opacity" style={{ background: BRAND }}><Layers className="w-3 h-3"/> Content</button>
+                        <div className="flex gap-1 mt-auto">
+                          <button onClick={(e) => { e.stopPropagation(); setEditSubmoduleId(sm.id); setSubmoduleForm({...sm, submoduleOrder: sm.position||(smIdx+1)}); setShowSubmoduleForm(true); }} className="w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:bg-gray-50"><Edit3 className="w-4 h-4 text-gray-500" /></button>
+                          <ChevronRight className="w-5 h-5 text-gray-400 self-center" />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -391,6 +487,7 @@ export default function HierarchyBuilder({ course }) {
                 <p className="text-sm text-gray-400 mt-2">Choose a module from the left panel to manage its submodules.</p>
              </div>
           )}
+        </div>
         </div>
       </div>
     </div>

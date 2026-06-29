@@ -187,12 +187,12 @@ public class Course extends TenantScopedEntity {
 
     // Analytics
     @Column(name = "total_views")
-    private Integer totalViews;
+    private Long totalViews;
 
     @Column(name = "total_clicks")
-    private Integer totalClicks;
+    private Long totalClicks;
 
-    @Column(columnDefinition = "numeric")
+    @Column(name = "ctr")
     private Double ctr;
 
     @Column(name = "seo_score")
@@ -312,10 +312,10 @@ public class Course extends TenantScopedEntity {
     public String getCustomBodyScript() { return customBodyScript; }
     public void setCustomBodyScript(String customBodyScript) { this.customBodyScript = customBodyScript; }
 
-    public Integer getTotalViews() { return totalViews; }
-    public void setTotalViews(Integer totalViews) { this.totalViews = totalViews; }
-    public Integer getTotalClicks() { return totalClicks; }
-    public void setTotalClicks(Integer totalClicks) { this.totalClicks = totalClicks; }
+    public Long getTotalViews() { return totalViews; }
+    public void setTotalViews(Long totalViews) { this.totalViews = totalViews; }
+    public Long getTotalClicks() { return totalClicks; }
+    public void setTotalClicks(Long totalClicks) { this.totalClicks = totalClicks; }
     public Double getCtr() { return ctr; }
     public void setCtr(Double ctr) { this.ctr = ctr; }
     public Integer getSeoScore() { return seoScore; }
