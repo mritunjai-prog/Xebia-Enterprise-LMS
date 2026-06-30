@@ -220,7 +220,7 @@ export default function CourseDetail() {
                     <div className={clsx(editorTab !== 'basic' && "hidden")}>
                       <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><BookOpen className="w-5 h-5 text-indigo-600" /> Core Information</h3>
                       <div className="space-y-5">
-                        <div className="grid grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 gap-5">
                           <div>
                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Course Title</label>
                             <input type="text" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-indigo-500" value={formData.title || ''} onChange={e => {
@@ -228,13 +228,6 @@ export default function CourseDetail() {
                               const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
                               setFormData({...formData, title, slug});
                             }} />
-                          </div>
-                          <div>
-                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">URL Slug</label>
-                            <div className="flex items-center w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-[12px] text-sm outline-none focus-within:border-indigo-500 font-mono text-gray-500">
-                              <span className="text-gray-500/60 select-none text-[11px]">/courses/</span>
-                              <input type="text" readOnly className="bg-transparent border-none outline-none flex-1 text-gray-900" value={formData.slug || ''} />
-                            </div>
                           </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

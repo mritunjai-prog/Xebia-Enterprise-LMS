@@ -154,25 +154,6 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
               </div>
             </Field>
           </FormRow>
-          
-          <FormRow cols={1}>
-            <Field label="URL Slug" required hint="Must be unique, lowercase, alphanumeric with hyphens. Auto-generated from title.">
-              <div className="relative flex items-center">
-                <span className="px-3 py-2 border border-r-0 border-gray-200 dark:border-[#3a3a4a] bg-gray-50 dark:bg-[#1a1a24] text-gray-500 text-sm rounded-l-xl">/courses/</span>
-                <input
-                  value={form.slug || ''}
-                  readOnly
-                  placeholder="your-course-title"
-                  className="w-full px-3 py-2 bg-gray-100 dark:bg-[#1a1a24] text-gray-500 border border-gray-200 dark:border-[#3a3a4a] rounded-r-xl text-sm outline-none cursor-not-allowed"
-                />
-                {form.slug && (
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-[#01AC9F] font-medium flex items-center gap-1">
-                    <Check className="w-3 h-3" /> Unique
-                  </span>
-                )}
-              </div>
-            </Field>
-          </FormRow>
 
           <FormRow>
             <Field label="Category" required>

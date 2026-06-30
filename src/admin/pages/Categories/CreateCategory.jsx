@@ -189,33 +189,6 @@ export default function CreateCategory({ onBack, editData = null }) {
                 />
               </div>
             </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-800 dark:text-white mb-2">
-                URL Slug <span className="text-red-500">*</span>
-              </label>
-              <div className="relative flex items-center">
-                <span className="px-3 py-2.5 bg-gray-50 dark:bg-[#1a1a24] border border-r-0 border-gray-300 dark:border-[#3a3a4a] rounded-l-lg text-gray-500 text-sm">/categories/</span>
-                <input
-                  type="text"
-                  maxLength={100}
-                  value={form.slug}
-                  onChange={e => setForm({ ...form, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
-                  className="w-full px-3 py-2.5 border border-gray-300 dark:border-[#3a3a4a] bg-white dark:bg-[#1a1a24] text-gray-900 dark:text-white rounded-r-lg text-sm outline-none focus:border-[#6C1D5F] focus:ring-1 focus:ring-[#6C1D5F] transition-all pr-24"
-                />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                  {form.slug && (
-                    <span className="flex items-center gap-1 text-[11px] text-[#01AC9F] font-medium">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Unique
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1">
-                <span>Must be unique, lowercase, alphanumeric with hyphens.</span>
-                <span>{form.slug.length}/100</span>
-              </div>
-            </div>
           </div>
 
           <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl p-5 space-y-3 transition-colors">

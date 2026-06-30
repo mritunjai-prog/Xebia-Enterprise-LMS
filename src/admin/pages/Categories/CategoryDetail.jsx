@@ -326,13 +326,7 @@ export default function CategoryDetail() {
               >
                 <h3 className="text-lg font-bold text-[#6C1D5F] dark:text-[#84117C] mb-5">General Information</h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-                  <div>
-                    <span className="block text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Slug</span>
-                    <span className="text-sm font-mono text-gray-700 dark:text-gray-300">
-                      /categories/{slug}
-                    </span>
-                  </div>
+                <div className="grid grid-cols-1 gap-5 mb-5">
                   <div>
                     <span className="block text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Visibility</span>
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -591,10 +585,7 @@ export default function CategoryDetail() {
                   <span className="font-mono text-gray-700 dark:text-gray-300 uppercase">{color}</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-500 dark:text-gray-400">Category Slug</span>
-                <span className="font-mono text-gray-700 dark:text-gray-300">{slug}</span>
-              </div>
+
               <div className="flex items-center justify-between text-xs">
                 <span className="text-gray-500 dark:text-gray-400">Linked Courses</span>
                 <span className="font-bold text-gray-700 dark:text-gray-300">{courses.length}</span>

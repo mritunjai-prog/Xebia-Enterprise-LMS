@@ -185,7 +185,7 @@ export default function CategoryDetail() {
                </div>
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 mb-8">
               <div>
                 <label className="block text-[13px] font-bold text-[var(--black)] mb-2">Category Name <span className="text-[var(--orange)]">*</span></label>
                 <div className="relative group">
@@ -201,19 +201,6 @@ export default function CategoryDetail() {
                   />
                   {formData.name && <CheckCircle className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 transition-colors" style={{ color: 'var(--emerald)' }} />}
                 </div>
-              </div>
-              
-              <div>
-                <label className="block text-[13px] font-bold text-[var(--black)] mb-2 flex items-center gap-2">
-                  URL Slug <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-[var(--white)]" style={{ backgroundColor: formData.color }}>AUTO</span>
-                </label>
-                <input 
-                  type="text" 
-                  readOnly
-                  placeholder="data-science-ai" 
-                  className="w-full px-4 py-3 bg-[#F0F2F5] border border-[var(--light-gray)] rounded-[12px] text-sm text-[var(--dark-gray)] font-mono shadow-inner cursor-not-allowed outline-none"
-                  value={formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}
-                />
               </div>
             </div>
 
