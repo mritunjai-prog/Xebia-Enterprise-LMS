@@ -10,7 +10,6 @@ import {
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CursorTrail } from "../components/cursor-trail";
 
 function NotFoundComponent() {
@@ -45,7 +44,7 @@ function ErrorComponent({ error, reset }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    // Error logged to console
   }, [error]);
   return _jsx("div", {
     className: "flex min-h-screen items-center justify-center bg-background px-4",
