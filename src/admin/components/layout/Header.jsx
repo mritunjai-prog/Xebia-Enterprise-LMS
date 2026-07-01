@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { IconSearch, IconProfile } from '../Icons';
-import { Sun, Moon, Settings, ChevronDown, BookOpen, Tag as TagIcon } from 'lucide-react';
+import { Sun, Moon, Settings, ChevronDown, BookOpen, Tag as TagIcon, Menu } from 'lucide-react';
 import { CourseService, CategoryService } from '../../../services/api';
 import { useRouter } from '@tanstack/react-router';
 import { clsx } from 'clsx';
 
 export function Header() {
-  const { activeSidebarItem, addToast } = useAppStore();
+  const { activeSidebarItem, addToast, toggleSidebar, isSidebarCollapsed } = useAppStore();
   const router = useRouter();
 
   const [isDark, setIsDark] = useState(() =>
@@ -125,10 +125,19 @@ export function Header() {
 
   return (
     <header className="header relative z-40">
-      <div className="breadcrumb">
-        <span>Platform</span>
-        <span className="breadcrumb-sep">›</span>
-        <span className="breadcrumb-cur">{activeSidebarItem}</span>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={toggleSidebar}
+          className="header-btn"
+          aria-label="Toggle Sidebar"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <div className="breadcrumb">
+          <span>Platform</span>
+          <span className="breadcrumb-sep">›</span>
+          <span className="breadcrumb-cur">{activeSidebarItem}</span>
+        </div>
       </div>
       
       <div className="flex-1 max-w-2xl px-4 relative" ref={searchRef}>

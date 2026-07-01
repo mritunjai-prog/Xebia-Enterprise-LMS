@@ -1,20 +1,14 @@
 import { Bell, Search, User, Menu } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Input } from "@/components/ui/input";
 import { studentProfile, notifications } from "@/features/student/mocks/dummy-data";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@tanstack/react-router";
 import { useDarkMode } from "@/features/student/hooks/use-dark-mode";
+import { useAppStore } from "@/admin/store/useAppStore";
 
-
-export function StudentNavbar({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen }) {
+export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
+  const { toggleSidebar } = useAppStore();
   const unreadCount = notifications.filter((n) => !n.read).length;
   const isDark = useDarkMode();
   const initials = studentProfile.name
@@ -24,66 +18,52 @@ export function StudentNavbar({ isCollapsed, setIsCollapsed, isMobileOpen, setIs
     .toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-md transition-all sm:px-6">
-      {/* Sidebar Toggle & Mobile Logo */}
-      <div className="flex items-center gap-2 mr-4">
+    <div className="header">
+      {/* Mobile Toggle */}
+      <div className="md:hidden flex items-center gap-2 mr-4">
         <button
-          onClick={() => {
-            if (window.innerWidth < 768) {
-              setIsMobileOpen(!isMobileOpen);
-            } else {
-              setIsCollapsed(!isCollapsed);
-            }
-          }}
-          className="flex h-10 w-10 items-center justify-center rounded-full glass hover:scale-105 transition-transform focus:outline-none"
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+          className="header-btn"
           aria-label="Toggle Sidebar"
         >
           <Menu className="h-5 w-5" />
         </button>
+      </div>
 
-        <div className="flex md:hidden items-center gap-2">
-          <Link
-            to="/student"
-            className="flex items-center gap-2"
-            style={{ textDecoration: "none" }}
-          >
-            <img
-              src={isDark ? "/logo-white.png" : "/logo-purple.png"}
-              alt="Xebia Logo"
-              className="h-8 w-auto object-contain"
-            />
-            <span className="font-bold tracking-wide text-sm text-foreground">
-              Xebia LMS
-            </span>
-          </Link>
+      {/* Desktop Toggle & Breadcrumb */}
+      <div className="hidden md:flex items-center gap-3 mr-4">
+        <button
+          onClick={toggleSidebar}
+          className="header-btn"
+          aria-label="Toggle Sidebar"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <div className="breadcrumb">
+          <span className="breadcrumb-cur">Student Portal</span>
         </div>
       </div>
 
       {/* Search Bar */}
-      <div className="flex flex-1 items-center justify-start max-w-md hidden md:flex">
-        <div className="relative w-full">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search courses, modules..."
-            className="w-full rounded-full bg-muted/50 pl-8 focus-visible:ring-primary/50"
-          />
-        </div>
+      <div className="header-search hidden md:block">
+        <Search className="search-icon" />
+        <input
+          type="text"
+          placeholder="Search..."
+        />
       </div>
 
-      <div className="ml-auto flex items-center gap-3 sm:gap-4">
+      <div className="header-actions">
         {/* Notifications Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="relative flex h-10 w-10 items-center justify-center rounded-full glass hover:scale-105 transition-transform ring-focus"
+              className="header-btn relative"
               aria-label="Notifications"
             >
               <Bell className="h-5 w-5" />
               {unreadCount > 0 && (
-                <Badge className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive p-0 text-[10px]">
-                  {unreadCount}
-                </Badge>
+                <div className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive"></div>
               )}
             </button>
           </DropdownMenuTrigger>
@@ -120,17 +100,11 @@ export function StudentNavbar({ isCollapsed, setIsCollapsed, isMobileOpen, setIs
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="flex items-center gap-2 rounded-full outline-none ring-focus p-1 hover:bg-muted/50 transition-all hover:shadow-sm"
+              className="header-btn"
               aria-label="User menu"
             >
-              <div className="h-9 w-9 flex items-center justify-center rounded-full text-sm font-bold bg-primary text-primary-foreground shadow-sm shadow-primary/30">
+              <div className="h-8 w-8 flex items-center justify-center rounded-full text-xs font-bold bg-primary text-primary-foreground shadow-sm">
                 {initials || <User className="h-4 w-4" />}
-              </div>
-              <div className="hidden flex-col items-start text-sm sm:flex mr-2 text-left">
-                <span className="font-semibold leading-none text-foreground">{studentProfile.name}</span>
-                <span className="text-xs text-muted-foreground mt-1 leading-none">
-                  {studentProfile.role}
-                </span>
               </div>
             </button>
           </DropdownMenuTrigger>
@@ -152,6 +126,6 @@ export function StudentNavbar({ isCollapsed, setIsCollapsed, isMobileOpen, setIs
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </header>
+    </div>
   );
 }

@@ -15,7 +15,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableWebSecurity
 public class ServiceConfig {
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth.anyRequest().permitAll()).addFilterBefore(new TenantHeaderFilter(), UsernamePasswordAuthenticationFilter.class).build();
+        return http
+            .cors(AbstractHttpConfigurer::disable)  // CORS is handled by API Gateway — disable here to avoid duplicate headers
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+            .addFilterBefore(new TenantHeaderFilter(), UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
+
     @Bean PermissionGuard permissionGuard() { return new PermissionGuard(); }
 }

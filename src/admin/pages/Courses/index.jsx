@@ -410,12 +410,12 @@ export default function Courses() {
                     </p>
 
                     {/* Meta Stats */}
-                    <div className="mt-auto flex items-center justify-between text-[12px] font-bold text-gray-500 dark:text-gray-400">
-                      <div className="flex items-center gap-4">
-                        <span className="flex items-center gap-1.5"><BookOpen className="w-4 h-4 text-gray-400 dark:text-gray-500" />{course.modules?.length || course.modulesCount || 0} Modules</span>
-                        <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-gray-400 dark:text-gray-500" />{course.studentsCount || 0} Students</span>
-                        <span className="flex items-center gap-1.5">
-                            <Clock className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                    <div className="mt-auto flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-gray-500 dark:text-gray-400">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <span className="flex items-center gap-1 whitespace-nowrap"><BookOpen className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />{course.modules?.length || course.modulesCount || 0} Modules</span>
+                        <span className="flex items-center gap-1 whitespace-nowrap"><Users className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />{course.studentsCount || 0} Students</span>
+                        <span className="flex items-center gap-1 whitespace-nowrap">
+                            <Clock className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
                             {duration}
                         </span>
                       </div>

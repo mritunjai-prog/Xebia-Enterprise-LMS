@@ -123,7 +123,7 @@ function OrganiserLayout() {
     <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground transition-colors duration-300">
       <OrganiserSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} isMobile={isMobile} />
 
-      <div className="flex flex-col flex-1 h-full overflow-hidden relative">
+      <div className="flex flex-col flex-1 h-full overflow-hidden relative" style={{ zoom: 0.8 }}>
         {/* ── Top Header ─────────────────────────────────────────────────── */}
         <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border/30 px-4 glass backdrop-blur-md sticky top-0 z-30 justify-between">
           <div className="flex items-center gap-3">

@@ -2,17 +2,18 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { StudentSidebar } from "@/components/layout/student-sidebar";
 import { StudentNavbar } from "@/components/layout/student-navbar";
 import { useState } from "react";
+import { useAppStore } from "@/admin/store/useAppStore";
 
 export const Route = createFileRoute("/student")({
   component: StudentLayout,
 });
 
 function StudentLayout() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { isSidebarCollapsed } = useAppStore();
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="shell">
       {/* Mobile backdrop overlay */}
       {isMobileOpen && (
         <div
@@ -21,29 +22,22 @@ function StudentLayout() {
         />
       )}
 
-      {/* Collapsible Sidebar */}
+      {/* Sidebar */}
       <StudentSidebar
-        isCollapsed={isCollapsed}
-        setIsCollapsed={setIsCollapsed}
         isMobileOpen={isMobileOpen}
         setIsMobileOpen={setIsMobileOpen}
+        isSidebarCollapsed={isSidebarCollapsed}
       />
 
-      {/* Main content — transitions offset based on sidebar width */}
-      <div
-        className={`flex flex-1 flex-col overflow-hidden transition-all duration-300 ml-0 ${
-          isCollapsed ? "md:ml-20" : "md:ml-64"
-        }`}
-      >
+      {/* Main content */}
+      <div className="main" style={{ zoom: 0.8 }}>
         <StudentNavbar
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
           isMobileOpen={isMobileOpen}
           setIsMobileOpen={setIsMobileOpen}
         />
-        <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
+        <div className="content">
           <Outlet />
-        </main>
+        </div>
       </div>
     </div>
   );

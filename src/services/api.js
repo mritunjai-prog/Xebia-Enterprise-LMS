@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8084';
+import { TEMPORARY_STUDENT_ID } from '@/config/student-identity';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
 
 /**
  * Standard fetch wrapper that automatically handles JSON and error states
@@ -7,7 +9,7 @@ async function fetchApi(endpoint, options = {}) {
   const headers = {
     'Content-Type': 'application/json',
     'X-Tenant-Id': '123e4567-e89b-12d3-a456-426614174000',
-    'X-User-Id': '123e4567-e89b-12d3-a456-426614174000',
+    'X-User-Id': TEMPORARY_STUDENT_ID,
     ...options.headers,
   };
 
@@ -32,6 +34,26 @@ async function fetchApi(endpoint, options = {}) {
   const text = await response.text();
   return text ? JSON.parse(text) : null;
 }
+
+export const EnrollmentService = {
+  enroll: (courseId) => fetchApi(`/enrollments/${courseId}`, { method: 'POST' }),
+  unenroll: (courseId) => fetchApi(`/enrollments/${courseId}`, { method: 'DELETE' }),
+  getStatus: (courseId) => fetchApi(`/enrollments/${courseId}/status`),
+  getMyCourses: () => fetchApi('/enrollments/my-courses'),
+};
+
+export const ProgressService = {
+  markComplete: (courseId, submoduleId) => 
+    fetchApi(`/progress/course/${courseId}/submodule/${submoduleId}/complete`, { method: 'POST' }),
+  markIncomplete: (courseId, submoduleId) => 
+    fetchApi(`/progress/course/${courseId}/submodule/${submoduleId}/complete`, { method: 'DELETE' }),
+  updateAccess: (courseId, submoduleId, contentId) => 
+    fetchApi(`/progress/course/${courseId}/access`, { 
+      method: 'POST', 
+      body: JSON.stringify({ submoduleId, contentId })
+    }),
+  getCourseProgress: (courseId) => fetchApi(`/progress/course/${courseId}`),
+};
 
 export const CourseService = {
   getCourses: () => fetchApi('/courses'),

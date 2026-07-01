@@ -19,6 +19,8 @@ public class RouteConfig {
         return routes.routes()
                 .route("course-service-courses", route -> route.path("/api/courses", "/api/courses/**").filters(filter -> filter.stripPrefix(1)).uri(serviceUrl("course", "http://localhost:8084")))
                 .route("course-service-categories", route -> route.path("/api/categories", "/api/categories/**").filters(filter -> filter.stripPrefix(1)).uri(serviceUrl("course", "http://localhost:8084")))
+                .route("course-service-enrollments", route -> route.path("/api/enrollments", "/api/enrollments/**").filters(filter -> filter.stripPrefix(1)).uri(serviceUrl("course", "http://localhost:8084")))
+                .route("course-service-progress", route -> route.path("/api/progress", "/api/progress/**").filters(filter -> filter.stripPrefix(1)).uri(serviceUrl("course", "http://localhost:8084")))
                 .build();
     }
 

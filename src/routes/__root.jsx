@@ -154,18 +154,24 @@ function RootShell({ children }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
+  const isStudentRoute = location.pathname.startsWith('/student');
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="shell">
-        <Sidebar />
-        <div className="main">
-          <Header />
-          <div className="content">
-            <Outlet />
+      {isStudentRoute ? (
+        <Outlet />
+      ) : (
+        <div className="shell">
+          <Sidebar />
+          <div className="main">
+            <Header />
+            <div className="content">
+              <Outlet />
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <CursorTrail />
     </QueryClientProvider>
   );

@@ -31,7 +31,25 @@ body {
 
 /* Base shell components */
 .shell { display: flex; height: 100vh; min-height: 700px; font-family: var(--font); background: var(--bg); overflow: hidden; font-size: 14px; }
-.sidebar { width: 260px; min-width: 260px; background: var(--primary-dark); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; }
+.sidebar { width: 260px; min-width: 260px; flex-shrink: 0; background: var(--white); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.sidebar.collapsed { width: 72px; min-width: 72px; }
+
+/* When collapsed, hide text elements */
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .logo-sub,
+.sidebar.collapsed .nav-section,
+.sidebar.collapsed .nav-item span,
+.sidebar.collapsed .user-info {
+  display: none;
+}
+
+/* Adjust alignments for collapsed mode */
+.sidebar.collapsed .sidebar-brand { padding: 22px 14px 16px; }
+.sidebar.collapsed .logo-mark { margin: 0 auto; }
+.sidebar.collapsed .nav-item { padding: 9px; justify-content: center; margin: 1px 12px; }
+.sidebar.collapsed .nav-item .nav-icon { margin: 0; }
+.sidebar.collapsed .sidebar-footer { padding: 14px 10px; }
+.sidebar.collapsed .user-avatar { margin: 0 auto; }
 .sidebar::-webkit-scrollbar { width: 0; }
 .sidebar-brand { padding: 22px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
 .sidebar-brand .logo { display: flex; align-items: center; gap: 10px; }
@@ -46,6 +64,28 @@ body {
 .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; margin: 1px 8px; border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; transition: all 0.15s; position: relative; }
 .nav-item:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
 .nav-item.active { background: var(--primary); color: #fff; }
+
+/* Admin Sidebar Theme */
+.sidebar-admin {
+  background: var(--white);
+  border-right: 1px solid var(--border);
+}
+.sidebar-admin .sidebar-brand { border-bottom-color: var(--border); }
+.sidebar-admin .logo-text { color: #111827; }
+.sidebar-admin .logo-sub { color: var(--primary); opacity: 0.8; }
+.sidebar-admin .nav-section { color: #9CA3AF; }
+.sidebar-admin .nav-item { color: #4B5563; }
+.sidebar-admin .nav-item:hover { background: #F3F4F6; color: #111827; }
+.sidebar-admin .nav-item.active { background: var(--primary); color: var(--white); }
+.sidebar-admin .sidebar-footer { border-top-color: var(--border); }
+.sidebar-admin .sidebar-user:hover { background: #F3F4F6; }
+.sidebar-admin .user-name { color: #111827; }
+.sidebar-admin .user-role { color: #6B7280; }
+
+/* Student Sidebar Theme */
+.sidebar-student .nav-item:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.sidebar-student .nav-item.active { background: var(--white); color: var(--primary-dark); }
+.sidebar-student .nav-item.active .nav-icon { color: var(--primary-dark); }
 .nav-item .nav-icon { width: 18px; height: 18px; opacity: 0.85; flex-shrink: 0; }
 .nav-item .nav-badge { margin-left: auto; background: var(--orange); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 20px; }
 .nav-item .nav-badge.green { background: var(--emerald); }
