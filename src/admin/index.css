@@ -31,7 +31,7 @@ body {
 
 /* Base shell components */
 .shell { display: flex; height: 100vh; min-height: 700px; font-family: var(--font); background: var(--bg); overflow: hidden; font-size: 14px; }
-.sidebar { width: 260px; min-width: 260px; flex-shrink: 0; background: var(--white); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.sidebar { width: 260px; min-width: 260px; flex-shrink: 0; background: transparent; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .sidebar.collapsed { width: 72px; min-width: 72px; }
 
 /* When collapsed, hide text elements */
@@ -83,6 +83,7 @@ body {
 .sidebar-admin .user-role { color: #6B7280; }
 
 /* Student Sidebar Theme */
+.sidebar-student { background: var(--primary-dark); }
 .sidebar-student .nav-item:hover { background: rgba(255,255,255,0.15); color: #fff; }
 .sidebar-student .nav-item.active { background: var(--white); color: var(--primary-dark); }
 .sidebar-student .nav-item.active .nav-icon { color: var(--primary-dark); }
