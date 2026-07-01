@@ -1,0 +1,317 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import { Clock, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { clsx } from "clsx";
+import { toast } from "sonner";
+
+export const Route = createFileRoute("/student/assessment/$assessmentId")({
+  component: ExamTakingView,
+});
+
+const dummyQuestions = [
+  {
+    id: 1,
+    question: "What is the primary purpose of a Virtual DOM in modern frontend frameworks?",
+    options: [
+      "To directly manipulate the browser's DOM for better performance",
+      "To create an in-memory representation of the UI and calculate minimal updates",
+      "To store data securely on the client-side",
+      "To manage server-side rendering logic"
+    ],
+    correctAnswer: 1
+  },
+  {
+    id: 2,
+    question: "Which pattern is considered an anti-pattern when managing global state?",
+    options: [
+      "Using React Context for deeply nested thematic data",
+      "Prop drilling through more than 5 levels of components",
+      "Centralizing all application state in a single store",
+      "Using custom hooks to encapsulate local state logic"
+    ],
+    correctAnswer: 1
+  },
+  {
+    id: 3,
+    question: "In Enterprise Architecture, what does 'Micro-frontends' solve?",
+    options: [
+      "Database scaling issues across regions",
+      "CSS specificity conflicts in monolithic applications",
+      "Scaling frontend development across multiple independent teams",
+      "Reducing the size of JavaScript bundles"
+    ],
+    correctAnswer: 2
+  },
+  {
+    id: 4,
+    question: "What is the Time Complexity of searching in a perfectly balanced Binary Search Tree?",
+    options: [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    correctAnswer: 1
+  },
+  {
+    id: 5,
+    question: "Which CSS property is crucial for creating accessible focus rings?",
+    options: [
+      "outline-offset",
+      "box-shadow",
+      "border-radius",
+      "opacity"
+    ],
+    correctAnswer: 0
+  }
+];
+
+function ExamTakingView() {
+  const { assessmentId } = Route.useParams();
+  const navigate = useNavigate();
+  
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [timeLeft, setTimeLeft] = useState(45 * 60); // 45 mins
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Timer logic
+  useEffect(() => {
+    if (isSubmitted || timeLeft <= 0) return;
+    
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          handleSubmit();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, [isSubmitted, timeLeft]);
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const handleSelectOption = (qId, optionIdx) => {
+    setAnswers(prev => ({ ...prev, [qId]: optionIdx }));
+  };
+
+  const handleClearSelection = (qId) => {
+    setAnswers(prev => {
+      const next = { ...prev };
+      delete next[qId];
+      return next;
+    });
+  };
+
+  const handleSubmit = () => {
+    setIsSubmitted(true);
+    toast.success("Assessment submitted successfully!");
+    
+    // Simulate calculating results and redirecting
+    setTimeout(() => {
+      navigate({ to: "/student/results" });
+    }, 2000);
+  };
+
+  const currentQ = dummyQuestions[currentIdx];
+  const isLastQ = currentIdx === dummyQuestions.length - 1;
+  const isFirstQ = currentIdx === 0;
+
+  const attemptedCount = Object.keys(answers).length;
+  const progressPercent = (attemptedCount / dummyQuestions.length) * 100;
+
+  if (isSubmitted) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] animate-in fade-in zoom-in duration-500">
+        <div className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6">
+          <CheckCircle2 className="w-12 h-12 text-emerald-500" />
+        </div>
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Assessment Submitted</h1>
+        <p className="text-gray-500 dark:text-gray-400">Your answers have been saved securely.</p>
+        <div className="mt-8 flex items-center gap-2 text-sm font-bold text-[#6C1D5F] dark:text-[#b44e9f] animate-pulse">
+          Redirecting to Results...
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-5xl mx-auto py-4 space-y-6 animate-in fade-in duration-500">
+      
+      {/* ── Top Header Panel ── */}
+      <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+        <div>
+          <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white">React Final Exam</h1>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1">ID: {assessmentId}</p>
+        </div>
+        
+        <div className="flex items-center gap-6">
+          <div className="flex flex-col items-end">
+            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Time Remaining</span>
+            <div className={clsx("flex items-center gap-2 text-3xl font-black font-mono", timeLeft < 300 ? "text-red-500 animate-pulse" : "text-gray-800 dark:text-gray-200")}>
+              <Clock className="w-6 h-6" />
+              {formatTime(timeLeft)}
+            </div>
+          </div>
+          
+          <button onClick={handleSubmit} className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-[#01AC9F] hover:from-emerald-600 hover:to-[#019085] text-white font-bold rounded-xl shadow-[0_2px_12px_-2px_rgba(1,172,159,0.5)] transition-all hover:-translate-y-0.5">
+            Submit Now
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+        
+        {/* ── Main Question Area ── */}
+        <div className="lg:col-span-3 bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl shadow-sm flex flex-col min-h-[500px]">
+          
+          {/* Progress Bar */}
+          <div className="h-1.5 w-full bg-gray-100 dark:bg-gray-800 rounded-t-2xl overflow-hidden">
+            <div className="h-full bg-[#6C1D5F] transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }} />
+          </div>
+
+          <div className="p-8 flex-1 flex flex-col">
+            <div className="flex items-center justify-between mb-8">
+              <span className="text-sm font-extrabold text-[#6C1D5F] dark:text-[#b44e9f] uppercase tracking-widest bg-[#6C1D5F]/10 dark:bg-[#b44e9f]/10 px-3 py-1.5 rounded-lg">
+                Question {currentIdx + 1} of {dummyQuestions.length}
+              </span>
+              
+              {answers[currentQ.id] !== undefined && (
+                <button 
+                  onClick={() => handleClearSelection(currentQ.id)}
+                  className="text-sm font-bold text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  Clear Selection
+                </button>
+              )}
+            </div>
+
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white leading-relaxed mb-8">
+              {currentQ.question}
+            </h2>
+
+            <div className="space-y-4">
+              <AnimatePresence mode="wait">
+                {currentQ.options.map((option, idx) => {
+                  const isSelected = answers[currentQ.id] === idx;
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                    >
+                      <button
+                        onClick={() => handleSelectOption(currentQ.id, idx)}
+                        className={clsx(
+                          "w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-start gap-4 group",
+                          isSelected 
+                            ? "border-[#6C1D5F] bg-[#6C1D5F]/5 dark:bg-[#6C1D5F]/10 shadow-[0_0_0_4px_rgba(108,29,95,0.1)]" 
+                            : "border-gray-200 dark:border-[#2e2e3e] hover:border-[#6C1D5F]/30 bg-transparent hover:bg-gray-50 dark:hover:bg-[#1a1a24]"
+                        )}
+                      >
+                        <div className={clsx(
+                          "w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors",
+                          isSelected ? "border-[#6C1D5F]" : "border-gray-300 dark:border-gray-600 group-hover:border-[#6C1D5F]/50"
+                        )}>
+                          {isSelected && <div className="w-3 h-3 bg-[#6C1D5F] rounded-full" />}
+                        </div>
+                        <span className={clsx(
+                          "text-lg font-medium",
+                          isSelected ? "text-[#6C1D5F] dark:text-[#b44e9f]" : "text-gray-700 dark:text-gray-300"
+                        )}>
+                          {option}
+                        </span>
+                      </button>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Navigation Footer */}
+          <div className="p-5 border-t border-gray-100 dark:border-[#2e2e3e] flex items-center justify-between bg-gray-50 dark:bg-[#1a1a24] rounded-b-2xl">
+            <button
+              onClick={() => setCurrentIdx(prev => prev - 1)}
+              disabled={isFirstQ}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" /> Previous
+            </button>
+            
+            {!isLastQ ? (
+              <button
+                onClick={() => setCurrentIdx(prev => prev + 1)}
+                className="flex items-center gap-2 px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl shadow-sm hover:-translate-y-0.5 transition-all"
+              >
+                Next <ChevronRight className="w-5 h-5" />
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 text-white font-bold rounded-xl shadow-sm hover:bg-emerald-600 hover:-translate-y-0.5 transition-all"
+              >
+                Finish Assessment <CheckCircle2 className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ── Question Navigator Panel ── */}
+        <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl p-5 shadow-sm sticky top-6">
+          <h3 className="font-extrabold text-gray-900 dark:text-white mb-4">Questions</h3>
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-4 gap-2">
+            {dummyQuestions.map((q, idx) => {
+              const isAttempted = answers[q.id] !== undefined;
+              const isActive = currentIdx === idx;
+              
+              return (
+                <button
+                  key={q.id}
+                  onClick={() => setCurrentIdx(idx)}
+                  className={clsx(
+                    "w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm transition-all duration-200",
+                    isActive 
+                      ? "ring-2 ring-offset-2 ring-[#6C1D5F] dark:ring-offset-[#15151f] scale-110 z-10" 
+                      : "hover:bg-gray-100 dark:hover:bg-gray-800",
+                    isAttempted 
+                      ? "bg-[#6C1D5F] text-white border-transparent" 
+                      : "bg-transparent border-2 border-gray-200 dark:border-[#2e2e3e] text-gray-500 dark:text-gray-400"
+                  )}
+                >
+                  {idx + 1}
+                </button>
+              );
+            })}
+          </div>
+          
+          <div className="mt-6 pt-5 border-t border-gray-100 dark:border-[#2e2e3e] space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-medium">
+                <div className="w-3 h-3 bg-[#6C1D5F] rounded-full" /> Attempted
+              </span>
+              <span className="font-bold text-gray-900 dark:text-white">{attemptedCount}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-medium">
+                <div className="w-3 h-3 border-2 border-gray-300 dark:border-[#2e2e3e] rounded-full" /> Unattempted
+              </span>
+              <span className="font-bold text-gray-900 dark:text-white">{dummyQuestions.length - attemptedCount}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}

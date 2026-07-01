@@ -11,6 +11,7 @@ import {
 import { useEffect } from "react";
 import appCss from "../styles.css?url";
 import { CursorTrail } from "../components/cursor-trail";
+import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
   return _jsx("div", {
@@ -131,6 +132,6 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return _jsxs(QueryClientProvider, {
     client: queryClient,
-    children: [_jsx(Outlet, {}), _jsx(CursorTrail, {})],
+    children: [_jsx(Outlet, {}), _jsx(CursorTrail, {}), _jsx(Toaster, { position: "top-right" })],
   });
 }

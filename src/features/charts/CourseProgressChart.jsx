@@ -48,7 +48,7 @@ export function CourseProgressChart({ data }) {
         />
         <Bar
           dataKey="progress"
-          fill="var(--primary)"
+          fill={isDark ? "#e879f9" : "var(--primary)"}
           radius={[0, 4, 4, 0]}
           barSize={20}
         />

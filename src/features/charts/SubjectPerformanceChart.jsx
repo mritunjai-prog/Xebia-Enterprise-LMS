@@ -37,7 +37,7 @@ export function SubjectPerformanceChart({ data }) {
           }}
           itemStyle={{ color: "var(--foreground)" }}
         />
-        <Bar dataKey="score" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="score" fill={isDark ? "#e879f9" : "var(--primary)"} radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

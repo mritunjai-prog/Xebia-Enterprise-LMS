@@ -1,10 +1,10 @@
 export const studentProfile = {
   name: "Vinit",
-  avatar: "https://i.pravatar.cc/150?u=vinit",
+  avatar: "",
   role: "Student",
   university: "Xebia University",
   batch: "Batch 2026 - Frontend Engineering",
-  email: "vinit@example.com",
+  email: "vinit@xebia.com",
   id: "S123456",
   phone: "+1-555-1234",
   enrollmentDate: "2026-01-10",
@@ -54,6 +54,7 @@ export const upcomingAssessments = [
     date: "2026-06-25",
     time: "10:00 AM",
     status: "Upcoming",
+    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
   },
   {
     id: "a2",
@@ -62,6 +63,7 @@ export const upcomingAssessments = [
     date: "2026-06-24",
     time: "02:00 PM",
     status: "Pending",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
   },
   {
     id: "a3",
@@ -70,6 +72,7 @@ export const upcomingAssessments = [
     date: "2026-06-20",
     time: "11:59 PM",
     status: "Completed",
+    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
   },
 ];
 
@@ -184,4 +187,12 @@ export const commentsData = [
     timestamp: "1 day ago",
     replies: []
   }
+];
+
+export const categories = [
+  { id: "cat1", name: "Frontend Development", description: "Learn React, Vue, HTML, CSS and more.", active: true },
+  { id: "cat2", name: "Backend Development", description: "Master Node.js, Python, Java and Databases.", active: true },
+  { id: "cat3", name: "UI/UX Design", description: "Design systems, Figma, and user research.", active: true },
+  { id: "cat4", name: "Cloud Computing", description: "AWS, Azure, and Google Cloud Platform.", active: true },
+  { id: "cat5", name: "Data Science", description: "Machine learning, AI, and data analytics.", active: false },
 ];

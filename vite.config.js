@@ -11,4 +11,20 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8084',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  },
+  vite: {
+    ssr: {
+      // These are browser-only libs — tell Vite not to bundle them for SSR
+      noExternal: ["jspdf", "html2canvas"],
+    },
+  },
 });
+

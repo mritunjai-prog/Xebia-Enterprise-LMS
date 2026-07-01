@@ -1,4 +1,6 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import React from "react";
+import { clsx } from "clsx";
+import { useRouter, useLocation } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   BookOpen,
@@ -8,155 +10,138 @@ import {
   Bell,
   MessageSquare,
   LogOut,
-  User,
 } from "lucide-react";
 import { studentProfile } from "@/lib/dummy-data";
-import { useDarkMode } from "@/hooks/use-dark-mode";
+import logoPurple from "@/assets/logo-purple.png";
+import logoWhite from "@/assets/logo-white.png";
 
+const NavItem = ({ icon: Icon, label, isActive, onClick, isCollapsed }) => (
+  <div 
+    onClick={onClick} 
+    title={isCollapsed ? label : undefined}
+    className={clsx(
+      "flex items-center gap-3 py-3 my-1 rounded-xl cursor-pointer font-medium transition-all duration-200 group text-[14px]",
+      isCollapsed ? "mx-3 px-0 justify-center" : "px-4 mx-4",
+      isActive 
+        ? "bg-[#6C1D5F] text-white shadow-md shadow-[#6C1D5F]/20" 
+        : "text-gray-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
+    )}
+  >
+    <Icon className={clsx(
+      "w-[20px] h-[20px] shrink-0 transition-transform duration-200 group-hover:scale-110",
+      isActive ? "text-white opacity-100" : "opacity-80 group-hover:opacity-100"
+    )} />
+    {!isCollapsed && <span>{label}</span>}
+  </div>
+);
 
-const navItems = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "My Courses", href: "/courses", icon: BookOpen },
-  { name: "My Batches", href: "/batches", icon: CalendarDays },
-  { name: "Assessments", href: "/assessments", icon: ClipboardCheck },
-  { name: "Results", href: "/results", icon: Award },
-  { name: "Notifications", href: "/notifications", icon: Bell },
-  { name: "Feedback", href: "/feedback", icon: MessageSquare },
-];
-
-export function StudentSidebar({ isCollapsed, isMobileOpen, setIsMobileOpen }) {
+export function StudentSidebar({ isCollapsed }) {
+  const router = useRouter();
   const location = useLocation();
   const currentPath = location.pathname;
-  const isDark = useDarkMode();
 
-  const initials = studentProfile.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  const handleNavClick = (path) => {
+    router.navigate({ to: path });
+  };
 
   return (
-    <aside
-      className={`fixed left-0 top-0 z-40 flex h-screen flex-col bg-card border-r border-border shadow-lg transition-all duration-300 ${
-        isCollapsed ? "w-20" : "w-64"
-      } ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
-    >
-      {/* ── Header / Logo & Text ── */}
-      <div className={`flex items-center py-5 ${isCollapsed ? "justify-center px-2" : "px-5"}`}>
-        <Link
-          to="/"
-          className="flex items-center gap-3 group"
-          style={{ textDecoration: "none" }}
-        >
-          <img
-            src={isDark ? "/logo-white.png" : "/logo-purple.png"}
-            alt="Xebia Logo"
-            className={`${isCollapsed ? "h-6 max-w-[40px]" : "h-8 max-w-[120px]"} w-auto object-contain transition-all duration-300`}
-          />
-
+    <aside className={clsx("shrink-0 flex flex-col h-full bg-white dark:bg-[#4A1E47] border-r border-gray-200 dark:border-transparent transition-all duration-300 overflow-hidden relative shadow-sm dark:shadow-none", isCollapsed ? "w-[80px]" : "w-[280px]")}>
+      
+      {/* Brand */}
+      <div className={clsx("pt-9 pb-7 flex flex-col justify-center border-b border-gray-100 dark:border-white/10", isCollapsed ? "px-4 items-center" : "px-8")}>
+        <div className="flex items-center gap-3.5">
+          {/* Light mode logo (purple) */}
+          <img src={logoPurple} alt="Xebia" className="h-11 rounded-full dark:hidden object-contain drop-shadow-sm" />
+          {/* Dark mode logo (white) */}
+          <img src={logoWhite} alt="Xebia" className="h-11 rounded-full hidden dark:block object-contain drop-shadow-sm" />
+          
           {!isCollapsed && (
-            <div className="flex flex-col leading-tight transition-all duration-300">
-              <span className="text-base font-bold tracking-wide text-foreground">
-                Xebia LMS
-              </span>
-              <span className="text-[10px] font-semibold uppercase tracking-widest mt-0.5 text-muted-foreground">
-                Student Portal
-              </span>
+            <div className="flex flex-col pt-0.5">
+              <span className="text-[21px] font-extrabold text-gray-900 dark:text-white leading-tight tracking-tight">Xebia LMS</span>
+              <span className="text-[10.5px] font-bold text-[#6C1D5F] dark:text-white/60 tracking-[0.2em] uppercase mt-0.5">Student Portal</span>
             </div>
           )}
-        </Link>
+        </div>
       </div>
 
-      {/* ── Divider ── */}
-      <div className="mx-4 mb-5 h-px bg-border/50" />
+      {/* Navigation */}
+      <nav className="flex-1 py-6 overflow-y-auto overflow-x-hidden hide-scrollbar">
+        {!isCollapsed && <div className="px-8 pb-3 text-[11px] font-bold tracking-wider text-gray-400 dark:text-white/40 uppercase">Main Menu</div>}
+        
+        <NavItem 
+          icon={LayoutDashboard}
+          label="Dashboard" 
+          isCollapsed={isCollapsed} 
+          isActive={currentPath === '/student' || currentPath === '/student/'}
+          onClick={() => handleNavClick('/student')}
+        />
+        <NavItem 
+          icon={BookOpen}
+          label="My Courses" 
+          isCollapsed={isCollapsed}
+          isActive={currentPath === '/student/courses' || currentPath.startsWith('/student/courses/')}
+          onClick={() => handleNavClick('/student/courses')}
+        />
+        <NavItem 
+          icon={ClipboardCheck}
+          label="Assessments" 
+          isCollapsed={isCollapsed}
+          isActive={currentPath === '/student/assessments' || currentPath.startsWith('/student/assessments/')}
+          onClick={() => handleNavClick('/student/assessments')}
+        />
+        <NavItem 
+          icon={Award}
+          label="Results" 
+          isCollapsed={isCollapsed}
+          isActive={currentPath === '/student/results' || currentPath.startsWith('/student/results/')}
+          onClick={() => handleNavClick('/student/results')}
+        />
+        
+        {!isCollapsed && <div className="px-8 pt-4 pb-3 mt-2 text-[11px] font-bold tracking-wider text-gray-400 dark:text-white/40 uppercase">Updates & Help</div>}
 
-      {/* ── Nav Items ── */}
-      <nav className="flex-1 overflow-y-auto px-3 space-y-1.5">
-        {navItems.map((item) => {
-          const isActive =
-            currentPath === item.href ||
-            (item.href !== "/" && currentPath.startsWith(item.href));
-
-          return (
-            <Link
-              key={item.name}
-              to={item.href}
-              title={isCollapsed ? item.name : undefined}
-              onClick={() => setIsMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-xl py-2.5 text-sm font-medium transition-all duration-200 group ${
-                isCollapsed ? "justify-center px-0" : "px-3"
-              } ${
-                isActive
-                  ? "bg-primary/10 text-primary hover:bg-primary/20"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground hover:translate-x-1"
-              }`}
-            >
-              {/* Icon container */}
-              <div
-                className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30"
-                    : "bg-muted text-muted-foreground group-hover:bg-muted-foreground/10 group-hover:text-foreground"
-                }`}
-              >
-                <item.icon className="h-4 w-4" />
-              </div>
-
-              {!isCollapsed && <span className="truncate">{item.name}</span>}
-
-              {/* Active indicator dot */}
-              {!isCollapsed && isActive && (
-                <div className="ml-auto h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary shadow-sm shadow-primary/50" />
-              )}
-            </Link>
-          );
-        })}
+        <NavItem 
+          icon={Bell}
+          label="Notifications" 
+          isCollapsed={isCollapsed}
+          isActive={currentPath === '/student/notifications' || currentPath.startsWith('/student/notifications/')}
+          onClick={() => handleNavClick('/student/notifications')}
+        />
+        <NavItem 
+          icon={MessageSquare}
+          label="Feedback" 
+          isCollapsed={isCollapsed}
+          isActive={currentPath === '/student/feedback' || currentPath.startsWith('/student/feedback/')}
+          onClick={() => handleNavClick('/student/feedback')}
+        />
       </nav>
 
-      {/* ── Bottom section ── */}
-      <div>
-        {/* Divider */}
-        <div className="mx-4 my-3 h-px bg-border/50" />
-
-        {/* Profile */}
-        <Link
-          to="/profile"
-          title={isCollapsed ? `${studentProfile.name} - View Profile` : undefined}
-          onClick={() => setIsMobileOpen(false)}
-          className={`mx-3 mb-1 flex items-center rounded-xl py-2.5 transition-all duration-200 group ${
-            isCollapsed ? "justify-center px-0" : "gap-3 px-3"
-          } text-muted-foreground hover:bg-muted hover:text-foreground hover:translate-x-1`}
-        >
-          {/* Initials circle */}
-          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold bg-primary text-primary-foreground shadow-sm shadow-primary/30 group-hover:shadow-md">
-            {initials || <User className="h-4 w-4" />}
+      {/* User Footer */}
+      <div className={clsx("p-4 border-t border-gray-100 dark:border-white/10", isCollapsed ? "flex flex-col items-center gap-3" : "flex items-center justify-between")}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6C1D5F] to-purple-800 text-white flex flex-col items-center justify-center font-bold text-sm shrink-0 shadow-inner relative">
+            <span className="leading-none">{studentProfile.initials}</span>
+            <span className="text-[7px] font-black uppercase mt-0.5 opacity-80 leading-none tracking-wider">PRO</span>
+            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-[#4A1E47] rounded-full" />
           </div>
           {!isCollapsed && (
-            <div className="flex flex-col min-w-0">
-              <span className="text-sm font-semibold truncate text-foreground group-hover:text-primary transition-colors">
-                {studentProfile.name}
-              </span>
-              <span className="text-xs truncate text-muted-foreground">
-                View Profile
-              </span>
+            <div className="flex-1 min-w-0 pr-2">
+              <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{studentProfile.name}</p>
+              <p className="text-[11px] font-bold text-gray-400 truncate">{studentProfile.role}</p>
             </div>
           )}
-        </Link>
-
-        {/* Logout */}
-        <Link
-          to="/"
-          title={isCollapsed ? "Logout" : undefined}
-          className={`mx-3 mb-4 flex items-center rounded-xl py-2.5 text-sm font-medium transition-all duration-200 group ${
-            isCollapsed ? "justify-center px-0" : "gap-3 px-3"
-          } text-destructive hover:bg-destructive/10 hover:translate-x-1`}
+        </div>
+        <button 
+          onClick={() => {
+            localStorage.removeItem('lms_token');
+            router.navigate({ to: '/' });
+          }}
+          className={clsx("text-gray-400 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-500/10")} 
+          title="Log out"
         >
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-destructive/10 group-hover:bg-destructive/20 text-destructive transition-colors">
-            <LogOut className="h-4 w-4" />
-          </div>
-          {!isCollapsed && <span>Logout</span>}
-        </Link>
+          <LogOut className="w-[18px] h-[18px]" />
+        </button>
       </div>
+      
     </aside>
   );
 }

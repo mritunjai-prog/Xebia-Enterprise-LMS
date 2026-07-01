@@ -9,247 +9,272 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LayoutRouteImport } from './routes/_layout'
-import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
-import { Route as LayoutResultsRouteImport } from './routes/_layout/results'
-import { Route as LayoutProfileRouteImport } from './routes/_layout/profile'
-import { Route as LayoutNotificationsRouteImport } from './routes/_layout/notifications'
-import { Route as LayoutFeedbackRouteImport } from './routes/_layout/feedback'
-import { Route as LayoutCoursesRouteImport } from './routes/_layout/courses'
-import { Route as LayoutBatchesRouteImport } from './routes/_layout/batches'
-import { Route as LayoutAssessmentsRouteImport } from './routes/_layout/assessments'
-import { Route as LayoutCourseCourseIdRouteImport } from './routes/_layout/course/$courseId'
+import { Route as StudentRouteImport } from './routes/student'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudentIndexRouteImport } from './routes/student/index'
+import { Route as StudentResultsRouteImport } from './routes/student/results'
+import { Route as StudentProfileRouteImport } from './routes/student/profile'
+import { Route as StudentNotificationsRouteImport } from './routes/student/notifications'
+import { Route as StudentFeedbackRouteImport } from './routes/student/feedback'
+import { Route as StudentCoursesRouteImport } from './routes/student/courses'
+import { Route as StudentAssessmentsRouteImport } from './routes/student/assessments'
+import { Route as StudentCourseCourseIdRouteImport } from './routes/student/course/$courseId'
+import { Route as StudentAssessmentAssessmentIdRouteImport } from './routes/student/assessment/$assessmentId'
 
-const LayoutRoute = LayoutRouteImport.update({
-  id: '/_layout',
+const StudentRoute = StudentRouteImport.update({
+  id: '/student',
+  path: '/student',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutIndexRoute = LayoutIndexRouteImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutResultsRoute = LayoutResultsRouteImport.update({
+const StudentIndexRoute = StudentIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentResultsRoute = StudentResultsRouteImport.update({
   id: '/results',
   path: '/results',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => StudentRoute,
 } as any)
-const LayoutProfileRoute = LayoutProfileRouteImport.update({
+const StudentProfileRoute = StudentProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => StudentRoute,
 } as any)
-const LayoutNotificationsRoute = LayoutNotificationsRouteImport.update({
+const StudentNotificationsRoute = StudentNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => StudentRoute,
 } as any)
-const LayoutFeedbackRoute = LayoutFeedbackRouteImport.update({
+const StudentFeedbackRoute = StudentFeedbackRouteImport.update({
   id: '/feedback',
   path: '/feedback',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => StudentRoute,
 } as any)
-const LayoutCoursesRoute = LayoutCoursesRouteImport.update({
+const StudentCoursesRoute = StudentCoursesRouteImport.update({
   id: '/courses',
   path: '/courses',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => StudentRoute,
 } as any)
-const LayoutBatchesRoute = LayoutBatchesRouteImport.update({
-  id: '/batches',
-  path: '/batches',
-  getParentRoute: () => LayoutRoute,
-} as any)
-const LayoutAssessmentsRoute = LayoutAssessmentsRouteImport.update({
+const StudentAssessmentsRoute = StudentAssessmentsRouteImport.update({
   id: '/assessments',
   path: '/assessments',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => StudentRoute,
 } as any)
-const LayoutCourseCourseIdRoute = LayoutCourseCourseIdRouteImport.update({
+const StudentCourseCourseIdRoute = StudentCourseCourseIdRouteImport.update({
   id: '/course/$courseId',
   path: '/course/$courseId',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => StudentRoute,
 } as any)
+const StudentAssessmentAssessmentIdRoute =
+  StudentAssessmentAssessmentIdRouteImport.update({
+    id: '/assessment/$assessmentId',
+    path: '/assessment/$assessmentId',
+    getParentRoute: () => StudentRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof LayoutIndexRoute
-  '/assessments': typeof LayoutAssessmentsRoute
-  '/batches': typeof LayoutBatchesRoute
-  '/courses': typeof LayoutCoursesRoute
-  '/feedback': typeof LayoutFeedbackRoute
-  '/notifications': typeof LayoutNotificationsRoute
-  '/profile': typeof LayoutProfileRoute
-  '/results': typeof LayoutResultsRoute
-  '/course/$courseId': typeof LayoutCourseCourseIdRoute
+  '/': typeof IndexRoute
+  '/student': typeof StudentRouteWithChildren
+  '/student/assessments': typeof StudentAssessmentsRoute
+  '/student/courses': typeof StudentCoursesRoute
+  '/student/feedback': typeof StudentFeedbackRoute
+  '/student/notifications': typeof StudentNotificationsRoute
+  '/student/profile': typeof StudentProfileRoute
+  '/student/results': typeof StudentResultsRoute
+  '/student/': typeof StudentIndexRoute
+  '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
+  '/student/course/$courseId': typeof StudentCourseCourseIdRoute
 }
 export interface FileRoutesByTo {
-  '/assessments': typeof LayoutAssessmentsRoute
-  '/batches': typeof LayoutBatchesRoute
-  '/courses': typeof LayoutCoursesRoute
-  '/feedback': typeof LayoutFeedbackRoute
-  '/notifications': typeof LayoutNotificationsRoute
-  '/profile': typeof LayoutProfileRoute
-  '/results': typeof LayoutResultsRoute
-  '/': typeof LayoutIndexRoute
-  '/course/$courseId': typeof LayoutCourseCourseIdRoute
+  '/': typeof IndexRoute
+  '/student/assessments': typeof StudentAssessmentsRoute
+  '/student/courses': typeof StudentCoursesRoute
+  '/student/feedback': typeof StudentFeedbackRoute
+  '/student/notifications': typeof StudentNotificationsRoute
+  '/student/profile': typeof StudentProfileRoute
+  '/student/results': typeof StudentResultsRoute
+  '/student': typeof StudentIndexRoute
+  '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
+  '/student/course/$courseId': typeof StudentCourseCourseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_layout': typeof LayoutRouteWithChildren
-  '/_layout/assessments': typeof LayoutAssessmentsRoute
-  '/_layout/batches': typeof LayoutBatchesRoute
-  '/_layout/courses': typeof LayoutCoursesRoute
-  '/_layout/feedback': typeof LayoutFeedbackRoute
-  '/_layout/notifications': typeof LayoutNotificationsRoute
-  '/_layout/profile': typeof LayoutProfileRoute
-  '/_layout/results': typeof LayoutResultsRoute
-  '/_layout/': typeof LayoutIndexRoute
-  '/_layout/course/$courseId': typeof LayoutCourseCourseIdRoute
+  '/': typeof IndexRoute
+  '/student': typeof StudentRouteWithChildren
+  '/student/assessments': typeof StudentAssessmentsRoute
+  '/student/courses': typeof StudentCoursesRoute
+  '/student/feedback': typeof StudentFeedbackRoute
+  '/student/notifications': typeof StudentNotificationsRoute
+  '/student/profile': typeof StudentProfileRoute
+  '/student/results': typeof StudentResultsRoute
+  '/student/': typeof StudentIndexRoute
+  '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
+  '/student/course/$courseId': typeof StudentCourseCourseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/assessments'
-    | '/batches'
-    | '/courses'
-    | '/feedback'
-    | '/notifications'
-    | '/profile'
-    | '/results'
-    | '/course/$courseId'
+    | '/student'
+    | '/student/assessments'
+    | '/student/courses'
+    | '/student/feedback'
+    | '/student/notifications'
+    | '/student/profile'
+    | '/student/results'
+    | '/student/'
+    | '/student/assessment/$assessmentId'
+    | '/student/course/$courseId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/assessments'
-    | '/batches'
-    | '/courses'
-    | '/feedback'
-    | '/notifications'
-    | '/profile'
-    | '/results'
     | '/'
-    | '/course/$courseId'
+    | '/student/assessments'
+    | '/student/courses'
+    | '/student/feedback'
+    | '/student/notifications'
+    | '/student/profile'
+    | '/student/results'
+    | '/student'
+    | '/student/assessment/$assessmentId'
+    | '/student/course/$courseId'
   id:
     | '__root__'
-    | '/_layout'
-    | '/_layout/assessments'
-    | '/_layout/batches'
-    | '/_layout/courses'
-    | '/_layout/feedback'
-    | '/_layout/notifications'
-    | '/_layout/profile'
-    | '/_layout/results'
-    | '/_layout/'
-    | '/_layout/course/$courseId'
+    | '/'
+    | '/student'
+    | '/student/assessments'
+    | '/student/courses'
+    | '/student/feedback'
+    | '/student/notifications'
+    | '/student/profile'
+    | '/student/results'
+    | '/student/'
+    | '/student/assessment/$assessmentId'
+    | '/student/course/$courseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  LayoutRoute: typeof LayoutRouteWithChildren
+  IndexRoute: typeof IndexRoute
+  StudentRoute: typeof StudentRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_layout': {
-      id: '/_layout'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof LayoutRouteImport
+    '/student': {
+      id: '/student'
+      path: '/student'
+      fullPath: '/student'
+      preLoaderRoute: typeof StudentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_layout/': {
-      id: '/_layout/'
+    '/': {
+      id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LayoutIndexRouteImport
-      parentRoute: typeof LayoutRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_layout/results': {
-      id: '/_layout/results'
+    '/student/': {
+      id: '/student/'
+      path: '/'
+      fullPath: '/student/'
+      preLoaderRoute: typeof StudentIndexRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/results': {
+      id: '/student/results'
       path: '/results'
-      fullPath: '/results'
-      preLoaderRoute: typeof LayoutResultsRouteImport
-      parentRoute: typeof LayoutRoute
+      fullPath: '/student/results'
+      preLoaderRoute: typeof StudentResultsRouteImport
+      parentRoute: typeof StudentRoute
     }
-    '/_layout/profile': {
-      id: '/_layout/profile'
+    '/student/profile': {
+      id: '/student/profile'
       path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof LayoutProfileRouteImport
-      parentRoute: typeof LayoutRoute
+      fullPath: '/student/profile'
+      preLoaderRoute: typeof StudentProfileRouteImport
+      parentRoute: typeof StudentRoute
     }
-    '/_layout/notifications': {
-      id: '/_layout/notifications'
+    '/student/notifications': {
+      id: '/student/notifications'
       path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof LayoutNotificationsRouteImport
-      parentRoute: typeof LayoutRoute
+      fullPath: '/student/notifications'
+      preLoaderRoute: typeof StudentNotificationsRouteImport
+      parentRoute: typeof StudentRoute
     }
-    '/_layout/feedback': {
-      id: '/_layout/feedback'
+    '/student/feedback': {
+      id: '/student/feedback'
       path: '/feedback'
-      fullPath: '/feedback'
-      preLoaderRoute: typeof LayoutFeedbackRouteImport
-      parentRoute: typeof LayoutRoute
+      fullPath: '/student/feedback'
+      preLoaderRoute: typeof StudentFeedbackRouteImport
+      parentRoute: typeof StudentRoute
     }
-    '/_layout/courses': {
-      id: '/_layout/courses'
+    '/student/courses': {
+      id: '/student/courses'
       path: '/courses'
-      fullPath: '/courses'
-      preLoaderRoute: typeof LayoutCoursesRouteImport
-      parentRoute: typeof LayoutRoute
+      fullPath: '/student/courses'
+      preLoaderRoute: typeof StudentCoursesRouteImport
+      parentRoute: typeof StudentRoute
     }
-    '/_layout/batches': {
-      id: '/_layout/batches'
-      path: '/batches'
-      fullPath: '/batches'
-      preLoaderRoute: typeof LayoutBatchesRouteImport
-      parentRoute: typeof LayoutRoute
-    }
-    '/_layout/assessments': {
-      id: '/_layout/assessments'
+    '/student/assessments': {
+      id: '/student/assessments'
       path: '/assessments'
-      fullPath: '/assessments'
-      preLoaderRoute: typeof LayoutAssessmentsRouteImport
-      parentRoute: typeof LayoutRoute
+      fullPath: '/student/assessments'
+      preLoaderRoute: typeof StudentAssessmentsRouteImport
+      parentRoute: typeof StudentRoute
     }
-    '/_layout/course/$courseId': {
-      id: '/_layout/course/$courseId'
+    '/student/course/$courseId': {
+      id: '/student/course/$courseId'
       path: '/course/$courseId'
-      fullPath: '/course/$courseId'
-      preLoaderRoute: typeof LayoutCourseCourseIdRouteImport
-      parentRoute: typeof LayoutRoute
+      fullPath: '/student/course/$courseId'
+      preLoaderRoute: typeof StudentCourseCourseIdRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/assessment/$assessmentId': {
+      id: '/student/assessment/$assessmentId'
+      path: '/assessment/$assessmentId'
+      fullPath: '/student/assessment/$assessmentId'
+      preLoaderRoute: typeof StudentAssessmentAssessmentIdRouteImport
+      parentRoute: typeof StudentRoute
     }
   }
 }
 
-interface LayoutRouteChildren {
-  LayoutAssessmentsRoute: typeof LayoutAssessmentsRoute
-  LayoutBatchesRoute: typeof LayoutBatchesRoute
-  LayoutCoursesRoute: typeof LayoutCoursesRoute
-  LayoutFeedbackRoute: typeof LayoutFeedbackRoute
-  LayoutNotificationsRoute: typeof LayoutNotificationsRoute
-  LayoutProfileRoute: typeof LayoutProfileRoute
-  LayoutResultsRoute: typeof LayoutResultsRoute
-  LayoutIndexRoute: typeof LayoutIndexRoute
-  LayoutCourseCourseIdRoute: typeof LayoutCourseCourseIdRoute
+interface StudentRouteChildren {
+  StudentAssessmentsRoute: typeof StudentAssessmentsRoute
+  StudentCoursesRoute: typeof StudentCoursesRoute
+  StudentFeedbackRoute: typeof StudentFeedbackRoute
+  StudentNotificationsRoute: typeof StudentNotificationsRoute
+  StudentProfileRoute: typeof StudentProfileRoute
+  StudentResultsRoute: typeof StudentResultsRoute
+  StudentIndexRoute: typeof StudentIndexRoute
+  StudentAssessmentAssessmentIdRoute: typeof StudentAssessmentAssessmentIdRoute
+  StudentCourseCourseIdRoute: typeof StudentCourseCourseIdRoute
 }
 
-const LayoutRouteChildren: LayoutRouteChildren = {
-  LayoutAssessmentsRoute: LayoutAssessmentsRoute,
-  LayoutBatchesRoute: LayoutBatchesRoute,
-  LayoutCoursesRoute: LayoutCoursesRoute,
-  LayoutFeedbackRoute: LayoutFeedbackRoute,
-  LayoutNotificationsRoute: LayoutNotificationsRoute,
-  LayoutProfileRoute: LayoutProfileRoute,
-  LayoutResultsRoute: LayoutResultsRoute,
-  LayoutIndexRoute: LayoutIndexRoute,
-  LayoutCourseCourseIdRoute: LayoutCourseCourseIdRoute,
+const StudentRouteChildren: StudentRouteChildren = {
+  StudentAssessmentsRoute: StudentAssessmentsRoute,
+  StudentCoursesRoute: StudentCoursesRoute,
+  StudentFeedbackRoute: StudentFeedbackRoute,
+  StudentNotificationsRoute: StudentNotificationsRoute,
+  StudentProfileRoute: StudentProfileRoute,
+  StudentResultsRoute: StudentResultsRoute,
+  StudentIndexRoute: StudentIndexRoute,
+  StudentAssessmentAssessmentIdRoute: StudentAssessmentAssessmentIdRoute,
+  StudentCourseCourseIdRoute: StudentCourseCourseIdRoute,
 }
 
-const LayoutRouteWithChildren =
-  LayoutRoute._addFileChildren(LayoutRouteChildren)
+const StudentRouteWithChildren =
+  StudentRoute._addFileChildren(StudentRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  LayoutRoute: LayoutRouteWithChildren,
+  IndexRoute: IndexRoute,
+  StudentRoute: StudentRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

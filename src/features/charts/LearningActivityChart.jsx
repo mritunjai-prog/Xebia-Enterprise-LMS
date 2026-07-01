@@ -40,9 +40,9 @@ export function LearningActivityChart({ data }) {
         <Line
           type="monotone"
           dataKey="progress"
-          stroke="var(--primary)"
+          stroke={isDark ? "#e879f9" : "var(--primary)"}
           strokeWidth={3}
-          dot={{ fill: "var(--primary)", r: 4 }}
+          dot={{ fill: isDark ? "#e879f9" : "var(--primary)", r: 4 }}
           activeDot={{ r: 6 }}
         />
       </LineChart>
