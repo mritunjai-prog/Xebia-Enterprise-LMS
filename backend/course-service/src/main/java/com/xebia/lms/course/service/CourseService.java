@@ -176,6 +176,24 @@ public class CourseService {
         return contentItems.save(item);
     }
 
+    @Transactional
+    public ContentItem updateContent(UUID contentId, ContentItemRequest request) {
+        ContentItem item = contentItems.findById(contentId)
+            .orElseThrow(() -> new RuntimeException("Content not found"));
+        item.setTitle(request.title());
+        item.setType(request.type());
+        item.setStorageRef(request.storageRef());
+        item.setPosition(request.position());
+        return contentItems.save(item);
+    }
+
+    @Transactional
+    public void deleteContent(UUID contentId) {
+        ContentItem item = contentItems.findById(contentId)
+            .orElseThrow(() -> new RuntimeException("Content not found"));
+        contentItems.delete(item);
+    }
+
     public com.xebia.lms.course.dto.CourseHierarchyDto getHierarchy(UUID courseId) {
         guard.requireTenant();
         Course course = courses.findById(courseId)

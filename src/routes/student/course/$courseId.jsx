@@ -17,16 +17,42 @@ export const Route = createFileRoute("/student/course/$courseId")({
 
 function ContentRenderer({ block }) {
   const type = block.type || "NOTE";
-  const data = block.contentData || "";
+  let parsedData = {};
+  
+  try {
+    if (block.storageRef) {
+      parsedData = JSON.parse(block.storageRef);
+    } else if (block.contentData) {
+      parsedData = { text: block.contentData, uiType: type };
+    }
+  } catch (e) {
+    parsedData = { text: block.storageRef, uiType: type };
+  }
 
-  switch (type) {
+  const uiType = parsedData.uiType || type;
+  
+  let dataToRender = "";
+  if (uiType === 'Video' || uiType === 'VIDEO_REFERENCE' || uiType === 'VIDEO') {
+    dataToRender = parsedData.videoUrl || block.contentData || "";
+  } else if (uiType === 'PDF' || uiType === 'DOCUMENT' || uiType === 'PPT') {
+    dataToRender = parsedData.pdfUrl || block.contentData || "";
+  } else if (uiType === 'Image' || uiType === 'IMAGE') {
+    dataToRender = parsedData.imageUrl || block.contentData || "";
+  } else if (uiType === 'Code' || uiType === 'CODE') {
+    dataToRender = parsedData.code || block.contentData || "";
+  } else {
+    dataToRender = parsedData.text || block.contentData || "";
+  }
+
+  switch (uiType) {
+    case "Video":
     case "VIDEO_REFERENCE":
     case "VIDEO":
       return (
         <div className="w-full bg-black rounded-2xl overflow-hidden aspect-video shadow-xl border border-border flex items-center justify-center">
-          {data ? (
+          {dataToRender ? (
             <iframe
-              src={data}
+              src={dataToRender}
               className="w-full h-full"
               allowFullScreen
               title="Video Content"
@@ -45,8 +71,8 @@ function ContentRenderer({ block }) {
     case "PPT":
       return (
         <div className="w-full aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden shadow-lg border border-border bg-gray-50 dark:bg-card">
-          {data ? (
-            <iframe src={data} className="w-full h-full" title="Document Viewer" />
+          {dataToRender ? (
+            <iframe src={dataToRender} className="w-full h-full" title="Document Viewer" />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
               <File className="w-12 h-12 mb-2 opacity-50" />
@@ -55,17 +81,19 @@ function ContentRenderer({ block }) {
           )}
         </div>
       );
+    case "Code":
     case "CODE":
       return (
         <div className="rounded-2xl overflow-hidden shadow-md border border-border bg-[#1e1e1e] p-6 text-sm text-gray-300 overflow-x-auto">
-          <pre><code>{data}</code></pre>
+          <pre><code>{dataToRender}</code></pre>
         </div>
       );
+    case "Image":
     case "IMAGE":
       return (
         <div className="rounded-2xl overflow-hidden shadow-lg border border-border flex justify-center bg-gray-100 dark:bg-card p-4">
-          {data ? (
-            <img src={data} alt="Lesson Content" className="max-w-full h-auto rounded-lg" />
+          {dataToRender ? (
+            <img src={dataToRender} alt="Lesson Content" className="max-w-full h-auto rounded-lg" />
           ) : (
             <ImageIcon className="w-12 h-12 text-gray-300" />
           )}
@@ -76,17 +104,33 @@ function ContentRenderer({ block }) {
         <div className="p-6 rounded-2xl bg-primary/5 border border-primary/20 flex flex-col items-center justify-center text-center">
           <LinkIcon className="w-12 h-12 text-primary mb-3" />
           <h3 className="text-lg font-bold text-foreground mb-2">External Resource</h3>
-          <a href={data} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-xl shadow hover:bg-primary-glow transition-all">
+          <a href={dataToRender} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-xl shadow hover:bg-primary-glow transition-all">
             Open Link <ArrowRight className="w-4 h-4" />
           </a>
         </div>
       );
+    case "Heading": {
+      const HeadingTag = `h${parsedData.headingLevel || 1}`;
+      return (
+        <HeadingTag className="font-extrabold text-foreground my-4">
+          {dataToRender}
+        </HeadingTag>
+      );
+    }
+    case "Callout":
+      return (
+        <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-100">
+          <div dangerouslySetInnerHTML={{ __html: dataToRender }} />
+        </div>
+      );
+    case "Table":
+    case "Text":
     case "NOTE":
     case "TEXT":
     default:
       return (
         <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-extrabold prose-a:text-primary hover:prose-a:text-primary-glow">
-          <div dangerouslySetInnerHTML={{ __html: data }} />
+          <div dangerouslySetInnerHTML={{ __html: dataToRender }} />
         </div>
       );
   }
@@ -113,7 +157,7 @@ function CourseViewer() {
   const isEnrolled = enrollmentStatus?.isEnrolled || false;
 
   const course = courseHierarchy || {};
-  const modules = courseHierarchy?.modules || [];
+  const modules = useMemo(() => courseHierarchy?.modules || [], [courseHierarchy]);
 
   const handleEnroll = async () => {
     try {
@@ -147,8 +191,13 @@ function CourseViewer() {
       const currentActive = progressData?.lastAccessedSubmoduleId || flatSubmodules[0].id;
       // Expand the module containing the active submodule
       const mod = modules.find(m => (m.submodules || []).some(s => s.id === currentActive));
-      if (mod && !expandedModules.includes(mod.id)) {
-        setExpandedModules(prev => [...prev, mod.id]);
+      if (mod) {
+        setExpandedModules(prev => {
+          if (!prev.includes(mod.id)) {
+            return [...prev, mod.id];
+          }
+          return prev;
+        });
       }
     }
   }, [flatSubmodules, modules, progressData, loadingProgress, isEnrolled]);
@@ -332,7 +381,7 @@ function CourseViewer() {
                   {/* Render Content Blocks */}
                   {(activeSubmodule.contentBlocks || []).length > 0 ? (
                     <div className="space-y-10">
-                      {activeSubmodule.contentBlocks.sort((a, b) => a.sequenceOrder - b.sequenceOrder).map((block) => (
+                      {[...activeSubmodule.contentBlocks].sort((a, b) => a.sequenceOrder - b.sequenceOrder).map((block) => (
                         <ContentRenderer key={block.id} block={block} />
                       ))}
                     </div>

@@ -91,6 +91,8 @@ export const CourseService = {
   addModule: (courseId, data) => fetchApi(`/courses/${courseId}/modules`, { method: 'POST', body: JSON.stringify(data) }),
   addSubmodule: (courseId, moduleId, data) => fetchApi(`/courses/${courseId}/modules/${moduleId}/submodules`, { method: 'POST', body: JSON.stringify(data) }),
   addContentItem: (courseId, data) => fetchApi(`/courses/${courseId}/content-items`, { method: 'POST', body: JSON.stringify(data) }),
+  updateContentItem: (contentId, data) => fetchApi(`/courses/content-items/${contentId}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteContentItem: (contentId) => fetchApi(`/courses/content-items/${contentId}`, { method: 'DELETE' }),
 };
 
 export const BatchService = {

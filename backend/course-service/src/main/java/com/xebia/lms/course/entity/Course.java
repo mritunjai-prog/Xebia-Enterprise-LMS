@@ -11,8 +11,11 @@ import org.hibernate.type.SqlTypes;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "courses", schema = "course")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Course extends TenantScopedEntity {
 
     @Column(nullable = false)

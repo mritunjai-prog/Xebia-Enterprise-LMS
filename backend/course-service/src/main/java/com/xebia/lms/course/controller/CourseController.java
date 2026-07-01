@@ -34,5 +34,7 @@ public class CourseController {
     @PostMapping("/{courseId}/modules") @ResponseStatus(HttpStatus.CREATED) CourseModule module(@PathVariable("courseId") UUID courseId, @Valid @RequestBody ModuleRequest request) { return service.addModule(courseId, request); }
     @PostMapping("/{courseId}/modules/{moduleId}/submodules") @ResponseStatus(HttpStatus.CREATED) SubModule subModule(@PathVariable("moduleId") UUID moduleId, @Valid @RequestBody com.xebia.lms.course.dto.SubModuleRequest request) { return service.addSubModule(moduleId, request); }
     @PostMapping("/{courseId}/content-items") @ResponseStatus(HttpStatus.CREATED) ContentItem content(@PathVariable("courseId") UUID courseId, @Valid @RequestBody ContentItemRequest request) { return service.addContent(courseId, request); }
+    @PutMapping("/content-items/{contentId}") ContentItem updateContent(@PathVariable("contentId") UUID contentId, @Valid @RequestBody ContentItemRequest request) { return service.updateContent(contentId, request); }
+    @DeleteMapping("/content-items/{contentId}") @ResponseStatus(HttpStatus.NO_CONTENT) void deleteContent(@PathVariable("contentId") UUID contentId) { service.deleteContent(contentId); }
     @GetMapping("/{courseId}/hierarchy") com.xebia.lms.course.dto.CourseHierarchyDto getHierarchy(@PathVariable("courseId") UUID courseId) { return service.getHierarchy(courseId); }
 }

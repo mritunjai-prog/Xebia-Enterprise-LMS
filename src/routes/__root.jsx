@@ -138,9 +138,29 @@ function RootShell({ children }) {
     })();
   `;
 
+  // Critical inline CSS to prevent sidebar FOUC (Flash of Unstyled Content).
+  // These styles load instantly with the HTML before any external CSS.
+  const criticalCss = `
+    .sidebar { background: #FFFFFF !important; border-right: 1px solid #DEDEDE; }
+    .sidebar-student { background: #4A1E47 !important; border-right: none !important; }
+    .nav-item { color: #4B5563; }
+    .nav-section { color: #9CA3AF; }
+    .sidebar-brand .logo-text { color: #111827; }
+    .sidebar-brand .logo-sub { color: #6C1D5F; }
+    .user-name { color: #111827; }
+    .user-role { color: #6B7280; }
+    .sidebar-student .nav-item { color: rgba(255,255,255,0.65); }
+    .sidebar-student .nav-section { color: rgba(255,255,255,0.35); }
+    .sidebar-student .logo-text { color: #fff; }
+    .sidebar-student .logo-sub { color: rgba(255,255,255,0.45); }
+    .sidebar-student .user-name { color: rgba(255,255,255,0.9); }
+    .sidebar-student .user-role { color: rgba(255,255,255,0.4); }
+  `;
+
   return (
     <html lang="en">
       <head>
+        <style dangerouslySetInnerHTML={{ __html: criticalCss }} />
         <HeadContent />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

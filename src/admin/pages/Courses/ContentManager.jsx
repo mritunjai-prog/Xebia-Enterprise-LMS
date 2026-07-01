@@ -89,8 +89,16 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
     
     try {
       if (editId) {
-        // Mock update since API doesn't exist
-        setBlocks(blocks.map(b => b.id === editId ? { ...b, title: formData.title || `${activeType} Block`, type: typeDef.backendType, storageRef, position: formData.contentOrder } : b));
+        const payload = {
+          moduleId,
+          subModuleId: submoduleId,
+          title: formData.title || `${activeType} Block`,
+          type: typeDef.backendType,
+          storageRef,
+          position: formData.contentOrder
+        };
+        const updatedBlock = await CourseService.updateContentItem(editId, payload);
+        setBlocks(blocks.map(b => b.id === editId ? updatedBlock : b));
         addToast('Content updated', 'success');
       } else {
         const payload = {
@@ -111,11 +119,15 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
     }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Delete this content block?')) {
-      // Mock delete since API doesn't exist
-      setBlocks(blocks.filter(b => b.id !== id));
-      addToast('Content deleted', 'success');
+      try {
+        await CourseService.deleteContentItem(id);
+        setBlocks(blocks.filter(b => b.id !== id));
+        addToast('Content deleted', 'success');
+      } catch (err) {
+        addToast('Error deleting content', 'error');
+      }
     }
   };
 
@@ -294,6 +306,11 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Or Video URL</label>
                       <input type="url" className={inputCls} value={formData.videoUrl} onChange={e => setFormData({...formData, videoUrl: e.target.value})} placeholder="https://..." />
                     </div>
+                    {formData.videoUrl && (
+                      <div className="mt-4 aspect-video rounded-xl overflow-hidden border border-border shadow-sm">
+                        <iframe src={formData.videoUrl} className="w-full h-full" allowFullScreen title="Video Preview" />
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -307,6 +324,11 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Or Image URL</label>
                       <input type="url" className={inputCls} value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} placeholder="https://..." />
                     </div>
+                    {formData.imageUrl && (
+                      <div className="mt-4 rounded-xl overflow-hidden border border-border shadow-sm flex justify-center bg-gray-50 dark:bg-card p-2">
+                        <img src={formData.imageUrl} alt="Preview" className="max-w-full h-auto rounded-lg max-h-64 object-contain" />
+                      </div>
+                    )}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Alt Text</label>
@@ -330,6 +352,11 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Or PDF URL</label>
                       <input type="url" className={inputCls} value={formData.pdfUrl} onChange={e => setFormData({...formData, pdfUrl: e.target.value})} placeholder="https://..." />
                     </div>
+                    {formData.pdfUrl && (
+                      <div className="mt-4 aspect-[4/3] rounded-xl overflow-hidden border border-border shadow-sm">
+                        <iframe src={formData.pdfUrl} className="w-full h-full" title="PDF Preview" />
+                      </div>
+                    )}
                   </div>
                 )}
 
