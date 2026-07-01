@@ -56,10 +56,10 @@ export const ProgressService = {
 };
 
 export const CourseService = {
-  getCourses: () => fetchApi('/courses'),
-  getCourseById: (id) => fetchApi(`/courses/${id}`),
+  getCourses: () => fetchApi('/courses', { cache: 'no-store' }),
+  getCourseById: (id) => fetchApi(`/courses/${id}`, { cache: 'no-store' }),
   getCourseHierarchy: async (id) => {
-    const dto = await fetchApi(`/courses/${id}/hierarchy`);
+    const dto = await fetchApi(`/courses/${id}/hierarchy`, { cache: 'no-store' });
     if (!dto) return null;
     const mappedCourse = { ...dto.course };
     mappedCourse.modules = (dto.modules || []).map(mDto => ({

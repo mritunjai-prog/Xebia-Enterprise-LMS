@@ -20,7 +20,7 @@ const uploadToCloudinary = async (file) => {
   formData.append("file", file);
   formData.append("upload_preset", uploadPreset);
 
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
     method: "POST",
     body: formData
   });
