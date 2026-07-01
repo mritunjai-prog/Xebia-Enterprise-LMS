@@ -145,6 +145,28 @@ public class CourseService {
     }
 
     @Transactional
+    public CourseModule updateModule(UUID moduleId, ModuleRequest request) {
+        CourseModule module = modules.findById(moduleId)
+            .orElseThrow(() -> new RuntimeException("Module not found"));
+        module.setTitle(request.title());
+        module.setPosition(request.position());
+        module.setDescription(request.description());
+        module.setActive(request.isActive());
+        return modules.save(module);
+    }
+
+    @Transactional
+    public void deleteModule(UUID moduleId) {
+        // Delete all content items in all submodules first
+        List<SubModule> subs = subModules.findByModuleIdOrderByPositionAsc(moduleId);
+        subs.forEach(sub -> {
+            contentItems.findBySubModuleIdOrderByPositionAsc(sub.getId()).forEach(contentItems::delete);
+            subModules.delete(sub);
+        });
+        modules.deleteById(moduleId);
+    }
+
+    @Transactional
     public SubModule addSubModule(UUID moduleId, SubModuleRequest request) {
         SubModule subModule = new SubModule();
         subModule.setTenantId(TenantContext.tenantId());
@@ -160,6 +182,31 @@ public class CourseService {
         subModule.setOgTitle(request.ogTitle());
         subModule.setOgImageUrl(request.ogImageUrl());
         return subModules.save(subModule);
+    }
+
+    @Transactional
+    public SubModule updateSubModule(UUID subModuleId, SubModuleRequest request) {
+        SubModule subModule = subModules.findById(subModuleId)
+            .orElseThrow(() -> new RuntimeException("SubModule not found"));
+        subModule.setTitle(request.title());
+        subModule.setPosition(request.position());
+        subModule.setDescription(request.description());
+        subModule.setActive(request.isActive());
+        subModule.setSlug(request.slug());
+        subModule.setMetaTitle(request.metaTitle());
+        subModule.setCanonicalUrl(request.canonicalUrl());
+        subModule.setMetaDescription(request.metaDescription());
+        subModule.setOgTitle(request.ogTitle());
+        subModule.setOgImageUrl(request.ogImageUrl());
+        return subModules.save(subModule);
+    }
+
+    @Transactional
+    public void deleteSubModule(UUID subModuleId) {
+        SubModule subModule = subModules.findById(subModuleId)
+            .orElseThrow(() -> new RuntimeException("SubModule not found"));
+        contentItems.findBySubModuleIdOrderByPositionAsc(subModuleId).forEach(contentItems::delete);
+        subModules.delete(subModule);
     }
 
     @Transactional

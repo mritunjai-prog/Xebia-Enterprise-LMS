@@ -32,7 +32,11 @@ public class CourseController {
     @PutMapping("/{courseId}") Course update(@PathVariable("courseId") UUID courseId, @Valid @RequestBody CourseRequest request) { return service.update(courseId, request); }
     @DeleteMapping("/{courseId}") @ResponseStatus(HttpStatus.NO_CONTENT) void delete(@PathVariable("courseId") UUID courseId) { service.delete(courseId); }
     @PostMapping("/{courseId}/modules") @ResponseStatus(HttpStatus.CREATED) CourseModule module(@PathVariable("courseId") UUID courseId, @Valid @RequestBody ModuleRequest request) { return service.addModule(courseId, request); }
+    @PutMapping("/modules/{moduleId}") CourseModule updateModule(@PathVariable("moduleId") UUID moduleId, @Valid @RequestBody ModuleRequest request) { return service.updateModule(moduleId, request); }
+    @DeleteMapping("/modules/{moduleId}") @ResponseStatus(HttpStatus.NO_CONTENT) void deleteModule(@PathVariable("moduleId") UUID moduleId) { service.deleteModule(moduleId); }
     @PostMapping("/{courseId}/modules/{moduleId}/submodules") @ResponseStatus(HttpStatus.CREATED) SubModule subModule(@PathVariable("moduleId") UUID moduleId, @Valid @RequestBody com.xebia.lms.course.dto.SubModuleRequest request) { return service.addSubModule(moduleId, request); }
+    @PutMapping("/submodules/{subModuleId}") SubModule updateSubModule(@PathVariable("subModuleId") UUID subModuleId, @Valid @RequestBody com.xebia.lms.course.dto.SubModuleRequest request) { return service.updateSubModule(subModuleId, request); }
+    @DeleteMapping("/submodules/{subModuleId}") @ResponseStatus(HttpStatus.NO_CONTENT) void deleteSubModule(@PathVariable("subModuleId") UUID subModuleId) { service.deleteSubModule(subModuleId); }
     @PostMapping("/{courseId}/content-items") @ResponseStatus(HttpStatus.CREATED) ContentItem content(@PathVariable("courseId") UUID courseId, @Valid @RequestBody ContentItemRequest request) { return service.addContent(courseId, request); }
     @PutMapping("/content-items/{contentId}") ContentItem updateContent(@PathVariable("contentId") UUID contentId, @Valid @RequestBody ContentItemRequest request) { return service.updateContent(contentId, request); }
     @DeleteMapping("/content-items/{contentId}") @ResponseStatus(HttpStatus.NO_CONTENT) void deleteContent(@PathVariable("contentId") UUID contentId) { service.deleteContent(contentId); }

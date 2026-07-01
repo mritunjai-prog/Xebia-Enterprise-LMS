@@ -72,7 +72,11 @@ function ContentRenderer({ block }) {
       return (
         <div className="w-full aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden shadow-lg border border-border bg-gray-50 dark:bg-card">
           {dataToRender ? (
-            <iframe src={dataToRender} className="w-full h-full" title="Document Viewer" />
+            <iframe
+              src={`https://docs.google.com/viewer?url=${encodeURIComponent(dataToRender)}&embedded=true`}
+              className="w-full h-full"
+              title="Document Viewer"
+            />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
               <File className="w-12 h-12 mb-2 opacity-50" />
