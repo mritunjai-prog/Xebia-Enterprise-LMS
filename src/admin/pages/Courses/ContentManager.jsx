@@ -8,6 +8,32 @@ import { CourseService } from '../../../services/api';
 const BRAND = '#6C1D5F';
 const BRAND_LIGHT = 'rgba(108,29,95,0.08)';
 
+const uploadToCloudinary = async (file) => {
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+  if (!cloudName || !uploadPreset) {
+    throw new Error("Cloudinary is not configured. Set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in .env");
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", uploadPreset);
+
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+    method: "POST",
+    body: formData
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error?.message || "Failed to upload file");
+  }
+
+  const data = await response.json();
+  return data.secure_url;
+};
+
 const BLOCK_TYPES = [
   { id: 'Text', label: 'Text', icon: FileText, backendType: 'NOTE' },
   { id: 'Heading', label: 'Heading', icon: FileText, backendType: 'NOTE' },
@@ -56,6 +82,7 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
   const { addToast } = useAppStore();
   const [blocks, setBlocks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUploadingFile, setIsUploadingFile] = useState(false);
 
   const [showEditor, setShowEditor] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -242,6 +269,13 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                   </div>
                 </div>
 
+                {isUploadingFile && (
+                  <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-sm font-bold flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    Uploading file to Cloudinary, please wait...
+                  </div>
+                )}
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Title</label>
@@ -300,7 +334,18 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                   <div className="space-y-4">
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Upload Video</label>
-                      <FileUpload accept="video/*" onUpload={file => setFormData({...formData, videoUrl: URL.createObjectURL(file)})} label="Drag & drop a video file" />
+                      <FileUpload accept="video/*" onUpload={async file => {
+                        try {
+                          setIsUploadingFile(true);
+                          const url = await uploadToCloudinary(file);
+                          setFormData({...formData, videoUrl: url});
+                          addToast('Video uploaded successfully!', 'success');
+                        } catch (err) {
+                          addToast(err.message, 'error');
+                        } finally {
+                          setIsUploadingFile(false);
+                        }
+                      }} label="Drag & drop a video file" />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Or Video URL</label>
@@ -318,7 +363,18 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                   <div className="space-y-4">
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Upload Image</label>
-                      <FileUpload accept="image/*" onUpload={file => setFormData({...formData, imageUrl: URL.createObjectURL(file)})} label="Drag & drop an image file" />
+                      <FileUpload accept="image/*" onUpload={async file => {
+                        try {
+                          setIsUploadingFile(true);
+                          const url = await uploadToCloudinary(file);
+                          setFormData({...formData, imageUrl: url});
+                          addToast('Image uploaded successfully!', 'success');
+                        } catch (err) {
+                          addToast(err.message, 'error');
+                        } finally {
+                          setIsUploadingFile(false);
+                        }
+                      }} label="Drag & drop an image" />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Or Image URL</label>
@@ -346,7 +402,18 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                   <div className="space-y-4">
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Upload PDF</label>
-                      <FileUpload accept="application/pdf" onUpload={file => setFormData({...formData, pdfUrl: URL.createObjectURL(file)})} label="Drag & drop a PDF file" />
+                      <FileUpload accept=".pdf" onUpload={async file => {
+                        try {
+                          setIsUploadingFile(true);
+                          const url = await uploadToCloudinary(file);
+                          setFormData({...formData, pdfUrl: url});
+                          addToast('PDF uploaded successfully!', 'success');
+                        } catch (err) {
+                          addToast(err.message, 'error');
+                        } finally {
+                          setIsUploadingFile(false);
+                        }
+                      }} label="Drag & drop a PDF file" />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Or PDF URL</label>
