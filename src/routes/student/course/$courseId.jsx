@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
+import { getCloudinaryDocumentPreviewUrl, normalizeCloudinaryDocumentUrl } from "@/lib/cloudinary";
 
 export const Route = createFileRoute("/student/course/$courseId")({
   component: CourseViewer,
@@ -35,7 +36,7 @@ function ContentRenderer({ block }) {
   if (uiType === 'Video' || uiType === 'VIDEO_REFERENCE' || uiType === 'VIDEO') {
     dataToRender = parsedData.videoUrl || block.contentData || "";
   } else if (uiType === 'PDF' || uiType === 'DOCUMENT' || uiType === 'PPT') {
-    dataToRender = parsedData.pdfUrl || block.contentData || "";
+    dataToRender = normalizeCloudinaryDocumentUrl(parsedData.pdfUrl || block.contentData || "");
   } else if (uiType === 'Image' || uiType === 'IMAGE') {
     dataToRender = parsedData.imageUrl || block.contentData || "";
   } else if (uiType === 'Code' || uiType === 'CODE') {
@@ -70,15 +71,20 @@ function ContentRenderer({ block }) {
     case "DOCUMENT":
     case "PPT":
       return (
-        <div className="w-full aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden shadow-lg border border-border bg-gray-50 dark:bg-card">
+        <div className="w-full rounded-2xl overflow-hidden shadow-lg border border-border bg-gray-50 dark:bg-card">
           {dataToRender ? (
-            <iframe
-              src={`https://docs.google.com/viewer?url=${encodeURIComponent(dataToRender)}&embedded=true`}
-              className="w-full h-full"
-              title="Document Viewer"
-            />
+            <div>
+              <img
+                src={getCloudinaryDocumentPreviewUrl(dataToRender)}
+                alt="Document preview"
+                className="w-full h-auto object-contain"
+              />
+              <div className="px-4 py-3 text-sm text-muted-foreground border-t border-border">
+                Document preview is shown as an image because direct PDF delivery is blocked for this Cloudinary account.
+              </div>
+            </div>
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
+            <div className="w-full min-h-64 flex flex-col items-center justify-center text-gray-400">
               <File className="w-12 h-12 mb-2 opacity-50" />
               <p>Document Not Available</p>
             </div>

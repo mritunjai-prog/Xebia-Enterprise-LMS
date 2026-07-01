@@ -4,6 +4,7 @@ import { ChevronLeft, Plus, Settings, Video, FileText, Code, Link as LinkIcon, T
 import { useRouter } from '@tanstack/react-router';
 import { useAppStore } from '../../store/useAppStore';
 import { CourseService } from '../../../services/api';
+import { getCloudinaryAssetUrl, getCloudinaryDocumentPreviewUrl, normalizeCloudinaryDocumentUrl } from '../../../lib/cloudinary';
 
 const BRAND = '#6C1D5F';
 const BRAND_LIGHT = 'rgba(108,29,95,0.08)';
@@ -31,7 +32,7 @@ const uploadToCloudinary = async (file) => {
   }
 
   const data = await response.json();
-  return data.secure_url;
+  return getCloudinaryAssetUrl(data);
 };
 
 const BLOCK_TYPES = [
@@ -92,6 +93,16 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
     title: '', text: '', code: '', language: 'javascript', videoUrl: '', imageUrl: '', pdfUrl: '', alt: '', caption: '', headingLevel: 1, contentOrder: 1, isActive: true
   });
 
+  const patchFormData = (updates) => {
+    setFormData((current) => {
+      const next = { ...current, ...updates };
+      if (next.pdfUrl) {
+        next.pdfUrl = normalizeCloudinaryDocumentUrl(next.pdfUrl);
+      }
+      return next;
+    });
+  };
+
   useEffect(() => {
     if (!courseId) return;
     CourseService.getCourseHierarchy(courseId).then(data => {
@@ -112,7 +123,11 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
   const handleSave = async (e) => {
     e.preventDefault();
     const typeDef = BLOCK_TYPES.find(b => b.id === activeType);
-    const storageRef = JSON.stringify({ uiType: activeType, ...formData });
+    const normalizedFormData = {
+      ...formData,
+      pdfUrl: normalizeCloudinaryDocumentUrl(formData.pdfUrl),
+    };
+    const storageRef = JSON.stringify({ uiType: activeType, ...normalizedFormData });
     
     try {
       if (editId) {
@@ -164,15 +179,15 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
       try {
         const data = JSON.parse(block.storageRef);
         setActiveType(data.uiType || 'Text');
-        setFormData({ ...data, title: block.title, contentOrder: block.position });
+        patchFormData({ ...data, title: block.title, contentOrder: block.position });
       } catch (e) {
         setActiveType('Text');
-        setFormData({ title: block.title, text: block.storageRef, contentOrder: block.position, isActive: true });
+        patchFormData({ title: block.title, text: block.storageRef, contentOrder: block.position, isActive: true });
       }
     } else {
       setEditId(null);
       setActiveType('Text');
-      setFormData({ title: '', text: '', code: '', language: 'javascript', videoUrl: '', imageUrl: '', pdfUrl: '', alt: '', caption: '', headingLevel: 1, contentOrder: blocks.length + 1, isActive: true });
+      patchFormData({ title: '', text: '', code: '', language: 'javascript', videoUrl: '', imageUrl: '', pdfUrl: '', alt: '', caption: '', headingLevel: 1, contentOrder: blocks.length + 1, isActive: true });
     }
     setShowEditor(true);
   };
@@ -310,7 +325,7 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                     )}
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">{activeType === 'Callout' ? 'Body' : 'Text'}</label>
-                      <textarea rows={6} className={inputCls} value={formData.text} onChange={e => setFormData({...formData, text: e.target.value})} placeholder="Enter text content..." />
+                     <textarea rows={6} className={inputCls} value={formData.text} onChange={e => setFormData({...formData, text: e.target.value})} placeholder="Enter text content..." />
                     </div>
                   </div>
                 )}
@@ -319,13 +334,13 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                   <>
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Language</label>
-                      <select className={inputCls} value={formData.language} onChange={e => setFormData({...formData, language: e.target.value})}>
+                     <select className={inputCls} value={formData.language} onChange={e => setFormData({...formData, language: e.target.value})}>
                         <option value="javascript">JavaScript</option><option value="python">Python</option><option value="java">Java</option><option value="html">HTML</option><option value="css">CSS</option>
                       </select>
                     </div>
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Code</label>
-                      <textarea rows={8} className={`${inputCls} font-mono`} value={formData.code} onChange={e => setFormData({...formData, code: e.target.value})} placeholder="// Write code here" />
+                     <textarea rows={8} className={`${inputCls} font-mono`} value={formData.code} onChange={e => setFormData({...formData, code: e.target.value})} placeholder="// Write code here" />
                     </div>
                   </>
                 )}
@@ -338,7 +353,7 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                         try {
                           setIsUploadingFile(true);
                           const url = await uploadToCloudinary(file);
-                          setFormData({...formData, videoUrl: url});
+                          patchFormData({ videoUrl: url });
                           addToast('Video uploaded successfully!', 'success');
                         } catch (err) {
                           addToast(err.message, 'error');
@@ -367,7 +382,7 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                         try {
                           setIsUploadingFile(true);
                           const url = await uploadToCloudinary(file);
-                          setFormData({...formData, imageUrl: url});
+                          patchFormData({ imageUrl: url });
                           addToast('Image uploaded successfully!', 'success');
                         } catch (err) {
                           addToast(err.message, 'error');
@@ -406,7 +421,7 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                         try {
                           setIsUploadingFile(true);
                           const url = await uploadToCloudinary(file);
-                          setFormData({...formData, pdfUrl: url});
+                          patchFormData({ pdfUrl: url });
                           addToast('PDF uploaded successfully!', 'success');
                         } catch (err) {
                           addToast(err.message, 'error');
@@ -417,11 +432,18 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                     </div>
                     <div>
                       <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Or PDF URL</label>
-                      <input type="url" className={inputCls} value={formData.pdfUrl} onChange={e => setFormData({...formData, pdfUrl: e.target.value})} placeholder="https://..." />
+                      <input type="url" className={inputCls} value={formData.pdfUrl} onChange={e => patchFormData({ pdfUrl: e.target.value })} placeholder="https://..." />
                     </div>
                     {formData.pdfUrl && (
-                      <div className="mt-4 aspect-[4/3] rounded-xl overflow-hidden border border-border shadow-sm">
-                        <iframe src={formData.pdfUrl} className="w-full h-full" title="PDF Preview" />
+                      <div className="mt-4 rounded-xl overflow-hidden border border-border shadow-sm bg-gray-50 dark:bg-card">
+                        <img
+                          src={getCloudinaryDocumentPreviewUrl(formData.pdfUrl)}
+                          alt="PDF preview"
+                          className="w-full h-auto object-contain"
+                        />
+                        <div className="border-t border-border px-4 py-3 text-xs text-muted-foreground">
+                          PDF preview uses the first page image generated by Cloudinary.
+                        </div>
                       </div>
                     )}
                   </div>
