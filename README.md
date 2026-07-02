@@ -11,7 +11,7 @@
 <p align="center">
   <a href="#key-features">Features</a> •
   <a href="#core-architecture">Architecture</a> •
-  <a href="#getting-started">Getting Started</a> •
+  <a href="SETUP.md">Getting Started (Setup Guide)</a> •
   <a href="#meet-the-team">Meet the Team</a>
 </p>
 
@@ -21,10 +21,7 @@
   <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
   <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring&logoColor=white" alt="Spring Boot" />
   <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java" />
-</p>
-
-<p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=22&duration=3000&pause=700&color=4F46E5&center=true&vCenter=true&width=900&lines=Building+Next-Gen+Learning+Experiences;Advanced+Course+%26+Module+Hierarchy;Real-time+Analytics+%26+Dashboards;Highly+Optimized+React+19+Frontend" alt="Typing SVG" />
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
 </p>
 
 ---
@@ -33,18 +30,18 @@
 
 **Xebia Enterprise LMS** is a state-of-the-art educational platform designed to streamline complex corporate training and large-scale academic learning. It goes beyond simple course delivery by offering a deep structural hierarchy: **Courses ➔ Modules ➔ Submodules ➔ Content Blocks**. 
 
-Built with performance and user experience in mind, the platform boasts a highly interactive, drag-and-drop hierarchy builder, comprehensive SEO metadata capabilities, and a visually stunning UI crafted with Tailwind CSS and Framer Motion.
+Built with performance and user experience in mind, the platform boasts a highly interactive, drag-and-drop hierarchy builder, comprehensive SEO metadata capabilities, AI-powered content generation, and a visually stunning UI crafted with Tailwind CSS and Framer Motion.
 
 ---
 
 ## 🔥 Key Features
 
 - 🏗️ **Advanced Curriculum Builder:** Fully animated, drag-and-drop interface for structuring complex courses. Automatically handles order indexing, slug generation, and real-time validation.
+- 🤖 **AI-Powered Generation:** Seamlessly integrates with the Groq API to auto-generate course metadata, summaries, and complex curriculum structures on the fly.
 - ⚡ **Real-Time Analytics Dashboard:** Monitor KPIs, track batch progress, evaluate student performance, and view system-wide engagement metrics instantly.
-- 🎨 **Premium Glassmorphism UI:** Stunning aesthetics with smooth transitions, seamless dark/light mode toggles, micro-animations, and responsive layouts that look beautiful on any device.
+- 🎨 **Premium Responsive UI:** Stunning aesthetics with smooth transitions, seamless dark/light mode toggles, micro-animations, and mobile-responsive layouts that look beautiful on any device.
 - 🔍 **SEO & Open Graph Engineered:** Deep metadata configuration at the submodule level to ensure content is fully optimized for search engines and social sharing.
-- 🔒 **Enterprise-Grade Security:** Ready for integration with robust authentication flows, role-based access control (RBAC), and secure microservice endpoints.
-- 💾 **Offline-First Resilience:** Implements intelligent `localStorage` sync strategies for seamless development and data persistence during network drops.
+- 🔒 **Enterprise-Grade Microservices:** Powered by Java Spring Boot, the backend is cleanly separated into a scalable API Gateway and modular Course Service connected to a robust PostgreSQL database.
 
 ---
 
@@ -68,17 +65,17 @@ Built with performance and user experience in mind, the platform boasts a highly
         <li><b>Routing:</b> Tanstack Router for type-safe routing</li>
         <li><b>Styling:</b> Tailwind CSS + Custom Design Tokens</li>
         <li><b>State Management:</b> Zustand for global state</li>
-        <li><b>Animations:</b> Framer Motion</li>
-        <li><b>Icons:</b> Lucide React</li>
+        <li><b>AI Integration:</b> Groq API</li>
+        <li><b>Media:</b> Cloudinary Uploads</li>
       </ul>
     </td>
     <td>
       <ul>
-        <li><b>Core:</b> Java 17+ & Spring Boot 3</li>
-        <li><b>Architecture:</b> Microservices Pattern</li>
-        <li><b>Database:</b> JPA / Hibernate (SQL)</li>
-        <li><b>API Gateway:</b> Spring Cloud Gateway</li>
-        <li><b>Discovery:</b> Eureka Service Registry</li>
+        <li><b>Core:</b> Java 21 & Spring Boot 3.3.6</li>
+        <li><b>Architecture:</b> API Gateway Pattern</li>
+        <li><b>Database:</b> PostgreSQL (Dockerized)</li>
+        <li><b>ORM:</b> Spring Data JPA / Hibernate</li>
+        <li><b>Migrations:</b> Flyway Database Migrations</li>
       </ul>
     </td>
   </tr>
@@ -86,51 +83,17 @@ Built with performance and user experience in mind, the platform boasts a highly
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Foolproof Setup Guide)
 
-Follow these instructions to get a copy of the project up and running on your local machine for development and testing.
+We have created an incredibly detailed, step-by-step setup guide designed specifically for newcomers. Whether you need to install Java from scratch, configure your environment variables, or learn how to run the Docker database, the guide has you covered.
 
-### Prerequisites
+👉 **[Click here to read the Ultimate SETUP.md Guide](SETUP.md)**
 
-Ensure you have the following installed:
-- [Node.js](https://nodejs.org/) (v18.x or higher)
-- [npm](https://www.npmjs.com/) (v9.x or higher)
-- Java Development Kit (JDK) 17+ (for backend services)
-
-### Installation
-
-Because this repository operates as a **Monorepo** containing both the React Frontend and the Spring Boot Backend microservices, you must boot the backend infrastructure before the UI.
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/mritunjai-prog/Xebia-Enterprise-LMS.git
-   cd Xebia-Enterprise-LMS
-   ```
-
-2. **Boot the Backend (Java + Docker):**
-   *Ensure Docker Desktop is running and Maven is installed on your system.*
-   ```bash
-   cd backend
-   
-   # Compile all 13 Java microservices into .jar files
-   mvn clean package -DskipTests
-   
-   # Boot the databases and microservices simultaneously
-   docker compose up --build -d
-   ```
-   *Wait ~2 minutes for all 16 containers to reach a `Healthy` state.*
-
-3. **Start the Frontend (React/Vite):**
-   Open a new terminal window at the root of the project (`Xebia-Enterprise-LMS`):
-   ```bash
-   npm install
-   npm run dev
-   ```
-
-4. **Access the Portal:**
-   - **Frontend UI**: `http://localhost:3000/`
-   - **Backend API Gateway**: `http://localhost:8080/api`
-   - **Database Access**: Connect to `localhost:5432` (User: `lms`, Pass: `lms`)
+*The guide will walk you through:*
+1. Installing Java 21, Maven, Node.js, and Docker.
+2. Spinning up the PostgreSQL database in seconds.
+3. Compiling and running the Spring Boot Microservices.
+4. Setting up the Vite React Frontend and configuring the AI keys.
 
 ---
 
