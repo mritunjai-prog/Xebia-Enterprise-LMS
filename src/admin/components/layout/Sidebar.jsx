@@ -39,7 +39,7 @@ export function Sidebar() {
   const router = useRouter();
   const location = useLocation();
   const currentPath = location.pathname;
-  const { setActiveSidebarItem, adminProfile, isSidebarCollapsed } = useAppStore();
+  const { setActiveSidebarItem, adminProfile, isSidebarCollapsed, toggleSidebar } = useAppStore();
   const [isAnalyticsExpanded, setIsAnalyticsExpanded] = useState(currentPath.startsWith('/admin/analytics'));
 
   useEffect(() => {
@@ -64,7 +64,8 @@ export function Sidebar() {
   };
 
   return (
-    <aside className={clsx("sidebar sidebar-admin bg-white dark:bg-[#15151f]", isSidebarCollapsed && "collapsed")}>
+    <>
+      <aside className={clsx("sidebar sidebar-admin bg-white dark:bg-[#15151f]", isSidebarCollapsed && "collapsed")}>
       
       {/* Brand */}
       <div className="sidebar-brand">
@@ -224,7 +225,15 @@ export function Sidebar() {
           </div>
         </div>
       </div>
-      
+      </div>
     </aside>
+    {/* Mobile Overlay */}
+    {!isSidebarCollapsed && (
+      <div 
+        className="sidebar-overlay lg:hidden"
+        onClick={toggleSidebar}
+      />
+    )}
+    </>
   );
 }
