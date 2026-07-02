@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: lms-api-gateway
+    name: xebia-api-gateway-mritunjai
     env: java
     rootDir: backend
     buildCommand: mvn clean package -DskipTests
@@ -13,13 +13,13 @@ services:
       - key: REDIS_HOST
         fromService:
           type: pserv
-          name: lms-redis
+          name: xebia-redis-mritunjai
           property: host
       - key: SERVICES_COURSE
-        value: http://lms-course-service:8084
+        value: http://xebia-course-service-mritunjai:8084
 
   - type: web
-    name: lms-course-service
+    name: xebia-course-service-mritunjai
     env: java
     rootDir: backend
     buildCommand: mvn clean package -DskipTests
@@ -31,28 +31,28 @@ services:
         generateValue: true
       - key: DB_URL
         fromDatabase:
-          name: lms-postgres
+          name: xebia-postgres-mritunjai
           property: connectionString
       - key: DB_USERNAME
         fromDatabase:
-          name: lms-postgres
+          name: xebia-postgres-mritunjai
           property: user
       - key: DB_PASSWORD
         fromDatabase:
-          name: lms-postgres
+          name: xebia-postgres-mritunjai
           property: password
       - key: REDIS_HOST
         fromService:
           type: pserv
-          name: lms-redis
+          name: xebia-redis-mritunjai
           property: host
 
   - type: pserv
-    name: lms-redis
+    name: xebia-redis-mritunjai
     env: docker
     repo: https://github.com/render-examples/redis.git
 
 databases:
-  - name: lms-postgres
+  - name: xebia-postgres-mritunjai
     databaseName: lms
     user: lms
