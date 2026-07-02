@@ -153,28 +153,23 @@ export function Sidebar() {
             />
             <SubNavItem 
               label="Learning Trends" 
-              isActive={currentPath === '/admin/analytics/trends'}
-              onClick={() => handleNavClick('/admin/analytics/trends')}
+              isActive={currentPath === '/admin/analytics/learning-trends'}
+              onClick={() => handleNavClick('/admin/analytics/learning-trends')}
             />
             <SubNavItem 
               label="Training Effectiveness" 
-              isActive={currentPath === '/admin/analytics/effectiveness'}
-              onClick={() => handleNavClick('/admin/analytics/effectiveness')}
+              isActive={currentPath === '/admin/analytics/training-effectiveness'}
+              onClick={() => handleNavClick('/admin/analytics/training-effectiveness')}
             />
             <SubNavItem 
               label="Learning Champions" 
-              isActive={currentPath === '/admin/analytics/champions'}
-              onClick={() => handleNavClick('/admin/analytics/champions')}
+              isActive={currentPath === '/admin/analytics/learning-champions'}
+              onClick={() => handleNavClick('/admin/analytics/learning-champions')}
             />
             <SubNavItem 
               label="Project Investment" 
-              isActive={currentPath === '/admin/analytics/investment'}
-              onClick={() => handleNavClick('/admin/analytics/investment')}
-            />
-            <SubNavItem 
-              label="Fresher Journey" 
-              isActive={currentPath === '/admin/analytics/fresher'}
-              onClick={() => handleNavClick('/admin/analytics/fresher')}
+              isActive={currentPath === '/admin/analytics/project-investment'}
+              onClick={() => handleNavClick('/admin/analytics/project-investment')}
             />
           </div>
         )}

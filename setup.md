@@ -14,14 +14,10 @@
    - [1.4 Install Docker Desktop](#14-install-docker-desktop)
    - [1.5 Install Git](#15-install-git)
 3. [Phase 2 — Clone the Repository](#phase-2--clone-the-repository)
-4. [Phase 3 — Start the Database (Docker)](#phase-3--start-the-database-docker)
-5. [Phase 4 — Run the Backend Microservices](#phase-4--run-the-backend-microservices)
-   - [4.1 Build the Common Library](#41-build-the-common-library)
-   - [4.2 Run the Course Service](#42-run-the-course-service)
-   - [4.3 Run the API Gateway](#43-run-the-api-gateway)
-6. [Phase 5 — Configure Environment Variables](#phase-5--configure-environment-variables)
-7. [Phase 6 — Run the Frontend](#phase-6--run-the-frontend)
-8. [Phase 7 — Access the Platform](#phase-7--access-the-platform)
+4. [Phase 3 — Start the Backend (Database + Microservices)](#phase-3--start-the-backend-database--microservices)
+5. [Phase 4 — Configure Environment Variables](#phase-4--configure-environment-variables)
+6. [Phase 5 — Run the Frontend](#phase-5--run-the-frontend)
+7. [Phase 6 — Access the Platform](#phase-6--access-the-platform)
 9. [Understanding the Application](#understanding-the-application)
    - [Admin Portal](#admin-portal-overview)
    - [Student Portal](#student-portal-overview)
@@ -199,113 +195,40 @@ You now have the entire project on your computer.
 
 ---
 
-## Phase 3 — Start the Database (Docker)
+## Phase 3 — Start the Backend (Database + Microservices)
 
-The backend Spring Boot service needs a PostgreSQL database to store its data. We will start one using Docker in literally two commands.
+The backend Spring Boot services (Course Service and API Gateway) need a PostgreSQL database and Redis to function. We have dockerized the entire backend infrastructure, so you can start everything with just **one command**.
 
 **Make sure Docker Desktop is open and running (green icon)!**
 
+Open your terminal and run:
+
 ```bash
 cd backend
-docker compose up -d
+docker compose up --build -d
 ```
 
+> The `--build` flag ensures the Java applications are compiled and packaged into Docker containers.
 > The `-d` flag means "detached" — it runs in the background. Your terminal will be free to use again.
 
-Wait about 30 seconds for the container to fully start up, then verify it is running:
+Wait about 60–90 seconds for the containers to fully start up, then verify they are running:
 ```bash
 docker ps
 ```
-✅ **Expected output:** You should see a row with `IMAGE: postgres` and `STATUS: Up`.
+✅ **Expected output:** You should see rows for `course-service`, `api-gateway`, `postgres`, and `redis` all showing `STATUS: Up`.
 
-> **What is happening?** Docker is reading the `docker-compose.yml` file and creating an isolated PostgreSQL database server with:
-> - **Database name:** `lms`
-> - **Username:** `lms`
-> - **Password:** `lms`
-> - **Port:** `5432` on your computer
+> **What is happening?** Docker is reading the `docker-compose.yml` file and automatically:
+> 1. Building the `common-lib` shared library.
+> 2. Compiling and starting the **API Gateway** (Port `8080`).
+> 3. Compiling and starting the **Course Service** (Port `8084`).
+> 4. Starting the PostgreSQL database and running all Flyway SQL migrations.
+> 5. Starting the Redis cache.
 
----
-
-## Phase 4 — Run the Backend Microservices
-
-The backend has 3 parts:
-1. **common-lib** — A shared library. Must be built first (not run separately).
-2. **course-service** — The main API server. Runs on port `8084`.
-3. **api-gateway** — Routes incoming requests. Runs on port `8080`.
-
-You will need **2 separate terminal windows** open for Steps 4.2 and 4.3.
+You do NOT need to run any Maven commands manually. The backend is now fully running!
 
 ---
 
-### 4.1 Build the Common Library
-
-The `course-service` uses shared code from `common-lib`. You must install it locally before running the service.
-
-In your terminal, make sure you are in the `backend` folder:
-```bash
-# If you are in the root project folder:
-cd backend/common-lib
-
-# Or if you are already inside backend/:
-cd common-lib
-
-mvn clean install
-```
-
-Wait for Maven to download dependencies (first time can take 2–3 minutes). You will see a progress bar.
-
-✅ **Expected final line:**
-```
-[INFO] BUILD SUCCESS
-```
-
-❌ **If it fails with "JAVA_HOME not set":** Ensure your Java PATH was set correctly in Step 1.1.
-
----
-
-### 4.2 Run the Course Service
-
-This is the core backend that talks to PostgreSQL and handles all course/category/module data.
-
-Open **Terminal Window 1** and navigate to the course-service:
-```bash
-cd backend/course-service
-mvn spring-boot:run
-```
-
-This will start the Spring Boot application. The first time, it will take 60–120 seconds as Maven downloads all dependencies.
-
-You will see lots of log output. Watch for these lines:
-```
-INFO - Bootstrapping Spring Data JPA repositories...
-INFO - HikariPool-1 - Start completed.    ← Database connected!
-INFO - Tomcat started on port 8084
-INFO - Started CourseServiceApplication   ← ✅ YOU'RE READY!
-```
-
-> **Do NOT close this terminal window.** It must stay running.
-
-> **What is Flyway?** When the Course Service starts for the first time, it automatically runs all the SQL migration scripts in `db/migration/` to create the database tables. This is handled entirely automatically — you don't need to do anything manually.
-
----
-
-### 4.3 Run the API Gateway
-
-The frontend doesn't talk to the Course Service directly. It goes through the API Gateway which then forwards the request.
-
-Open **Terminal Window 2** and run:
-```bash
-cd backend/api-gateway
-mvn spring-boot:run
-```
-
-✅ **Wait for:** `Started ApiGatewayApplication` in the logs.
-
-> **Do NOT close this terminal window either.**
-
----
-
-## Phase 5 — Configure Environment Variables
+## Phase 4 — Configure Environment Variables
 
 The frontend needs several API keys to enable image uploading and AI features.
 
@@ -338,7 +261,7 @@ VITE_GROQ_API_KEY=your_groq_api_key_here
 
 ---
 
-## Phase 6 — Run the Frontend
+## Phase 5 — Run the Frontend
 
 Open **Terminal Window 3** (in the root project folder — `Xebia-Enterprise-LMS`, NOT inside `backend/`):
 
@@ -361,7 +284,7 @@ npm run dev
 
 ---
 
-## Phase 7 — Access the Platform
+## Phase 6 — Access the Platform
 
 Open your web browser and visit:
 

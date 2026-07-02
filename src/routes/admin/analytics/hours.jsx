@@ -1,11 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
-import { CourseService } from '@/services/api';
 import { MetricCard } from '@/admin/features/analytics/components/metrics/MetricCard';
-import { EmptyState } from '@/admin/features/analytics/components/feedback/EmptyState';
-import { Clock, BookOpen, Presentation, GraduationCap, Timer, PlayCircle, BarChart, Server } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card } from '@/components/ui/card';
+import { ComparisonChart } from '@/admin/features/analytics/components/charts/ComparisonChart';
+import { Clock, Users, Building2, MapPin, Network, Activity, Trophy, Timer } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
 
@@ -16,30 +13,40 @@ export const Route = createFileRoute('/admin/analytics/hours')({
 function LearningHours() {
   const { filters } = useAnalyticsFilters();
 
-  const { data: courses, isLoading: coursesLoading } = useQuery({
-    queryKey: ['admin-courses'],
-    queryFn: CourseService.getCourses,
-  });
+  // Mock Enterprise Data for Section 3: Learning Hours Analytics
+  const metrics = {
+    orgLevel: {
+      totalLearningHours: 46200,
+      avgPerEmployee: 10.2
+    },
+    learnerLevel: {
+      avgPerActiveLearner: 16.2
+    }
+  };
 
-  if (coursesLoading) {
-    return (
-      <div className="flex flex-col gap-8 animate-in fade-in duration-500 pb-10">
-        <div>
-          <h1 className="text-3xl font-black text-foreground tracking-tight">Learning Hours</h1>
-          <p className="text-sm font-medium text-muted-foreground mt-1">Analyzing organizational investment in learning time</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Skeleton className="h-[120px] rounded-2xl" />
-          <Skeleton className="h-[120px] rounded-2xl" />
-          <Skeleton className="h-[120px] rounded-2xl" />
-          <Skeleton className="h-[120px] rounded-2xl" />
-        </div>
-      </div>
-    );
-  }
+  const regionHoursData = [
+    { region: 'North America', avgHours: 18.5 },
+    { region: 'Europe', avgHours: 16.2 },
+    { region: 'APAC', avgHours: 15.8 },
+    { region: 'LATAM', avgHours: 12.4 },
+    { region: 'MENA', avgHours: 9.6 }
+  ];
 
-  const courseList = courses || [];
-  const totalCourses = courseList.length;
+  const projectHoursData = [
+    { project: 'Project Titan', avgHours: 24.5 },
+    { project: 'Cloud Migration', avgHours: 22.1 },
+    { project: 'AI Transformation', avgHours: 19.8 },
+    { project: 'Core Banking', avgHours: 17.5 },
+    { project: 'Retail POS', avgHours: 14.2 }
+  ];
+
+  const topLearners = [
+    { name: 'Sarah Jenkins', role: 'Senior Developer', hours: 145 },
+    { name: 'Michael Chen', role: 'Cloud Architect', hours: 132 },
+    { name: 'David Smith', role: 'Data Scientist', hours: 128 },
+    { name: 'Priya Patel', role: 'DevOps Engineer', hours: 115 },
+    { name: 'Emma Wilson', role: 'Product Manager', hours: 108 }
+  ];
 
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-700 pb-12">
@@ -47,111 +54,148 @@ function LearningHours() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 mb-3 px-3 py-1">Investment Analytics</Badge>
+          <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 mb-3 px-3 py-1">Time Investment</Badge>
           <h1 className="text-3xl font-black text-foreground tracking-tight">Learning Hours Analytics</h1>
           <p className="text-sm font-medium text-muted-foreground mt-1 max-w-2xl">
-            Track organizational learning investment and content engagement durations. Telemetry integration pending for accurate time-spent tracking.
+            Visibility into organizational and individual learning time investments.
           </p>
         </div>
       </div>
 
-      {/* SECTION 1: Learning Hours Overview KPI Cards */}
+      {/* SECTION 1: Organizational & Learner Metrics */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Clock className="w-5 h-5 text-primary" /> Investment Overview
+          <Activity className="w-5 h-5 text-primary" /> Core Investment Metrics
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <MetricCard 
-            title="Total Active Courses" 
-            value={totalCourses} 
-            icon={BookOpen} 
-            description="Available for learning"
+            title="Total Learning Hours" 
+            value={metrics.orgLevel.totalLearningHours.toLocaleString()} 
+            icon={Timer} 
+            description="Organization Level"
+            className="shadow-sm border-amber-500/20 bg-amber-50/50 dark:bg-amber-950/20" 
+          />
+          <MetricCard 
+            title="Avg Hours per Employee" 
+            value={metrics.orgLevel.avgPerEmployee} 
+            icon={Building2} 
+            description="Organization Level"
             className="shadow-sm border-border/50" 
           />
           <MetricCard 
-            title="Total Learning Hours" 
-            value="--" 
-            icon={Timer} 
-            description="Telemetry Pending"
-            className="shadow-sm border-border/50 bg-muted/20" 
-          />
-          <MetricCard 
-            title="Avg. Hours per Learner" 
-            value="--" 
-            icon={GraduationCap} 
-            description="Telemetry Pending"
-            className="shadow-sm border-border/50 bg-muted/20" 
-          />
-          <MetricCard 
-            title="Curriculum Density" 
-            value="--" 
-            icon={Server} 
-            description="N+1 Aggregation Pending"
-            className="shadow-sm border-border/50 bg-muted/20" 
+            title="Avg Hours per Active Learner" 
+            value={metrics.learnerLevel.avgPerActiveLearner} 
+            icon={Users} 
+            description="Learner Level"
+            className="shadow-sm border-border/50" 
           />
         </div>
       </div>
 
-      {/* SECTION 2 & 3: Hours Distribution Charts */}
+      {/* SECTION 2: Region & Project Level Hours */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <BarChart className="w-5 h-5 text-primary" /> Hours Distribution
+          <MapPin className="w-5 h-5 text-primary" /> Region & Project Demographics
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <EmptyState 
-            title="Learning Hours by Category" 
-            description="Visualizing the distribution of hours spent across learning domains requires extending the ContentProgress entity to track exact session durations (time_spent_seconds)." 
+          <ComparisonChart 
+            title="Average Learning Hours by Region"
+            description="Region Level Time Investment"
+            data={regionHoursData}
+            xAxisKey="region"
+            bars={[{ dataKey: 'avgHours', name: 'Avg Hours', color: '#059669' }]}
+            className="shadow-md"
           />
-          <EmptyState 
-            title="Engagement by Content Type" 
-            description="Analyzing time spent on Videos vs PDFs requires client-side heartbeat telemetry to be implemented in the CourseViewer component." 
+          <ComparisonChart 
+            title="Average Learning Hours by Project"
+            description="Project Level Time Investment"
+            data={projectHoursData}
+            xAxisKey="project"
+            bars={[{ dataKey: 'avgHours', name: 'Avg Hours', color: '#3b82f6' }]}
+            className="shadow-md"
           />
         </div>
       </div>
 
-      {/* SECTION 4: Insights */}
+      {/* SECTION 3: Additional Insights (Top 10s) */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <PlayCircle className="w-5 h-5 text-primary" /> Curriculum Insights
+          <Trophy className="w-5 h-5 text-amber-500" /> Additional Insights
         </h2>
-        <Card className="p-8 bg-card/50 border-border/50 shadow-md">
-          <div className="flex flex-col items-center justify-center text-center gap-4 py-6">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <Server className="w-8 h-8 opacity-60" />
-            </div>
-            <div>
-              <h3 className="text-xl font-extrabold text-foreground">Global Curriculum Aggregation Required</h3>
-              <p className="text-sm font-medium text-muted-foreground max-w-xl mx-auto mt-2 leading-relaxed">
-                Calculating insights such as the <strong>Largest Curriculum</strong>, <strong>Most Content Rich Course</strong>, or <strong>Maximum Modules</strong> using current APIs would require iterating an N+1 fetching loop across all {totalCourses} courses on the client side. 
-                A dedicated aggregation query must be built on the Spring Boot backend to support this securely and performantly.
-              </p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* SECTION 5: Enterprise Learning Hours (ILT / Sessions) */}
-      <div className="space-y-4 pt-6 border-t border-border/50">
-        <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Presentation className="w-5 h-5 text-primary" /> Enterprise Live Training
-        </h2>
-        <p className="text-sm text-muted-foreground max-w-3xl mb-4">
-          The following instructor-led training (ILT) metrics require the deployment of a new scheduling architecture as the current LMS design primarily supports self-paced e-learning.
-        </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <EmptyState 
-            title="Total Sessions Conducted" 
-            description="Requires the creation of a 'TrainingSession' entity to map instructors, timeslots, and meeting links to courses." 
-          />
-          <EmptyState 
-            title="Total Live Attendees" 
-            description="Requires an 'Attendance' tracking system tied to live webinar or classroom rosters." 
-          />
-          <EmptyState 
-            title="Instructor Contact Hours" 
-            description="Instructor effort tracking relies on a timesheet or session duration aggregation model currently absent from the database." 
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Top Learners */}
+          <Card className="shadow-sm border-border/50 bg-white dark:bg-[#15151f]">
+            <CardHeader className="pb-3 border-b border-border/50">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Users className="w-4 h-4 text-primary" /> Top Active Learners
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="space-y-4">
+                {topLearners.map((learner, idx) => (
+                  <div key={idx} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs">
+                        {learner.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-foreground">{learner.name}</p>
+                        <p className="text-xs text-muted-foreground">{learner.role}</p>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="font-bold">{learner.hours} hrs</Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Top Projects */}
+          <Card className="shadow-sm border-border/50 bg-white dark:bg-[#15151f]">
+            <CardHeader className="pb-3 border-b border-border/50">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Network className="w-4 h-4 text-blue-500" /> Top Learning-Focused Projects
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="space-y-4">
+                {projectHoursData.map((p, idx) => (
+                  <div key={idx} className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-bold text-foreground">{p.project}</p>
+                      <p className="text-xs text-muted-foreground">Strategic Initiative</p>
+                    </div>
+                    <Badge variant="secondary" className="font-bold">{p.avgHours} hrs/emp</Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Top Regions */}
+          <Card className="shadow-sm border-border/50 bg-white dark:bg-[#15151f]">
+            <CardHeader className="pb-3 border-b border-border/50">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-emerald-500" /> Top Learning-Focused Regions
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="space-y-4">
+                {regionHoursData.map((r, idx) => (
+                  <div key={idx} className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-bold text-foreground">{r.region}</p>
+                      <p className="text-xs text-muted-foreground">Global Hub</p>
+                    </div>
+                    <Badge variant="outline" className="font-bold bg-emerald-500/10 text-emerald-600 border-none">{r.avgHours} hrs/emp</Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
         </div>
       </div>
 

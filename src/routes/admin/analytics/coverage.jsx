@@ -1,12 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
-import { CourseService, CategoryService } from '@/services/api';
 import { MetricCard } from '@/admin/features/analytics/components/metrics/MetricCard';
-import { EmptyState } from '@/admin/features/analytics/components/feedback/EmptyState';
 import { DonutChart } from '@/admin/features/analytics/components/charts/DonutChart';
 import { ComparisonChart } from '@/admin/features/analytics/components/charts/ComparisonChart';
-import { BookOpen, Tag, FileCheck, FileEdit, Users, Globe, Building2, MapPin, Network, Activity } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Users, Globe, Building2, MapPin, Network, Activity, BarChart3, TrendingUp, Layers } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
@@ -18,58 +14,35 @@ export const Route = createFileRoute('/admin/analytics/coverage')({
 function LearningCoverage() {
   const { filters } = useAnalyticsFilters();
 
-  const { data: courses, isLoading: coursesLoading } = useQuery({
-    queryKey: ['admin-courses'],
-    queryFn: CourseService.getCourses,
-  });
+  // Mock Enterprise Data for Section 2: Learning Coverage & Participation
+  const metrics = {
+    overallCoverage: 63.3,
+    activeRegions: 8,
+    activeProjects: 45,
+    coveredGrades: 12
+  };
 
-  const { data: categories, isLoading: categoriesLoading } = useQuery({
-    queryKey: ['admin-categories'],
-    queryFn: CategoryService.getCategories,
-  });
+  const regionCoverageData = [
+    { region: 'North America', coverage: 82 },
+    { region: 'Europe', coverage: 76 },
+    { region: 'APAC', coverage: 65 },
+    { region: 'LATAM', coverage: 54 },
+    { region: 'MENA', coverage: 42 }
+  ];
 
-  if (coursesLoading || categoriesLoading) {
-    return (
-      <div className="flex flex-col gap-8 animate-in fade-in duration-500 pb-10">
-        <div>
-          <h1 className="text-3xl font-black text-foreground tracking-tight">Learning Coverage</h1>
-          <p className="text-sm font-medium text-muted-foreground mt-1">Analyzing the reach and availability of curriculum</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Skeleton className="h-[120px] rounded-2xl" />
-          <Skeleton className="h-[120px] rounded-2xl" />
-          <Skeleton className="h-[120px] rounded-2xl" />
-          <Skeleton className="h-[120px] rounded-2xl" />
-        </div>
-      </div>
-    );
-  }
+  const gradeCoverageData = [
+    { name: 'L1 - Entry', value: 88, color: '#01AC9F' },
+    { name: 'L2 - Mid', value: 75, color: '#8b5cf6' },
+    { name: 'L3 - Senior', value: 62, color: '#f59e0b' },
+    { name: 'L4 - Lead', value: 55, color: '#ec4899' },
+    { name: 'L5 - Exec', value: 35, color: '#64748b' }
+  ];
 
-  const courseList = courses || [];
-  const categoryList = categories || [];
-
-  const totalCourses = courseList.length;
-  const publishedCourses = courseList.filter(c => c.published || c.isPublished).length;
-  const draftCourses = totalCourses - publishedCourses;
-  const totalCategories = categoryList.length;
-
-  // Frontend Aggregation for "Courses per Category"
-  const categoryCountMap = {};
-  courseList.forEach(course => {
-    const catName = course.category?.name || 'Uncategorized';
-    categoryCountMap[catName] = (categoryCountMap[catName] || 0) + 1;
-  });
-
-  const categoryBarData = Object.entries(categoryCountMap)
-    .map(([name, count]) => ({ category: name, courses: count }))
-    .sort((a, b) => b.courses - a.courses);
-
-  const topCategories = categoryBarData.slice(0, 5);
-  const topCategoryName = topCategories.length > 0 ? topCategories[0].category : 'N/A';
-
-  const publishedDistribution = [
-    { name: 'Available to Learners (Published)', value: publishedCourses, color: '#01AC9F' },
-    { name: 'In Development (Drafts)', value: draftCourses, color: '#F59E0B' }
+  const quarterlyTrendData = [
+    { quarter: 'Q1', participation: 25 },
+    { quarter: 'Q2', participation: 45 },
+    { quarter: 'Q3', participation: 58 },
+    { quarter: 'Q4', participation: 75 }
   ];
 
   return (
@@ -78,137 +51,125 @@ function LearningCoverage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 mb-3 px-3 py-1">Coverage Analytics</Badge>
+          <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 mb-3 px-3 py-1">Coverage & Participation</Badge>
           <h1 className="text-3xl font-black text-foreground tracking-tight">Learning Coverage</h1>
           <p className="text-sm font-medium text-muted-foreground mt-1 max-w-2xl">
-            Analyze the breadth of your learning library and track curriculum distribution. Note: Employee demographic coverage is pending HR integration.
+            "How effectively are we reaching employees across the organization?"
           </p>
         </div>
       </div>
 
-      {/* SECTION 1: Coverage Overview KPI Cards */}
+      {/* SECTION 1: Coverage Metrics */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-primary" /> Content Availability
+          <Activity className="w-5 h-5 text-primary" /> Core Coverage Metrics
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <MetricCard 
-            title="Total Learning Programs" 
-            value={totalCourses} 
-            icon={BookOpen} 
-            description="Total courses in system"
+            title="Overall Coverage" 
+            value={`${metrics.overallCoverage}%`} 
+            icon={Users} 
+            description="Enterprise-wide reach"
             className="shadow-sm border-border/50" 
           />
           <MetricCard 
-            title="Published Coverage" 
-            value={publishedCourses} 
-            icon={FileCheck} 
-            description="Active to learners"
+            title="Region Coverage" 
+            value={metrics.activeRegions} 
+            icon={Globe} 
+            description="Active geographical hubs"
             className="shadow-sm border-border/50" 
           />
           <MetricCard 
-            title="Draft Pipeline" 
-            value={draftCourses} 
-            icon={FileEdit} 
-            description="Content in development"
+            title="Project Coverage" 
+            value={metrics.activeProjects} 
+            icon={Network} 
+            description="Projects with active learners"
             className="shadow-sm border-border/50" 
           />
           <MetricCard 
-            title="Learning Domains" 
-            value={totalCategories} 
-            icon={Tag} 
-            description="Active categories"
+            title="Grade Coverage" 
+            value={metrics.coveredGrades} 
+            icon={Layers} 
+            description="Unique employee grades trained"
             className="shadow-sm border-border/50" 
           />
         </div>
       </div>
 
-      {/* SECTION 2 & 3: Coverage Charts & Distribution */}
+      {/* SECTION 2 & 3: Coverage Visualizations */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Activity className="w-5 h-5 text-primary" /> Curriculum Distribution
+          <BarChart3 className="w-5 h-5 text-primary" /> Coverage Distribution
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <ComparisonChart 
-              title="Coverage by Category"
-              description="Number of courses available per learning domain"
-              data={topCategories}
-              xAxisKey="category"
-              bars={[{ dataKey: 'courses', name: 'Total Courses', color: '#84117C' }]}
+              title="Region-wise Coverage Chart"
+              description="Learning coverage percentage broken down by geographic region."
+              data={regionCoverageData}
+              xAxisKey="region"
+              bars={[{ dataKey: 'coverage', name: 'Coverage %', color: '#84117C' }]}
               className="shadow-md h-full"
             />
           </div>
           <div className="lg:col-span-1">
             <DonutChart 
-              title="Publication Readiness"
-              description="Ratio of available vs developing content"
-              data={publishedDistribution}
+              title="Learning Coverage by Employee Grade"
+              description="Distribution of learning participation across hierarchy levels."
+              data={gradeCoverageData}
               className="shadow-md h-full"
             />
           </div>
         </div>
       </div>
 
-      {/* SECTION 4: Coverage Insights */}
+      {/* SECTION 4: Trends & Heatmaps */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Activity className="w-5 h-5 text-primary" /> Coverage Insights
+          <TrendingUp className="w-5 h-5 text-primary" /> Trends & Participation
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          <Card className="p-5 bg-primary/5 border-primary/20 shadow-sm flex flex-col justify-center">
-            <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Top Coverage Domain</p>
-            <p className="text-xl font-black text-foreground">{topCategoryName}</p>
-            <p className="text-xs text-muted-foreground mt-2">This category holds the most active courses.</p>
-          </Card>
-          <Card className="p-5 border-border/50 shadow-sm flex flex-col justify-center bg-card/50">
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Filter Context</p>
-            <p className="text-lg font-bold text-foreground">{filters.organization.region}</p>
-            <p className="text-xs text-muted-foreground mt-2">Selected global region filter.</p>
-          </Card>
-          <Card className="p-5 border-border/50 shadow-sm flex flex-col justify-center bg-card/50">
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Platform Readiness</p>
-            <p className="text-lg font-bold text-foreground">{totalCourses > 0 ? 'Operational' : 'Needs Content'}</p>
-            <p className="text-xs text-muted-foreground mt-2">Based on existing curriculum catalog.</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ComparisonChart 
+            title="Quarterly Participation Trend"
+            description="Growth in employee participation over the current year."
+            data={quarterlyTrendData}
+            xAxisKey="quarter"
+            bars={[{ dataKey: 'participation', name: 'Participation %', color: '#059669' }]}
+            className="shadow-md"
+          />
+          
+          {/* Mock Heatmap equivalent */}
+          <Card className="p-6 border border-border/50 shadow-md flex flex-col h-full bg-slate-50/50 dark:bg-slate-900/20">
+            <div className="mb-4">
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-indigo-500" /> Coverage Heatmap
+              </h3>
+              <p className="text-sm text-muted-foreground">Density of trained employees by location</p>
+            </div>
+            
+            <div className="flex-1 flex flex-col justify-center gap-4">
+              <div className="grid grid-cols-5 gap-2">
+                {Array.from({ length: 25 }).map((_, i) => {
+                  const intensity = Math.floor(Math.random() * 5); // 0-4
+                  const bgClass = ['bg-indigo-50 dark:bg-indigo-950/20', 'bg-indigo-200 dark:bg-indigo-900/40', 'bg-indigo-400 dark:bg-indigo-700/60', 'bg-indigo-600 dark:bg-indigo-500/80', 'bg-indigo-800 dark:bg-indigo-400'][intensity];
+                  return (
+                    <div key={i} className={`h-8 rounded-sm ${bgClass} transition-colors duration-500`} title={`Location ${i+1}`} />
+                  )
+                })}
+              </div>
+              <div className="flex justify-between items-center text-[10px] uppercase font-bold text-muted-foreground mt-2">
+                <span>Low Coverage</span>
+                <span>High Coverage</span>
+              </div>
+            </div>
           </Card>
         </div>
       </div>
 
-      {/* SECTION 5: Backend Pending Enterprise Coverage */}
-      <div className="space-y-4 pt-6 border-t border-border/50">
-        <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Users className="w-5 h-5 text-primary" /> Enterprise Demographic Coverage
-        </h2>
-        <p className="text-sm text-muted-foreground max-w-3xl mb-4">
-          The following geographic and organizational coverage visualizations require the deployment of the Employee Master Directory synchronization via HRMS integration.
-        </p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <EmptyState 
-            title="Region Coverage Heatmap" 
-            description="This visualization requires Employee Region mappings (e.g., APAC, EMEA, NA) which are not yet available in the current backend telemetry." 
-          />
-          <EmptyState 
-            title="Business Unit Penetration" 
-            description="Tracking learning reach across specific Business Units requires organizational matrix synchronization with the core LMS database." 
-          />
-          <EmptyState 
-            title="Project-wise Participation" 
-            description="Mapping active learning hours to specific billing codes or Project IDs requires future integration with your timesheet system." 
-          />
-          <EmptyState 
-            title="Grade-wise Coverage" 
-            description="Analyzing learning adoption by Employee Grade (e.g., L1, L2, Managerial) requires HR hierarchical data." 
-          />
-          <EmptyState 
-            title="Location Distribution" 
-            description="Office-level or city-level coverage insights are pending the rollout of the demographic enrichment API." 
-          />
-          <EmptyState 
-            title="Department Analytics" 
-            description="Departmental learning coverage (e.g., Engineering vs Sales) relies on organizational mapping data currently absent from the database." 
-          />
-        </div>
+      {/* Filter Context Indicator */}
+      <div className="flex items-center gap-3 mt-4 text-xs font-medium text-muted-foreground bg-primary/5 border border-primary/10 w-fit px-4 py-2 rounded-lg">
+        <Building2 className="w-4 h-4 text-primary" />
+        <span>Currently viewing data for Business Unit: <strong>{filters.organization.businessUnit}</strong></span>
       </div>
 
     </div>

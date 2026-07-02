@@ -242,32 +242,20 @@ git clone https://github.com/mritunjai-prog/Xebia-Enterprise-LMS.git
 cd Xebia-Enterprise-LMS
 ```
 
-### 2. Start the Database
+### 2. Start the Backend (Database + Microservices)
 ```bash
 cd backend
-docker-compose up -d
+docker compose up --build -d
 ```
 
-### 3. Build & Run Backend
-```bash
-# Build the shared library first
-cd common-lib && mvn clean install && cd ..
-
-# Run Course Service (Terminal 1)
-cd course-service && mvn spring-boot:run
-
-# Run API Gateway (Terminal 2)
-cd api-gateway && mvn spring-boot:run
-```
-
-### 4. Start Frontend
+### 3. Start Frontend
 ```bash
 # In project root (Terminal 3)
 npm install
 npm run dev
 ```
 
-### 5. Create your `.env` file in the root
+### 4. Create your `.env` file in the root
 ```env
 VITE_API_BASE_URL=http://localhost:8080
 VITE_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name

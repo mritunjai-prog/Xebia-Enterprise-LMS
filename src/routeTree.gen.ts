@@ -30,12 +30,17 @@ import { Route as CategoriesCategorySlugRouteImport } from './routes/categories/
 import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
 import { Route as AdminCurriculumIndexRouteImport } from './routes/admin/curriculum/index'
 import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categories/index'
+import { Route as AdminAnalyticsIndexRouteImport } from './routes/admin/analytics/index'
 import { Route as StudentCourseCourseIdRouteImport } from './routes/student/course/$courseId'
 import { Route as StudentAssessmentAssessmentIdRouteImport } from './routes/student/assessment/$assessmentId'
 import { Route as AdminCurriculumCourseIdRouteImport } from './routes/admin/curriculum/$courseId'
 import { Route as AdminCoursesCourseSlugRouteImport } from './routes/admin/courses/$courseSlug'
 import { Route as AdminCategoriesCategoryIdRouteImport } from './routes/admin/categories/$categoryId'
+import { Route as AdminAnalyticsTrainingEffectivenessRouteImport } from './routes/admin/analytics/training-effectiveness'
+import { Route as AdminAnalyticsProjectInvestmentRouteImport } from './routes/admin/analytics/project-investment'
 import { Route as AdminAnalyticsPillarsRouteImport } from './routes/admin/analytics/pillars'
+import { Route as AdminAnalyticsLearningTrendsRouteImport } from './routes/admin/analytics/learning-trends'
+import { Route as AdminAnalyticsLearningChampionsRouteImport } from './routes/admin/analytics/learning-champions'
 import { Route as AdminAnalyticsHoursRouteImport } from './routes/admin/analytics/hours'
 import { Route as AdminAnalyticsFlagshipProgramsRouteImport } from './routes/admin/analytics/flagship-programs'
 import { Route as AdminAnalyticsExecutiveRouteImport } from './routes/admin/analytics/executive'
@@ -149,6 +154,11 @@ const AdminCategoriesIndexRoute = AdminCategoriesIndexRouteImport.update({
   path: '/admin/categories/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAnalyticsIndexRoute = AdminAnalyticsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminAnalyticsRoute,
+} as any)
 const StudentCourseCourseIdRoute = StudentCourseCourseIdRouteImport.update({
   id: '/course/$courseId',
   path: '/course/$courseId',
@@ -176,11 +186,35 @@ const AdminCategoriesCategoryIdRoute =
     path: '/admin/categories/$categoryId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AdminAnalyticsTrainingEffectivenessRoute =
+  AdminAnalyticsTrainingEffectivenessRouteImport.update({
+    id: '/training-effectiveness',
+    path: '/training-effectiveness',
+    getParentRoute: () => AdminAnalyticsRoute,
+  } as any)
+const AdminAnalyticsProjectInvestmentRoute =
+  AdminAnalyticsProjectInvestmentRouteImport.update({
+    id: '/project-investment',
+    path: '/project-investment',
+    getParentRoute: () => AdminAnalyticsRoute,
+  } as any)
 const AdminAnalyticsPillarsRoute = AdminAnalyticsPillarsRouteImport.update({
   id: '/pillars',
   path: '/pillars',
   getParentRoute: () => AdminAnalyticsRoute,
 } as any)
+const AdminAnalyticsLearningTrendsRoute =
+  AdminAnalyticsLearningTrendsRouteImport.update({
+    id: '/learning-trends',
+    path: '/learning-trends',
+    getParentRoute: () => AdminAnalyticsRoute,
+  } as any)
+const AdminAnalyticsLearningChampionsRoute =
+  AdminAnalyticsLearningChampionsRouteImport.update({
+    id: '/learning-champions',
+    path: '/learning-champions',
+    getParentRoute: () => AdminAnalyticsRoute,
+  } as any)
 const AdminAnalyticsHoursRoute = AdminAnalyticsHoursRouteImport.update({
   id: '/hours',
   path: '/hours',
@@ -247,12 +281,17 @@ export interface FileRoutesByFullPath {
   '/admin/analytics/executive': typeof AdminAnalyticsExecutiveRoute
   '/admin/analytics/flagship-programs': typeof AdminAnalyticsFlagshipProgramsRoute
   '/admin/analytics/hours': typeof AdminAnalyticsHoursRoute
+  '/admin/analytics/learning-champions': typeof AdminAnalyticsLearningChampionsRoute
+  '/admin/analytics/learning-trends': typeof AdminAnalyticsLearningTrendsRoute
   '/admin/analytics/pillars': typeof AdminAnalyticsPillarsRoute
+  '/admin/analytics/project-investment': typeof AdminAnalyticsProjectInvestmentRoute
+  '/admin/analytics/training-effectiveness': typeof AdminAnalyticsTrainingEffectivenessRoute
   '/admin/categories/$categoryId': typeof AdminCategoriesCategoryIdRoute
   '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
   '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
   '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
+  '/admin/analytics/': typeof AdminAnalyticsIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
@@ -262,7 +301,6 @@ export interface FileRoutesByTo {
   '/curriculum': typeof CurriculumRoute
   '/organiser': typeof OrganiserRoute
   '/trainer': typeof TrainerRoute
-  '/admin/analytics': typeof AdminAnalyticsRouteWithChildren
   '/categories/$categorySlug': typeof CategoriesCategorySlugRoute
   '/courses/$courseSlug': typeof CoursesCourseSlugRoute
   '/courses/builder': typeof CoursesBuilderRoute
@@ -282,12 +320,17 @@ export interface FileRoutesByTo {
   '/admin/analytics/executive': typeof AdminAnalyticsExecutiveRoute
   '/admin/analytics/flagship-programs': typeof AdminAnalyticsFlagshipProgramsRoute
   '/admin/analytics/hours': typeof AdminAnalyticsHoursRoute
+  '/admin/analytics/learning-champions': typeof AdminAnalyticsLearningChampionsRoute
+  '/admin/analytics/learning-trends': typeof AdminAnalyticsLearningTrendsRoute
   '/admin/analytics/pillars': typeof AdminAnalyticsPillarsRoute
+  '/admin/analytics/project-investment': typeof AdminAnalyticsProjectInvestmentRoute
+  '/admin/analytics/training-effectiveness': typeof AdminAnalyticsTrainingEffectivenessRoute
   '/admin/categories/$categoryId': typeof AdminCategoriesCategoryIdRoute
   '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
   '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
   '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
+  '/admin/analytics': typeof AdminAnalyticsIndexRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/curriculum': typeof AdminCurriculumIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
@@ -319,12 +362,17 @@ export interface FileRoutesById {
   '/admin/analytics/executive': typeof AdminAnalyticsExecutiveRoute
   '/admin/analytics/flagship-programs': typeof AdminAnalyticsFlagshipProgramsRoute
   '/admin/analytics/hours': typeof AdminAnalyticsHoursRoute
+  '/admin/analytics/learning-champions': typeof AdminAnalyticsLearningChampionsRoute
+  '/admin/analytics/learning-trends': typeof AdminAnalyticsLearningTrendsRoute
   '/admin/analytics/pillars': typeof AdminAnalyticsPillarsRoute
+  '/admin/analytics/project-investment': typeof AdminAnalyticsProjectInvestmentRoute
+  '/admin/analytics/training-effectiveness': typeof AdminAnalyticsTrainingEffectivenessRoute
   '/admin/categories/$categoryId': typeof AdminCategoriesCategoryIdRoute
   '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
   '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
   '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
+  '/admin/analytics/': typeof AdminAnalyticsIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
@@ -357,12 +405,17 @@ export interface FileRouteTypes {
     | '/admin/analytics/executive'
     | '/admin/analytics/flagship-programs'
     | '/admin/analytics/hours'
+    | '/admin/analytics/learning-champions'
+    | '/admin/analytics/learning-trends'
     | '/admin/analytics/pillars'
+    | '/admin/analytics/project-investment'
+    | '/admin/analytics/training-effectiveness'
     | '/admin/categories/$categoryId'
     | '/admin/courses/$courseSlug'
     | '/admin/curriculum/$courseId'
     | '/student/assessment/$assessmentId'
     | '/student/course/$courseId'
+    | '/admin/analytics/'
     | '/admin/categories/'
     | '/admin/curriculum/'
     | '/admin/submodules/$submoduleId/content'
@@ -372,7 +425,6 @@ export interface FileRouteTypes {
     | '/curriculum'
     | '/organiser'
     | '/trainer'
-    | '/admin/analytics'
     | '/categories/$categorySlug'
     | '/courses/$courseSlug'
     | '/courses/builder'
@@ -392,12 +444,17 @@ export interface FileRouteTypes {
     | '/admin/analytics/executive'
     | '/admin/analytics/flagship-programs'
     | '/admin/analytics/hours'
+    | '/admin/analytics/learning-champions'
+    | '/admin/analytics/learning-trends'
     | '/admin/analytics/pillars'
+    | '/admin/analytics/project-investment'
+    | '/admin/analytics/training-effectiveness'
     | '/admin/categories/$categoryId'
     | '/admin/courses/$courseSlug'
     | '/admin/curriculum/$courseId'
     | '/student/assessment/$assessmentId'
     | '/student/course/$courseId'
+    | '/admin/analytics'
     | '/admin/categories'
     | '/admin/curriculum'
     | '/admin/submodules/$submoduleId/content'
@@ -428,12 +485,17 @@ export interface FileRouteTypes {
     | '/admin/analytics/executive'
     | '/admin/analytics/flagship-programs'
     | '/admin/analytics/hours'
+    | '/admin/analytics/learning-champions'
+    | '/admin/analytics/learning-trends'
     | '/admin/analytics/pillars'
+    | '/admin/analytics/project-investment'
+    | '/admin/analytics/training-effectiveness'
     | '/admin/categories/$categoryId'
     | '/admin/courses/$courseSlug'
     | '/admin/curriculum/$courseId'
     | '/student/assessment/$assessmentId'
     | '/student/course/$courseId'
+    | '/admin/analytics/'
     | '/admin/categories/'
     | '/admin/curriculum/'
     | '/admin/submodules/$submoduleId/content'
@@ -609,6 +671,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoriesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/analytics/': {
+      id: '/admin/analytics/'
+      path: '/'
+      fullPath: '/admin/analytics/'
+      preLoaderRoute: typeof AdminAnalyticsIndexRouteImport
+      parentRoute: typeof AdminAnalyticsRoute
+    }
     '/student/course/$courseId': {
       id: '/student/course/$courseId'
       path: '/course/$courseId'
@@ -644,11 +713,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoriesCategoryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/analytics/training-effectiveness': {
+      id: '/admin/analytics/training-effectiveness'
+      path: '/training-effectiveness'
+      fullPath: '/admin/analytics/training-effectiveness'
+      preLoaderRoute: typeof AdminAnalyticsTrainingEffectivenessRouteImport
+      parentRoute: typeof AdminAnalyticsRoute
+    }
+    '/admin/analytics/project-investment': {
+      id: '/admin/analytics/project-investment'
+      path: '/project-investment'
+      fullPath: '/admin/analytics/project-investment'
+      preLoaderRoute: typeof AdminAnalyticsProjectInvestmentRouteImport
+      parentRoute: typeof AdminAnalyticsRoute
+    }
     '/admin/analytics/pillars': {
       id: '/admin/analytics/pillars'
       path: '/pillars'
       fullPath: '/admin/analytics/pillars'
       preLoaderRoute: typeof AdminAnalyticsPillarsRouteImport
+      parentRoute: typeof AdminAnalyticsRoute
+    }
+    '/admin/analytics/learning-trends': {
+      id: '/admin/analytics/learning-trends'
+      path: '/learning-trends'
+      fullPath: '/admin/analytics/learning-trends'
+      preLoaderRoute: typeof AdminAnalyticsLearningTrendsRouteImport
+      parentRoute: typeof AdminAnalyticsRoute
+    }
+    '/admin/analytics/learning-champions': {
+      id: '/admin/analytics/learning-champions'
+      path: '/learning-champions'
+      fullPath: '/admin/analytics/learning-champions'
+      preLoaderRoute: typeof AdminAnalyticsLearningChampionsRouteImport
       parentRoute: typeof AdminAnalyticsRoute
     }
     '/admin/analytics/hours': {
@@ -737,7 +834,12 @@ interface AdminAnalyticsRouteChildren {
   AdminAnalyticsExecutiveRoute: typeof AdminAnalyticsExecutiveRoute
   AdminAnalyticsFlagshipProgramsRoute: typeof AdminAnalyticsFlagshipProgramsRoute
   AdminAnalyticsHoursRoute: typeof AdminAnalyticsHoursRoute
+  AdminAnalyticsLearningChampionsRoute: typeof AdminAnalyticsLearningChampionsRoute
+  AdminAnalyticsLearningTrendsRoute: typeof AdminAnalyticsLearningTrendsRoute
   AdminAnalyticsPillarsRoute: typeof AdminAnalyticsPillarsRoute
+  AdminAnalyticsProjectInvestmentRoute: typeof AdminAnalyticsProjectInvestmentRoute
+  AdminAnalyticsTrainingEffectivenessRoute: typeof AdminAnalyticsTrainingEffectivenessRoute
+  AdminAnalyticsIndexRoute: typeof AdminAnalyticsIndexRoute
 }
 
 const AdminAnalyticsRouteChildren: AdminAnalyticsRouteChildren = {
@@ -747,7 +849,13 @@ const AdminAnalyticsRouteChildren: AdminAnalyticsRouteChildren = {
   AdminAnalyticsExecutiveRoute: AdminAnalyticsExecutiveRoute,
   AdminAnalyticsFlagshipProgramsRoute: AdminAnalyticsFlagshipProgramsRoute,
   AdminAnalyticsHoursRoute: AdminAnalyticsHoursRoute,
+  AdminAnalyticsLearningChampionsRoute: AdminAnalyticsLearningChampionsRoute,
+  AdminAnalyticsLearningTrendsRoute: AdminAnalyticsLearningTrendsRoute,
   AdminAnalyticsPillarsRoute: AdminAnalyticsPillarsRoute,
+  AdminAnalyticsProjectInvestmentRoute: AdminAnalyticsProjectInvestmentRoute,
+  AdminAnalyticsTrainingEffectivenessRoute:
+    AdminAnalyticsTrainingEffectivenessRoute,
+  AdminAnalyticsIndexRoute: AdminAnalyticsIndexRoute,
 }
 
 const AdminAnalyticsRouteWithChildren = AdminAnalyticsRoute._addFileChildren(

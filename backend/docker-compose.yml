@@ -26,7 +26,9 @@ services:
       retries: 10
 
   api-gateway:
-    build: ./api-gateway
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
     environment:
       SERVER_PORT: 8080
       JWT_SECRET: ${JWT_SECRET:-replace-with-at-least-32-characters}
@@ -39,9 +41,12 @@ services:
         condition: service_healthy
 
   course-service:
-    build: ./course-service
+    build:
+      context: .
+      dockerfile: course-service/Dockerfile
     environment:
-      DB_URL: jdbc:postgresql://postgres:5432/lms
+      DB_HOST: postgres
+      DB_NAME: lms
       DB_USERNAME: lms
       DB_PASSWORD: lms
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
