@@ -1,0 +1,58 @@
+services:
+  - type: web
+    name: lms-api-gateway
+    env: java
+    rootDir: backend
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar api-gateway/target/api-gateway-*.jar
+    envVars:
+      - key: SERVER_PORT
+        value: "8080"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: REDIS_HOST
+        fromService:
+          type: pserv
+          name: lms-redis
+          property: host
+      - key: SERVICES_COURSE
+        value: http://lms-course-service:8084
+
+  - type: web
+    name: lms-course-service
+    env: java
+    rootDir: backend
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar course-service/target/course-service-*.jar
+    envVars:
+      - key: SERVER_PORT
+        value: "8084"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_URL
+        fromDatabase:
+          name: lms-postgres
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: lms-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: lms-postgres
+          property: password
+      - key: REDIS_HOST
+        fromService:
+          type: pserv
+          name: lms-redis
+          property: host
+
+  - type: pserv
+    name: lms-redis
+    env: docker
+    repo: https://github.com/render-examples/redis.git
+
+databases:
+  - name: lms-postgres
+    databaseName: lms
+    user: lms
