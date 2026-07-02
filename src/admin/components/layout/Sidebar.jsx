@@ -61,6 +61,9 @@ export function Sidebar() {
 
   const handleNavClick = (path) => {
     router.navigate({ to: path });
+    if (window.innerWidth <= 768 && !isSidebarCollapsed) {
+      toggleSidebar();
+    }
   };
 
   return (
