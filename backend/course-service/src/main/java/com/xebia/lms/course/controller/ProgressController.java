@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/progress")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProgressController {
 
     private final ProgressTrackingService progressService;

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CourseService, EnrollmentService, ProgressService } from "@/services/api";
 import {
   ArrowLeft, ArrowRight, BookOpen, Clock, ChevronDown, CheckCircle2,
-  FileText, PlayCircle, Image as ImageIcon, Code, Link as LinkIcon, File, Play, X
+  FileText, PlayCircle, Image as ImageIcon, Code, Link as LinkIcon, File, Play, X, Download
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useState, useEffect, useMemo } from "react";
@@ -31,14 +31,25 @@ function ContentRenderer({ block }) {
   }
 
   const uiType = parsedData.uiType || type;
-  
+  const ensureAbsoluteUrl = (url, resourceType = 'image') => {
+    if (!url) return "";
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'izyaykle';
+      // If it doesn't have an extension, assume it's a PDF for document type
+      const hasExtension = url.includes('.');
+      const finalUrl = hasExtension ? url : `${url}.pdf`;
+      return `https://res.cloudinary.com/${cloudName}/${resourceType}/upload/${finalUrl}`;
+    }
+    return url;
+  };
+
   let dataToRender = "";
   if (uiType === 'Video' || uiType === 'VIDEO_REFERENCE' || uiType === 'VIDEO') {
-    dataToRender = parsedData.videoUrl || block.contentData || "";
+    dataToRender = ensureAbsoluteUrl(parsedData.videoUrl || block.contentData || "", 'video');
   } else if (uiType === 'PDF' || uiType === 'DOCUMENT' || uiType === 'PPT') {
-    dataToRender = normalizeCloudinaryDocumentUrl(parsedData.pdfUrl || block.contentData || "");
+    dataToRender = ensureAbsoluteUrl(parsedData.pdfUrl || block.contentData || "", 'image');
   } else if (uiType === 'Image' || uiType === 'IMAGE') {
-    dataToRender = parsedData.imageUrl || block.contentData || "";
+    dataToRender = ensureAbsoluteUrl(parsedData.imageUrl || block.contentData || "", 'image');
   } else if (uiType === 'Code' || uiType === 'CODE') {
     dataToRender = parsedData.code || block.contentData || "";
   } else {
@@ -73,14 +84,29 @@ function ContentRenderer({ block }) {
       return (
         <div className="w-full rounded-2xl overflow-hidden shadow-lg border border-border bg-gray-50 dark:bg-card">
           {dataToRender ? (
-            <div>
-              <img
-                src={getCloudinaryDocumentPreviewUrl(dataToRender)}
-                alt="Document preview"
-                className="w-full h-auto object-contain"
-              />
-              <div className="px-4 py-3 text-sm text-muted-foreground border-t border-border">
-                Document preview is shown as an image because direct PDF delivery is blocked for this Cloudinary account.
+            <div className="relative group w-full aspect-[4/3] md:aspect-video bg-white">
+              {uiType === 'PDF' ? (
+                <iframe
+                  src={dataToRender}
+                  className="w-full h-full border-0"
+                  title="PDF Viewer"
+                />
+              ) : (
+                <iframe
+                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(dataToRender)}&embedded=true`}
+                  className="w-full h-full border-0"
+                  title="Document Viewer"
+                />
+              )}
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <a 
+                  href={dataToRender} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="bg-black/60 hover:bg-black/80 text-white p-2 rounded-lg backdrop-blur-sm flex items-center gap-2 text-xs font-bold transition-colors shadow-lg"
+                >
+                  <Download className="w-4 h-4" /> Download Original
+                </a>
               </div>
             </div>
           ) : (
@@ -191,23 +217,26 @@ function CourseViewer() {
   useEffect(() => {
     if (flatSubmodules.length > 0 && modules.length > 0 && !loadingProgress && isEnrolled) {
       if (!activeSubmoduleId) {
-        if (progressData?.lastAccessedSubmoduleId) {
-          setActiveSubmoduleId(progressData.lastAccessedSubmoduleId);
-        } else {
-          setActiveSubmoduleId(flatSubmodules[0].id);
+        // Find last accessed or first incomplete
+        let currentActive = progressData?.lastAccessedSubmoduleId || flatSubmodules[0].id;
+        
+        // Validate that the last accessed module still exists (prevents "No Lessons Available" bug if lesson was deleted)
+        if (!flatSubmodules.some(s => s.id === currentActive)) {
+          currentActive = flatSubmodules[0].id;
         }
-      }
-      
-      const currentActive = progressData?.lastAccessedSubmoduleId || flatSubmodules[0].id;
-      // Expand the module containing the active submodule
-      const mod = modules.find(m => (m.submodules || []).some(s => s.id === currentActive));
-      if (mod) {
-        setExpandedModules(prev => {
-          if (!prev.includes(mod.id)) {
-            return [...prev, mod.id];
-          }
-          return prev;
-        });
+
+        setActiveSubmoduleId(currentActive);
+        
+        // Auto-expand the module containing this submodule
+        const mod = modules.find(m => (m.submodules || []).some(s => s.id === currentActive));
+        if (mod) {
+          setExpandedModules(prev => {
+            if (!prev.includes(mod.id)) {
+              return [...prev, mod.id];
+            }
+            return prev;
+          });
+        }
       }
     }
   }, [flatSubmodules, modules, progressData, loadingProgress, isEnrolled]);
@@ -263,9 +292,29 @@ function CourseViewer() {
 
   if (loading || loadingEnrollment) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-        <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-        <p className="text-muted-foreground font-medium">Loading course workspace...</p>
+      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-64px)] bg-background animate-pulse">
+        {/* Sidebar Skeleton */}
+        <div className="w-full lg:w-80 flex-shrink-0 border-r border-border bg-card flex flex-col p-6">
+          <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mb-6" />
+          <div className="space-y-4">
+            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+          </div>
+        </div>
+        {/* Main Content Skeleton */}
+        <div className="flex-1 p-6 lg:p-10 flex flex-col bg-gray-50/50 dark:bg-background">
+          <div className="max-w-4xl mx-auto w-full space-y-6">
+            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded-lg w-2/3 mb-8" />
+            <div className="h-[400px] bg-gray-200 dark:bg-gray-800 rounded-2xl w-full" />
+            <div className="flex justify-between mt-8">
+              <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl w-32" />
+              <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl w-32" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -381,20 +430,37 @@ function CourseViewer() {
             {activeSubmodule ? (
               <>
                 <div className="p-6 sm:p-10 flex-1 space-y-8 bg-white dark:bg-[#121212]">
-                  <div className="space-y-2 mb-8">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="space-y-2 mb-8"
+                  >
                     <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-primary/10 text-primary uppercase tracking-wider">
                       Lesson {activeIndex + 1} of {totalLessons}
                     </span>
                     <h2 className="text-2xl sm:text-4xl font-black text-foreground">{activeSubmodule.title}</h2>
-                  </div>
+                  </motion.div>
                   
                   {/* Render Content Blocks */}
                   {(activeSubmodule.contentBlocks || []).length > 0 ? (
-                    <div className="space-y-10">
-                      {[...activeSubmodule.contentBlocks].sort((a, b) => a.sequenceOrder - b.sequenceOrder).map((block) => (
-                        <ContentRenderer key={block.id} block={block} />
+                    <motion.div 
+                      className="space-y-10"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ staggerChildren: 0.2 }}
+                    >
+                      {[...activeSubmodule.contentBlocks].sort((a, b) => a.sequenceOrder - b.sequenceOrder).map((block, idx) => (
+                        <motion.div 
+                          key={block.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: idx * 0.1, duration: 0.5 }}
+                        >
+                          <ContentRenderer block={block} />
+                        </motion.div>
                       ))}
-                    </div>
+                    </motion.div>
                   ) : (
                     <div className="py-20 text-center">
                       <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">

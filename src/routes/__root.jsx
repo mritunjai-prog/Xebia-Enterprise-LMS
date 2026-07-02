@@ -141,20 +141,35 @@ function RootShell({ children }) {
   // Critical inline CSS to prevent sidebar FOUC (Flash of Unstyled Content).
   // These styles load instantly with the HTML before any external CSS.
   const criticalCss = `
-    .sidebar { background: #FFFFFF !important; border-right: 1px solid #DEDEDE; }
+    .sidebar { background: #FFFFFF !important; border-right: 1px solid #DEDEDE !important; }
+    html.dark .sidebar { background: #4A1E47 !important; border-right: none !important; }
     .sidebar-student { background: #4A1E47 !important; border-right: none !important; }
     .nav-item { color: #4B5563; }
+    html.dark .nav-item { color: rgba(255,255,255,0.7) !important; }
+    html.dark .nav-item.active { background: #FFFFFF !important; color: #4A1E47 !important; }
+    html.dark .nav-item:hover { background: rgba(255,255,255,0.1) !important; color: #FFFFFF !important; }
     .nav-section { color: #9CA3AF; }
+    html.dark .nav-section { color: rgba(255,255,255,0.4) !important; }
     .sidebar-brand .logo-text { color: #111827; }
+    html.dark .sidebar-brand .logo-text { color: #fff !important; }
     .sidebar-brand .logo-sub { color: #6C1D5F; }
+    html.dark .sidebar-brand .logo-sub { color: rgba(255,255,255,0.6) !important; }
     .user-name { color: #111827; }
+    html.dark .user-name { color: #fff !important; }
     .user-role { color: #6B7280; }
-    .sidebar-student .nav-item { color: rgba(255,255,255,0.65); }
+    html.dark .user-role { color: rgba(255,255,255,0.5) !important; }
+    .sidebar-student .nav-item { color: rgba(255,255,255,0.65) !important; }
     .sidebar-student .nav-section { color: rgba(255,255,255,0.35); }
-    .sidebar-student .logo-text { color: #fff; }
+    .sidebar-student .logo-text { color: #fff !important; }
     .sidebar-student .logo-sub { color: rgba(255,255,255,0.45); }
-    .sidebar-student .user-name { color: rgba(255,255,255,0.9); }
+    .sidebar-student .user-name { color: rgba(255,255,255,0.9) !important; }
     .sidebar-student .user-role { color: rgba(255,255,255,0.4); }
+    
+    /* Sleek scrollbar */
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(150, 150, 150, 0.2); border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(150, 150, 150, 0.4); }
   `;
 
   return (

@@ -329,7 +329,9 @@ function MyCourses() {
           {/* Meta Stats */}
           <div className="mt-auto flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-[#2e2e3e] pt-4 mb-4">
             <div className="flex items-center gap-2 sm:gap-3">
-              <span className="flex items-center gap-1 whitespace-nowrap"><BookOpen className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />{course.modules?.length || course.modulesCount || course.totalModules || 0} Modules</span>
+              {(course.modules?.length || course.modulesCount || course.totalModules) ? (
+                <span className="flex items-center gap-1 whitespace-nowrap"><BookOpen className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />{course.modules?.length || course.modulesCount || course.totalModules} Modules</span>
+              ) : null}
               <span className="flex items-center gap-1 whitespace-nowrap"><Users className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />{course.studentsCount || 0} Students</span>
               <span className="flex items-center gap-1 whitespace-nowrap"><Clock className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />{duration}</span>
             </div>

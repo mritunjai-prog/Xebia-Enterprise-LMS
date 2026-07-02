@@ -290,6 +290,15 @@ svg { vertical-align: bottom; }
 .dark .header-btn { background: #1e1e2d; border-color: var(--border); color: var(--dark-gray); }
 .dark .header-btn:hover { background: #252535; border-color: var(--primary); color: var(--primary); }
 .dark .header-btn .notif-dot { border-color: #15151f; }
+.dark .sidebar, .dark .sidebar-admin { background: #4A1E47; border: none; }
+.dark .sidebar-brand { border-bottom-color: rgba(255,255,255,0.08); }
+.dark .sidebar-footer { border-top-color: rgba(255,255,255,0.08); }
+.dark .logo-text { color: #fff; }
+.dark .nav-item { color: rgba(255,255,255,0.65); }
+.dark .nav-item:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.dark .nav-item.active { background: #fff; color: #4A1E47; }
+.dark .sidebar-user:hover { background: rgba(255,255,255,0.08); }
+.dark .user-name { color: rgba(255,255,255,0.9); }
 .dark .tenant-switcher { background: #1e1e2d; border-color: var(--border); color: var(--dark-gray); }
 .dark .breadcrumb { color: var(--dark-gray); }
 .dark .breadcrumb-cur { color: var(--black); }
