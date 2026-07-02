@@ -11,10 +11,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: REDIS_HOST
-        fromService:
-          type: pserv
-          name: xebia-redis-mritunjai
-          property: host
+        value: "YOUR_UPSTASH_REDIS_URL_HERE"
       - key: SERVICES_COURSE
         value: http://xebia-course-service-mritunjai:8084
 
@@ -42,16 +39,7 @@ services:
           name: xebia-postgres-mritunjai
           property: password
       - key: REDIS_HOST
-        fromService:
-          type: pserv
-          name: xebia-redis-mritunjai
-          property: host
-
-  - type: pserv
-    name: xebia-redis-mritunjai
-    env: docker
-    plan: free
-    repo: https://github.com/render-examples/redis.git
+        value: "YOUR_UPSTASH_REDIS_URL_HERE"
 
 databases:
   - name: xebia-postgres-mritunjai
