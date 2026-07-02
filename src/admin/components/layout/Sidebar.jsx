@@ -225,7 +225,6 @@ export function Sidebar() {
           </div>
         </div>
       </div>
-      </div>
     </aside>
     {/* Mobile Overlay */}
     {!isSidebarCollapsed && (
