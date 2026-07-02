@@ -1,205 +1,551 @@
-# 🚀 Ultimate Setup Guide: Xebia Enterprise LMS
+# 📖 Ultimate Setup Guide — Xebia Enterprise LMS
 
-Welcome to the Xebia Enterprise LMS! This guide is designed to be **completely foolproof**. Even if you have never written a line of Java, never used React, or never installed a database, this guide will hold your hand through every single step to get the entire project running perfectly on your computer.
+> **This guide is designed to be completely foolproof. Follow every single step in order, and you will have the full platform running on your computer — even if you have never written Java or used Docker before.**
 
 ---
 
 ## 📑 Table of Contents
-1. [Phase 1: Installing Core Prerequisites](#phase-1-installing-core-prerequisites)
-2. [Phase 2: Setting up the Database (Docker)](#phase-2-setting-up-the-database-docker)
-3. [Phase 3: Booting the Backend (Java & Spring Boot)](#phase-3-booting-the-backend-java--spring-boot)
-4. [Phase 4: Booting the Frontend (React & Vite)](#phase-4-booting-the-frontend-react--vite)
-5. [Phase 5: Configuring AI & Environment Variables](#phase-5-configuring-ai--environment-variables)
-6. [Troubleshooting Guide](#troubleshooting-guide)
+
+1. [What You Are Setting Up](#1-what-you-are-setting-up)
+2. [Phase 1 — Install Core Prerequisites](#phase-1--install-core-prerequisites)
+   - [1.1 Install Java 21 (JDK)](#11-install-java-21-jdk)
+   - [1.2 Install Apache Maven](#12-install-apache-maven)
+   - [1.3 Install Node.js & npm](#13-install-nodejs--npm)
+   - [1.4 Install Docker Desktop](#14-install-docker-desktop)
+   - [1.5 Install Git](#15-install-git)
+3. [Phase 2 — Clone the Repository](#phase-2--clone-the-repository)
+4. [Phase 3 — Start the Database (Docker)](#phase-3--start-the-database-docker)
+5. [Phase 4 — Run the Backend Microservices](#phase-4--run-the-backend-microservices)
+   - [4.1 Build the Common Library](#41-build-the-common-library)
+   - [4.2 Run the Course Service](#42-run-the-course-service)
+   - [4.3 Run the API Gateway](#43-run-the-api-gateway)
+6. [Phase 5 — Configure Environment Variables](#phase-5--configure-environment-variables)
+7. [Phase 6 — Run the Frontend](#phase-6--run-the-frontend)
+8. [Phase 7 — Access the Platform](#phase-7--access-the-platform)
+9. [Understanding the Application](#understanding-the-application)
+   - [Admin Portal](#admin-portal-overview)
+   - [Student Portal](#student-portal-overview)
+   - [Analytics Suite](#analytics-suite-overview)
+10. [Deployment Guide (Render + Vercel)](#deployment-guide-render--vercel)
+11. [Troubleshooting Guide](#troubleshooting-guide)
 
 ---
 
-## 🛠️ Phase 1: Installing Core Prerequisites
+## 1. What You Are Setting Up
 
-Before we touch any code, your computer needs specific software to understand Java and JavaScript.
+This project is a **full-stack application** split into three separate pieces that must all run together:
 
-### 1. Install Java 21 (JDK)
-The backend of this project is written in **Java**, specifically version 21.
-1. Go to the [Oracle Java 21 Downloads Page](https://www.oracle.com/java/technologies/downloads/#java21).
-2. Download the installer for your operating system (Windows x64 Installer, macOS ARM64 DMG, etc.).
-3. Run the installer and click "Next" until it finishes.
-4. **Verify:** Open your terminal (Command Prompt or PowerShell on Windows, Terminal on Mac) and type:
-   ```bash
-   java -version
-   ```
-   *You should see `java version "21.x.x"` print out. If you see an error, you need to add Java to your System PATH.*
+| Piece | What It Is | Technology | Port |
+|---|---|---|---|
+| **Database** | Stores all data (courses, categories, modules, students) | PostgreSQL (inside Docker) | 5432 |
+| **Backend** | The server that handles all business logic and API requests | Java + Spring Boot | 8080, 8084 |
+| **Frontend** | The visual user interface in your browser | React + Vite | 5173 |
 
-### 2. Install Maven
-Maven is the tool that downloads Java libraries and builds our code.
-1. Go to the [Maven Download Page](https://maven.apache.org/download.cgi).
-2. Download the `Binary zip archive` (e.g., `apache-maven-3.9.6-bin.zip`).
-3. Extract the ZIP file to a permanent location, like `C:\Program Files\apache-maven`.
-4. **Add to PATH (Windows):**
-   - Open Start Menu, search "Environment Variables".
-   - Under "System variables", find `Path` and click Edit.
-   - Click New, and paste the path to Maven's `bin` folder (e.g., `C:\Program Files\apache-maven\bin`).
-   - Click OK on everything.
-5. **Verify:** Open a **new** terminal and type:
-   ```bash
-   mvn -version
-   ```
-   *You should see Maven version details.*
-
-### 3. Install Node.js
-Node.js runs our frontend React environment.
-1. Go to [Nodejs.org](https://nodejs.org/).
-2. Download the **LTS (Long Term Support)** version.
-3. Run the installer and leave all settings on Default.
-4. **Verify:**
-   ```bash
-   node -v
-   npm -v
-   ```
-
-### 4. Install Docker Desktop
-Docker runs our PostgreSQL database without you needing to install PostgreSQL manually.
-1. Go to [Docker Desktop](https://www.docker.com/products/docker-desktop/).
-2. Download and install it.
-3. Once installed, **open Docker Desktop** and wait for the engine to start (the icon turns green). You MUST have Docker Desktop open and running in the background for Phase 2 to work.
+Think of it like a restaurant: the Database is the kitchen storage, the Backend is the chef, and the Frontend is the menu/waiter that you, the user, interact with.
 
 ---
 
-## 🗄️ Phase 2: Setting up the Database (Docker)
+## Phase 1 — Install Core Prerequisites
 
-Our project uses PostgreSQL for the database. Instead of installing PostgreSQL, we use Docker to spin up an isolated container.
-
-1. Open a terminal and navigate to the root of the project:
-   ```bash
-   cd path/to/Xebia-Enterprise-LMS
-   ```
-2. Navigate into the `backend` folder where the Docker configuration lives:
-   ```bash
-   cd backend
-   ```
-3. Tell Docker to download PostgreSQL and start it in the background (`-d`):
-   ```bash
-   docker-compose up -d
-   ```
-   *(Note: This might take a few minutes the very first time as it downloads the database image).*
-4. **Verify:** Run `docker ps`. You should see a container named `postgres` running on port `5432`.
+Open your terminal (**PowerShell** on Windows, **Terminal** on Mac) for all of the commands below.
 
 ---
 
-## ⚙️ Phase 3: Booting the Backend (Java & Spring Boot)
+### 1.1 Install Java 21 (JDK)
 
-Our backend uses a microservices architecture. It has:
-- **common-lib**: A shared library used by other services.
-- **course-service**: The core service that handles course data and connects to PostgreSQL.
-- **api-gateway**: The front door that routes requests to the correct service.
+The backend is written in Java. You need the **Java Development Kit (JDK)** version 21.
 
-### Step 1: Install the Common Library
-Because `course-service` relies on `common-lib`, we must build it first.
+**Step 1:** Go to the [Adoptium OpenJDK 21 Downloads Page](https://adoptium.net/temurin/releases/?version=21).
+
+**Step 2:** Choose your operating system:
+- **Windows:** Download `Temurin 21 (LTS)` → `Windows` → `x64` → `.msi` file
+- **macOS (Apple Silicon):** Download the `aarch64` `.pkg` file
+- **macOS (Intel):** Download the `x64` `.pkg` file
+
+**Step 3:** Run the downloaded installer. Accept all defaults.
+
+**Step 4:** Verify the installation. Open a **new** terminal and type:
 ```bash
+java -version
+```
+✅ **Expected output:**
+```
+openjdk version "21.0.x" 2024-...
+OpenJDK Runtime Environment Temurin-21...
+```
+
+❌ **If you get "java is not recognized as a command":** You need to add Java to your PATH.
+- **Windows:** Search "Environment Variables" in the Start Menu → Click "Edit the system environment variables" → Click "Environment Variables..." → Under "System variables", find `Path` → Click "Edit" → Click "New" → Type `C:\Program Files\Eclipse Adoptium\jdk-21.x.x.x-hotspot\bin` (adjust based on where it was installed) → Click OK on everything.
+
+---
+
+### 1.2 Install Apache Maven
+
+Maven is the build tool that compiles our Java code and downloads its dependencies.
+
+**Step 1:** Go to the [Maven Download Page](https://maven.apache.org/download.cgi).
+
+**Step 2:** Under "Files", download the `Binary zip archive` (e.g., `apache-maven-3.9.6-bin.zip`).
+
+**Step 3:** Extract the ZIP file to a permanent location:
+- **Windows:** Extract to `C:\Program Files\apache-maven`
+- **Mac/Linux:** Extract to `/usr/local/apache-maven`
+
+**Step 4: Add Maven to your PATH**
+- **Windows:**
+  1. Open Start Menu → Search "Edit the system environment variables"
+  2. Click "Environment Variables..."
+  3. Under "System variables", find and click `Path` → Click "Edit"
+  4. Click "New"
+  5. Type the full path to the Maven `bin` folder, e.g.: `C:\Program Files\apache-maven\bin`
+  6. Click OK on all windows.
+  7. **Important:** Close and reopen all your terminal windows.
+
+- **Mac/Linux:** Add this line to your `~/.zshrc` or `~/.bashrc`:
+  ```bash
+  export PATH="/usr/local/apache-maven/bin:$PATH"
+  ```
+  Then run: `source ~/.zshrc`
+
+**Step 5:** Verify. Open a **new** terminal and type:
+```bash
+mvn -version
+```
+✅ **Expected output:**
+```
+Apache Maven 3.9.6
+Java version: 21.0.x
+```
+
+---
+
+### 1.3 Install Node.js & npm
+
+Node.js runs our React frontend.
+
+**Step 1:** Go to [Nodejs.org](https://nodejs.org/).
+
+**Step 2:** Click the big green **"LTS" (Long Term Support)** button. Download the installer for your OS.
+
+**Step 3:** Run the installer. Leave all settings on their defaults. Click Next until it finishes.
+
+**Step 4:** Verify:
+```bash
+node -v
+npm -v
+```
+✅ **Expected output:**
+```
+v20.x.x     ← node version
+10.x.x      ← npm version
+```
+
+---
+
+### 1.4 Install Docker Desktop
+
+Docker lets us run a PostgreSQL database inside an isolated container — no manual database installation needed!
+
+**Step 1:** Go to [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+**Step 2:** Click "Download Docker Desktop" and choose your OS.
+
+**Step 3:** Run the installer. Follow all prompts and restart your computer if asked.
+
+**Step 4:** After installation, **open the Docker Desktop application**. Wait until the whale icon in the taskbar turns green and says "Engine Running". This is critical — Docker must be running before you proceed to Phase 3.
+
+**Step 5:** Verify:
+```bash
+docker -v
+docker compose version
+```
+✅ **Expected output:**
+```
+Docker version 26.x.x
+Docker Compose version v2.x.x
+```
+
+---
+
+### 1.5 Install Git
+
+Git is used to download (clone) the project from GitHub.
+
+**Step 1:** Go to [git-scm.com](https://git-scm.com/downloads).
+
+**Step 2:** Download and install the version for your OS. Leave all settings on defaults.
+
+**Step 3:** Verify:
+```bash
+git --version
+```
+✅ **Expected output:** `git version 2.x.x`
+
+---
+
+## Phase 2 — Clone the Repository
+
+This downloads the full project source code to your computer.
+
+**Step 1:** Choose a folder where you want to keep the project. For example, `C:\Projects` on Windows or `~/Projects` on Mac.
+
+**Step 2:** Open your terminal in that folder and run:
+```bash
+git clone https://github.com/mritunjai-prog/Xebia-Enterprise-LMS.git
+cd Xebia-Enterprise-LMS
+```
+
+You now have the entire project on your computer.
+
+---
+
+## Phase 3 — Start the Database (Docker)
+
+The backend Spring Boot service needs a PostgreSQL database to store its data. We will start one using Docker in literally two commands.
+
+**Make sure Docker Desktop is open and running (green icon)!**
+
+```bash
+cd backend
+docker compose up -d
+```
+
+> The `-d` flag means "detached" — it runs in the background. Your terminal will be free to use again.
+
+Wait about 30 seconds for the container to fully start up, then verify it is running:
+```bash
+docker ps
+```
+✅ **Expected output:** You should see a row with `IMAGE: postgres` and `STATUS: Up`.
+
+> **What is happening?** Docker is reading the `docker-compose.yml` file and creating an isolated PostgreSQL database server with:
+> - **Database name:** `lms`
+> - **Username:** `lms`
+> - **Password:** `lms`
+> - **Port:** `5432` on your computer
+
+---
+
+## Phase 4 — Run the Backend Microservices
+
+The backend has 3 parts:
+1. **common-lib** — A shared library. Must be built first (not run separately).
+2. **course-service** — The main API server. Runs on port `8084`.
+3. **api-gateway** — Routes incoming requests. Runs on port `8080`.
+
+You will need **2 separate terminal windows** open for Steps 4.2 and 4.3.
+
+---
+
+### 4.1 Build the Common Library
+
+The `course-service` uses shared code from `common-lib`. You must install it locally before running the service.
+
+In your terminal, make sure you are in the `backend` folder:
+```bash
+# If you are in the root project folder:
 cd backend/common-lib
+
+# Or if you are already inside backend/:
+cd common-lib
+
 mvn clean install
 ```
-*(You should see a green "BUILD SUCCESS" message at the end).*
 
-### Step 2: Run the Course Service
-Now we start the service that connects to our database.
+Wait for Maven to download dependencies (first time can take 2–3 minutes). You will see a progress bar.
+
+✅ **Expected final line:**
+```
+[INFO] BUILD SUCCESS
+```
+
+❌ **If it fails with "JAVA_HOME not set":** Ensure your Java PATH was set correctly in Step 1.1.
+
+---
+
+### 4.2 Run the Course Service
+
+This is the core backend that talks to PostgreSQL and handles all course/category/module data.
+
+Open **Terminal Window 1** and navigate to the course-service:
 ```bash
-cd ../course-service
+cd backend/course-service
 mvn spring-boot:run
 ```
-*(Wait until the logs stop moving and you see a message saying "Started CourseServiceApplication". Do NOT close this terminal. It must stay open!)*
 
-### Step 3: Run the API Gateway
-The frontend doesn't talk to the Course Service directly; it talks to the API Gateway.
-Open a **NEW terminal window**, navigate to the project, and run:
+This will start the Spring Boot application. The first time, it will take 60–120 seconds as Maven downloads all dependencies.
+
+You will see lots of log output. Watch for these lines:
+```
+INFO - Bootstrapping Spring Data JPA repositories...
+INFO - HikariPool-1 - Start completed.    ← Database connected!
+INFO - Tomcat started on port 8084
+INFO - Started CourseServiceApplication   ← ✅ YOU'RE READY!
+```
+
+> **Do NOT close this terminal window.** It must stay running.
+
+> **What is Flyway?** When the Course Service starts for the first time, it automatically runs all the SQL migration scripts in `db/migration/` to create the database tables. This is handled entirely automatically — you don't need to do anything manually.
+
+---
+
+### 4.3 Run the API Gateway
+
+The frontend doesn't talk to the Course Service directly. It goes through the API Gateway which then forwards the request.
+
+Open **Terminal Window 2** and run:
 ```bash
 cd backend/api-gateway
 mvn spring-boot:run
 ```
-*(Wait until you see "Started ApiGatewayApplication").*
+
+✅ **Wait for:** `Started ApiGatewayApplication` in the logs.
+
+> **Do NOT close this terminal window either.**
 
 ---
 
-## 💻 Phase 4: Booting the Frontend (React & Vite)
+## Phase 5 — Configure Environment Variables
 
-Now that the databases and APIs are running, let's start the user interface!
+The frontend needs several API keys to enable image uploading and AI features.
 
-1. Open a **NEW terminal window** (you should now have 3 terminal windows open).
-2. Navigate to the root folder of the project:
-   ```bash
-   cd path/to/Xebia-Enterprise-LMS
-   ```
-3. Install all the JavaScript dependencies:
-   ```bash
-   npm install
-   ```
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-5. Open your web browser and go to: `http://localhost:5173` (or whichever port Vite tells you in the terminal).
+**Step 1:** In the root of the project (the `Xebia-Enterprise-LMS` folder), create a new file named exactly `.env`. Note the leading dot — this is important!
 
-You should now see the beautiful LMS interface!
+> On Windows, if File Explorer won't let you name a file starting with a dot, open VS Code and do File → New File → name it `.env`.
 
----
-
-## 🤖 Phase 5: Configuring AI & Environment Variables
-
-To use the AI curriculum generation and image uploading features, you need API keys.
-
-1. In the root of the project (where `package.json` is), create a new file exactly named `.env`.
-2. Open `.env` in your code editor and paste the following:
+**Step 2:** Open the `.env` file and paste the following:
 
 ```env
-# Cloudinary (For Image Uploads)
+# Backend API Gateway (running locally)
+VITE_API_BASE_URL=http://localhost:8080
+
+# Cloudinary (Image Uploads) — already configured for this project
 VITE_CLOUDINARY_CLOUD_NAME=izyaykle
 VITE_CLOUDINARY_UPLOAD_PRESET=lms_uploads
 
-# Groq (For AI Generation)
+# Groq AI (for AI course/category generation)
+# Get your free API key from: https://console.groq.com
 VITE_GROQ_API_KEY=your_groq_api_key_here
 ```
 
-### How to get a Groq API Key:
-1. Go to [Groq Cloud](https://console.groq.com/).
-2. Create an account and go to API Keys.
-3. Click "Create API Key", copy it, and replace `your_groq_api_key_here` in your `.env` file.
-4. **Restart your frontend server** (Click `Ctrl + C` in the frontend terminal, then run `npm run dev` again) to load the new keys!
+### How to get a free Groq API key:
+1. Go to [console.groq.com](https://console.groq.com) and sign up.
+2. In the left sidebar, click **API Keys**.
+3. Click **Create API Key**, give it a name, and copy the key.
+4. Replace `your_groq_api_key_here` in your `.env` file with your actual key.
+
+> ⚠️ **Never commit your `.env` file to GitHub.** It is already listed in `.gitignore` for your protection.
 
 ---
 
-## 🚑 Troubleshooting Guide
+## Phase 6 — Run the Frontend
 
-Here are the most common issues you might face and exactly how to fix them:
+Open **Terminal Window 3** (in the root project folder — `Xebia-Enterprise-LMS`, NOT inside `backend/`):
 
-### 1. "Web server failed to start. Port 8084 was already in use."
-**The Problem:** You tried to start a microservice, but something else on your computer is already using its port.
-**The Fix (Windows):**
-1. Open Command Prompt as Administrator.
-2. Find what is using the port: `netstat -ano | findstr :8084`
-3. Look at the last number on the right (the PID).
-4. Kill it: `taskkill /PID <the_pid> /F`
-5. Try starting the service again.
+**Step 1:** Install all JavaScript dependencies (only need to do this once):
+```bash
+npm install
+```
+This downloads hundreds of packages from npm. It may take 1–2 minutes.
 
-### 2. "Connection refused" or "HikariPool - Exception during pool initialization"
-**The Problem:** The Java backend cannot talk to the PostgreSQL database.
-**The Fix:**
-1. Make sure you actually completed **Phase 2**.
-2. Open Docker Desktop and ensure the database container is running.
-3. If it failed, run `docker-compose down` followed by `docker-compose up -d`.
+**Step 2:** Start the development server:
+```bash
+npm run dev
+```
 
-### 3. "Groq API key is not configured"
-**The Problem:** The AI features are trying to fire, but they don't have access.
-**The Fix:** 
-1. Make sure your `.env` file is in the ROOT of the project, not inside `src` or `backend`.
-2. Make sure you named it exactly `.env`, not `.env.txt`.
-3. You MUST restart the Vite frontend (`npm run dev`) after creating or editing the `.env` file!
-
-### 4. Flyway Checksum Mismatch Error
-**The Problem:** You changed a database migration SQL file after it already ran successfully.
-**The Fix:** 
-1. The easiest way to fix this locally is to wipe your local database clean and let it rebuild.
-2. Run `docker-compose down -v` (The `-v` deletes the database volumes!).
-3. Run `docker-compose up -d`.
-4. Restart the Course Service. It will run all migrations from scratch cleanly.
+✅ **Expected output:**
+```
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+```
 
 ---
-*If you followed every step in this document, you are now officially running the Xebia Enterprise LMS locally! Happy Coding!* 🚀
+
+## Phase 7 — Access the Platform
+
+Open your web browser and visit:
+
+| Portal | URL |
+|---|---|
+| 🛡️ Admin Portal | http://localhost:5173/ |
+| 🎓 Student Portal | http://localhost:5173/student |
+| 📊 Analytics | http://localhost:5173/admin/analytics |
+
+---
+
+## Understanding the Application
+
+### Admin Portal Overview
+
+The admin portal is accessible at `/` and is designed for platform administrators and course architects. It features a collapsible sidebar with dark mode support and the following modules:
+
+**Dashboard:**
+The landing page showing real-time KPIs, course and category statistics, and platform-wide engagement metrics at a glance.
+
+**Courses (`/courses`):**
+- View all courses in a data-rich list with search and filter.
+- Create new courses with AI-assistance (click the ✨ button to auto-generate descriptions, learning outcomes, and prerequisites from just a course title).
+- Build a full 4-level curriculum hierarchy: **Course → Modules → Submodules → Content Blocks**.
+- Add rich text and video content blocks to each submodule using the Content Manager.
+
+**Categories (`/categories`):**
+- Manage the category taxonomy for the platform.
+- Create categories with images (uploaded to Cloudinary) and AI-generated descriptions.
+- View which courses belong to each category.
+
+**Analytics (`/analytics/executive` and sub-pages):**
+A 7-page analytics suite. Navigate the sub-pages from the expandable "Analytics" section in the sidebar.
+
+---
+
+### Student Portal Overview
+
+The student portal at `/student` is an entirely separate experience from the admin side, with its own dedicated dark-purple sidebar, navbar, and page layouts.
+
+**Student Dashboard (`/student`):**
+- A personalized welcome banner.
+- Quick action cards (Resume Last Course, Browse Catalogue).
+- Stat tiles (enrolled courses, hours learned, completed, certifications).
+- Two interactive charts: Learning Activity (bar chart) and Subject Performance (radar chart).
+
+**Course Catalogue (`/student/courses`):**
+Browse and search all available courses. Each course card shows progress, level, and category.
+
+**Course Playback (`/student/course/:id`):**
+Full course learning view with:
+- A right-side curriculum sidebar showing all modules and submodules.
+- Content area rendering video or text for the selected submodule.
+- Progress tracking as submodules are completed.
+
+**Assessments, Results, Feedback, Notifications:**
+Complete post-course activities and manage your learning journey.
+
+---
+
+### Analytics Suite Overview
+
+| Page | URL | Description |
+|---|---|---|
+| Executive | `/admin/analytics/executive` | High-level KPIs and engagement trends |
+| Coverage | `/admin/analytics/coverage` | Content coverage across departments |
+| Hours | `/admin/analytics/hours` | Learning hours by team and role |
+| AI Transformation | `/admin/analytics/ai-transformation` | AI content adoption metrics |
+| Flagship Programs | `/admin/analytics/flagship-programs` | Key programme performance |
+| Certifications | `/admin/analytics/certifications` | Certification trends |
+| Pillars | `/admin/analytics/pillars` | Content by learning pillar |
+
+---
+
+## Deployment Guide (Render + Vercel)
+
+The production version of this application is deployed on free-tier cloud services:
+
+### Frontend → Vercel
+1. Push code to the `main` branch on GitHub.
+2. Vercel automatically detects the push and builds the project.
+3. Add **Environment Variables** in Vercel → Settings → Environment Variables:
+   - `VITE_API_BASE_URL` = `https://xebia-api-gateway-mritunjai.onrender.com`
+   - `VITE_CLOUDINARY_CLOUD_NAME` = `izyaykle`
+   - `VITE_CLOUDINARY_UPLOAD_PRESET` = `lms_uploads`
+   - `VITE_GROQ_API_KEY` = your key
+
+### Backend → Render Web Services
+1. Both `api-gateway` and `course-service` are deployed as separate Web Services on Render.
+2. Each service uses the Dockerfile in its respective folder.
+3. In the API Gateway's Environment Variables on Render, set:
+   - `SERVICES_COURSE` = `https://xebia-course-service-mritunjai.onrender.com`
+4. Set the PostgreSQL connection in the Course Service's Environment Variables:
+   - `SPRING_DATASOURCE_URL` = your Render PostgreSQL connection string
+   - `SPRING_DATASOURCE_USERNAME` = your db username
+   - `SPRING_DATASOURCE_PASSWORD` = your db password
+
+> ⚠️ **Free tier warning:** Render free services go to sleep after 15 minutes of inactivity. The first request after sleep will take 30–60 seconds to wake up. This is normal!
+
+---
+
+## Troubleshooting Guide
+
+### Problem 1: `java is not recognized as an internal or external command`
+**Cause:** Java is not in your system PATH.  
+**Fix:** Follow the PATH instructions in Step 1.1 carefully. Make sure to close and reopen your terminal after editing environment variables.
+
+---
+
+### Problem 2: `mvn is not recognized`
+**Cause:** Maven's `bin` folder is not in your PATH.  
+**Fix:** Repeat the PATH steps in Step 1.2. Make sure you are pointing to the `bin` sub-folder (not just the maven root folder).
+
+---
+
+### Problem 3: `Connection refused` on startup / `HikariPool - Exception during pool initialization`
+**Cause:** The Course Service cannot connect to PostgreSQL.  
+**Fix:**
+1. Make sure Docker Desktop is open and the green "Engine Running" status is shown.
+2. Run `docker ps` — ensure the postgres container is listed with `STATUS: Up`.
+3. If the container is not running: `cd backend && docker compose up -d`.
+4. Restart the Course Service.
+
+---
+
+### Problem 4: `Web server failed to start. Port 8084 was already in use.`
+**Cause:** Something else is already using port 8084 (maybe a previous run that didn't shut down).  
+**Fix (Windows):**
+```bash
+# Find what's using port 8084
+netstat -ano | findstr :8084
+# Look at the last number (the Process ID, e.g., 12345)
+# Kill that process
+taskkill /PID 12345 /F
+```
+**Fix (Mac/Linux):**
+```bash
+lsof -ti:8084 | xargs kill -9
+```
+Then try starting the service again.
+
+---
+
+### Problem 5: `Flyway: Validate failed - Migration checksum mismatch for migration V10`
+**Cause:** A migration SQL file was changed after it already ran successfully in the database.  
+**Fix:** This can be safely resolved locally by wiping the database and starting fresh:
+```bash
+cd backend
+docker compose down -v    # The -v flag deletes database volumes
+docker compose up -d      # Start fresh PostgreSQL
+```
+Then restart the Course Service. It will re-run all migrations from scratch.
+
+> ⚠️ This will delete ALL data in your local database, but on a fresh development setup that's usually fine.
+
+---
+
+### Problem 6: AI features not working / `Groq API key is not configured`
+**Cause:** The `.env` file is missing, misnamed, or in the wrong location.  
+**Fix:**
+1. Make sure the `.env` file is in the ROOT of the project (same folder as `package.json`).
+2. Not in `/src`, not in `/backend` — the **root folder**.
+3. Make sure the file is named exactly `.env` — not `.env.txt` or `env.txt`.
+4. After creating or editing `.env`, you MUST restart the Vite server: press `Ctrl+C` to stop it, then run `npm run dev` again.
+
+---
+
+### Problem 7: `npm install` fails with permission errors (Mac/Linux)
+**Cause:** Permission issue on the node_modules directory.  
+**Fix:**
+```bash
+sudo chown -R $(whoami) ~/.npm
+npm install
+```
+
+---
+
+### Problem 8: The page loads but shows "An error occurred while fetching data"
+**Cause:** The frontend can't reach the API Gateway.  
+**Fix:**
+1. Make sure Terminal Window 2 (API Gateway) is still running and shows `Started ApiGatewayApplication`.
+2. Make sure Terminal Window 1 (Course Service) is still running and shows `Started CourseServiceApplication`.
+3. Make sure your `.env` has `VITE_API_BASE_URL=http://localhost:8080`.
+
+---
+
+*If you have followed every step in this guide and still have trouble, please open an issue on the GitHub repository with the full error message, and the team will help you!* 🚀
