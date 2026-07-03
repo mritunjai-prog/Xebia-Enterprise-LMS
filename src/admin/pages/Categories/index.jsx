@@ -150,20 +150,23 @@ export default function Categories() {
       </div>
 
       {/* Premium KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Total Categories', value: totalCategories, icon: Tag, color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-100 dark:bg-pink-500/10', ring: 'ring-pink-100 dark:ring-pink-500/20' },
-          { label: 'Active', value: activeCount, icon: CheckCircle, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-500/10', ring: 'ring-emerald-100 dark:ring-emerald-500/20' },
-          { label: 'Inactive', value: inactiveCount, icon: XCircle, color: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-500/10', ring: 'ring-orange-100 dark:ring-orange-500/20' },
-          { label: 'Total Courses', value: totalCourses, icon: BookOpen, color: 'text-[#6C1D5F] dark:text-purple-400', bg: 'bg-[#6C1D5F]/10 dark:bg-purple-500/10', ring: 'ring-[#6C1D5F]/10 dark:ring-purple-500/20' },
-        ].map(({ label, value, icon: Icon, color, bg, ring }) => (
-          <div key={label} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 flex items-center gap-5 hover:shadow-md transition-shadow">
-            <div className={clsx('w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ring-8', bg, color, ring)}>
-              <Icon className="w-6 h-6" />
+          { label: 'TOTAL CATEGORIES', value: totalCategories, desc: 'All categories in system', icon: Tag, color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-50 dark:bg-pink-500/10' },
+          { label: 'ACTIVE', value: activeCount, desc: 'Categories in use', icon: CheckCircle, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-500/10' },
+          { label: 'INACTIVE', value: inactiveCount, desc: 'Empty or disabled', icon: XCircle, color: 'text-orange-500 dark:text-orange-400', bg: 'bg-orange-50 dark:bg-orange-500/10' },
+          { label: 'TOTAL COURSES', value: totalCourses, desc: 'Across all categories', icon: BookOpen, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-500/10' },
+        ].map((stat, i) => (
+          <div key={i} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div className={clsx('w-12 h-12 rounded-2xl flex items-center justify-center shrink-0', stat.bg, stat.color)}>
+              <stat.icon className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{label}</p>
-              <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mt-1 tracking-tight">{value}</h3>
+              <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">{stat.label}</p>
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-black text-gray-900 dark:text-white leading-none">{stat.value}</span>
+              </div>
+              <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-1">{stat.desc}</p>
             </div>
           </div>
         ))}
