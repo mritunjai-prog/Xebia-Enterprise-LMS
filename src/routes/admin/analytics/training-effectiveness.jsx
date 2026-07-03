@@ -2,8 +2,8 @@ import { createFileRoute } from '@tanstack/react-router';
 import { MetricCard } from '@/admin/features/analytics/components/metrics/MetricCard';
 import { ComparisonChart } from '@/admin/features/analytics/components/charts/ComparisonChart';
 import { DonutChart } from '@/admin/features/analytics/components/charts/DonutChart';
+import { PremiumPageHeader } from '@/admin/features/analytics/components/layout/PremiumPageHeader';
 import { Target, Star, FileText, CheckCircle2, TrendingUp, Award, Brain, Briefcase } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
 
@@ -40,22 +40,13 @@ function TrainingEffectivenessDashboard() {
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-700 pb-12">
       
-      {/* Premium Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#0f172a] p-8 sm:p-10 text-white shadow-2xl border border-emerald-500/10">
-        <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
-          <Award className="w-64 h-64 text-emerald-400" />
-        </div>
-        <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-3xl">
-          <Badge className="bg-emerald-500/30 text-emerald-200 border-emerald-400/30 mb-4 px-3 py-1 backdrop-blur-md">
-            Quality & Impact
-          </Badge>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-sm">Training Effectiveness</h1>
-          <p className="mt-3 text-emerald-100/80 text-sm sm:text-base font-medium leading-relaxed max-w-2xl">
-            Evaluate the impact of learning programs through satisfaction scores, assessment improvements, and practical application to projects.
-          </p>
-        </div>
-      </div>
+      <PremiumPageHeader
+        title="Training Effectiveness"
+        description="Evaluate the impact of learning programs through satisfaction scores, assessment improvements, and practical application to projects."
+        icon={Award}
+        badgeText="Quality & Impact"
+        badgeColor="emerald"
+      />
 
       {/* SECTION 1: Executive KPIs */}
       <div className="space-y-4">
@@ -132,29 +123,38 @@ function TrainingEffectivenessDashboard() {
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <Card className="p-5 border-l-4 border-l-emerald-500 shadow-sm border-border/50">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Highest Improvement</p>
-            <div>
-              <p className="font-bold text-foreground truncate">Generative AI</p>
-              <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium mt-1">+37% Score Increase</p>
+          <div className="relative group p-5 bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 border-l-4 border-l-emerald-500 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+            <div className="absolute -inset-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative z-10">
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Highest Improvement</p>
+              <div>
+                <p className="font-bold text-gray-900 dark:text-white truncate">Generative AI</p>
+                <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium mt-1">+37% Score Increase</p>
+              </div>
             </div>
-          </Card>
+          </div>
           
-          <Card className="p-5 border-l-4 border-l-blue-500 shadow-sm border-border/50">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Most Practical Application</p>
-            <div>
-              <p className="font-bold text-foreground truncate">Cloud Native Architecture</p>
-              <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mt-1">85% applied to active projects</p>
+          <div className="relative group p-5 bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 border-l-4 border-l-blue-500 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+            <div className="absolute -inset-px bg-gradient-to-r from-transparent via-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative z-10">
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Most Practical Application</p>
+              <div>
+                <p className="font-bold text-gray-900 dark:text-white truncate">Cloud Native Architecture</p>
+                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mt-1">85% applied to active projects</p>
+              </div>
             </div>
-          </Card>
+          </div>
           
-          <Card className="p-5 border-l-4 border-l-fuchsia-500 shadow-sm border-border/50">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Top Rated Module</p>
-            <div>
-              <p className="font-bold text-foreground truncate">Agile Leadership</p>
-              <p className="text-sm text-fuchsia-600 dark:text-fuchsia-400 font-medium mt-1">4.8 / 5.0 Average CSAT</p>
+          <div className="relative group p-5 bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 border-l-4 border-l-fuchsia-500 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+            <div className="absolute -inset-px bg-gradient-to-r from-transparent via-fuchsia-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative z-10">
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Top Rated Module</p>
+              <div>
+                <p className="font-bold text-gray-900 dark:text-white truncate">Agile Leadership</p>
+                <p className="text-sm text-fuchsia-600 dark:text-fuchsia-400 font-medium mt-1">4.8 / 5.0 Average CSAT</p>
+              </div>
             </div>
-          </Card>
+          </div>
         </div>
       </div>
 

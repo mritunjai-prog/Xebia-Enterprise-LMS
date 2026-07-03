@@ -2,8 +2,8 @@ import { createFileRoute } from '@tanstack/react-router';
 import { MetricCard } from '@/admin/features/analytics/components/metrics/MetricCard';
 import { DonutChart } from '@/admin/features/analytics/components/charts/DonutChart';
 import { ComparisonChart } from '@/admin/features/analytics/components/charts/ComparisonChart';
+import { PremiumPageHeader } from '@/admin/features/analytics/components/layout/PremiumPageHeader';
 import { TrendingUp, Clock, Calendar, BarChart3, ArrowUpRight, LineChart } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
 
@@ -48,22 +48,13 @@ function LearningTrendsDashboard() {
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-700 pb-12">
       
-      {/* Premium Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] p-8 sm:p-10 text-white shadow-2xl border border-indigo-500/10">
-        <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
-          <TrendingUp className="w-64 h-64 text-indigo-400" />
-        </div>
-        <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-3xl">
-          <Badge className="bg-indigo-500/30 text-indigo-200 border-indigo-400/30 mb-4 px-3 py-1 backdrop-blur-md">
-            Growth Analytics
-          </Badge>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-sm">Learning Trends</h1>
-          <p className="mt-3 text-indigo-100/80 text-sm sm:text-base font-medium leading-relaxed max-w-2xl">
-            Monitor Year-over-Year, Quarter-over-Quarter, and Month-over-Month growth metrics alongside top learning trends.
-          </p>
-        </div>
-      </div>
+      <PremiumPageHeader
+        title="Learning Trends"
+        description="Monitor Year-over-Year, Quarter-over-Quarter, and Month-over-Month growth metrics alongside top learning trends."
+        icon={TrendingUp}
+        badgeText="Growth Analytics"
+        badgeColor="indigo"
+      />
 
       {/* SECTION 1: Growth KPIs */}
       <div className="space-y-4">
@@ -131,23 +122,24 @@ function LearningTrendsDashboard() {
         
         <div className="grid grid-cols-1 gap-4">
           {topTrends.map((trend, idx) => (
-            <Card key={idx} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between shadow-sm border-border/50 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 transition-colors">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-600 dark:text-indigo-400 text-sm shrink-0">
+            <div key={idx} className="relative group p-4 flex flex-col sm:flex-row sm:items-center justify-between bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+              <div className="absolute -inset-px bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative z-10 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-600 dark:text-indigo-400 text-sm shrink-0 group-hover:scale-110 transition-transform duration-500 border border-indigo-100 dark:border-indigo-500/20 shadow-sm">
                   #{idx + 1}
                 </div>
                 <div>
-                  <h3 className="font-bold text-foreground text-base">{trend.trend}</h3>
-                  <p className="text-sm text-muted-foreground mt-0.5">{trend.description}</p>
+                  <h3 className="font-bold text-gray-900 dark:text-white text-base">{trend.trend}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{trend.description}</p>
                 </div>
               </div>
-              <div className="mt-4 sm:mt-0 sm:text-right flex items-center sm:block gap-2">
-                <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 whitespace-nowrap">
+              <div className="mt-4 sm:mt-0 sm:text-right flex items-center sm:block gap-2 relative z-10">
+                <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 whitespace-nowrap shadow-sm border border-emerald-100 dark:border-emerald-800/50">
                   <ArrowUpRight className="w-3 h-3 mr-1 inline-block" />
                   {trend.growth}% Growth
                 </Badge>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>

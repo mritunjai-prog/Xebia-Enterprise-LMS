@@ -2,8 +2,8 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { MetricCard } from '@/admin/features/analytics/components/metrics/MetricCard';
 import { DonutChart } from '@/admin/features/analytics/components/charts/DonutChart';
 import { ComparisonChart } from '@/admin/features/analytics/components/charts/ComparisonChart';
+import { PremiumPageHeader } from '@/admin/features/analytics/components/layout/PremiumPageHeader';
 import { Flag, Trophy, Target, Star, Users, Briefcase, Sparkles, Building2, TrendingUp, Lightbulb, GraduationCap, Map, BookOpen, Layers, ArrowRight, ShieldCheck, Database, Server, Clock, Activity, FileCheck, Target as TargetIcon } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
@@ -54,22 +54,13 @@ function FlagshipProgramsDashboard() {
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-700 pb-12">
       
-      {/* Premium Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#701a75] via-[#4c1d95] to-[#0f172a] p-8 sm:p-10 text-white shadow-2xl border border-white/5">
-        <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
-          <Flag className="w-64 h-64 text-white" />
-        </div>
-        <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-fuchsia-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-3xl">
-          <Badge className="bg-fuchsia-500/30 text-fuchsia-200 border-fuchsia-400/30 mb-4 px-3 py-1 backdrop-blur-md">
-            Enterprise Initiatives
-          </Badge>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-sm">Flagship Programs</h1>
-          <p className="mt-3 text-fuchsia-100/80 text-sm sm:text-base font-medium leading-relaxed max-w-2xl">
-            Track performance, enrollment, and progress across strategic organization-wide flagship academies and learning programs.
-          </p>
-        </div>
-      </div>
+      <PremiumPageHeader
+        title="Flagship Programs"
+        description="Track performance, enrollment, and progress across strategic organization-wide flagship academies and learning programs."
+        icon={Flag}
+        badgeText="Enterprise Initiatives"
+        badgeColor="fuchsia"
+      />
 
       {/* SECTION 1: Overview KPIs */}
       <div className="space-y-4">
@@ -137,37 +128,38 @@ function FlagshipProgramsDashboard() {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {flagshipProgramsList.map((program, idx) => (
-            <Card key={idx} className="p-6 flex flex-col justify-between shadow-sm border-border/50 hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start mb-4">
+            <div key={idx} className="relative group bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm p-6 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+              <div className="absolute -inset-px bg-gradient-to-r from-transparent via-fuchsia-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative z-10 flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-lg font-bold text-foreground">{program.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{program.type}</p>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">{program.name}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{program.type}</p>
                 </div>
                 <Badge variant="outline" className={
-                  program.status === 'Ahead' ? "bg-green-50 text-green-700 border-green-200" :
-                  program.status === 'On Track' ? "bg-blue-50 text-blue-700 border-blue-200" :
-                  program.status === 'At Risk' ? "bg-amber-50 text-amber-700 border-amber-200" :
-                  "bg-rose-50 text-rose-700 border-rose-200"
+                  program.status === 'Ahead' ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/20" :
+                  program.status === 'On Track' ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20" :
+                  program.status === 'At Risk' ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20" :
+                  "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20"
                 }>
                   {program.status}
                 </Badge>
               </div>
               
-              <div className="space-y-4 mb-2">
+              <div className="space-y-4 mb-2 relative z-10">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground flex items-center gap-1.5"><Users className="w-4 h-4" /> Enrolled:</span>
-                  <span className="font-bold text-foreground">{program.enrolled}</span>
+                  <span className="text-gray-500 dark:text-gray-400 flex items-center gap-1.5"><Users className="w-4 h-4" /> Enrolled:</span>
+                  <span className="font-bold text-gray-900 dark:text-white">{program.enrolled}</span>
                 </div>
                 
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground flex items-center gap-1.5"><Activity className="w-4 h-4" /> Cohort Progress:</span>
-                    <span className="font-bold text-foreground">{program.progress}%</span>
+                    <span className="text-gray-500 dark:text-gray-400 flex items-center gap-1.5"><Activity className="w-4 h-4" /> Cohort Progress:</span>
+                    <span className="font-bold text-gray-900 dark:text-white">{program.progress}%</span>
                   </div>
-                  <Progress value={program.progress} className="h-2" indicatorClassName="bg-fuchsia-600" />
+                  <Progress value={program.progress} className="h-2 bg-gray-100 dark:bg-gray-800" indicatorClassName="bg-fuchsia-600 dark:bg-fuchsia-500" />
                 </div>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>

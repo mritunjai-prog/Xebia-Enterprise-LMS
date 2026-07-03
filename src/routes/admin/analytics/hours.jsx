@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { MetricCard } from '@/admin/features/analytics/components/metrics/MetricCard';
 import { ComparisonChart } from '@/admin/features/analytics/components/charts/ComparisonChart';
+import { PremiumPageHeader } from '@/admin/features/analytics/components/layout/PremiumPageHeader';
 import { Clock, Users, Building2, MapPin, Network, Activity, Trophy, Timer } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
 
@@ -51,16 +51,13 @@ function LearningHours() {
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-700 pb-12">
       
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 mb-3 px-3 py-1">Time Investment</Badge>
-          <h1 className="text-3xl font-black text-foreground tracking-tight">Learning Hours Analytics</h1>
-          <p className="text-sm font-medium text-muted-foreground mt-1 max-w-2xl">
-            Visibility into organizational and individual learning time investments.
-          </p>
-        </div>
-      </div>
+      <PremiumPageHeader
+        title="Learning Hours Analytics"
+        description="Visibility into organizational and individual learning time investments."
+        icon={Clock}
+        badgeText="Time Investment"
+        badgeColor="amber"
+      />
 
       {/* SECTION 1: Organizational & Learner Metrics */}
       <div className="space-y-4">
@@ -126,75 +123,78 @@ function LearningHours() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Top Learners */}
-          <Card className="shadow-sm border-border/50 bg-white dark:bg-[#15151f]">
-            <CardHeader className="pb-3 border-b border-border/50">
-              <CardTitle className="text-sm font-bold flex items-center gap-2">
-                <Users className="w-4 h-4 text-primary" /> Top Active Learners
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
+          <div className="relative group bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+            <div className="absolute -inset-px bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="p-5 border-b border-gray-100 dark:border-gray-800/50 relative z-10">
+              <h3 className="text-sm font-bold flex items-center gap-2">
+                <Users className="w-4 h-4 text-indigo-500" /> Top Active Learners
+              </h3>
+            </div>
+            <div className="p-5 relative z-10">
               <div className="space-y-4">
                 {topLearners.map((learner, idx) => (
                   <div key={idx} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs">
+                      <div className="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-600 dark:text-indigo-400 text-xs">
                         {learner.name.split(' ').map(n => n[0]).join('')}
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-foreground">{learner.name}</p>
-                        <p className="text-xs text-muted-foreground">{learner.role}</p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white">{learner.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{learner.role}</p>
                       </div>
                     </div>
-                    <Badge variant="outline" className="font-bold">{learner.hours} hrs</Badge>
+                    <Badge variant="outline" className="font-bold border-gray-200 dark:border-[#2e2e3e] text-gray-700 dark:text-gray-300">{learner.hours} hrs</Badge>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Top Projects */}
-          <Card className="shadow-sm border-border/50 bg-white dark:bg-[#15151f]">
-            <CardHeader className="pb-3 border-b border-border/50">
-              <CardTitle className="text-sm font-bold flex items-center gap-2">
+          <div className="relative group bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+            <div className="absolute -inset-px bg-gradient-to-r from-transparent via-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="p-5 border-b border-gray-100 dark:border-gray-800/50 relative z-10">
+              <h3 className="text-sm font-bold flex items-center gap-2">
                 <Network className="w-4 h-4 text-blue-500" /> Top Learning-Focused Projects
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
+              </h3>
+            </div>
+            <div className="p-5 relative z-10">
               <div className="space-y-4">
                 {projectHoursData.map((p, idx) => (
                   <div key={idx} className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-bold text-foreground">{p.project}</p>
-                      <p className="text-xs text-muted-foreground">Strategic Initiative</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{p.project}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Strategic Initiative</p>
                     </div>
-                    <Badge variant="secondary" className="font-bold">{p.avgHours} hrs/emp</Badge>
+                    <Badge variant="secondary" className="font-bold bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400">{p.avgHours} hrs/emp</Badge>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Top Regions */}
-          <Card className="shadow-sm border-border/50 bg-white dark:bg-[#15151f]">
-            <CardHeader className="pb-3 border-b border-border/50">
-              <CardTitle className="text-sm font-bold flex items-center gap-2">
+          <div className="relative group bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+            <div className="absolute -inset-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="p-5 border-b border-gray-100 dark:border-gray-800/50 relative z-10">
+              <h3 className="text-sm font-bold flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-emerald-500" /> Top Learning-Focused Regions
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
+              </h3>
+            </div>
+            <div className="p-5 relative z-10">
               <div className="space-y-4">
                 {regionHoursData.map((r, idx) => (
                   <div key={idx} className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-bold text-foreground">{r.region}</p>
-                      <p className="text-xs text-muted-foreground">Global Hub</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{r.region}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Global Hub</p>
                     </div>
-                    <Badge variant="outline" className="font-bold bg-emerald-500/10 text-emerald-600 border-none">{r.avgHours} hrs/emp</Badge>
+                    <Badge variant="outline" className="font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-none">{r.avgHours} hrs/emp</Badge>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
         </div>
       </div>

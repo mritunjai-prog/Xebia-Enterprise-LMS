@@ -13,12 +13,16 @@ export function FunnelChartWrapper({ title, description, data, dataKey = "value"
   }));
 
   return (
-    <Card className={clsx("bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col", className)}>
-      <CardHeader className="pb-2 pt-6 px-6 shrink-0">
-        <CardTitle className="text-lg font-extrabold text-foreground">{title}</CardTitle>
-        {description && <CardDescription className="text-xs font-medium">{description}</CardDescription>}
-      </CardHeader>
-      <CardContent className="px-6 pb-6 pt-2 flex-1 min-h-[250px]">
+    <div className={clsx("relative group bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden flex flex-col", className)}>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-400 via-rose-500 to-purple-600 opacity-50" />
+      <div className="absolute -inset-px bg-gradient-to-r from-transparent via-white/20 to-transparent dark:via-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      
+      <div className="px-6 pt-6 pb-4 shrink-0 relative z-10">
+        <h3 className="text-base font-extrabold text-gray-900 dark:text-white">{title}</h3>
+        {description && <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-1">{description}</p>}
+      </div>
+      
+      <div className="px-6 pb-6 pt-0 flex-1 min-h-[250px] relative z-10">
         <div className="h-full w-full min-h-[250px]">
           <ResponsiveContainer width="100%" height="100%">
             <RechartsFunnelChart>
@@ -43,7 +47,7 @@ export function FunnelChartWrapper({ title, description, data, dataKey = "value"
             </RechartsFunnelChart>
           </ResponsiveContainer>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -13,7 +13,6 @@ import {
 import { useEffect } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { CursorTrail } from "../components/cursor-trail";
 import { Sidebar } from "@/admin/components/layout/Sidebar";
 import { Header } from "@/admin/components/layout/Header";
 import "@/admin/index.css";
@@ -148,6 +147,7 @@ function RootShell({ children }) {
     html.dark .nav-item { color: rgba(255,255,255,0.7) !important; }
     html.dark .nav-item.active { background: #FFFFFF !important; color: #4A1E47 !important; }
     html.dark .nav-item:hover { background: rgba(255,255,255,0.1) !important; color: #FFFFFF !important; }
+    .nav-item.active { background: var(--primary); color: #fff; }
     .nav-section { color: #9CA3AF; }
     html.dark .nav-section { color: rgba(255,255,255,0.4) !important; }
     .sidebar-brand .logo-text { color: #111827; }
@@ -158,7 +158,8 @@ function RootShell({ children }) {
     html.dark .user-name { color: #fff !important; }
     .user-role { color: #6B7280; }
     html.dark .user-role { color: rgba(255,255,255,0.5) !important; }
-    .sidebar-student .nav-item { color: rgba(255,255,255,0.65) !important; }
+    .sidebar-student .nav-item { color: rgba(255,255,255,0.65); }
+    .sidebar-student .nav-item.active { background: #FFFFFF !important; color: #4A1E47 !important; }
     .sidebar-student .nav-section { color: rgba(255,255,255,0.35); }
     .sidebar-student .logo-text { color: #fff !important; }
     .sidebar-student .logo-sub { color: rgba(255,255,255,0.45); }
@@ -207,7 +208,6 @@ function RootComponent() {
           </div>
         </div>
       )}
-      <CursorTrail />
     </QueryClientProvider>
   );
 }

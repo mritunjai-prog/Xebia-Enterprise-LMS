@@ -2,8 +2,8 @@ import { createFileRoute } from '@tanstack/react-router';
 import { MetricCard } from '@/admin/features/analytics/components/metrics/MetricCard';
 import { DonutChart } from '@/admin/features/analytics/components/charts/DonutChart';
 import { ComparisonChart } from '@/admin/features/analytics/components/charts/ComparisonChart';
-import { Award, ShieldCheck, Target, Cloud, Server, LayoutGrid, CheckCircle2, History, Network, BadgeCheck, FileCheck, Building2, BookOpen } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { PremiumPageHeader } from '@/admin/features/analytics/components/layout/PremiumPageHeader';
+import { Award, ShieldCheck, Target, Cloud, Server, LayoutGrid, CheckCircle2, History, Network, BadgeCheck, FileCheck, Building2, BookOpen, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
 
@@ -53,22 +53,13 @@ function CertificationDashboard() {
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-700 pb-12">
       
-      {/* Premium Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#064e3b] via-[#022c22] to-[#0f172a] p-8 sm:p-10 text-white shadow-2xl border border-white/5">
-        <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
-          <Award className="w-64 h-64 text-white" />
-        </div>
-        <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-3xl">
-          <Badge className="bg-emerald-500/30 text-emerald-200 border-emerald-400/30 mb-4 px-3 py-1 backdrop-blur-md">
-            Credential Tracking
-          </Badge>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-sm">Certifications Dashboard</h1>
-          <p className="mt-3 text-emerald-100/80 text-sm sm:text-base font-medium leading-relaxed max-w-2xl">
-            Monitor organizational certification counts and department-wise credential distribution.
-          </p>
-        </div>
-      </div>
+      <PremiumPageHeader
+        title="Certifications Dashboard"
+        description="Monitor organizational certification counts and department-wise credential distribution."
+        icon={Award}
+        badgeText="Credential Tracking"
+        badgeColor="emerald"
+      />
 
       {/* SECTION 1: Certification Overview (KPIs) */}
       <div className="space-y-4">
@@ -134,36 +125,35 @@ function CertificationDashboard() {
           <Award className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /> Top Credentials
         </h2>
         
-        <Card className="shadow-sm border-border/50 bg-white dark:bg-[#15151f]">
-          <CardHeader className="pb-3 border-b border-border/50">
-            <CardTitle className="text-sm font-bold flex items-center gap-2">
+        <div className="relative group bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+          <div className="absolute -inset-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="p-5 border-b border-gray-100 dark:border-gray-800/50 relative z-10">
+            <h3 className="text-sm font-bold flex items-center gap-2">
               <Star className="w-4 h-4 text-emerald-500" /> Top 10 Popular Certifications
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-4">
+            </h3>
+          </div>
+          <div className="p-5 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {topCertifications.map((cert, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 border border-border/50 rounded-lg bg-card/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 transition-colors">
+                <div key={idx} className="flex items-center justify-between p-3 border border-gray-100 dark:border-white/5 rounded-lg bg-white/50 dark:bg-[#252535]/50 hover:bg-white dark:hover:bg-[#252535] transition-colors shadow-sm hover:shadow-md hover:border-emerald-500/20">
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-md bg-emerald-500/10 flex items-center justify-center font-bold text-emerald-600 dark:text-emerald-400 text-xs shrink-0 mt-0.5">
                       {idx + 1}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-foreground leading-tight">{cert.name}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{cert.vendor}</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white leading-tight">{cert.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{cert.vendor}</p>
                     </div>
                   </div>
-                  <Badge variant="outline" className="font-bold shrink-0">{cert.count} Achieved</Badge>
+                  <Badge variant="outline" className="font-bold shrink-0 border-gray-200 dark:border-white/5 text-gray-700 dark:text-gray-300">{cert.count} Achieved</Badge>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
     </div>
   );
 }
 
-// Temporary Star icon import since it was missing from lucide-react imports above
-import { Star } from 'lucide-react';

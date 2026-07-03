@@ -11,11 +11,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
 
-export const Route = createFileRoute('/admin/analytics/project-investment')({
-  component: ProjectInvestmentDashboard,
+export const Route = createFileRoute('/admin/analytics/fresher-journey')({
+  component: FresherJourneyDashboard,
 });
 
-function ProjectInvestmentDashboard() {
+function FresherJourneyDashboard() {
 
 
   // Mock Enterprise Data for Section 11: Project Investment
@@ -58,70 +58,95 @@ function ProjectInvestmentDashboard() {
     <div className="flex flex-col gap-10 animate-in fade-in duration-700 pb-12">
       
       <PremiumPageHeader
-        title="Project Investment"
-        description="Evaluate strategic workforce development and billable project deployment."
-        icon={Briefcase}
-        badgeText="Enterprise Workforce Transformation"
-        badgeColor="indigo"
+        title="Fresher Journey"
+        description="Track the lifecycle of new campus hires from onboarding to project deployment."
+        icon={Users}
+        badgeText="Talent Pipeline"
+        badgeColor="blue"
       />
 
-      {/* SECTION 1: Top Projects */}
+
+
+      {/* SECTION 2: Fresher Pipeline */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Briefcase className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> Top 5 Projects with Highest Learning Investment
+          <Map className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> Fresher Campus to Project Pipeline
         </h2>
         
-        <div className="grid grid-cols-1 gap-6">
-          <div className="relative group bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
-            <div className="absolute -inset-px bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="relative z-10">
-              <ComparisonChart 
-                title="Learning Investment Hours"
-                description="Total hours invested by employees allocated to these projects"
-                data={topProjectsData}
-                xAxisKey="project"
-                bars={[{ dataKey: 'investment', name: 'Investment (Hours)', color: '#4f46e5' }]}
-              />
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {fresherPipelineData.map((stage, idx) => (
+            <div key={idx} className={`relative group p-6 rounded-2xl border backdrop-blur-md shadow-sm flex flex-col items-center text-center justify-center overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-500 bg-white/80 dark:bg-[#15151f]/80 ${stage.border}`}>
+              <div className="absolute -inset-px bg-gradient-to-br from-transparent via-current opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500" />
+              <div className="relative z-10">
+                {idx < fresherPipelineData.length - 1 && (
+                   <div className="absolute -right-12 top-1/2 -translate-y-1/2 text-gray-400/30 dark:text-gray-500/30 hidden md:block">
+                     <ShieldCheck className="w-8 h-8" />
+                   </div>
+                )}
+                <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-2">{stage.stage}</h3>
+                <div className="flex items-end justify-center gap-2">
+                  <span className={`text-4xl font-black ${stage.color}`}>{stage.count}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1">Employees</span>
+                </div>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
 
 
 
-      {/* SECTION 3: Project Investment Roadmap */}
+      {/* SECTION 4: Fresher Journey (Premium Empty States) */}
       <div className="space-y-4 pt-6 border-t border-border/50">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Map className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> Project Investment Roadmap
+          <Users className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> Fresher Journey Details
         </h2>
         <p className="text-sm text-muted-foreground max-w-3xl mb-6">
-          The following features will connect LMS capabilities to ERP and Project Management tracking systems for true ROI calculation.
+          Tracking the lifecycle of new campus hires requires robust integration with HR workflows. Data fabrication is strictly prohibited.
         </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <EmptyState title="Campus Hiring" description="Requires integration with University Recruiting ATS tables." icon={<Users className="w-8 h-8 text-blue-500/30 mb-4" />} />
+          <EmptyState title="HR Induction" description="Requires organizational onboarding checklist API integration." icon={<CheckCircle2 className="w-8 h-8 text-emerald-500/30 mb-4" />} />
+          <EmptyState title="Foundation Training" description="Requires Cohort Management and bootcamp scheduling entities." icon={<BookOpen className="w-8 h-8 text-amber-500/30 mb-4" />} />
+          <EmptyState title="Technical Learning" description="Requires deep skill-gap mapping against project requirements." icon={<Cpu className="w-8 h-8 text-purple-500/30 mb-4" />} />
+          <EmptyState title="Project Allocation" description="Requires Resource Management system synchronization." icon={<Map className="w-8 h-8 text-rose-500/30 mb-4" />} />
+          <EmptyState title="Billable Deployment" description="Requires Timesheet and Finance Module integration." icon={<Briefcase className="w-8 h-8 text-indigo-500/30 mb-4" />} />
+        </div>
+      </div>
+
+      {/* SECTION 5: Enterprise Workforce Roadmap */}
+      <div className="space-y-4 pt-6 border-t border-border/50">
+        <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+          <Building2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> Enterprise Workforce Roadmap
+        </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {projectRoadmap.map((roadmap, idx) => {
+          {hrRoadmap.map((roadmap, idx) => {
             const Icon = roadmap.icon;
             return (
-              <div key={idx} className="relative group overflow-hidden rounded-2xl border border-indigo-500/20 bg-white/50 dark:bg-[#15151f]/50 backdrop-blur-md transition-all duration-500 hover:shadow-xl hover:-translate-y-1 hover:border-indigo-500/40">
+              <div key={idx} className="relative group overflow-hidden bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
                 <div className="absolute -inset-px bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10 p-4 border-b border-gray-100 dark:border-gray-800/50 flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <Icon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    <div className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                      <Icon className="w-4 h-4" />
+                    </div>
                     <h3 className="font-bold text-gray-900 dark:text-white text-sm">{roadmap.name}</h3>
                   </div>
-                  <Badge className="bg-indigo-500 text-white hover:bg-indigo-600 whitespace-nowrap ml-2 text-[10px] px-1.5 py-0 shadow-sm">{roadmap.phase}</Badge>
+                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20 text-[10px]">{roadmap.phase}</Badge>
                 </div>
-                <div className="relative z-10 p-4 space-y-2">
+                <div className="relative z-10 p-4 space-y-3">
                   <div className="grid grid-cols-[80px_1fr] items-center gap-2 text-sm">
-                    <span className="text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5 text-[10px] uppercase"><Database className="w-3 h-3" /> Entity</span>
-                    <code className="text-xs bg-white/50 dark:bg-white/5 px-1.5 py-0.5 rounded border border-gray-100 dark:border-white/5 font-mono text-indigo-600 dark:text-indigo-400 w-max">{roadmap.entity}</code>
+                    <span className="text-gray-500 dark:text-gray-400 font-medium text-xs">Entity</span>
+                    <code className="text-xs bg-white/50 dark:bg-white/5 px-1.5 py-0.5 rounded border border-gray-100 dark:border-white/5 font-mono text-gray-900 dark:text-white w-max">{roadmap.entity}</code>
                   </div>
                   <div className="grid grid-cols-[80px_1fr] items-center gap-2 text-sm">
-                    <span className="text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5 text-[10px] uppercase"><Server className="w-3 h-3" /> API</span>
-                    <span className="text-xs font-mono text-blue-600 dark:text-blue-400 w-max">{roadmap.api}</span>
+                    <span className="text-gray-500 dark:text-gray-400 font-medium text-xs">API</span>
+                    <code className="text-xs bg-white/50 dark:bg-white/5 px-1.5 py-0.5 rounded border border-gray-100 dark:border-white/5 font-mono text-gray-900 dark:text-white w-max">{roadmap.api}</code>
                   </div>
                   <div className="grid grid-cols-[80px_1fr] items-start gap-2 text-sm pt-2 border-t border-gray-100 dark:border-gray-800/50">
-                    <span className="text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5 text-[10px] uppercase"><Briefcase className="w-3 h-3" /> Value</span>
+                    <span className="text-gray-500 dark:text-gray-400 font-medium text-xs mt-0.5">Value</span>
                     <span className="text-gray-900 dark:text-white text-xs leading-relaxed">{roadmap.value}</span>
                   </div>
                 </div>
@@ -130,8 +155,6 @@ function ProjectInvestmentDashboard() {
           })}
         </div>
       </div>
-
-
 
       {/* SECTION 6: Analytics Completion */}
       <div className="space-y-4 pt-12 pb-6 border-t border-border/50 flex flex-col items-center">

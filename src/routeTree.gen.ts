@@ -42,6 +42,7 @@ import { Route as AdminAnalyticsPillarsRouteImport } from './routes/admin/analyt
 import { Route as AdminAnalyticsLearningTrendsRouteImport } from './routes/admin/analytics/learning-trends'
 import { Route as AdminAnalyticsLearningChampionsRouteImport } from './routes/admin/analytics/learning-champions'
 import { Route as AdminAnalyticsHoursRouteImport } from './routes/admin/analytics/hours'
+import { Route as AdminAnalyticsFresherJourneyRouteImport } from './routes/admin/analytics/fresher-journey'
 import { Route as AdminAnalyticsFlagshipProgramsRouteImport } from './routes/admin/analytics/flagship-programs'
 import { Route as AdminAnalyticsExecutiveRouteImport } from './routes/admin/analytics/executive'
 import { Route as AdminAnalyticsCoverageRouteImport } from './routes/admin/analytics/coverage'
@@ -220,6 +221,12 @@ const AdminAnalyticsHoursRoute = AdminAnalyticsHoursRouteImport.update({
   path: '/hours',
   getParentRoute: () => AdminAnalyticsRoute,
 } as any)
+const AdminAnalyticsFresherJourneyRoute =
+  AdminAnalyticsFresherJourneyRouteImport.update({
+    id: '/fresher-journey',
+    path: '/fresher-journey',
+    getParentRoute: () => AdminAnalyticsRoute,
+  } as any)
 const AdminAnalyticsFlagshipProgramsRoute =
   AdminAnalyticsFlagshipProgramsRouteImport.update({
     id: '/flagship-programs',
@@ -280,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/admin/analytics/coverage': typeof AdminAnalyticsCoverageRoute
   '/admin/analytics/executive': typeof AdminAnalyticsExecutiveRoute
   '/admin/analytics/flagship-programs': typeof AdminAnalyticsFlagshipProgramsRoute
+  '/admin/analytics/fresher-journey': typeof AdminAnalyticsFresherJourneyRoute
   '/admin/analytics/hours': typeof AdminAnalyticsHoursRoute
   '/admin/analytics/learning-champions': typeof AdminAnalyticsLearningChampionsRoute
   '/admin/analytics/learning-trends': typeof AdminAnalyticsLearningTrendsRoute
@@ -319,6 +327,7 @@ export interface FileRoutesByTo {
   '/admin/analytics/coverage': typeof AdminAnalyticsCoverageRoute
   '/admin/analytics/executive': typeof AdminAnalyticsExecutiveRoute
   '/admin/analytics/flagship-programs': typeof AdminAnalyticsFlagshipProgramsRoute
+  '/admin/analytics/fresher-journey': typeof AdminAnalyticsFresherJourneyRoute
   '/admin/analytics/hours': typeof AdminAnalyticsHoursRoute
   '/admin/analytics/learning-champions': typeof AdminAnalyticsLearningChampionsRoute
   '/admin/analytics/learning-trends': typeof AdminAnalyticsLearningTrendsRoute
@@ -361,6 +370,7 @@ export interface FileRoutesById {
   '/admin/analytics/coverage': typeof AdminAnalyticsCoverageRoute
   '/admin/analytics/executive': typeof AdminAnalyticsExecutiveRoute
   '/admin/analytics/flagship-programs': typeof AdminAnalyticsFlagshipProgramsRoute
+  '/admin/analytics/fresher-journey': typeof AdminAnalyticsFresherJourneyRoute
   '/admin/analytics/hours': typeof AdminAnalyticsHoursRoute
   '/admin/analytics/learning-champions': typeof AdminAnalyticsLearningChampionsRoute
   '/admin/analytics/learning-trends': typeof AdminAnalyticsLearningTrendsRoute
@@ -404,6 +414,7 @@ export interface FileRouteTypes {
     | '/admin/analytics/coverage'
     | '/admin/analytics/executive'
     | '/admin/analytics/flagship-programs'
+    | '/admin/analytics/fresher-journey'
     | '/admin/analytics/hours'
     | '/admin/analytics/learning-champions'
     | '/admin/analytics/learning-trends'
@@ -443,6 +454,7 @@ export interface FileRouteTypes {
     | '/admin/analytics/coverage'
     | '/admin/analytics/executive'
     | '/admin/analytics/flagship-programs'
+    | '/admin/analytics/fresher-journey'
     | '/admin/analytics/hours'
     | '/admin/analytics/learning-champions'
     | '/admin/analytics/learning-trends'
@@ -484,6 +496,7 @@ export interface FileRouteTypes {
     | '/admin/analytics/coverage'
     | '/admin/analytics/executive'
     | '/admin/analytics/flagship-programs'
+    | '/admin/analytics/fresher-journey'
     | '/admin/analytics/hours'
     | '/admin/analytics/learning-champions'
     | '/admin/analytics/learning-trends'
@@ -755,6 +768,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsHoursRouteImport
       parentRoute: typeof AdminAnalyticsRoute
     }
+    '/admin/analytics/fresher-journey': {
+      id: '/admin/analytics/fresher-journey'
+      path: '/fresher-journey'
+      fullPath: '/admin/analytics/fresher-journey'
+      preLoaderRoute: typeof AdminAnalyticsFresherJourneyRouteImport
+      parentRoute: typeof AdminAnalyticsRoute
+    }
     '/admin/analytics/flagship-programs': {
       id: '/admin/analytics/flagship-programs'
       path: '/flagship-programs'
@@ -833,6 +853,7 @@ interface AdminAnalyticsRouteChildren {
   AdminAnalyticsCoverageRoute: typeof AdminAnalyticsCoverageRoute
   AdminAnalyticsExecutiveRoute: typeof AdminAnalyticsExecutiveRoute
   AdminAnalyticsFlagshipProgramsRoute: typeof AdminAnalyticsFlagshipProgramsRoute
+  AdminAnalyticsFresherJourneyRoute: typeof AdminAnalyticsFresherJourneyRoute
   AdminAnalyticsHoursRoute: typeof AdminAnalyticsHoursRoute
   AdminAnalyticsLearningChampionsRoute: typeof AdminAnalyticsLearningChampionsRoute
   AdminAnalyticsLearningTrendsRoute: typeof AdminAnalyticsLearningTrendsRoute
@@ -848,6 +869,7 @@ const AdminAnalyticsRouteChildren: AdminAnalyticsRouteChildren = {
   AdminAnalyticsCoverageRoute: AdminAnalyticsCoverageRoute,
   AdminAnalyticsExecutiveRoute: AdminAnalyticsExecutiveRoute,
   AdminAnalyticsFlagshipProgramsRoute: AdminAnalyticsFlagshipProgramsRoute,
+  AdminAnalyticsFresherJourneyRoute: AdminAnalyticsFresherJourneyRoute,
   AdminAnalyticsHoursRoute: AdminAnalyticsHoursRoute,
   AdminAnalyticsLearningChampionsRoute: AdminAnalyticsLearningChampionsRoute,
   AdminAnalyticsLearningTrendsRoute: AdminAnalyticsLearningTrendsRoute,

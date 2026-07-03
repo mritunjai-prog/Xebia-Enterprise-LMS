@@ -2,8 +2,8 @@ import { createFileRoute } from '@tanstack/react-router';
 import { MetricCard } from '@/admin/features/analytics/components/metrics/MetricCard';
 import { DonutChart } from '@/admin/features/analytics/components/charts/DonutChart';
 import { ComparisonChart } from '@/admin/features/analytics/components/charts/ComparisonChart';
+import { PremiumPageHeader } from '@/admin/features/analytics/components/layout/PremiumPageHeader';
 import { Sparkles, BrainCircuit, Bot, Zap, Code2, LineChart, Network, GraduationCap, ShieldCheck, Database, Activity, Server, Users, Timer } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
 
@@ -50,22 +50,13 @@ function AITransformation() {
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-700 pb-12">
       
-      {/* Premium Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] p-8 sm:p-10 text-white shadow-2xl border border-white/5">
-        <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
-          <BrainCircuit className="w-64 h-64 text-white" />
-        </div>
-        <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-3xl">
-          <Badge className="bg-indigo-500/30 text-indigo-200 border-indigo-400/30 mb-4 px-3 py-1 backdrop-blur-md">
-            <Sparkles className="w-3 h-3 inline-block mr-1.5" /> Phase 2 Initiative
-          </Badge>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-sm">AI Transformation Hub</h1>
-          <p className="mt-3 text-indigo-100/80 text-sm sm:text-base font-medium leading-relaxed max-w-2xl">
-            Monitor organizational AI readiness and upskilling metrics across departments.
-          </p>
-        </div>
-      </div>
+      <PremiumPageHeader
+        title="AI Transformation Hub"
+        description="Monitor organizational AI readiness and upskilling metrics across departments."
+        icon={BrainCircuit}
+        badgeText="Phase 2 Initiative"
+        badgeColor="indigo"
+      />
 
       {/* SECTION 1: AI Transformation Overview (KPIs) */}
       <div className="space-y-4">
@@ -137,26 +128,27 @@ function AITransformation() {
           <Code2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> Curriculum Popularity
         </h2>
         
-        <Card className="shadow-sm border-border/50 bg-white dark:bg-[#15151f]">
-          <CardHeader className="pb-3 border-b border-border/50">
-            <CardTitle className="text-sm font-bold flex items-center gap-2">
+        <div className="relative group bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+          <div className="absolute -inset-px bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="p-5 border-b border-gray-100 dark:border-gray-800/50 relative z-10">
+            <h3 className="text-sm font-bold flex items-center gap-2">
               <Bot className="w-4 h-4 text-indigo-500" /> Top AI/GenAI Courses
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-4">
+            </h3>
+          </div>
+          <div className="p-5 relative z-10">
             <div className="space-y-4">
               {topAICourses.map((course, idx) => (
-                <div key={idx} className="flex items-center justify-between p-2 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 rounded-lg transition-colors">
+                <div key={idx} className="flex items-center justify-between p-2 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-colors border border-transparent hover:border-indigo-500/20">
                   <div>
-                    <p className="text-sm font-bold text-foreground">{course.name}</p>
-                    <p className="text-xs text-muted-foreground">{course.category}</p>
+                    <p className="text-sm font-bold text-gray-900 dark:text-white">{course.name}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{course.category}</p>
                   </div>
-                  <Badge variant="secondary" className="font-bold bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">{course.learners} Learners</Badge>
+                  <Badge variant="secondary" className="font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400">{course.learners} Learners</Badge>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
     </div>

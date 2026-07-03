@@ -171,6 +171,11 @@ export function Sidebar() {
               isActive={currentPath === '/admin/analytics/project-investment'}
               onClick={() => handleNavClick('/admin/analytics/project-investment')}
             />
+            <SubNavItem 
+              label="Fresher Journey" 
+              isActive={currentPath === '/admin/analytics/fresher-journey'}
+              onClick={() => handleNavClick('/admin/analytics/fresher-journey')}
+            />
           </div>
         )}
 

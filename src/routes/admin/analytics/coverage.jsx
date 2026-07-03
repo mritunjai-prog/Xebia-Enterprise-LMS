@@ -2,9 +2,8 @@ import { createFileRoute } from '@tanstack/react-router';
 import { MetricCard } from '@/admin/features/analytics/components/metrics/MetricCard';
 import { DonutChart } from '@/admin/features/analytics/components/charts/DonutChart';
 import { ComparisonChart } from '@/admin/features/analytics/components/charts/ComparisonChart';
+import { PremiumPageHeader } from '@/admin/features/analytics/components/layout/PremiumPageHeader';
 import { Users, Globe, Building2, MapPin, Network, Activity, BarChart3, TrendingUp, Layers } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { useAnalyticsFilters } from '@/admin/features/analytics/context/AnalyticsFilterContext';
 
 export const Route = createFileRoute('/admin/analytics/coverage')({
@@ -48,16 +47,13 @@ function LearningCoverage() {
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-700 pb-12">
       
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 mb-3 px-3 py-1">Coverage & Participation</Badge>
-          <h1 className="text-3xl font-black text-foreground tracking-tight">Learning Coverage</h1>
-          <p className="text-sm font-medium text-muted-foreground mt-1 max-w-2xl">
-            "How effectively are we reaching employees across the organization?"
-          </p>
-        </div>
-      </div>
+      <PremiumPageHeader
+        title="Learning Coverage"
+        description="How effectively are we reaching employees across the organization?"
+        icon={BarChart3}
+        badgeText="Coverage & Participation"
+        badgeColor="indigo"
+      />
 
       {/* SECTION 1: Coverage Metrics */}
       <div className="space-y-4">
@@ -139,30 +135,32 @@ function LearningCoverage() {
           />
           
           {/* Mock Heatmap equivalent */}
-          <Card className="p-6 border border-border/50 shadow-md flex flex-col h-full bg-slate-50/50 dark:bg-slate-900/20">
-            <div className="mb-4">
-              <h3 className="text-lg font-bold flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-indigo-500" /> Coverage Heatmap
+          <div className="relative group bg-white/80 dark:bg-[#15151f]/80 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/5 hover:border-primary/40 dark:hover:border-fuchsia-400/60 shadow-sm p-6 flex flex-col h-full hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+            <div className="absolute -inset-px bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            
+            <div className="mb-4 relative z-10">
+              <h3 className="text-sm font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                <MapPin className="w-4 h-4 text-indigo-500" /> Coverage Heatmap
               </h3>
-              <p className="text-sm text-muted-foreground">Density of trained employees by location</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Density of trained employees by location</p>
             </div>
             
-            <div className="flex-1 flex flex-col justify-center gap-4">
+            <div className="flex-1 flex flex-col justify-center gap-4 mt-2 relative z-10">
               <div className="grid grid-cols-5 gap-2">
                 {Array.from({ length: 25 }).map((_, i) => {
                   const intensity = Math.floor(Math.random() * 5); // 0-4
                   const bgClass = ['bg-indigo-50 dark:bg-indigo-950/20', 'bg-indigo-200 dark:bg-indigo-900/40', 'bg-indigo-400 dark:bg-indigo-700/60', 'bg-indigo-600 dark:bg-indigo-500/80', 'bg-indigo-800 dark:bg-indigo-400'][intensity];
                   return (
-                    <div key={i} className={`h-8 rounded-sm ${bgClass} transition-colors duration-500`} title={`Location ${i+1}`} />
+                    <div key={i} className={`h-8 rounded-md ${bgClass} shadow-sm border border-indigo-100 dark:border-indigo-500/10 transition-colors duration-500 hover:scale-105 cursor-pointer`} title={`Location ${i+1}`} />
                   )
                 })}
               </div>
-              <div className="flex justify-between items-center text-[10px] uppercase font-bold text-muted-foreground mt-2">
+              <div className="flex justify-between items-center text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 mt-2">
                 <span>Low Coverage</span>
                 <span>High Coverage</span>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       </div>
 
