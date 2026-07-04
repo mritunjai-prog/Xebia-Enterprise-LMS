@@ -138,7 +138,8 @@ export const batchInfo = {
   trainer: "Sarah Drasner",
   university: "Xebia University",
   schedule: "Mon - Fri, 09:00 AM - 05:00 PM",
-  description: "An intensive frontend engineering program focusing on modern React, Next.js, and Enterprise Architecture.",
+  description:
+    "An intensive frontend engineering program focusing on modern React, Next.js, and Enterprise Architecture.",
 };
 
 export const chartData = {
@@ -173,8 +174,8 @@ export const commentsData = [
         avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&q=80",
         text: "useMemo returns a memoized value, while useCallback returns a memoized callback function. Use useCallback when passing callbacks to optimized child components!",
         timestamp: "1 hour ago",
-      }
-    ]
+      },
+    ],
   },
   {
     id: "c2",
@@ -182,6 +183,6 @@ export const commentsData = [
     avatar: "https://i.pravatar.cc/150?u=student",
     text: "The state management module is super helpful, thanks!",
     timestamp: "1 day ago",
-    replies: []
-  }
+    replies: [],
+  },
 ];

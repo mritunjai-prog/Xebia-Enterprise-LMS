@@ -1,5 +1,5 @@
-import React from 'react';
-import { Filter, Calendar, MapPin, Building, Briefcase } from 'lucide-react';
+import React from "react";
+import { Filter, Calendar, MapPin, Building, Briefcase } from "lucide-react";
 
 export function GlobalFilters() {
   return (
@@ -21,12 +21,16 @@ export function GlobalFilters() {
 
       <div className="flex items-center gap-2 bg-gray-50 dark:bg-black/20 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/5 cursor-pointer">
         <Building className="w-3.5 h-3.5 text-[#FF6200]" />
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">All Business Units</span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          All Business Units
+        </span>
       </div>
 
       <div className="flex items-center gap-2 bg-gray-50 dark:bg-black/20 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/5 cursor-pointer">
         <Briefcase className="w-3.5 h-3.5 text-[#84117C]" />
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">All Departments</span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          All Departments
+        </span>
       </div>
     </div>
   );

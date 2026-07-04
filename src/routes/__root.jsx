@@ -7,7 +7,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
-  Navigate
+  Navigate,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 import appCss from "../styles.css?url";
@@ -191,6 +191,6 @@ function RootComponent() {
 
   return _jsx(QueryClientProvider, {
     client: queryClient,
-    children: _jsx(Outlet, {})
+    children: _jsx(Outlet, {}),
   });
 }

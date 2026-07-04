@@ -36,7 +36,7 @@ const highlights = [
     title: "Employee Development",
     description: "Track skills, learning progress and career development.",
     icon: TrendingUp,
-  }
+  },
 ];
 
 export function HighlightsSection() {
@@ -44,15 +44,18 @@ export function HighlightsSection() {
     <section id="features" className="py-24 bg-white dark:bg-transparent">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="text-center mb-20">
-          <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 tracking-tight">Platform Highlights</h2>
+          <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 tracking-tight">
+            Platform Highlights
+          </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-medium">
-            We've engineered a robust suite of tools that bridge the gap between content creation and actionable workforce intelligence.
+            We've engineered a robust suite of tools that bridge the gap between content creation
+            and actionable workforce intelligence.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {highlights.map((item) => (
-            <div 
+            <div
               key={item.id}
               className="flex items-start gap-6 p-8 rounded-3xl border border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-[#111111]/50 hover:bg-white dark:hover:bg-[#151515] hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group"
             >

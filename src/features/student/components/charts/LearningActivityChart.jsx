@@ -23,8 +23,8 @@ export function LearningActivityChart({ data }) {
       <AreaChart data={data} margin={{ top: 20, right: 30, left: -20, bottom: 0 }}>
         <defs>
           <linearGradient id="colorProgress" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#6C1D5F" stopOpacity={0.6}/>
-            <stop offset="95%" stopColor="#6C1D5F" stopOpacity={0}/>
+            <stop offset="5%" stopColor="#6C1D5F" stopOpacity={0.6} />
+            <stop offset="95%" stopColor="#6C1D5F" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid
@@ -40,10 +40,10 @@ export function LearningActivityChart({ data }) {
           tick={{ fill: "currentColor", opacity: 0.5, fontSize: 11 }}
           dy={10}
         />
-        <YAxis 
+        <YAxis
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "currentColor", opacity: 0.5, fontSize: 11 }} 
+          tick={{ fill: "currentColor", opacity: 0.5, fontSize: 11 }}
           dx={-10}
         />
         <Tooltip
@@ -56,7 +56,12 @@ export function LearningActivityChart({ data }) {
             backdropFilter: "blur(16px)",
           }}
           itemStyle={{ fontSize: "13px", fontWeight: "800" }}
-          labelStyle={{ fontSize: "12px", fontWeight: "bold", color: "#6b7280", marginBottom: "4px" }}
+          labelStyle={{
+            fontSize: "12px",
+            fontWeight: "bold",
+            color: "#6b7280",
+            marginBottom: "4px",
+          }}
         />
         <Area
           type="monotone"

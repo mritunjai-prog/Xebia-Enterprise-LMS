@@ -1,13 +1,11 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import { api } from '../services/api';
-
-
+import { api } from "../services/api";
 
 export const useAppStore = create((set, get) => ({
   isSidebarCollapsed: false,
-  activeTenant: 'Global · All Tenants',
-  activeSidebarItem: 'Dashboard',
+  activeTenant: "Global · All Tenants",
+  activeSidebarItem: "Dashboard",
   breadcrumbs: [],
   toasts: [],
   modals: {
@@ -17,31 +15,32 @@ export const useAppStore = create((set, get) => ({
   },
 
   adminProfile: (() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       try {
-        const saved = localStorage.getItem('lms_admin_profile');
+        const saved = localStorage.getItem("lms_admin_profile");
         if (saved) return JSON.parse(saved);
       } catch (e) {}
     }
     return {
-      name: 'Admin User',
-      email: 'admin@xebia.com',
-      role: 'System Administrator',
+      name: "Admin User",
+      email: "admin@xebia.com",
+      role: "System Administrator",
       image: null,
     };
   })(),
-  
-  updateAdminProfile: (updates) => set((state) => {
-    const newProfile = { ...state.adminProfile, ...updates };
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('lms_admin_profile', JSON.stringify(newProfile));
-      } catch (error) {
-        console.warn('Could not save profile to localStorage, it might be too large.', error);
+
+  updateAdminProfile: (updates) =>
+    set((state) => {
+      const newProfile = { ...state.adminProfile, ...updates };
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("lms_admin_profile", JSON.stringify(newProfile));
+        } catch (error) {
+          console.warn("Could not save profile to localStorage, it might be too large.", error);
+        }
       }
-    }
-    return { adminProfile: newProfile };
-  }),
+      return { adminProfile: newProfile };
+    }),
 
   dashboardData: null,
   organizations: [],
@@ -55,20 +54,20 @@ export const useAppStore = create((set, get) => ({
   setTenant: (tenant) => set({ activeTenant: tenant }),
   setActiveSidebarItem: (item) => set({ activeSidebarItem: item }),
   setBreadcrumbs: (crumbs) => set({ breadcrumbs: crumbs }),
-  
-  addToast: (message, type = 'info') => {
+
+  addToast: (message, type = "info") => {
     const id = Math.random().toString(36).substring(2, 9);
     set((state) => ({ toasts: [...state.toasts, { id, message, type }] }));
     setTimeout(() => {
       get().removeToast(id);
     }, 4000);
   },
-  
-  removeToast: (id) => set((state) => ({ toasts: state.toasts.filter(t => t.id !== id) })),
-  
+
+  removeToast: (id) => set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) })),
+
   openModal: (modal) => set((state) => ({ modals: { ...state.modals, [modal]: true } })),
   closeModal: (modal) => set((state) => ({ modals: { ...state.modals, [modal]: false } })),
-  
+
   fetchDashboardData: async () => {
     set({ isLoading: true });
     try {
@@ -107,9 +106,9 @@ export const useAppStore = create((set, get) => ({
     try {
       await api.approvals.process(id, action);
       set((state) => ({
-        approvals: state.approvals.filter(a => a.id !== id)
+        approvals: state.approvals.filter((a) => a.id !== id),
       }));
-      get().addToast(`Request ${action}d successfully.`, 'success');
+      get().addToast(`Request ${action}d successfully.`, "success");
       // Update dashboard KPI optimistically
       set((state) => {
         if (state.dashboardData) {
@@ -120,16 +119,16 @@ export const useAppStore = create((set, get) => ({
                 ...state.dashboardData.kpi,
                 approvals: {
                   ...state.dashboardData.kpi.approvals,
-                  total: Math.max(0, state.dashboardData.kpi.approvals.total - 1)
-                }
-              }
-            }
-          }
+                  total: Math.max(0, state.dashboardData.kpi.approvals.total - 1),
+                },
+              },
+            },
+          };
         }
         return state;
       });
     } catch (error) {
-      get().addToast(`Failed to ${action} request.`, 'error');
+      get().addToast(`Failed to ${action} request.`, "error");
     }
   },
 
@@ -137,11 +136,11 @@ export const useAppStore = create((set, get) => ({
     try {
       const newOrg = await api.organizations.create(org);
       set((state) => ({
-        organizations: [newOrg, ...state.organizations]
+        organizations: [newOrg, ...state.organizations],
       }));
-      get().addToast(`Organization ${newOrg.name} created.`, 'success');
+      get().addToast(`Organization ${newOrg.name} created.`, "success");
     } catch (error) {
-      get().addToast("Failed to create organization.", 'error');
+      get().addToast("Failed to create organization.", "error");
     }
   },
 
@@ -149,11 +148,11 @@ export const useAppStore = create((set, get) => ({
     try {
       const newUser = await api.users.create(user);
       set((state) => ({
-        users: [newUser, ...state.users]
+        users: [newUser, ...state.users],
       }));
-      get().addToast(`User ${newUser.name} created.`, 'success');
+      get().addToast(`User ${newUser.name} created.`, "success");
     } catch (error) {
-      get().addToast("Failed to create user.", 'error');
+      get().addToast("Failed to create user.", "error");
     }
-  }
+  },
 }));

@@ -1,8 +1,11 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Database, AlertCircle } from 'lucide-react';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Database, AlertCircle } from "lucide-react";
 
-export function EmptyState({ title = "Backend Support Pending", description = "This metric requires backend telemetry, HR system integration, or future database migrations before it can be calculated." }) {
+export function EmptyState({
+  title = "Backend Support Pending",
+  description = "This metric requires backend telemetry, HR system integration, or future database migrations before it can be calculated.",
+}) {
   return (
     <Card className="flex flex-col items-center justify-center min-h-[300px] border-dashed border-2 border-border/60 bg-muted/30">
       <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4 relative">

@@ -23,7 +23,7 @@ function BatchesPage() {
       instructor: "Jane Smith",
       schedule: "Mon, Wed, Fri (10 AM - 1 PM)",
       location: "Hybrid (Online & Gurgaon Campus)",
-      studentsCount: 42
+      studentsCount: 42,
     },
     {
       id: "b2",
@@ -36,8 +36,8 @@ function BatchesPage() {
       instructor: "Michael Doe",
       schedule: "Tue, Thu (2 PM - 5 PM)",
       location: "Online",
-      studentsCount: 38
-    }
+      studentsCount: 38,
+    },
   ];
 
   return (
@@ -62,16 +62,18 @@ function BatchesPage() {
           >
             {/* Status indicator */}
             <div className="absolute top-0 right-0 p-6">
-              <Badge 
+              <Badge
                 className={clsx(
                   "px-3 py-1 font-bold text-xs rounded-full",
-                  batch.status === "Active" 
-                    ? "bg-[#01AC9F]/10 text-[#01AC9F] border border-[#01AC9F]/20" 
-                    : "bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-gray-300 border border-gray-200 dark:border-white/10"
+                  batch.status === "Active"
+                    ? "bg-[#01AC9F]/10 text-[#01AC9F] border border-[#01AC9F]/20"
+                    : "bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-gray-300 border border-gray-200 dark:border-white/10",
                 )}
                 variant="outline"
               >
-                {batch.status === "Active" && <span className="w-1.5 h-1.5 rounded-full bg-[#01AC9F] inline-block mr-2 animate-pulse" />}
+                {batch.status === "Active" && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#01AC9F] inline-block mr-2 animate-pulse" />
+                )}
                 {batch.status}
               </Badge>
             </div>
@@ -93,28 +95,36 @@ function BatchesPage() {
                 <Calendar className="w-4 h-4 text-gray-400 mt-0.5" />
                 <div>
                   <p className="font-bold text-gray-700 dark:text-gray-300">Duration</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">{batch.startDate} - {batch.endDate}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
+                    {batch.startDate} - {batch.endDate}
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <Clock className="w-4 h-4 text-gray-400 mt-0.5" />
                 <div>
                   <p className="font-bold text-gray-700 dark:text-gray-300">Schedule</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">{batch.schedule}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
+                    {batch.schedule}
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
                 <div>
                   <p className="font-bold text-gray-700 dark:text-gray-300">Location</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">{batch.location}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
+                    {batch.location}
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <CheckCircle className="w-4 h-4 text-gray-400 mt-0.5" />
                 <div>
                   <p className="font-bold text-gray-700 dark:text-gray-300">Instructor</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">{batch.instructor}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
+                    {batch.instructor}
+                  </p>
                 </div>
               </div>
             </div>
@@ -124,7 +134,9 @@ function BatchesPage() {
                 <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center border border-white dark:border-gray-800 z-10 text-xs font-bold text-gray-600 dark:text-gray-300">
                   +{batch.studentsCount}
                 </div>
-                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Classmates</span>
+                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Classmates
+                </span>
               </div>
               <Button className="bg-[#FF6200] hover:bg-[#FF6200]/90 text-white rounded-full px-6 font-bold shadow-lg shadow-[#FF6200]/20 transition-all">
                 View Details <ArrowRight className="w-4 h-4 ml-2" />

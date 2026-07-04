@@ -15,28 +15,33 @@ function AssessmentsPage() {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
-  const filteredAssessments = upcomingAssessments.filter((a) =>
-    a.name.toLowerCase().includes(search.toLowerCase()) || 
-    a.course.toLowerCase().includes(search.toLowerCase())
+  const filteredAssessments = upcomingAssessments.filter(
+    (a) =>
+      a.name.toLowerCase().includes(search.toLowerCase()) ||
+      a.course.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const pending = filteredAssessments.filter(a => a.status === "Pending");
-  const upcoming = filteredAssessments.filter(a => a.status === "Upcoming");
-  const completed = filteredAssessments.filter(a => a.status === "Completed");
+  const pending = filteredAssessments.filter((a) => a.status === "Pending");
+  const upcoming = filteredAssessments.filter((a) => a.status === "Upcoming");
+  const completed = filteredAssessments.filter((a) => a.status === "Completed");
 
   const getStatusConfig = (status) => {
     switch (status) {
-      case "Completed": return { bg: "bg-[#01AC9F]", icon: CheckCircle, label: "Completed" };
-      case "Upcoming": return { bg: "bg-[#6C1D5F]", icon: Calendar, label: "Upcoming" };
-      case "Pending": return { bg: "bg-[#FF6200]", icon: Clock, label: "Action Required" };
-      default: return { bg: "bg-gray-500", icon: FileText, label: status };
+      case "Completed":
+        return { bg: "bg-[#01AC9F]", icon: CheckCircle, label: "Completed" };
+      case "Upcoming":
+        return { bg: "bg-[#6C1D5F]", icon: Calendar, label: "Upcoming" };
+      case "Pending":
+        return { bg: "bg-[#FF6200]", icon: Clock, label: "Action Required" };
+      default:
+        return { bg: "bg-gray-500", icon: FileText, label: status };
     }
   };
 
   const AssessmentCard = ({ assessment, idx }) => {
     const config = getStatusConfig(assessment.status);
     const Icon = config.icon;
-    
+
     return (
       <motion.div
         layout
@@ -49,7 +54,9 @@ function AssessmentsPage() {
         {/* Top Banner Area */}
         <div className="relative h-32 bg-muted overflow-hidden shrink-0 p-4 flex items-start justify-between border-b border-border">
           <div className="absolute inset-0 flex items-center justify-center text-gray-300 dark:text-gray-600 z-0">
-            <span className="text-4xl font-black opacity-20 uppercase">{assessment.course.substring(0, 2)}</span>
+            <span className="text-4xl font-black opacity-20 uppercase">
+              {assessment.course.substring(0, 2)}
+            </span>
           </div>
           {assessment.image && (
             <img
@@ -60,16 +67,23 @@ function AssessmentsPage() {
           )}
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10 z-10 pointer-events-none" />
-          
+
           <div className="relative z-20">
-            <span className={clsx("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold text-white shadow-sm", config.bg)}>
+            <span
+              className={clsx(
+                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold text-white shadow-sm",
+                config.bg,
+              )}
+            >
               <Icon className="w-3.5 h-3.5" />
               {config.label}
             </span>
           </div>
-          
+
           <div className="relative z-20 bg-black/50 backdrop-blur-md rounded-lg px-3 py-1.5 flex flex-col items-center justify-center shadow-sm border border-white/10">
-            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-wider leading-none mb-0.5">Time</span>
+            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-wider leading-none mb-0.5">
+              Time
+            </span>
             <span className="text-xs font-black text-white leading-none">{assessment.time}</span>
           </div>
         </div>
@@ -86,7 +100,9 @@ function AssessmentsPage() {
           <div className="mt-auto space-y-4">
             <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-gray-50 dark:bg-gray-800/50 p-2.5 rounded-lg border border-gray-100 dark:border-gray-800">
               <Calendar className="w-4 h-4 shrink-0 text-gray-400" />
-              <span>Scheduled for <strong className="text-foreground">{assessment.date}</strong></span>
+              <span>
+                Scheduled for <strong className="text-foreground">{assessment.date}</strong>
+              </span>
             </div>
 
             {/* CTA Button */}
@@ -97,7 +113,10 @@ function AssessmentsPage() {
                 </button>
               </Link>
             ) : assessment.status === "Upcoming" ? (
-              <button disabled className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-muted text-gray-400 dark:text-gray-500 cursor-not-allowed">
+              <button
+                disabled
+                className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-muted text-gray-400 dark:text-gray-500 cursor-not-allowed"
+              >
                 <Clock className="w-4 h-4" /> Starts on {assessment.date}
               </button>
             ) : (
@@ -183,10 +202,18 @@ function AssessmentsPage() {
           ))}
         </TabsList>
 
-        <TabsContent value="all" className="mt-0 outline-none"><AssessmentGrid items={filteredAssessments} /></TabsContent>
-        <TabsContent value="pending" className="mt-0 outline-none"><AssessmentGrid items={pending} /></TabsContent>
-        <TabsContent value="upcoming" className="mt-0 outline-none"><AssessmentGrid items={upcoming} /></TabsContent>
-        <TabsContent value="completed" className="mt-0 outline-none"><AssessmentGrid items={completed} /></TabsContent>
+        <TabsContent value="all" className="mt-0 outline-none">
+          <AssessmentGrid items={filteredAssessments} />
+        </TabsContent>
+        <TabsContent value="pending" className="mt-0 outline-none">
+          <AssessmentGrid items={pending} />
+        </TabsContent>
+        <TabsContent value="upcoming" className="mt-0 outline-none">
+          <AssessmentGrid items={upcoming} />
+        </TabsContent>
+        <TabsContent value="completed" className="mt-0 outline-none">
+          <AssessmentGrid items={completed} />
+        </TabsContent>
       </Tabs>
     </div>
   );

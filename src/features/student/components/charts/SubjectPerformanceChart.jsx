@@ -24,8 +24,8 @@ export function SubjectPerformanceChart({ data }) {
       <BarChart data={data} margin={{ top: 20, right: 30, left: -20, bottom: 0 }}>
         <defs>
           <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#01AC9F" stopOpacity={1}/>
-            <stop offset="100%" stopColor="#01AC9F" stopOpacity={0.4}/>
+            <stop offset="0%" stopColor="#01AC9F" stopOpacity={1} />
+            <stop offset="100%" stopColor="#01AC9F" stopOpacity={0.4} />
           </linearGradient>
         </defs>
         <CartesianGrid
@@ -41,10 +41,10 @@ export function SubjectPerformanceChart({ data }) {
           tick={{ fill: "currentColor", opacity: 0.5, fontSize: 11 }}
           dy={10}
         />
-        <YAxis 
+        <YAxis
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "currentColor", opacity: 0.5, fontSize: 11 }} 
+          tick={{ fill: "currentColor", opacity: 0.5, fontSize: 11 }}
           dx={-10}
         />
         <Tooltip
@@ -57,13 +57,18 @@ export function SubjectPerformanceChart({ data }) {
             backdropFilter: "blur(16px)",
           }}
           itemStyle={{ fontSize: "13px", fontWeight: "800" }}
-          labelStyle={{ fontSize: "12px", fontWeight: "bold", color: "#6b7280", marginBottom: "4px" }}
-          cursor={{ fill: 'currentColor', opacity: 0.05 }}
+          labelStyle={{
+            fontSize: "12px",
+            fontWeight: "bold",
+            color: "#6b7280",
+            marginBottom: "4px",
+          }}
+          cursor={{ fill: "currentColor", opacity: 0.05 }}
         />
-        <Bar 
-          dataKey="score" 
+        <Bar
+          dataKey="score"
           name="Score %"
-          fill="url(#colorScore)" 
+          fill="url(#colorScore)"
           radius={[6, 6, 0, 0]}
           barSize={40}
         >

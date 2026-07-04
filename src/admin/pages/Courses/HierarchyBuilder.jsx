@@ -114,6 +114,35 @@ const getContentIcon = (type) => {
   }
 };
 
+
+function AIGenerateButton({ isGenerating, onClick, disabled }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-[#845EC2] to-[#D65DB1] text-white shadow-[0_4px_12px_-4px_rgba(214,93,177,0.4)] hover:shadow-[0_8px_20px_-6px_rgba(214,93,177,0.6)] hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group shrink-0"
+      title="Generate with AI"
+    >
+      <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+      <div className={clsx("relative z-10 transition-transform duration-500", !disabled && !isGenerating && "group-hover:rotate-12 group-hover:scale-110")}>
+        {isGenerating ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Wand2 className="w-4 h-4" />
+        )}
+      </div>
+      {!disabled && !isGenerating && (
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <span className="absolute top-1 left-1.5 w-1 h-1 bg-white/80 rounded-full animate-ping" style={{ animationDuration: '1s' }} />
+          <span className="absolute bottom-1 right-1.5 w-1 h-1 bg-white/80 rounded-full animate-ping" style={{ animationDuration: '1.2s', animationDelay: '0.2s' }} />
+          <span className="absolute top-1.5 right-1 w-0.5 h-0.5 bg-white/80 rounded-full animate-ping" style={{ animationDuration: '0.8s', animationDelay: '0.4s' }} />
+        </div>
+      )}
+    </button>
+  );
+}
+
 export default function HierarchyBuilder({ course }) {
   const router = useRouter();
   const { addToast } = useAppStore();
@@ -211,9 +240,9 @@ export default function HierarchyBuilder({ course }) {
         setModules(modules.map((mod) => (mod.id === editModuleId ? { ...mod, ...updated } : mod)));
         setEditModuleId(null);
         setShowModuleForm(false);
-        addToast('Module Updated', 'success');
+        addToast("Module Updated", "success");
       } catch (err) {
-        addToast('Failed to update module', 'error');
+        addToast("Failed to update module", "error");
       }
       return;
     }
@@ -266,9 +295,9 @@ export default function HierarchyBuilder({ course }) {
         );
         setEditSubmoduleId(null);
         setShowSubmoduleForm(false);
-        addToast('Submodule Updated', 'success');
+        addToast("Submodule Updated", "success");
       } catch (err) {
-        addToast('Failed to update submodule', 'error');
+        addToast("Failed to update submodule", "error");
       }
       return;
     }
@@ -361,19 +390,19 @@ export default function HierarchyBuilder({ course }) {
   };
 
   const handleDeleteModule = async (id) => {
-    if (window.confirm('Delete this module and all its content?')) {
+    if (window.confirm("Delete this module and all its content?")) {
       try {
         await CourseService.deleteModule(id);
         setModules(modules.filter((m) => m.id !== id));
         if (selectedModuleId === id) setSelectedModuleId(null);
-        addToast('Module deleted', 'success');
+        addToast("Module deleted", "success");
       } catch (err) {
-        addToast('Failed to delete module', 'error');
+        addToast("Failed to delete module", "error");
       }
     }
   };
   const handleDeleteSubmodule = async (sid) => {
-    if (window.confirm('Delete this submodule and all its content?')) {
+    if (window.confirm("Delete this submodule and all its content?")) {
       try {
         await CourseService.deleteSubmodule(sid);
         setModules(
@@ -383,14 +412,14 @@ export default function HierarchyBuilder({ course }) {
               : m,
           ),
         );
-        addToast('Submodule deleted', 'success');
+        addToast("Submodule deleted", "success");
       } catch (err) {
-        addToast('Failed to delete submodule', 'error');
+        addToast("Failed to delete submodule", "error");
       }
     }
   };
   const handleDeleteContent = async (sid, cid) => {
-    if (window.confirm('Delete this content?')) {
+    if (window.confirm("Delete this content?")) {
       try {
         await CourseService.deleteContentItem(cid);
         setModules(
@@ -407,9 +436,9 @@ export default function HierarchyBuilder({ course }) {
               : m,
           ),
         );
-        addToast('Content deleted', 'success');
+        addToast("Content deleted", "success");
       } catch (err) {
-        addToast('Failed to delete content', 'error');
+        addToast("Failed to delete content", "error");
       }
     }
   };
