@@ -509,7 +509,8 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
       </SectionCard>
     </div>
 
-
+  );
+}
 
 export default function CreateCourse({ editData, categories = [], onBack, onSaved }) {
   const { addToast } = useAppStore();
