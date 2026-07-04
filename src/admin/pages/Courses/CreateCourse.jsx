@@ -3,7 +3,7 @@ import { useAppStore } from '../../store/useAppStore';
 import { CourseService } from '../../../services/api';
 import { AIService } from '../../../services/aiService';
 import {
-  CheckCircle2, Circle, ChevronRight, Save, PlayCircle, Star, Users, Check, AlertCircle, Plus, X, UploadCloud, Link as LinkIcon, Wand2, Loader2, ArrowLeft, Globe, Clock, BookOpen
+  CheckCircle2, Circle, ChevronRight, Save, Check, AlertCircle, Plus, X, Wand2, Loader2, Globe, Clock, BookOpen
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -508,232 +508,11 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
         </div>
       </SectionCard>
     </div>
-  );
-}
 
-function SeoMetaStep({ form, setForm }) {
-  const seoScore = Math.min(100, [
-    form.seoTitle ? 20 : 0,
-    form.seoDescription ? 20 : 0,
-    form.canonicalUrl ? 10 : 0,
-    form.ogTitle ? 15 : 0,
-    form.ogDescription ? 15 : 0,
-    form.twitterTitle ? 10 : 0,
-    form.metaKeywords ? 10 : 0,
-  ].reduce((a, b) => a + b, 0));
 
-  const scoreColor = seoScore >= 70 ? 'text-[#01AC9F]' : seoScore >= 40 ? 'text-orange-400' : 'text-red-500';
-
-  return (
-    <div className="space-y-5">
-      <SectionCard color={BRAND} title="SEO Core" icon="🔍">
-        <div className="space-y-4">
-          <Field label="SEO Title" hint={`${(form.seoTitle || '').length}/60`}>
-            <Input
-              value={form.seoTitle}
-              onChange={e => setForm(f => ({ ...f, seoTitle: e.target.value }))}
-              placeholder="Spring Boot Masterclass - Complete Backend Guide"
-              maxLength={60}
-            />
-          </Field>
-          <Field label="Meta Description" hint={`${(form.seoDescription || '').length}/160`}>
-            <Textarea
-              value={form.seoDescription}
-              onChange={e => setForm(f => ({ ...f, seoDescription: e.target.value }))}
-              rows={3}
-              placeholder="Master Spring Boot 3 and build production-ready REST APIs..."
-              maxLength={160}
-            />
-          </Field>
-          <FormRow>
-            <Field label="Canonical URL">
-              <Input
-                value={form.canonicalUrl}
-                onChange={e => setForm(f => ({ ...f, canonicalUrl: e.target.value }))}
-                placeholder="https://..."
-              />
-            </Field>
-            <Field label="Robots">
-              <Select value={form.robots} onChange={e => setForm(f => ({ ...f, robots: e.target.value }))}>
-                {['index, follow', 'noindex, nofollow', 'index, nofollow', 'noindex, follow'].map(r => <option key={r}>{r}</option>)}
-              </Select>
-            </Field>
-          </FormRow>
-          <Field label="Meta Keywords" hint="Comma-separated">
-            <Input
-              value={form.metaKeywords}
-              onChange={e => setForm(f => ({ ...f, metaKeywords: e.target.value }))}
-              placeholder="spring boot, java, backend, rest api"
-            />
-          </Field>
-        </div>
-      </SectionCard>
-
-      <SectionCard color="#3b82f6" title="Advanced SEO" icon="🚀">
-        <div className="space-y-4">
-          <Field label="primaryKeyword (*)">
-            <Input value={form.primaryKeyword} onChange={e => setForm(f => ({ ...f, primaryKeyword: e.target.value }))} placeholder="spring boot" />
-          </Field>
-          <FormRow>
-            <Field label="focusKeyphrase (Google/SEO)">
-              <Input value={form.focusKeyphrase} onChange={e => setForm(f => ({ ...f, focusKeyphrase: e.target.value }))} placeholder="Spring Boot Masterclass" />
-            </Field>
-            <Field label="focusKeyword (SEMrush)">
-              <Input value={form.focusKeyword} onChange={e => setForm(f => ({ ...f, focusKeyword: e.target.value }))} placeholder="spring boot course" />
-            </Field>
-          </FormRow>
-          <FormRow>
-            <Field label="socialMediaTitle (Linked label)">
-              <Input value={form.socialMediaTitle} onChange={e => setForm(f => ({ ...f, socialMediaTitle: e.target.value }))} placeholder="Spring Boot Masterclass" />
-            </Field>
-            <Field label="searchEngineTitle (Google SEO)">
-              <Input value={form.searchEngineTitle} onChange={e => setForm(f => ({ ...f, searchEngineTitle: e.target.value }))} placeholder="Spring Boot Masterclass | Xebia LMS" />
-            </Field>
-          </FormRow>
-          <FormRow>
-            <Field label="courseDescription (JSON-LD)">
-              <Textarea value={form.courseDescriptionSeo} onChange={e => setForm(f => ({ ...f, courseDescriptionSeo: e.target.value }))} rows={2} placeholder="Same or shorter version of your course description..." />
-            </Field>
-            <Field label="courseDescription (Twitter)">
-              <Textarea value={form.courseDescriptionTwitter} onChange={e => setForm(f => ({ ...f, courseDescriptionTwitter: e.target.value }))} rows={2} placeholder="Tweet-sized description..." />
-            </Field>
-          </FormRow>
-        </div>
-      </SectionCard>
-
-      <SectionCard color="#f97316" title="Open Graph (Social Media)" icon="📱">
-        <div className="space-y-4">
-          <FormRow>
-            <Field label="ogTitle">
-              <Input value={form.ogTitle} onChange={e => setForm(f => ({ ...f, ogTitle: e.target.value }))} placeholder="Spring Boot Masterclass" />
-            </Field>
-            <Field label="ogType">
-              <Select value={form.ogType} onChange={e => setForm(f => ({ ...f, ogType: e.target.value }))}>
-                {['website', 'article', 'course', 'video.movie'].map(t => <option key={t}>{t}</option>)}
-              </Select>
-            </Field>
-          </FormRow>
-          <Field label="ogDescription (*)">
-            <Textarea value={form.ogDescription} onChange={e => setForm(f => ({ ...f, ogDescription: e.target.value }))} rows={2} placeholder="OG description for Facebook, LinkedIn..." />
-          </Field>
-          <FormRow>
-            <Field label="ogImage (***)" hint="1200×630 recommended">
-              <Input value={form.ogImage} onChange={e => setForm(f => ({ ...f, ogImage: e.target.value }))} placeholder="https://..." />
-            </Field>
-            <Field label="ogUrl (***)" hint="Canonical URL for OG">
-              <Input value={form.ogUrl} onChange={e => setForm(f => ({ ...f, ogUrl: e.target.value }))} placeholder="https://..." />
-            </Field>
-          </FormRow>
-        </div>
-      </SectionCard>
-
-      <SectionCard color="#1da1f2" title="Twitter" icon="🐦">
-        <div className="space-y-4">
-          <FormRow>
-            <Field label="twitterTitle (*)">
-              <Input value={form.twitterTitle} onChange={e => setForm(f => ({ ...f, twitterTitle: e.target.value }))} placeholder="Spring Boot Masterclass" />
-            </Field>
-            <Field label="twitterCard (label)">
-              <Select value={form.twitterCard} onChange={e => setForm(f => ({ ...f, twitterCard: e.target.value }))}>
-                {['summary', 'summary_large_image', 'app', 'player'].map(t => <option key={t}>{t}</option>)}
-              </Select>
-            </Field>
-          </FormRow>
-          <Field label="twitterDescription (*)">
-            <Textarea value={form.twitterDescription} onChange={e => setForm(f => ({ ...f, twitterDescription: e.target.value }))} rows={2} placeholder="Short Twitter description..." />
-          </Field>
-          <Field label="twitterImage (***)" hint="Twitter card image">
-            <Input value={form.twitterImage} onChange={e => setForm(f => ({ ...f, twitterImage: e.target.value }))} placeholder="https://..." />
-          </Field>
-        </div>
-      </SectionCard>
-
-      <SectionCard color="#8b5cf6" title="Structured Data (JSON-LD)" icon="📊">
-        <div className="space-y-4">
-          <Field label="courseCode">
-            <Input value={form.courseCode} onChange={e => setForm(f => ({ ...f, courseCode: e.target.value }))} placeholder="spring-boot-masterclass-001" />
-          </Field>
-          <div className="space-y-2">
-            {[
-              { label: 'breadcrumb (JSON-LD)', key: 'breadcrumb', placeholder: '{"@type":"BreadcrumbList","itemListElement":[...]}' },
-              { label: 'faqSchema (JSON-LD)', key: 'faqSchema', placeholder: '{"@type":"FAQPage","mainEntity":[...]}' },
-              { label: 'reviewSchema (JSON-LD)', key: 'reviewSchema', placeholder: '{"@type":"AggregateRating",...}' },
-            ].map(({ label, key, placeholder }) => (
-              <Field key={key} label={label}>
-                <Textarea
-                  value={form[key]}
-                  onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                  rows={3}
-                  placeholder={placeholder}
-                  className="font-mono text-xs"
-                />
-              </Field>
-            ))}
-          </div>
-          <Field label="legalText (***)" hint="Legal disclaimer shown on course page">
-            <Textarea value={form.legalText} onChange={e => setForm(f => ({ ...f, legalText: e.target.value }))} rows={2} placeholder="Standard legal disclaimer..." />
-          </Field>
-        </div>
-      </SectionCard>
-
-      <SectionCard color="#6b7280" title="Tracking" icon="📈">
-        <div className="space-y-4">
-          <FormRow>
-            <Field label="trackingId (*)">
-              <Input value={form.trackingId} onChange={e => setForm(f => ({ ...f, trackingId: e.target.value }))} placeholder="Spring Boot Masterclass" />
-            </Field>
-            <Field label="LabelCard (alias / label)">
-              <Select value={form.labelCard} onChange={e => setForm(f => ({ ...f, labelCard: e.target.value }))}>
-                {['None', 'New', 'Bestseller', 'Popular', 'Updated', 'Free'].map(l => <option key={l}>{l}</option>)}
-              </Select>
-            </Field>
-          </FormRow>
-          <Field label="Note Description">
-            <Input value={form.noteDescription} onChange={e => setForm(f => ({ ...f, noteDescription: e.target.value }))} placeholder="To the landing description" />
-          </Field>
-          <Field label="Badge Image (***)" hint="Enter Badge Image URL">
-            <Input value={form.badgeImage} onChange={e => setForm(f => ({ ...f, badgeImage: e.target.value }))} placeholder="https://..." />
-          </Field>
-          <Field label="Build Image (***)" hint="Enter Build Image URL">
-            <Input value={form.buildImage} onChange={e => setForm(f => ({ ...f, buildImage: e.target.value }))} placeholder="https://..." />
-          </Field>
-        </div>
-      </SectionCard>
-
-      <SectionCard color="#ec4899" title="Configurations (A/B testing | Advanced)" icon="🧪">
-        <div className="space-y-4">
-          <FormRow>
-            <Field label="variantA/B (***)" hint="A/B test variant slug">
-              <Input value={form.variantA} onChange={e => setForm(f => ({ ...f, variantA: e.target.value }))} placeholder="variant-a" />
-            </Field>
-            <Field label="variantB/B (***)" hint="Comparison variant slug">
-              <Input value={form.variantB} onChange={e => setForm(f => ({ ...f, variantB: e.target.value }))} placeholder="variant-b" />
-            </Field>
-          </FormRow>
-          <Field label="legalText (***) · Site-wide legal override">
-            <Textarea value={form.legalTextOverride} onChange={e => setForm(f => ({ ...f, legalTextOverride: e.target.value }))} rows={2} placeholder="Optional site-wide legal override..." />
-          </Field>
-        </div>
-      </SectionCard>
-
-      <div className="bg-gray-50 dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl p-4">
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">SEO Score</p>
-        <div className="flex items-center gap-3">
-          <div className="w-16 h-16 rounded-full border-4 border-gray-200 dark:border-[#2e2e3e] flex items-center justify-center relative">
-            <span className={clsx('text-xl font-black', scoreColor)}>{seoScore}</span>
-          </div>
-          <div className="text-sm text-gray-500">
-            {seoScore >= 70 ? '✅ Good SEO coverage' : seoScore >= 40 ? '⚠️ Needs improvement' : '❌ Missing key SEO fields'}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function CreateCourse({ editData, categories = [], onBack, onSaved }) {
   const { addToast } = useAppStore();
-  const [currentStep, setCurrentStep] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [generatingField, setGeneratingField] = useState(null);
   const [duplicateError, setDuplicateError] = useState(null);
@@ -782,8 +561,6 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
     icon: editData?.icon || '',
     thumbnail: editData?.thumbnail || editData?.thumbnailImageUrl || '',
     bannerImage: editData?.bannerImage || editData?.promoImageUrl || '',
-    previewVideoUrl: editData?.previewVideoUrl || '',
-    coursePriceUrl: editData?.coursePriceUrl || '',
     learningOutcomes: editData?.learningOutcomes || [''],
     prerequisites: editData?.prerequisites || [''],
     targetAudience: editData?.targetAudience || [''],
@@ -794,40 +571,6 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
     isFeatured: editData?.isFeatured || false,
     allowEnrolling: editData?.allowEnrolling !== false,
     showOnCourse: editData?.showOnCourse !== false,
-    seoTitle: editData?.seoTitle || '',
-    seoDescription: editData?.seoDescription || editData?.metaDescription || '',
-    canonicalUrl: editData?.canonicalUrl || '',
-    robots: editData?.robots || 'index, follow',
-    metaKeywords: editData?.metaKeywords || '',
-    primaryKeyword: editData?.primaryKeyword || '',
-    focusKeyphrase: editData?.focusKeyphrase || '',
-    focusKeyword: editData?.focusKeyword || '',
-    socialMediaTitle: editData?.socialMediaTitle || '',
-    searchEngineTitle: editData?.searchEngineTitle || '',
-    courseDescriptionSeo: editData?.courseDescriptionSeo || '',
-    courseDescriptionTwitter: editData?.courseDescriptionTwitter || '',
-    ogTitle: editData?.ogTitle || '',
-    ogType: editData?.ogType || 'website',
-    ogDescription: editData?.ogDescription || '',
-    ogImage: editData?.ogImage || '',
-    ogUrl: editData?.ogUrl || '',
-    twitterTitle: editData?.twitterTitle || '',
-    twitterCard: editData?.twitterCard || 'summary_large_image',
-    twitterDescription: editData?.twitterDescription || '',
-    twitterImage: editData?.twitterImage || '',
-    courseCode: editData?.courseCode || editData?.slug || '',
-    breadcrumb: editData?.breadcrumb || '',
-    faqSchema: editData?.faqSchema || '',
-    reviewSchema: editData?.reviewSchema || '',
-    legalText: editData?.legalText || '',
-    trackingId: editData?.trackingId || '',
-    labelCard: editData?.labelCard || 'None',
-    noteDescription: editData?.noteDescription || '',
-    badgeImage: editData?.badgeImage || '',
-    buildImage: editData?.buildImage || '',
-    variantA: editData?.variantA || '',
-    variantB: editData?.variantB || '',
-    legalTextOverride: editData?.legalTextOverride || '',
   });
 
   const handleSave = async (asDraft = false) => {
@@ -852,7 +595,7 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
 
       const payload = {
         title: form.title,
-        courseCode: form.courseCode || form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        courseCode: form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
         categoryId: form.categoryId,
         level: form.level,
         language: form.language,
@@ -864,7 +607,6 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
         icon: form.icon,
         thumbnail: form.thumbnail,
         bannerImage: form.bannerImage,
-        previewVideoUrl: form.previewVideoUrl,
         published: asDraft ? false : true,
         active: form.active,
         isActive: form.active,
@@ -875,14 +617,6 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
         targetAudience: form.targetAudience.filter(Boolean),
         highlights: form.highlights.filter(Boolean),
         careerOpportunities: form.careerOpportunities.filter(Boolean),
-        seoTitle: form.seoTitle,
-        seoDescription: form.seoDescription,
-        metaKeywords: typeof form.metaKeywords === 'string' ? form.metaKeywords.split(',').map(s => s.trim()).filter(Boolean) : (form.metaKeywords || []),
-        ogTitle: form.ogTitle,
-        ogDescription: form.ogDescription,
-        ogImage: form.ogImage,
-        twitterTitle: form.twitterTitle,
-        twitterDescription: form.twitterDescription,
       };
 
       let result;
@@ -903,7 +637,6 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
   };
 
   const selectedCat = categories.find(c => String(c.id) === String(form.categoryId));
-  const seoScore = Math.min(100, [form.seoTitle, form.seoDescription, form.ogTitle, form.metaKeywords].filter(Boolean).length * 18);
 
   return (
     <div className="animate-in fade-in duration-300">
