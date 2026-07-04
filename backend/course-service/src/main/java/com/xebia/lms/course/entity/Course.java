@@ -242,7 +242,7 @@ public class Course extends TenantScopedEntity {
     public String getBannerImage() { return bannerImage; }
     public void setBannerImage(String bannerImage) { this.bannerImage = bannerImage; }
     public boolean isFeatured() { return isFeatured; }
-    public void setFeatured(boolean featured) { isFeatured = featured; }
+    public void setFeatured(boolean featured) { this.isFeatured = featured; }
     public boolean isAllowEnrolling() { return allowEnrolling; }
     public void setAllowEnrolling(boolean allowEnrolling) { this.allowEnrolling = allowEnrolling; }
     public List<String> getHighlights() { return highlights; }

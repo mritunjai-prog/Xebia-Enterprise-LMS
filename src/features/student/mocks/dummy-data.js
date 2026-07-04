@@ -1,10 +1,10 @@
 export const studentProfile = {
-  name: "Vinit",
-  avatar: "https://i.pravatar.cc/150?u=vinit",
+  name: "Student",
+  avatar: "https://i.pravatar.cc/150?u=student",
   role: "Student",
   university: "Xebia University",
   batch: "Batch 2026 - Frontend Engineering",
-  email: "vinit@example.com",
+  email: "student@example.com",
   id: "S123456",
   phone: "+1-555-1234",
   enrollmentDate: "2026-01-10",
@@ -178,8 +178,8 @@ export const commentsData = [
   },
   {
     id: "c2",
-    author: "Vinit",
-    avatar: "https://i.pravatar.cc/150?u=vinit",
+    author: "Student",
+    avatar: "https://i.pravatar.cc/150?u=student",
     text: "The state management module is super helpful, thanks!",
     timestamp: "1 day ago",
     replies: []

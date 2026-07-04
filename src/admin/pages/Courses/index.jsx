@@ -16,10 +16,10 @@ import CreateCourse from './CreateCourse';
 const ITEMS_PER_PAGE = 12; // Adjusted for 4-column grid (3 rows)
 
 const LEVEL_COLORS = {
-  Beginner:     { bg: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 ring-emerald-600/20 dark:ring-emerald-500/20', dot: 'bg-emerald-500' },
-  Intermediate: { bg: 'bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-400 ring-purple-600/20 dark:ring-purple-500/20',  dot: 'bg-purple-500' },
-  Advanced:     { bg: 'bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-400 ring-orange-600/20 dark:ring-orange-500/20',  dot: 'bg-orange-500' },
-  Expert:       { bg: 'bg-gray-100 dark:bg-gray-500/10 text-gray-800 dark:text-gray-300 ring-gray-600/20 dark:ring-gray-500/20',       dot: 'bg-gray-800 dark:bg-gray-400' },
+  Beginner:     { bg: 'bg-[#01AC9F]/10 text-[#01AC9F] ring-[#01AC9F]/20 dark:bg-[#01AC9F]/20 dark:ring-[#01AC9F]/30', dot: 'bg-[#01AC9F]' },
+  Intermediate: { bg: 'bg-[#84117C]/10 text-[#84117C] dark:text-[#D3CCEC] ring-[#84117C]/20 dark:bg-[#84117C]/20 dark:ring-[#84117C]/30',  dot: 'bg-[#84117C]' },
+  Advanced:     { bg: 'bg-[#FF6200]/10 text-[#FF6200] ring-[#FF6200]/20 dark:bg-[#FF6200]/20 dark:ring-[#FF6200]/30',  dot: 'bg-[#FF6200]' },
+  Expert:       { bg: 'bg-[#5A5A5A]/10 text-[#5A5A5A] dark:text-gray-300 ring-[#5A5A5A]/20 dark:bg-[#5A5A5A]/20 dark:ring-[#5A5A5A]/30',       dot: 'bg-[#5A5A5A] dark:bg-gray-400' },
 };
 
 const CAT_COLORS = [
@@ -342,7 +342,7 @@ export default function Courses() {
                   className="group bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl flex flex-col h-full overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer"
                   onClick={(e) => {
                     if (e.target.closest('button')) return;
-                    window.location.href = `/courses/${slug}`;
+                    router.navigate({ to: '/admin/courses/$courseSlug', params: { courseSlug: slug } });
                   }}
                 >
                   {/* Thumbnail */}
@@ -363,7 +363,7 @@ export default function Courses() {
                     <div className="absolute top-4 left-4 z-20 pointer-events-none">
                       <span className={clsx(
                         'text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm',
-                        isPublished ? 'bg-purple-600 text-white' : 'bg-amber-500 text-white'
+                        isPublished ? 'bg-[#84117C] text-white' : 'bg-[#FF6200] text-white'
                       )}>
                         {isPublished ? 'Published' : 'Draft'}
                       </span>
@@ -372,7 +372,7 @@ export default function Courses() {
                     <div className="absolute top-4 right-4 z-20 pointer-events-none">
                       <span className={clsx(
                         'text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm',
-                        active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                        active ? 'bg-[#01AC9F] text-white' : 'bg-[#5A5A5A] text-white'
                       )}>
                         {active ? 'Active' : 'Inactive'}
                       </span>
@@ -399,7 +399,11 @@ export default function Courses() {
                       
                     {/* Meta Top (Level) */}
                     <div className="mb-4">
-                      <span className={clsx('inline-flex items-center text-sm font-bold px-4 py-1.5 rounded-lg text-white shadow-md tracking-wide', level === 'Beginner' ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.6)]' : level === 'Intermediate' ? 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)]' : 'bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.6)]')}>
+                      <span className={clsx('inline-flex items-center text-sm font-bold px-4 py-1.5 rounded-lg text-white shadow-md tracking-wide', 
+                        level === 'Beginner' ? 'bg-[#01AC9F] shadow-[0_0_15px_rgba(1,172,159,0.4)]' : 
+                        level === 'Intermediate' ? 'bg-[#84117C] shadow-[0_0_15px_rgba(132,17,124,0.4)]' : 
+                        'bg-[#FF6200] shadow-[0_0_15px_rgba(255,98,0,0.4)]'
+                      )}>
                         {level}
                       </span>
                     </div>
@@ -486,7 +490,7 @@ export default function Courses() {
                       className="group hover:bg-gray-100 dark:hover:bg-[#1a1a24] transition-colors cursor-pointer"
                       onClick={(e) => {
                         if (e.target.closest('button')) return;
-                        window.location.href = `/courses/${slug}`;
+                        router.navigate({ to: '/admin/courses/$courseSlug', params: { courseSlug: slug } });
                       }}
                     >
                       {/* Course */}

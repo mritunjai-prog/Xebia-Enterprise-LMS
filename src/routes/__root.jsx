@@ -7,14 +7,11 @@ import {
   useRouter,
   HeadContent,
   Scripts,
-  useLocation,
   Navigate
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { Sidebar } from "@/admin/components/layout/Sidebar";
-import { Header } from "@/admin/components/layout/Header";
 import "@/admin/index.css";
 
 function NotFoundComponent() {
@@ -130,8 +127,9 @@ function RootShell({ children }) {
         var theme = localStorage.getItem('lms_theme');
         if (theme === 'dark') {
           document.documentElement.classList.add('dark');
-        } else if (theme === 'light') {
+        } else {
           document.documentElement.classList.remove('dark');
+          if (!theme) localStorage.setItem('lms_theme', 'light');
         }
       } catch (e) {}
     })();
@@ -190,24 +188,9 @@ function RootShell({ children }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const location = useLocation();
-  const isStudentRoute = location.pathname.startsWith('/student');
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      {isStudentRoute ? (
-        <Outlet />
-      ) : (
-        <div className="shell">
-          <Sidebar />
-          <div className="main">
-            <Header />
-            <div className="content">
-              <Outlet />
-            </div>
-          </div>
-        </div>
-      )}
-    </QueryClientProvider>
-  );
+  return _jsx(QueryClientProvider, {
+    client: queryClient,
+    children: _jsx(Outlet, {})
+  });
 }

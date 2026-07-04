@@ -1,38 +1,39 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { notifications } from "@/features/student/mocks/dummy-data";
-import { Bell, BookOpen, ClipboardCheck, MessageSquare, Award, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import { notifications as initialNotifications } from "@/features/student/mocks/dummy-data";
+import { Bell, CheckCircle, Info, AlertTriangle, BookOpen, Clock, Settings, Search, Check, Trash2, Calendar, ClipboardCheck, MessageSquare, Award, CheckCircle2 } from "lucide-react";
 import { clsx } from "clsx";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/student/notifications")({
   component: NotificationsPage,
 });
 
 function NotificationsPage() {
-  const [localNotifications, setLocalNotifications] = useState(notifications);
+  const [localNotifications, setLocalNotifications] = useState(initialNotifications);
 
   const getIconData = (type) => {
     switch (type) {
       case "course":
         return {
           icon: <BookOpen className="w-5 h-5" />,
-          colorClass: "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400"
+          colorClass: "bg-[#6C1D5F]/10 text-[#6C1D5F] dark:bg-[#6C1D5F]/20 dark:text-[#D3CCEC]"
         };
       case "assessment":
         return {
           icon: <ClipboardCheck className="w-5 h-5" />,
-          colorClass: "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
+          colorClass: "bg-[#FF6200]/10 text-[#FF6200] dark:bg-[#FF6200]/20"
         };
       case "comment":
         return {
           icon: <MessageSquare className="w-5 h-5" />,
-          colorClass: "bg-purple-50 text-purple-600 dark:bg-primary/20 dark:text-primary-foreground"
+          colorClass: "bg-[#84117C]/10 text-[#84117C] dark:bg-[#84117C]/20 dark:text-[#D3CCEC]"
         };
       case "result":
         return {
           icon: <Award className="w-5 h-5" />,
-          colorClass: "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
+          colorClass: "bg-[#01AC9F]/10 text-[#01AC9F] dark:bg-[#01AC9F]/20"
         };
       default:
         return {
@@ -89,7 +90,7 @@ function NotificationsPage() {
       {/* Notifications List */}
       <div className="space-y-4">
         {localNotifications.length === 0 ? (
-          <div className="py-12 text-center bg-card rounded-2xl border border-border">
+          <div className="py-12 text-center bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] transition-all">
             <Bell className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
             <p className="text-lg font-bold text-foreground">You're all caught up!</p>
             <p className="text-sm text-muted-foreground">No new notifications right now.</p>
@@ -109,12 +110,12 @@ function NotificationsPage() {
                   "relative overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer group flex items-start gap-4 p-5",
                   notification.read 
                     ? "bg-card border-border hover:shadow-md hover:-translate-y-0.5" 
-                    : "bg-primary/[0.03] dark:bg-purple-500/[0.05] border-primary/20 dark:border-purple-500/20 shadow-sm hover:shadow-md hover:-translate-y-0.5"
+                    : "bg-[#6C1D5F]/[0.03] dark:bg-[#6C1D5F]/[0.05] border-[#6C1D5F]/20 shadow-sm hover:shadow-md hover:-translate-y-0.5"
                 )}
               >
                 {/* Unread Indicator Bar */}
                 {!notification.read && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary dark:bg-purple-500" />
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#6C1D5F] dark:bg-[#84117C]" />
                 )}
 
                 {/* Icon */}

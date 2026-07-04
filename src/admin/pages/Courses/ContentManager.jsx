@@ -14,16 +14,16 @@ const uploadToCloudinary = async (file) => {
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
   if (!cloudName || !uploadPreset) {
-    throw new Error("Cloudinary is not configured. Set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in .env");
+    throw new Error("Cloudinary is not configured. Please use the URL field directly instead, or add VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET to your .env file.");
   }
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", uploadPreset);
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", uploadPreset);
 
   const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
     method: "POST",
-    body: formData
+    body: fd
   });
 
   if (!response.ok) {
@@ -40,7 +40,7 @@ const BLOCK_TYPES = [
   { id: 'Heading', label: 'Heading', icon: FileText, backendType: 'NOTE' },
   { id: 'Code', label: 'Code', icon: Code, backendType: 'NOTE' },
   { id: 'Video', label: 'Video', icon: Video, backendType: 'VIDEO_REFERENCE' },
-  { id: 'Image', label: 'Image', icon: ImageIcon, backendType: 'PDF' },
+  { id: 'Image', label: 'Image', icon: ImageIcon, backendType: 'NOTE' },
   { id: 'PDF', label: 'PDF', icon: FileText, backendType: 'PDF' },
   { id: 'Callout', label: 'Callout', icon: LayoutTemplate, backendType: 'NOTE' },
   { id: 'Table', label: 'Table', icon: Table, backendType: 'COMPARISON_TABLE' }
@@ -48,34 +48,68 @@ const BLOCK_TYPES = [
 
 const FileUpload = ({ accept, onUpload, label }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const inputRef = React.useRef(null);
+
   const handleDrop = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      onUpload(e.dataTransfer.files[0]);
+    const files = e.dataTransfer?.files;
+    if (files && files.length > 0) {
+      onUpload(files[0]);
     }
   };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleChange = (e) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      onUpload(files[0]);
+    }
+    // Reset input so same file can be re-selected
+    e.target.value = '';
+  };
+
   return (
-    <div 
-      onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
-      onDragLeave={() => setIsDragging(false)}
+    <div
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors ${isDragging ? 'border-[#6C1D5F] bg-gray-50' : 'border-gray-300 hover:border-gray-400 dark:border-gray-700'}`}
+      onClick={() => inputRef.current?.click()}
+      className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
+        isDragging
+          ? 'border-[#6C1D5F] bg-[#6C1D5F]/5 scale-[1.01]'
+          : 'border-gray-300 hover:border-[#6C1D5F]/50 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-[#1a1a24]'
+      }`}
     >
-      <div className="flex flex-col items-center justify-center gap-2">
-        <Plus className="w-8 h-8 text-gray-400" />
+      <div className="flex flex-col items-center justify-center gap-2 pointer-events-none">
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isDragging ? 'bg-[#6C1D5F]/10' : 'bg-gray-100 dark:bg-gray-800'}`}>
+          <Plus className={`w-6 h-6 ${isDragging ? 'text-[#6C1D5F]' : 'text-gray-400'}`} />
+        </div>
         <p className="text-sm font-bold text-gray-600 dark:text-gray-300">{label || 'Drag & drop a file here'}</p>
-        <p className="text-xs text-gray-400">Supported formats: {accept}</p>
-        <input type="file" accept={accept} className="hidden" id={`file-upload-${accept.replace(/[^a-zA-Z0-9]/g, '')}`} onChange={e => {
-          if(e.target.files && e.target.files.length > 0) onUpload(e.target.files[0]);
-        }} />
-        <button type="button" onClick={() => document.getElementById(`file-upload-${accept.replace(/[^a-zA-Z0-9]/g, '')}`).click()} className="mt-2 px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-sm" style={{ background: BRAND }}>
-          Browse Files
-        </button>
+        <p className="text-xs text-gray-400">or click to browse &bull; {accept}</p>
       </div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept={accept}
+        className="hidden"
+        onChange={handleChange}
+      />
     </div>
   );
 };
+
 
 
 export default function ContentManager({ submoduleId, courseId, moduleId }) {
@@ -173,22 +207,44 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
     }
   };
 
-  const openEditor = (block = null) => {
-    if (block) {
-      setEditId(block.id);
-      try {
-        const data = JSON.parse(block.storageRef);
-        setActiveType(data.uiType || 'Text');
-        patchFormData({ ...data, title: block.title, contentOrder: block.position });
-      } catch (e) {
-        setActiveType('Text');
-        patchFormData({ title: block.title, text: block.storageRef, contentOrder: block.position, isActive: true });
+  const handleEdit = (block) => {
+    let data = {};
+    try {
+      let parsed = JSON.parse(block.storageRef);
+      if (typeof parsed === 'string') {
+        parsed = JSON.parse(parsed);
       }
-    } else {
-      setEditId(null);
-      setActiveType('Text');
-      patchFormData({ title: '', text: '', code: '', language: 'javascript', videoUrl: '', imageUrl: '', pdfUrl: '', alt: '', caption: '', headingLevel: 1, contentOrder: blocks.length + 1, isActive: true });
-    }
+      data = parsed || {};
+    } catch(e) {}
+    
+    // Find the correct activeType from the saved data
+    const uiType = data.uiType || BLOCK_TYPES.find(b => b.backendType === block.type)?.id || 'Text';
+    
+    setEditId(block.id);
+    setActiveType(uiType);
+    setFormData({
+      title: block.title,
+      text: data.text || '',
+      headingText: data.headingText || '',
+      code: data.code || '',
+      language: data.language || 'javascript',
+      videoUrl: data.videoUrl || '',
+      imageUrl: data.imageUrl || '',
+      pdfUrl: data.pdfUrl || '',
+      tableData: data.tableData || '',
+      alt: data.alt || '',
+      caption: data.caption || '',
+      headingLevel: data.headingLevel || 1,
+      contentOrder: block.position,
+      isActive: data.isActive !== false
+    });
+    setShowEditor(true);
+  };
+
+  const handleAddNew = () => {
+    setEditId(null);
+    setActiveType('Text');
+    setFormData({ title: '', text: '', headingText: '', code: '', language: 'javascript', videoUrl: '', imageUrl: '', pdfUrl: '', tableData: '', alt: '', caption: '', headingLevel: 1, contentOrder: blocks.length + 1, isActive: true });
     setShowEditor(true);
   };
 
@@ -228,7 +284,13 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                <div className="text-center text-gray-500 py-10">No content blocks found.</div>
             ) : blocks.map((block) => {
               let data = {};
-              try { data = JSON.parse(block.storageRef); } catch(e){}
+              try {
+                let parsed = JSON.parse(block.storageRef);
+                if (typeof parsed === 'string') {
+                  parsed = JSON.parse(parsed);
+                }
+                data = parsed;
+              } catch(e) {}
               const typeDef = BLOCK_TYPES.find(b => b.id === data.uiType) || BLOCK_TYPES[0];
               const Icon = typeDef.icon;
               return (
@@ -245,7 +307,7 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                   <div className="flex items-center gap-3">
                     {renderToggle(data.isActive !== false, () => {})}
                     <div className="flex flex-col gap-1">
-                      <button onClick={() => openEditor(block)} className="w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:bg-gray-50"><Edit3 className="w-4 h-4 text-gray-500" /></button>
+                      <button onClick={() => handleEdit(block)} className="w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:bg-gray-50"><Edit3 className="w-4 h-4 text-gray-500" /></button>
                       <button onClick={() => handleDelete(block.id)} className="w-8 h-8 flex items-center justify-center rounded-lg border border-red-100 bg-red-50 hover:bg-red-100"><Trash2 className="w-4 h-4 text-red-500" /></button>
                     </div>
                   </div>
@@ -253,7 +315,7 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
               );
             })}
             
-            <button onClick={() => openEditor()} className="w-full py-4 rounded-2xl border-2 border-dashed border-gray-300 dark:border-[#3a3a4a] text-gray-500 hover:border-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center justify-center gap-2 font-bold transition-colors">
+            <button onClick={() => handleAddNew()} className="w-full py-4 rounded-2xl border-2 border-dashed border-gray-300 dark:border-[#3a3a4a] text-gray-500 hover:border-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center justify-center gap-2 font-bold transition-colors">
               <Plus className="w-5 h-5"/> Add Content Block
             </button>
           </div>
@@ -303,11 +365,17 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                 </div>
 
                 {activeType === 'Heading' && (
-                  <div>
-                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Heading Level</label>
-                    <select className={inputCls} value={formData.headingLevel} onChange={e => setFormData({...formData, headingLevel: parseInt(e.target.value)})}>
-                      <option value={1}>H1</option><option value={2}>H2</option><option value={3}>H3</option><option value={4}>H4</option><option value={5}>H5</option><option value={6}>H6</option>
-                    </select>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Heading Level</label>
+                      <select className={inputCls} value={formData.headingLevel} onChange={e => setFormData({...formData, headingLevel: parseInt(e.target.value)})}>
+                        <option value={1}>H1</option><option value={2}>H2</option><option value={3}>H3</option><option value={4}>H4</option><option value={5}>H5</option><option value={6}>H6</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Heading Text</label>
+                      <input type="text" className={inputCls} value={formData.headingText} onChange={e => setFormData({...formData, headingText: e.target.value})} placeholder="Enter heading text..." />
+                    </div>
                   </div>
                 )}
 
@@ -451,8 +519,9 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
 
                 {activeType === 'Table' && (
                   <div>
-                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">Markdown/JSON Table</label>
-                    <textarea rows={6} className={`${inputCls} font-mono`} value={formData.text} onChange={e => setFormData({...formData, text: e.target.value})} placeholder="| Header 1 | Header 2 |&#10;| -------- | -------- |&#10;| Row 1    | Row 1    |" />
+                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-1.5">JSON Table Data</label>
+                    <p className="text-xs text-gray-400 mb-2">Format: <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">{`[{"Col1":"Val1","Col2":"Val2"}]`}</code></p>
+                    <textarea rows={6} className={`${inputCls} font-mono`} value={formData.tableData} onChange={e => setFormData({...formData, tableData: e.target.value})} placeholder={`[{"Feature":"Compiler","Description":"Translates entire source code at once"},{"Feature":"Interpreter","Description":"Translates source code line by line"}]`} />
                   </div>
                 )}
 

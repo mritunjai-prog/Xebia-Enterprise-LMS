@@ -74,14 +74,14 @@ export default function Dashboard() {
           </p>
           <div className="mt-4 flex flex-wrap gap-2.5">
             <Link
-              to="/courses"
+              to="/admin/courses"
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-[#6C1D5F] hover:bg-white/90 font-semibold rounded-xl text-xs transition-colors shadow-sm"
             >
               <BookOpen className="w-3.5 h-3.5" />
               Manage Courses
             </Link>
             <Link
-              to="/categories"
+              to="/admin/categories"
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl text-xs border border-white/20 transition-colors"
             >
               <Tag className="w-3.5 h-3.5" />
@@ -151,7 +151,7 @@ export default function Dashboard() {
               <h2 className="text-base font-bold text-gray-900 dark:text-white">Recently Created Courses</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">Latest curriculums and learning materials added</p>
             </div>
-            <Link to="/courses" className="text-xs font-semibold text-[#01AC9F] hover:text-[#009d8f] flex items-center gap-1">
+            <Link to="/admin/courses" className="text-xs font-semibold text-[#01AC9F] hover:text-[#009d8f] flex items-center gap-1">
               View all <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
@@ -208,7 +208,7 @@ export default function Dashboard() {
           <h2 className="text-base font-bold text-gray-900 dark:text-white pb-3 border-b border-gray-100 dark:border-[#2e2e3e] mb-4">Quick Creator Actions</h2>
           <div className="space-y-3.5">
             <a
-              href="/categories?create=true"
+              href="/admin/categories"
               className="flex items-center gap-3.5 p-4 rounded-xl border border-[#01AC9F]/10 bg-[#01AC9F]/5 hover:bg-[#01AC9F]/10 hover:shadow-sm hover:-translate-y-0.5 text-gray-900 dark:text-white hover:text-[#01AC9F] transition-all duration-200"
             >
               <div className="w-10 h-10 rounded-xl bg-[#01AC9F] text-white flex items-center justify-center shrink-0 shadow-sm">
@@ -221,7 +221,7 @@ export default function Dashboard() {
             </a>
 
             <a
-              href="/courses?create=true"
+              href="/admin/courses"
               className="flex items-center gap-3.5 p-4 rounded-xl border border-[#6C1D5F]/10 dark:border-[#84117C]/20 bg-[#6C1D5F]/5 dark:bg-[#84117C]/5 hover:bg-[#6C1D5F]/10 dark:hover:bg-[#84117C]/10 hover:shadow-sm hover:-translate-y-0.5 text-gray-900 dark:text-white hover:text-[#6C1D5F] dark:hover:text-[#84117C] transition-all duration-200"
             >
               <div className="w-10 h-10 rounded-xl bg-[#6C1D5F] text-white flex items-center justify-center shrink-0 shadow-sm">
@@ -234,7 +234,7 @@ export default function Dashboard() {
             </a>
 
             <Link
-              to="/curriculum"
+              to="/admin/curriculum"
               className="flex items-center gap-3.5 p-4 rounded-xl border border-orange-500/10 bg-orange-500/5 hover:bg-orange-500/10 hover:shadow-sm hover:-translate-y-0.5 text-gray-900 dark:text-white hover:text-orange-500 transition-all duration-200"
             >
               <div className="w-10 h-10 rounded-xl bg-[#FF6200] text-white flex items-center justify-center shrink-0 shadow-sm">

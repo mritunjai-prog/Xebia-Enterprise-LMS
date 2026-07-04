@@ -9,11 +9,12 @@ import {
 import { CategoryService, CourseService } from '../../../services/api';
 import CreateCategory from './CreateCategory';
 import { clsx } from 'clsx';
-import { Link } from '@tanstack/react-router';
+import { Link, useRouter } from '@tanstack/react-router';
 
 const ITEMS_PER_PAGE = 12; // Standardized to 12 for grid
 
 export default function Categories() {
+  const router = useRouter();
   const { addToast } = useAppStore();
   const [categories, setCategories] = useState([]);
   const [courses, setCourses] = useState(() => {
@@ -260,7 +261,7 @@ export default function Categories() {
                       style={{ backgroundColor: (cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('data:image/'))) ? 'var(--tw-bg-opacity)' : color }}
                       onClick={(e) => {
                         if (e.target.closest('button')) return;
-                        window.location.href = `/categories/${slug}`;
+                        router.navigate({ to: `/admin/categories/$categorySlug`, params: { categorySlug: slug } });
                       }}
                     >
                       {cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('data:image/')) ? (
@@ -283,7 +284,7 @@ export default function Categories() {
                     onClick={(e) => {
                     // Prevent navigation if clicking on action buttons
                     if (e.target.closest('button')) return;
-                    window.location.href = `/categories/${slug}`;
+                    router.navigate({ to: `/admin/categories/$categorySlug`, params: { categorySlug: slug } });
                   }}>
 
                     <div className="mb-auto">
@@ -360,7 +361,7 @@ export default function Categories() {
                       className="group hover:bg-gray-100 dark:hover:bg-[#1a1a24] transition-colors cursor-pointer"
                       onClick={(e) => {
                         if (e.target.closest('button')) return;
-                        window.location.href = `/categories/${slug}`;
+                        router.navigate({ to: `/admin/categories/$categorySlug`, params: { categorySlug: slug } });
                       }}
                     >
                       <td className="px-6 py-5">

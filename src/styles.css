@@ -38,11 +38,17 @@
   --color-ring: var(--ring);
 }
 
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
 :root {
   --radius: 1rem;
 
   /* Main Colors from palette */
-  --background: #F7F8FC; /* Blueish Grey */
+  --background: #F3F4F6; /* Light grey application background */
   --foreground: #000000; /* Black */
   
   --card: #FFFFFF; /* White */

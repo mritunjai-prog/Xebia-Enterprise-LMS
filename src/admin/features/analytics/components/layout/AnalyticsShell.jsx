@@ -6,17 +6,17 @@ import { clsx } from 'clsx';
 import { Loader2 } from 'lucide-react';
 
 const analyticsLinks = [
-  { path: '/admin/analytics/executive', label: 'Executive Summary' },
-  { path: '/admin/analytics/coverage', label: 'Learning Coverage' },
-  { path: '/admin/analytics/hours', label: 'Learning Hours' },
-  { path: '/admin/analytics/pillars', label: 'Learning Pillars' },
-  { path: '/admin/analytics/ai-transformation', label: 'AI Transformation' },
-  { path: '/admin/analytics/certifications', label: 'Certifications' },
-  { path: '/admin/analytics/flagship-programs', label: 'Flagship Programs' },
-  { path: '/admin/analytics/learning-trends', label: 'Learning Trends' },
-  { path: '/admin/analytics/training-effectiveness', label: 'Training Effectiveness' },
-  { path: '/admin/analytics/learning-champions', label: 'Learning Champions' },
-  { path: '/admin/analytics/project-investment', label: 'Project Investment' },
+  { path: '/analytics/executive', label: 'Executive Summary' },
+  { path: '/analytics/coverage', label: 'Learning Coverage' },
+  { path: '/analytics/hours', label: 'Learning Hours' },
+  { path: '/analytics/pillars', label: 'Learning Pillars' },
+  { path: '/analytics/ai-transformation', label: 'AI Transformation' },
+  { path: '/analytics/certifications', label: 'Certifications' },
+  { path: '/analytics/flagship-programs', label: 'Flagship Programs' },
+  { path: '/analytics/learning-trends', label: 'Learning Trends' },
+  { path: '/analytics/training-effectiveness', label: 'Training Effectiveness' },
+  { path: '/analytics/learning-champions', label: 'Learning Champions' },
+  { path: '/analytics/project-investment', label: 'Project Investment' },
 ];
 
 export function AnalyticsShell() {

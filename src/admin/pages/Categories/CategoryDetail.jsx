@@ -129,7 +129,7 @@ export default function CategoryDetail() {
         <AlertCircle className="w-10 h-10 text-gray-300 dark:text-gray-700 mx-auto mb-3" />
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Category Not Found</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">The category you are trying to view does not exist or has been removed.</p>
-        <Link to="/categories" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#6C1D5F] hover:bg-[#5a1850] text-white font-semibold rounded-xl text-sm transition-colors">
+        <Link to="/admin/categories" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#6C1D5F] hover:bg-[#5a1850] text-white font-semibold rounded-xl text-sm transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to Categories
         </Link>
       </div>

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { upcomingAssessments } from "@/features/student/mocks/dummy-data";
+import { upcomingAssessments as mockAssessments } from "@/features/student/mocks/dummy-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlayCircle, Clock, CheckCircle, Search, FileText, Calendar, Award } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +11,7 @@ export const Route = createFileRoute("/student/assessments")({
 });
 
 function AssessmentsPage() {
+  const [upcomingAssessments, setUpcomingAssessments] = useState(mockAssessments);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
@@ -25,9 +26,9 @@ function AssessmentsPage() {
 
   const getStatusConfig = (status) => {
     switch (status) {
-      case "Completed": return { bg: "bg-emerald-500", icon: CheckCircle, label: "Completed" };
-      case "Upcoming": return { bg: "bg-blue-500", icon: Calendar, label: "Upcoming" };
-      case "Pending": return { bg: "bg-orange-500", icon: Clock, label: "Action Required" };
+      case "Completed": return { bg: "bg-[#01AC9F]", icon: CheckCircle, label: "Completed" };
+      case "Upcoming": return { bg: "bg-[#6C1D5F]", icon: Calendar, label: "Upcoming" };
+      case "Pending": return { bg: "bg-[#FF6200]", icon: Clock, label: "Action Required" };
       default: return { bg: "bg-gray-500", icon: FileText, label: status };
     }
   };
@@ -43,7 +44,7 @@ function AssessmentsPage() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2, delay: idx * 0.04 }}
-        className="group bg-card border border-border rounded-2xl flex flex-col overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out"
+        className="group bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl flex flex-col overflow-hidden hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out"
       >
         {/* Top Banner Area */}
         <div className="relative h-32 bg-muted overflow-hidden shrink-0 p-4 flex items-start justify-between border-b border-border">
@@ -78,7 +79,7 @@ function AssessmentsPage() {
           <p className="text-xs font-bold text-primary dark:text-[#b44e9f] uppercase tracking-wider mb-1 line-clamp-1">
             {assessment.course}
           </p>
-          <h2 className="text-lg font-extrabold text-foreground leading-tight mb-4 line-clamp-2 group-hover:text-primary dark:group-hover:text-[#b44e9f] transition-colors">
+          <h2 className="text-lg font-extrabold text-foreground leading-tight mb-4 line-clamp-2 transition-colors">
             {assessment.name}
           </h2>
 

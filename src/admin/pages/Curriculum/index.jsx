@@ -148,7 +148,7 @@ export default function Curriculum() {
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.22, delay: idx * 0.04 }}
                 className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group flex flex-col"
-                onClick={() => router.navigate({ to: '/courses/builder', search: { courseId: course.id } })}
+                onClick={() => router.navigate({ to: '/admin/courses/builder', search: { courseId: course.id } })}
               >
                 {/* Thumbnail */}
                 <div className="relative h-44 overflow-hidden bg-gray-900 shrink-0">
@@ -208,7 +208,7 @@ export default function Curriculum() {
                       </span>
                     </div>
                     <button
-                      onClick={e => { e.stopPropagation(); router.navigate({ to: '/courses/builder', search: { courseId: course.id } }); }}
+                      onClick={e => { e.stopPropagation(); router.navigate({ to: '/admin/courses/builder', search: { courseId: course.id } }); }}
                       className="flex items-center gap-1 text-[12px] font-bold text-gray-500 dark:text-gray-400 hover:text-[#6C1D5F] dark:hover:text-white transition-colors"
                     >
                       Open <ChevronRight className="w-3.5 h-3.5" />

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { assessmentResults, chartData, enrolledCourses } from "@/features/student/mocks/dummy-data";
+import { useState } from "react";
+import { assessmentResults as mockResults, chartData as mockChartData, enrolledCourses as mockCourses } from "@/features/student/mocks/dummy-data";
 import { Award, Trophy, ArrowRight, BookOpen, Star, Calendar, Percent, ClipboardCheck } from "lucide-react";
 import { clsx } from "clsx";
 import { motion } from "framer-motion";
@@ -14,13 +15,17 @@ export const Route = createFileRoute("/student/results")({
 });
 
 function ResultsPage() {
+  const assessmentResults = mockResults;
+  const enrolledCourses = mockCourses;
+  const chartData = mockChartData;
+
   const getGradeStyle = (grade) => {
     switch(grade) {
       case 'A+':
-      case 'A': return "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20";
+      case 'A': return "bg-[#01AC9F]/10 text-[#01AC9F] dark:bg-[#01AC9F]/20 border-[#01AC9F]/20 dark:border-[#01AC9F]/30";
       case 'B+':
-      case 'B': return "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 border-blue-200 dark:border-blue-500/20";
-      case 'C': return "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400 border-orange-200 dark:border-orange-500/20";
+      case 'B': return "bg-[#6C1D5F]/10 text-[#6C1D5F] dark:bg-[#6C1D5F]/20 dark:text-[#D3CCEC] border-[#6C1D5F]/20 dark:border-[#6C1D5F]/30";
+      case 'C': return "bg-[#FF6200]/10 text-[#FF6200] dark:bg-[#FF6200]/20 border-[#FF6200]/20 dark:border-[#FF6200]/30";
       default: return "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 border-red-200 dark:border-red-500/20";
     }
   };
@@ -47,10 +52,10 @@ function ResultsPage() {
         {/* Course Progress */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
-          className="bg-card border border-border rounded-2xl p-5 hover:shadow-xl transition-all duration-300 flex flex-col"
+          className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] rounded-2xl p-5 hover:shadow-xl transition-all duration-300 flex flex-col"
         >
           <div className="mb-4 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400">
+            <div className="w-8 h-8 rounded-lg bg-[#6C1D5F]/10 dark:bg-[#6C1D5F]/20 flex items-center justify-center text-[#6C1D5F] dark:text-[#D3CCEC]">
               <BookOpen className="w-4 h-4" />
             </div>
             <div>
@@ -66,10 +71,10 @@ function ResultsPage() {
         {/* Subject Performance */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.1 }}
-          className="bg-card border border-border rounded-2xl p-5 hover:shadow-xl transition-all duration-300 flex flex-col"
+          className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] rounded-2xl p-5 hover:shadow-xl transition-all duration-300 flex flex-col"
         >
           <div className="mb-4 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+            <div className="w-8 h-8 rounded-lg bg-[#01AC9F]/10 dark:bg-[#01AC9F]/20 flex items-center justify-center text-[#01AC9F]">
               <Trophy className="w-4 h-4" />
             </div>
             <div>
@@ -85,10 +90,10 @@ function ResultsPage() {
         {/* Learning Activity */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.2 }}
-          className="bg-card border border-border rounded-2xl p-5 hover:shadow-xl transition-all duration-300 flex flex-col xl:col-span-1 lg:col-span-2"
+          className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] rounded-2xl p-5 hover:shadow-xl transition-all duration-300 flex flex-col xl:col-span-1 lg:col-span-2"
         >
           <div className="mb-4 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400">
+            <div className="w-8 h-8 rounded-lg bg-[#FF6200]/10 dark:bg-[#FF6200]/20 flex items-center justify-center text-[#FF6200]">
               <Star className="w-4 h-4" />
             </div>
             <div>
@@ -108,7 +113,7 @@ function ResultsPage() {
           <h2 className="text-xl font-bold text-foreground tracking-tight">Recent Results</h2>
         </div>
 
-        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl overflow-hidden shadow-sm hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] transition-all">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>

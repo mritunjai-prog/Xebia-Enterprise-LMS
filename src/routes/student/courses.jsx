@@ -2,13 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import { Progress } from "@/components/ui/progress";
 import {
-  Clock, PlayCircle, CheckCircle, BookOpen, Search, Award, Printer, X, Users, Bookmark, MoreVertical
+  Clock, PlayCircle, CheckCircle, BookOpen, Search, Award, Printer, X, Users, Star, MoreVertical, LayoutGrid, ListIcon, Filter, Layers, Activity
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { studentProfile } from "@/features/student/mocks/dummy-data";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
-import { CourseService, EnrollmentService } from "@/services/api";
+import { CourseService, EnrollmentService, AuthService, CategoryService } from "@/services/api";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
 import { toast } from "sonner";
@@ -179,7 +179,13 @@ function CertificateModal({ course, onClose }) {
 }
 
 function MyCourses() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
+  const [favorites, setFavorites] = useState(new Set());
+  const [filterFavorites, setFilterFavorites] = useState('All Courses');
+  const [viewMode, setViewMode] = useState('grid');
+  const [filterLevel, setFilterLevel] = useState('All Levels');
+  const [filterStatus, setFilterStatus] = useState('All Status');
   const [certCourse, setCertCourse] = useState(null); // course to show certificate for
   const { data: allCoursesData, isLoading: loadingAll } = useQuery({
     queryKey: ['student-all-courses'],
@@ -198,7 +204,7 @@ function MyCourses() {
     const enrolled = enrolledCourses.find(e => String(e.id) === String(course.id));
     return {
       ...course,
-      progress: enrolled ? (course.progress || 5) : 0, // Mock progress for enrolled courses if undefined
+      progress: enrolled ? (enrolled.progress || course.progress || 0) : 0,
       isEnrolled: !!enrolled
     };
   });
@@ -212,25 +218,34 @@ function MyCourses() {
     );
   }
 
-  const filteredCourses = courses.filter((c) =>
-    c.title.toLowerCase().includes(search.toLowerCase())
-  );
-  const inProgress = filteredCourses.filter((c) => c.progress > 0 && c.progress < 100);
-  const completed = filteredCourses.filter((c) => c.progress === 100);
-  const notStarted = filteredCourses.filter((c) => c.progress === 0);
+  const filteredCourses = courses.filter((c) => {
+    const level = c.difficultyLevel || c.level || 'Beginner';
+    const status = c.progress === 100 ? 'Completed' : (c.progress > 0 ? 'In Progress' : 'Not Started');
+
+    if (filterLevel !== 'All Levels' && level !== filterLevel) return false;
+    if (filterStatus !== 'All Status' && status !== filterStatus) return false;
+    if (filterFavorites === 'Favorites' && !favorites.has(c.id)) return false;
+    
+    if (search && !(c.title || '').toLowerCase().includes(search.toLowerCase())) return false;
+    
+    return true;
+  });
+
+  const inProgress = courses.filter((c) => c.progress > 0 && c.progress < 100);
+  const completed = courses.filter((c) => c.progress === 100);
 
   const statusBadge = (course) => {
-    if (course.progress === 100) return { label: "Completed", className: "bg-emerald-500 text-white" };
-    if (course.progress > 0) return { label: "In Progress", className: "bg-blue-500 text-white" };
-    return { label: "Not Started", className: "bg-gray-500 dark:bg-gray-600 text-white" };
+    if (course.progress === 100) return { label: "Completed", className: "bg-[#01AC9F] text-white" };
+    if (course.progress > 0) return { label: "In Progress", className: "bg-[#6C1D5F] text-white" };
+    return { label: "Not Started", className: "bg-[#5A5A5A] text-white" };
   };
 
   const CourseCard = ({ course, idx }) => {
     const badge = statusBadge(course);
-    const level = course.difficultyLevel || course.level || 'Advanced';
+    const level = course.difficultyLevel || course.level || 'Beginner';
     const isPublished = course.published || course.isPublished !== false;
     const active = course.isActive !== false && course.active !== false;
-    const duration = (`${course.durationHours ? course.durationHours + 'h ' : ''}${course.durationMinutes ? course.durationMinutes + 'm' : ''}`.trim()) || course.duration || '6h';
+    const duration = (`${course.durationHours ? course.durationHours + 'h ' : ''}${course.durationMinutes ? course.durationMinutes + 'm' : ''}`.trim()) || 'N/A';
     const thumb = course.image || course.thumbnailImageUrl || course.thumbnail || course.icon;
 
     return (
@@ -240,14 +255,20 @@ function MyCourses() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2, delay: idx * 0.03 }}
-        className="group bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl flex flex-col h-full overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer"
+        className={clsx(
+          "group bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] rounded-2xl overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] transition-all duration-300 ease-out cursor-pointer",
+          viewMode === 'list' ? 'flex flex-col sm:flex-row h-auto' : 'flex flex-col h-full hover:-translate-y-1'
+        )}
         onClick={(e) => {
           if (e.target.closest('button')) return;
-          window.location.href = `/student/course/${course.id}`;
+          router.navigate({ to: `/student/course/${course.id}` });
         }}
       >
         {/* Thumbnail */}
-        <div className="relative h-44 bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0">
+        <div className={clsx(
+          "relative bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0",
+          viewMode === 'list' ? 'w-full sm:w-64 h-48 sm:h-auto' : 'w-full h-44'
+        )}>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 z-0">
             <span className="text-4xl font-bold opacity-30 uppercase tracking-wider">{course.title ? course.title.substring(0, 2) : 'CO'}</span>
           </div>
@@ -260,30 +281,20 @@ function MyCourses() {
             />
           )}
           
-          {/* Floating Badges */}
-          <div className="absolute top-4 left-4 z-20 pointer-events-none">
-            <span className={clsx(
-              'text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm',
-              isPublished ? 'bg-purple-600 text-white' : 'bg-amber-500 text-white'
-            )}>
-              {isPublished ? 'Published' : 'Draft'}
-            </span>
-          </div>
-          
-          <div className="absolute top-4 right-4 z-20 pointer-events-none">
-            <span className={clsx(
-              'text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm',
-              active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-            )}>
-              {active ? 'Active' : 'Inactive'}
-            </span>
-          </div>
-
           <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            className="absolute bottom-4 right-4 w-8 h-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg flex items-center justify-center hover:scale-105 transition-transform shadow-sm z-20"
+            onClick={(e) => { 
+              e.preventDefault(); 
+              e.stopPropagation(); 
+              setFavorites(prev => {
+                const next = new Set(prev);
+                if (next.has(course.id)) next.delete(course.id);
+                else next.add(course.id);
+                return next;
+              });
+            }}
+            className="absolute bottom-4 right-4 w-8 h-8 bg-white dark:bg-[#15151f] rounded-lg flex items-center justify-center hover:scale-105 transition-transform shadow-sm z-20"
           >
-            <Bookmark className={clsx('w-4 h-4 text-gray-500 dark:text-gray-300')} />
+            <Star className={clsx('w-4 h-4 transition-colors', favorites.has(course.id) ? 'fill-[#FF6200] text-[#FF6200]' : 'text-gray-400 dark:text-gray-500')} />
           </button>
         </div>
 
@@ -291,14 +302,18 @@ function MyCourses() {
         <div className="p-5 flex-1 flex flex-col relative">
           {/* Title */}
           <div className="mb-2">
-            <span className="text-xl font-extrabold text-gray-900 dark:text-white group-hover:text-[#6C1D5F] dark:group-hover:text-[#84117C] transition-colors leading-tight block mb-2 line-clamp-2">
+            <span className="text-xl font-extrabold text-gray-900 dark:text-white transition-colors leading-tight block mb-2 line-clamp-2">
               {course.title}
             </span>
           </div>
             
           {/* Meta Top (Level) */}
           <div className="mb-4 flex items-center justify-between">
-            <span className={clsx('inline-flex items-center text-sm font-bold px-4 py-1.5 rounded-lg text-white shadow-md tracking-wide', level === 'Beginner' ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.6)]' : level === 'Intermediate' ? 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)]' : 'bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.6)]')}>
+            <span className={clsx('inline-flex items-center text-sm font-bold px-4 py-1.5 rounded-lg text-white shadow-md tracking-wide', 
+              level === 'Beginner' ? 'bg-[#01AC9F] shadow-[0_0_15px_rgba(1,172,159,0.4)]' : 
+              level === 'Intermediate' ? 'bg-[#84117C] shadow-[0_0_15px_rgba(132,17,124,0.4)]' : 
+              'bg-[#FF6200] shadow-[0_0_15px_rgba(255,98,0,0.4)]'
+            )}>
               {level}
             </span>
             <span className={clsx("text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm flex items-center gap-1.5", badge.className)}>
@@ -317,29 +332,27 @@ function MyCourses() {
             <div className="mb-4">
               <div className="flex justify-between text-[11px] font-bold mb-1.5">
                 <span className="text-gray-500">Progress</span>
-                <span className={clsx("font-extrabold", course.progress === 100 ? "text-emerald-600 dark:text-emerald-400" : "text-gray-900 dark:text-white")}>{course.progress}%</span>
+                <span className={clsx("font-extrabold", course.progress === 100 ? "text-[#01AC9F]" : "text-gray-900 dark:text-white")}>{course.progress}%</span>
               </div>
               <Progress
                 value={course.progress}
-                className={clsx("h-1.5", course.progress === 100 ? "[&>div]:bg-emerald-500" : "[&>div]:bg-[#6C1D5F]")}
+                className={clsx("h-1.5", course.progress === 100 ? "[&>div]:bg-[#01AC9F]" : "[&>div]:bg-[#6C1D5F]")}
               />
             </div>
           )}
 
           {/* Meta Stats */}
-          <div className="mt-auto flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-[#2e2e3e] pt-4 mb-4">
-            <div className="flex items-center gap-2 sm:gap-3">
-              {(course.modules?.length || course.modulesCount || course.totalModules) ? (
-                <span className="flex items-center gap-1 whitespace-nowrap"><BookOpen className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />{course.modules?.length || course.modulesCount || course.totalModules} Modules</span>
-              ) : null}
-              <span className="flex items-center gap-1 whitespace-nowrap"><Users className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />{course.studentsCount || 0} Students</span>
-              <span className="flex items-center gap-1 whitespace-nowrap"><Clock className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />{duration}</span>
-            </div>
-            <div className="relative group/menu">
-              <button onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#252535] transition-colors text-gray-500">
-                <MoreVertical className="w-4 h-4" />
-              </button>
-            </div>
+          <div className="mt-auto flex items-center gap-4 text-[11px] font-bold text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-[#2e2e3e] pt-4 mb-4">
+            {(course.modules?.length || course.modulesCount || course.totalModules) ? (
+              <span className="flex items-center gap-1 whitespace-nowrap">
+                <BookOpen className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+                {course.modules?.length || course.modulesCount || course.totalModules} Modules
+              </span>
+            ) : null}
+            <span className="flex items-center gap-1 whitespace-nowrap">
+              <Clock className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+              {duration}
+            </span>
           </div>
 
           {/* CTA Button */}
@@ -353,7 +366,7 @@ function MyCourses() {
           ) : (
             <Link to={`/student/course/${course.id}`} className="block w-full">
               <button className="w-full py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2 bg-[#6C1D5F] hover:bg-[#5a184f] text-white shadow-[0_2px_10px_-2px_rgba(108,29,95,0.4)] hover:shadow-[0_4px_14px_-2px_rgba(108,29,95,0.5)] hover:-translate-y-0.5">
-                {course.progress === 0 ? "Start Course" : "Continue Learning"}
+                {course.progress === 0 ? "Start Course" : "Resume Course"}
               </button>
             </Link>
           )}
@@ -372,8 +385,89 @@ function MyCourses() {
         </div>
       );
     }
+    if (viewMode === 'list') {
+      return (
+        <div className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead className="bg-[#6C1D5F] text-white uppercase tracking-wider text-[11px]">
+                <tr>
+                  <th className="px-6 py-4 font-bold rounded-tl-2xl">Course</th>
+                  <th className="px-6 py-4 font-bold">Duration</th>
+                  <th className="px-6 py-4 font-bold">Level</th>
+                  <th className="px-6 py-4 font-bold">Progress</th>
+                  <th className="px-6 py-4 font-bold">Status</th>
+                  <th className="px-6 py-4 font-bold text-center rounded-tr-2xl">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-[#2e2e3e]">
+                {items.map((course) => {
+                  const badge = statusBadge(course);
+                  const level = course.difficultyLevel || course.level || 'Beginner';
+                  const thumb = course.image || course.thumbnailImageUrl || course.thumbnail || course.icon;
+                  const duration = (`${course.durationHours ? course.durationHours + 'h ' : ''}${course.durationMinutes ? course.durationMinutes + 'm' : ''}`.trim()) || 'N/A';
+                  
+                  return (
+                    <tr key={course.id} className="hover:bg-gray-50 dark:hover:bg-[#1a1a24] transition-colors group border-l-4 border-transparent hover:border-l-[#6C1D5F]">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 shrink-0 overflow-hidden relative">
+                            {thumb ? <img src={thumb} className="w-full h-full object-cover" /> : <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-bold uppercase">{course.title?.substring(0, 2)}</div>}
+                          </div>
+                          <div className="max-w-[250px] sm:max-w-xs md:max-w-md">
+                            <h4 className="font-bold text-gray-900 dark:text-white truncate">{course.title}</h4>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 text-sm font-medium">
+                          <Clock className="w-4 h-4 text-gray-400" />
+                          {duration}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={clsx('inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-md text-white shadow-sm', 
+                          level === 'Beginner' ? 'bg-[#01AC9F]' : 
+                          level === 'Intermediate' ? 'bg-[#84117C]' : 'bg-[#FF6200]'
+                        )}>
+                          {level}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <Progress value={course.progress} className={clsx("w-20 h-1.5", course.progress === 100 ? "[&>div]:bg-[#01AC9F]" : "[&>div]:bg-[#6C1D5F]")} />
+                          <span className="font-bold text-xs text-gray-700 dark:text-gray-300">{course.progress}%</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={clsx("text-xs font-bold px-2.5 py-1 rounded-md shadow-sm flex w-fit items-center gap-1", badge.className)}>
+                          {course.progress === 100 && <CheckCircle className="w-3 h-3" />}
+                          {badge.label}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        {course.progress === 100 ? (
+                          <button onClick={(e) => { e.stopPropagation(); setCertCourse(course); }} className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-[#01AC9F] text-white font-bold text-xs shadow-sm hover:shadow-md transition-all">
+                            <Award className="w-3.5 h-3.5" /> View Certificate
+                          </button>
+                        ) : (
+                          <button onClick={(e) => { e.stopPropagation(); router.navigate({ to: `/student/course/${course.id}` }); }} className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#6C1D5F] hover:bg-[#5a184f] text-white font-bold text-xs shadow-sm hover:shadow-md transition-all">
+                            <PlayCircle className="w-3.5 h-3.5" /> {course.progress === 0 ? "Start Course" : "Resume Course"}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 transition-all">
         <AnimatePresence>
           {items.map((course, idx) => <CourseCard key={course.id} course={course} idx={idx} />)}
         </AnimatePresence>
@@ -386,53 +480,139 @@ function MyCourses() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-xl flex items-center justify-center text-primary dark:text-primary-foreground shrink-0">
-            <BookOpen className="w-6 h-6" />
-          </div>
           <div>
-            <h1 className="text-3xl font-extrabold text-foreground tracking-tight">My Courses</h1>
-            <p className="text-sm font-medium text-muted-foreground mt-0.5">
-              {courses.length} courses enrolled · {completed.length} completed
+            <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">My Courses</h1>
+            <p className="text-sm font-medium text-gray-500 mt-0.5">
+              Access your enrolled courses and track your progress
             </p>
           </div>
         </div>
+      </div>
 
-        {/* Search */}
-        <div className="relative w-full sm:w-72 shrink-0">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search my courses…"
-            className="w-full pl-10 pr-4 py-2.5 bg-card border border-border rounded-xl text-sm font-medium text-foreground placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-primary transition-all shadow-sm"
-          />
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-[#6C1D5F] dark:hover:border-[#6C1D5F] hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 rounded-2xl p-5 flex flex-col shadow-sm">
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-[13px] font-bold text-gray-500 dark:text-gray-400">Enrolled Courses</h3>
+            <div className="w-10 h-10 rounded-xl bg-[#f8f5f8] dark:bg-[#1a1a24] flex items-center justify-center text-[#6C1D5F]">
+              <BookOpen className="w-5 h-5" />
+            </div>
+          </div>
+          <div>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-1">{courses.length}</h2>
+            <p className="text-xs font-bold text-gray-500 dark:text-gray-400">Total enrollments</p>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-[#FF6200] dark:hover:border-[#FF6200] hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 rounded-2xl p-5 flex flex-col shadow-sm">
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-[13px] font-bold text-gray-500 dark:text-gray-400">In Progress</h3>
+            <div className="w-10 h-10 rounded-xl bg-[#fff6f0] dark:bg-[#1a1a24] flex items-center justify-center text-[#FF6200]">
+              <PlayCircle className="w-5 h-5" />
+            </div>
+          </div>
+          <div>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-1">{inProgress.length}</h2>
+            <p className="text-xs font-bold text-gray-500 dark:text-gray-400">Ongoing courses</p>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-[#01AC9F] dark:hover:border-[#01AC9F] hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 rounded-2xl p-5 flex flex-col shadow-sm">
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-[13px] font-bold text-gray-500 dark:text-gray-400">Completed Courses</h3>
+            <div className="w-10 h-10 rounded-xl bg-[#effaf9] dark:bg-[#1a1a24] flex items-center justify-center text-[#01AC9F]">
+              <Award className="w-5 h-5" />
+            </div>
+          </div>
+          <div>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-1">{completed.length}</h2>
+            <p className="text-xs font-bold text-gray-500 dark:text-gray-400">Finished courses</p>
+          </div>
         </div>
       </div>
 
-      {/* Tabs */}
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList className="mb-8 h-auto p-1.5 bg-gray-100 dark:bg-[#15151f] border border-transparent dark:border-[#2e2e3e] w-full sm:w-auto justify-start overflow-x-auto rounded-xl">
-          {[
-            { value: "all", label: `All (${filteredCourses.length})` },
-            { value: "in-progress", label: `In Progress (${inProgress.length})` },
-            { value: "not-started", label: `Not Started (${notStarted.length})` },
-            { value: "completed", label: `Completed (${completed.length})` },
-          ].map((tab) => (
-            <TabsTrigger
-              key={tab.value}
-              value={tab.value}
-              className="px-5 py-2 rounded-lg font-bold text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-[#252535] data-[state=active]:text-primary dark:data-[state=active]:text-white data-[state=active]:shadow-sm text-muted-foreground whitespace-nowrap"
-            >
-              {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      {/* Filters & Search Toolbar */}
+      <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl p-3 flex flex-col xl:flex-row items-center justify-between gap-3">
+          
+          {/* Left Group */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto overflow-x-auto hide-scrollbar">
+            {/* Search */}
+            <div className="relative w-full sm:w-64 shrink-0 group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#6C1D5F] transition-colors" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search courses by title..."
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-[#1a1a24] border border-transparent rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:bg-white dark:focus:bg-[#15151f] focus:border-[#6C1D5F] focus:ring-4 focus:ring-[#6C1D5F]/10 transition-all"
+              />
+            </div>
 
-        <TabsContent value="all" className="mt-0 outline-none"><CourseGrid items={filteredCourses} /></TabsContent>
-        <TabsContent value="in-progress" className="mt-0 outline-none"><CourseGrid items={inProgress} /></TabsContent>
-        <TabsContent value="not-started" className="mt-0 outline-none"><CourseGrid items={notStarted} /></TabsContent>
-        <TabsContent value="completed" className="mt-0 outline-none"><CourseGrid items={completed} /></TabsContent>
-      </Tabs>
+            <div className="w-px h-8 bg-gray-200 dark:bg-[#2e2e3e] hidden sm:block mx-1 shrink-0"></div>
+
+            {/* Favorites Filter (All Courses) */}
+            <div className="shrink-0">
+              <Select value={filterFavorites} onValueChange={setFilterFavorites}>
+                <SelectTrigger className="w-[140px] h-9 px-3 text-xs bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 focus:ring-0 focus:ring-offset-0 transition-colors hover:bg-gray-100 dark:hover:bg-[#333333] rounded-xl outline-none">
+                  <div className="flex items-center gap-1.5">
+                    <span>{filterFavorites === 'All Courses' ? 'Course' : filterFavorites}</span>
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-[#1a1a24] border border-black dark:border-white rounded-xl shadow-lg">
+                  {['All Courses', 'Favorites'].map(o => (
+                    <SelectItem key={o} value={o} className="text-xs focus:bg-[#f4ebf4] dark:focus:bg-[#252535] focus:text-gray-900 dark:focus:text-white cursor-pointer rounded-md mx-1 my-0.5 [&>.absolute]:hidden !pr-2">
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Grid/List Toggle */}
+            <div className="flex bg-gray-100 dark:bg-[#1a1a24] rounded-xl p-1 shrink-0 ml-1">
+              <button 
+                onClick={() => setViewMode('grid')} 
+                className={clsx('p-2 rounded-lg transition-all', viewMode === 'grid' ? 'bg-white dark:bg-[#252535] text-[#6C1D5F] dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300')}
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={() => setViewMode('list')} 
+                className={clsx('p-2 rounded-lg transition-all', viewMode === 'list' ? 'bg-white dark:bg-[#252535] text-[#6C1D5F] dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300')}
+              >
+                <ListIcon className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Right Group */}
+          <div className="flex items-center gap-2 w-full xl:w-auto overflow-x-auto pb-2 xl:pb-0 hide-scrollbar shrink-0 justify-start xl:justify-end">
+            <div className="w-px h-8 bg-gray-200 dark:bg-[#2e2e3e] hidden xl:block mx-1 shrink-0"></div>
+
+            {[
+              { label: 'Level', value: filterLevel, set: setFilterLevel, opts: ['All Levels', 'Beginner', 'Intermediate', 'Advanced', 'Expert'] },
+              { label: 'Status', value: filterStatus, set: setFilterStatus, opts: ['All Status', 'Not Started', 'In Progress', 'Completed'] }
+            ].map((filter, i) => (
+              <div key={i} className="shrink-0">
+                <Select value={filter.value} onValueChange={filter.set}>
+                  <SelectTrigger className="w-[140px] h-9 px-3 text-xs bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 focus:ring-0 focus:ring-offset-0 transition-colors hover:bg-gray-100 dark:hover:bg-[#333333] rounded-xl outline-none">
+                    <div className="flex items-center gap-1.5">
+                      <span>{filter.value === filter.opts[0] ? filter.label : filter.value}</span>
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-[#1a1a24] border border-black dark:border-white rounded-xl shadow-lg">
+                    {filter.opts.map(o => (
+                      <SelectItem key={o} value={o} className="text-xs focus:bg-[#f4ebf4] dark:focus:bg-[#252535] focus:text-gray-900 dark:focus:text-white cursor-pointer rounded-md mx-1 my-0.5 [&>.absolute]:hidden !pr-2">
+                        {o}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      <CourseGrid items={filteredCourses} />
 
       {/* Certificate Modal */}
       <AnimatePresence>

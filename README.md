@@ -50,7 +50,7 @@
 
 **Xebia Enterprise LMS** is a full-stack, production-deployed Learning Management System built for enterprise training at scale. It powers **two distinct user portals** — a feature-rich **Admin Portal** for course architects and platform administrators, and a beautifully designed **Student Portal** for learners — all running on a scalable Java microservices backend.
 
-The platform was built over several weeks of intensive development and covers the full LMS lifecycle: from AI-assisted content creation and deep curriculum hierarchy building, all the way to student enrolment, course playback, assessments, and a 7-page enterprise analytics suite.
+The platform was built over several weeks of intensive development and covers the full LMS lifecycle: from AI-assisted content creation and deep curriculum hierarchy building, all the way to student enrolment, course playback, assessments, and a 15-page enterprise analytics suite.
 
 ---
 

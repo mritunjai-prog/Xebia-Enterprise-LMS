@@ -123,7 +123,7 @@ export default function CourseDetail() {
       <div className="text-center py-16 bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] shadow-sm">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Course Not Found</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">The course you are trying to view does not exist or has been removed.</p>
-        <Link to="/courses" className="btn-primary inline-flex items-center gap-2">
+        <Link to="/admin/courses" className="btn-primary inline-flex items-center gap-2">
           <ArrowLeft className="w-4 h-4" /> Back to Courses
         </Link>
       </div>
@@ -149,7 +149,7 @@ export default function CourseDetail() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-12 font-sans">
       <Link 
-        to="/courses"
+        to="/admin/courses"
         className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-[#6C1D5F] dark:hover:text-[#84117C] transition-colors"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Course List

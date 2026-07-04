@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { IconSearch, IconProfile } from '../Icons';
-import { Sun, Moon, Settings, ChevronDown, BookOpen, Tag as TagIcon, Menu } from 'lucide-react';
+import { Sun, Moon, Settings, ChevronDown, BookOpen, Tag as TagIcon, Menu, BarChart2, Search, X } from 'lucide-react';
 import { CourseService, CategoryService } from '../../../services/api';
-import { useRouter } from '@tanstack/react-router';
+import { useRouter, Link } from '@tanstack/react-router';
 import { clsx } from 'clsx';
 
 export function Header() {
-  const { activeSidebarItem, addToast, toggleSidebar, isSidebarCollapsed } = useAppStore();
+  const { breadcrumbs, addToast, toggleSidebar, isSidebarCollapsed } = useAppStore();
   const router = useRouter();
 
   const [isDark, setIsDark] = useState(() =>
@@ -40,22 +40,34 @@ export function Header() {
 
   // Search Logic
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState({ courses: [], categories: [] });
+  const [searchResults, setSearchResults] = useState({ courses: [], categories: [], analytics: [] });
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchRef = useRef(null);
 
+  const ANALYTICS_PAGES = [
+    { id: 'executive', title: 'Executive Overview', slug: 'executive' },
+    { id: 'learner', title: 'Learner Engagement', slug: 'learner' },
+    { id: 'course', title: 'Course Performance', slug: 'course' },
+    { id: 'revenue', title: 'Revenue & ROI', slug: 'revenue' },
+    { id: 'content', title: 'Content Effectiveness', slug: 'content' },
+    { id: 'skill-gap', title: 'Skill Gap', slug: 'skill-gap' },
+    { id: 'recommendations', title: 'Recommendations', slug: 'recommendations' },
+    { id: 'predictive', title: 'Predictive Analytics', slug: 'predictive' }
+  ];
+
   useEffect(() => {
-    if (searchQuery.trim().length >= 2) {
+    if (searchQuery.trim().length >= 1) {
       Promise.all([CourseService.getCourses(), CategoryService.getCategories()])
         .then(([courses, categories]) => {
           const lower = searchQuery.toLowerCase();
           setSearchResults({
-            courses: (courses || []).filter(c => (c.title || '').toLowerCase().includes(lower)).slice(0, 5),
-            categories: (categories || []).filter(c => (c.name || '').toLowerCase().includes(lower)).slice(0, 5)
+            courses: (courses || []).filter(c => (c.title || '').toLowerCase().includes(lower)).slice(0, 3),
+            categories: (categories || []).filter(c => (c.name || '').toLowerCase().includes(lower)).slice(0, 3),
+            analytics: ANALYTICS_PAGES.filter(a => a.title.toLowerCase().includes(lower)).slice(0, 3)
           });
         });
     } else {
-      setSearchResults({ courses: [], categories: [] });
+      setSearchResults({ courses: [], categories: [], analytics: [] });
     }
   }, [searchQuery]);
 
@@ -72,7 +84,25 @@ export function Header() {
   const handleResultClick = (type, slug) => {
     setIsSearchOpen(false);
     setSearchQuery('');
-    router.navigate({ to: `/${type}/${slug}` });
+    router.navigate({ to: `/admin/${type}/${slug}` });
+  };
+  
+  const handleSearchBtnClick = () => {
+    if (!isSearchOpen) {
+      setIsSearchOpen(true);
+    }
+    // If there is query and results exist, navigate to first result
+    if (searchQuery.trim().length >= 1) {
+      const allResults = [
+        ...searchResults.analytics.map(i => ({ type: 'analytics', slug: i.slug })),
+        ...searchResults.courses.map(i => ({ type: 'courses', slug: i.slug || i.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') })),
+        ...searchResults.categories.map(i => ({ type: 'categories', slug: i.slug || i.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') })),
+      ];
+      
+      if (allResults.length > 0) {
+        handleResultClick(allResults[0].type, allResults[0].slug);
+      }
+    }
   };
 
   // Settings Menu
@@ -125,70 +155,103 @@ export function Header() {
 
   return (
     <header className="header relative z-40">
-      <div className="flex items-center gap-3">
+      {/* Left: Menu + Breadcrumb */}
+      <div className="header-left">
         <button
           onClick={toggleSidebar}
           className="header-btn"
           aria-label="Toggle Sidebar"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-4 w-4" />
         </button>
         <div className="breadcrumb">
-          <span>Platform</span>
-          <span className="breadcrumb-sep">›</span>
-          <span className="breadcrumb-cur">{activeSidebarItem}</span>
+          {breadcrumbs?.map((crumb, index) => (
+            <React.Fragment key={crumb.label}>
+              {index > 0 && <span className="breadcrumb-sep">›</span>}
+              <Link 
+                to={crumb.href} 
+                className={index === breadcrumbs.length - 1 ? "breadcrumb-cur hover:underline" : "hover:underline"}
+                style={{ textDecoration: 'none' }}
+              >
+                {crumb.label}
+              </Link>
+            </React.Fragment>
+          ))}
         </div>
       </div>
-      
-      <div className="flex-1 max-w-2xl px-4 relative" ref={searchRef}>
-        <div className="header-search w-full relative">
-          <IconSearch className="search-icon text-[#5A5A5A]" />
-          <input 
-            type="text" 
-            placeholder="Search courses and categories…" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() => setIsSearchOpen(true)}
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2e2e3e] rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all"
-          />
-        </div>
 
+      {/* Center: Search */}
+      <div className="header-search" ref={searchRef}>
+        <input
+          type="text"
+          placeholder="Search users, batches, courses, analytics..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => setIsSearchOpen(true)}
+        />
+        <div className="search-controls">
+          {searchQuery.length > 0 && (
+            <button className="search-clear" onClick={() => { setSearchQuery(''); setIsSearchOpen(false); }}>
+              <X className="w-4 h-4" />
+            </button>
+          )}
+          {searchQuery.length > 0 && <div className="search-divider"></div>}
+          <button className="search-btn" onClick={handleSearchBtnClick}>
+            <Search className="w-4 h-4" strokeWidth={2.5} />
+          </button>
+        </div>
         {/* Search Results Dropdown */}
-        {isSearchOpen && searchQuery.trim().length >= 2 && (
-          <div className="absolute top-full left-4 right-4 mt-2 bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl shadow-xl overflow-hidden z-50 py-2">
-            {searchResults.courses.length === 0 && searchResults.categories.length === 0 ? (
+        {isSearchOpen && searchQuery.trim().length >= 1 && (
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl shadow-xl overflow-hidden z-50 py-2 custom-scrollbar" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+            {searchResults.courses.length === 0 && searchResults.categories.length === 0 && searchResults.analytics.length === 0 ? (
               <div className="px-4 py-3 text-sm text-gray-500 text-center">No results found for "{searchQuery}"</div>
             ) : (
               <>
+                {searchResults.analytics.length > 0 && (
+                  <div className="mb-2">
+                    <div className="px-4 py-1.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Analytics Hub</div>
+                    {searchResults.analytics.map(page => (
+                      <div
+                        key={page.id}
+                        onClick={() => handleResultClick('analytics', page.slug)}
+                        className="px-4 py-2 hover:bg-gray-50 dark:hover:bg-[#1a1a24] cursor-pointer flex items-center gap-3 transition-colors"
+                      >
+                        <div className="w-7 h-7 rounded-lg bg-[#01AC9F]/10 text-[#01AC9F] flex items-center justify-center shrink-0">
+                          <BarChart2 className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{page.title}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 {searchResults.categories.length > 0 && (
                   <div className="mb-2">
                     <div className="px-4 py-1.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Categories</div>
                     {searchResults.categories.map(cat => (
-                      <div 
-                        key={cat.id} 
+                      <div
+                        key={cat.id}
                         onClick={() => handleResultClick('categories', cat.slug || (cat.name && cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')))}
                         className="px-4 py-2 hover:bg-gray-50 dark:hover:bg-[#1a1a24] cursor-pointer flex items-center gap-3 transition-colors"
                       >
-                        <div className="w-8 h-8 rounded-lg bg-[#01AC9F]/10 text-[#01AC9F] flex items-center justify-center shrink-0">
-                          <TagIcon className="w-4 h-4" />
+                        <div className="w-7 h-7 rounded-lg bg-[#6C1D5F]/10 text-[#6C1D5F] flex items-center justify-center shrink-0">
+                          <TagIcon className="w-3.5 h-3.5" />
                         </div>
                         <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{cat.name}</span>
                       </div>
                     ))}
                   </div>
                 )}
-                
                 {searchResults.courses.length > 0 && (
-                  <div>
+                  <div className="mb-2">
                     <div className="px-4 py-1.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Courses</div>
                     {searchResults.courses.map(course => (
-                      <div 
-                        key={course.id} 
+                      <div
+                        key={course.id}
                         onClick={() => handleResultClick('courses', course.slug || (course.title && course.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')))}
                         className="px-4 py-2 hover:bg-gray-50 dark:hover:bg-[#1a1a24] cursor-pointer flex items-center gap-3 transition-colors"
                       >
-                        <div className="w-8 h-8 rounded-lg bg-[#6C1D5F]/10 text-[#6C1D5F] dark:bg-[#84117C]/20 dark:text-[#84117C] flex items-center justify-center shrink-0">
-                          <BookOpen className="w-4 h-4" />
+                        <div className="w-7 h-7 rounded-lg bg-[#84117C]/10 text-[#84117C] flex items-center justify-center shrink-0">
+                          <BookOpen className="w-3.5 h-3.5" />
                         </div>
                         <div className="flex flex-col truncate">
                           <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{course.title}</span>
@@ -203,25 +266,23 @@ export function Header() {
           </div>
         )}
       </div>
-      
-      <div className="header-actions relative">
+
+      {/* Right: Actions */}
+      <div className="header-actions">
         <button
           onClick={toggleDark}
-          className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#252535] transition-colors border border-transparent dark:border-[#2e2e3e]"
+          className="w-[34px] h-[34px] flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-400 hover:text-[#6C1D5F] dark:hover:text-[#D3CCEC] transition-colors border border-gray-200 dark:border-[#2e2e3e]"
           title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
-          {isDark ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
+          {isDark ? <Sun className="w-[15px] h-[15px]" /> : <Moon className="w-[15px] h-[15px]" />}
         </button>
-
-        <div className="relative">
-          <button
-            onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#252535] transition-colors border border-transparent dark:border-[#2e2e3e]"
-            title="Settings"
-          >
-            <Settings className="w-[18px] h-[18px]" />
-          </button>
-        </div>
+        <button
+          onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+          className="w-[34px] h-[34px] flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-400 hover:text-[#6C1D5F] dark:hover:text-[#D3CCEC] transition-colors border border-gray-200 dark:border-[#2e2e3e]"
+          title="Settings"
+        >
+          <Settings className="w-[15px] h-[15px]" />
+        </button>
       </div>
 
       {/* Account Settings Modal */}

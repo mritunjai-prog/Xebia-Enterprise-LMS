@@ -8,6 +8,7 @@ export const useAppStore = create((set, get) => ({
   isSidebarCollapsed: false,
   activeTenant: 'Global · All Tenants',
   activeSidebarItem: 'Dashboard',
+  breadcrumbs: [],
   toasts: [],
   modals: {
     addOrg: false,
@@ -53,6 +54,7 @@ export const useAppStore = create((set, get) => ({
   toggleSidebar: () => set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
   setTenant: (tenant) => set({ activeTenant: tenant }),
   setActiveSidebarItem: (item) => set({ activeSidebarItem: item }),
+  setBreadcrumbs: (crumbs) => set({ breadcrumbs: crumbs }),
   
   addToast: (message, type = 'info') => {
     const id = Math.random().toString(36).substring(2, 9);
