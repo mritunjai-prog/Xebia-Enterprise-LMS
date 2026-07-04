@@ -12,7 +12,6 @@ const TEAL = '#01AC9F';
 
 const STEPS = [
   { id: 'basic', label: 'Basic Details' },
-  { id: 'seo', label: 'SEO & Meta' },
 ];
 
 const LANGUAGES = ['English', 'Hindi', 'Spanish', 'French', 'German', 'Japanese', 'Chinese'];
@@ -383,22 +382,7 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
             </Field>
           </FormRow>
 
-          <FormRow>
-            <Field label="Preview Video URL" hint="Short intro video link (YouTube / Vimeo)">
-              <Input
-                value={form.previewVideoUrl}
-                onChange={e => setForm(f => ({ ...f, previewVideoUrl: e.target.value }))}
-                placeholder="https://youtube.com/..."
-              />
-            </Field>
-            <Field label="Intro Video URL (****)" hint="Longer intro/trailer">
-              <Input
-                value={form.introVideoUrl}
-                onChange={e => setForm(f => ({ ...f, introVideoUrl: e.target.value }))}
-                placeholder="https://..."
-              />
-            </Field>
-          </FormRow>
+
 
           <div className="grid grid-cols-2 gap-4">
             <div className="h-28 bg-gray-50 dark:bg-[#1a1a24] border border-dashed border-gray-200 dark:border-[#3a3a4a] rounded-xl flex items-center justify-center overflow-hidden">
@@ -415,13 +399,7 @@ function BasicDetailsStep({ form, setForm, categories, generatingField, handleAI
             </div>
           </div>
 
-          <Field label="Price Course URL (***) · Resource / purchase page">
-            <Input
-              value={form.coursePriceUrl}
-              onChange={e => setForm(f => ({ ...f, coursePriceUrl: e.target.value }))}
-              placeholder="https://..."
-            />
-          </Field>
+
         </div>
       </SectionCard>
 
@@ -935,26 +913,9 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
           <ChevronRight className="w-3.5 h-3.5" />
           <button onClick={onBack} className="hover:text-gray-800 dark:hover:text-white transition-colors">Courses</button>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-gray-900 dark:text-white font-medium">{editData ? 'Edit Course' : 'Create Course'} — {STEPS[currentStep].label}</span>
+          <span className="text-gray-900 dark:text-white font-medium">{editData ? 'Edit Course' : 'Create Course'}</span>
         </div>
         <div className="flex items-center gap-2">
-          {STEPS.map((s, i) => (
-            <button
-              key={s.id}
-              onClick={() => setCurrentStep(i)}
-              className={clsx(
-                'px-4 py-1.5 rounded-full text-sm font-semibold border transition-colors',
-                i === currentStep 
-                  ? 'text-white border-transparent' 
-                  : i < currentStep 
-                    ? 'border-[#01AC9F]/30 text-[#01AC9F] bg-[#01AC9F]/5' 
-                    : 'border-gray-200 dark:border-[#2e2e3e] text-gray-400 bg-white dark:bg-[#15151f]'
-              )}
-              style={i === currentStep ? { backgroundColor: BRAND } : {}}
-            >
-              {i < currentStep ? '✓ ' : ''}{s.label}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -962,20 +923,19 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-lg" style={{ backgroundColor: BRAND }}>
-              {currentStep === 0 ? '🎓' : '🔍'}
+              🎓
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                {editData ? 'Edit Course' : 'Create Course'} — {STEPS[currentStep].label}
+                {editData ? 'Edit Course' : 'Create Course'}
               </h1>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                {currentStep === 0 ? 'Establish course name, content, level and prerequisites.' : 'Set up this page to rank higher and optimise SEO titles.'}
+                Establish course name, content, level and prerequisites.
               </p>
             </div>
           </div>
 
-            {currentStep === 0 && <BasicDetailsStep form={form} setForm={setForm} categories={categories} generatingField={generatingField} handleAIGenerate={handleAIGenerate} />}
-            {currentStep === 1 && <SeoMetaStep form={form} setForm={setForm} />}
+            <BasicDetailsStep form={form} setForm={setForm} categories={categories} generatingField={generatingField} handleAIGenerate={handleAIGenerate} />
         </div>
 
         <div className="w-full lg:w-72 shrink-0 flex flex-col gap-4 self-start lg:sticky lg:top-4">
@@ -1050,14 +1010,7 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
                   </span>
                 </div>
               ))}
-              {currentStep === 1 && (
-                <div className="pt-2 border-t border-gray-100 dark:border-[#2e2e3e]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[12px] text-gray-500 dark:text-gray-400">SEO Score</span>
-                    <span className={clsx('text-sm font-black', seoScore >= 70 ? 'text-[#01AC9F]' : 'text-orange-400')}>{seoScore}</span>
-                  </div>
-                </div>
-              )}
+
             </div>
           </div>
 

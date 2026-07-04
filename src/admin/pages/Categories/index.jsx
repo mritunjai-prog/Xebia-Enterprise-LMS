@@ -151,20 +151,23 @@ export default function Categories() {
       </div>
 
       {/* Premium KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Total Categories', value: totalCategories, icon: Tag, color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-100 dark:bg-pink-500/10', ring: 'ring-pink-100 dark:ring-pink-500/20' },
-          { label: 'Active', value: activeCount, icon: CheckCircle, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-500/10', ring: 'ring-emerald-100 dark:ring-emerald-500/20' },
-          { label: 'Inactive', value: inactiveCount, icon: XCircle, color: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-500/10', ring: 'ring-orange-100 dark:ring-orange-500/20' },
-          { label: 'Total Courses', value: totalCourses, icon: BookOpen, color: 'text-[#6C1D5F] dark:text-purple-400', bg: 'bg-[#6C1D5F]/10 dark:bg-purple-500/10', ring: 'ring-[#6C1D5F]/10 dark:ring-purple-500/20' },
-        ].map(({ label, value, icon: Icon, color, bg, ring }) => (
-          <div key={label} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 flex items-center gap-5 hover:shadow-md transition-shadow">
-            <div className={clsx('w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ring-8', bg, color, ring)}>
-              <Icon className="w-6 h-6" />
+          { label: 'TOTAL CATEGORIES', value: totalCategories, desc: 'All structured domains', icon: Tag, color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-50 dark:bg-pink-500/10' },
+          { label: 'ACTIVE', value: activeCount, desc: 'Currently in use', icon: CheckCircle, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-500/10' },
+          { label: 'INACTIVE', value: inactiveCount, desc: 'Hidden or archived', icon: XCircle, color: 'text-orange-500 dark:text-orange-400', bg: 'bg-orange-50 dark:bg-orange-500/10' },
+          { label: 'TOTAL COURSES', value: totalCourses, desc: 'Across all categories', icon: BookOpen, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-500/10' },
+        ].map((stat, i) => (
+          <div key={i} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div className={clsx('w-12 h-12 rounded-2xl flex items-center justify-center shrink-0', stat.bg, stat.color)}>
+              <stat.icon className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{label}</p>
-              <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mt-1 tracking-tight">{value}</h3>
+              <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">{stat.label}</p>
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-black text-gray-900 dark:text-white leading-none">{stat.value}</span>
+              </div>
+              <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-1">{stat.desc}</p>
             </div>
           </div>
         ))}
@@ -237,7 +240,7 @@ export default function Categories() {
 
       {/* Grid View */}
       {viewMode === 'grid' && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           <AnimatePresence>
             {paginatedCategories.map((cat, index) => {
               const color = cat.color || '#6C1D5F';
@@ -252,12 +255,20 @@ export default function Categories() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2, delay: index * 0.03 }}
-                  className="group bg-white dark:bg-[#15151f] rounded-2xl shadow-sm overflow-hidden flex flex-col h-full hover:shadow-2xl hover:shadow-[#6C1D5F]/10 hover:-translate-y-1.5 transition-all duration-200 relative cursor-pointer"
-                  style={{ border: `3px solid ${color}` }}
+                  className="group bg-white dark:bg-[#15151f] rounded-xl overflow-hidden flex flex-col h-full transition-all duration-300 relative cursor-pointer border-[3px]"
+                  style={{ 
+                    borderColor: `${color}50`,
+                    boxShadow: `0 4px 20px -5px ${color}40`
+                  }}
+                  whileHover={{ 
+                    y: -5,
+                    borderColor: color,
+                    boxShadow: `0 15px 45px -5px ${color}99, 0 0 20px 0 ${color}60`
+                  }}
                 >
 
                     <div 
-                      className="w-full aspect-video shrink-0 overflow-hidden cursor-pointer relative flex items-center justify-center" 
+                      className="w-full h-32 shrink-0 overflow-hidden cursor-pointer relative flex items-center justify-center" 
                       style={{ backgroundColor: (cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('data:image/'))) ? 'var(--tw-bg-opacity)' : color }}
                       onClick={(e) => {
                         if (e.target.closest('button')) return;
@@ -267,7 +278,7 @@ export default function Categories() {
                       {cat.icon && (cat.icon.startsWith('http') || cat.icon.startsWith('data:image/')) ? (
                         <img src={cat.icon} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/1200x675/ffffff/94a3b8?text=${encodeURIComponent(cat.name)}`; }} />
                       ) : cat.icon ? (
-                        <span className="text-[400px] leading-none absolute flex items-center justify-center w-full h-full group-hover:scale-105 transition-transform duration-200">{cat.icon}</span>
+                        <span className="text-7xl leading-none absolute flex items-center justify-center w-full h-full group-hover:scale-105 transition-transform duration-200">{cat.icon}</span>
                       ) : null}
                       <div className="absolute top-4 right-4">
                         <span className={clsx(
@@ -289,12 +300,15 @@ export default function Categories() {
 
                     <div className="mb-auto">
                       <span
-                        className="text-xl font-extrabold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors leading-tight block mb-3"
+                        className="text-base font-bold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors leading-tight block mb-2"
                       >
                         {cat.name}
                       </span>
                       {cat.description && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed mb-4">
+                        <p 
+                          className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 line-clamp-3 mb-3"
+                          title={cat.description}
+                        >
                           {cat.description}
                         </p>
                       )}
