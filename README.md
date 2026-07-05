@@ -23,11 +23,11 @@
 <p align="center">
   <a href="https://xebia-enterprise-lms.vercel.app" target="_blank"><strong>🌐 Live Demo</strong></a> &nbsp;•&nbsp;
   <a href="setup.md"><strong>📖 Setup Guide</strong></a> &nbsp;•&nbsp;
-  <a href="ProjectDocumentation.html"><strong>📚 Full Technical Docs</strong></a>
+  <a href="https://htmlpreview.github.io/?https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/blob/main/ProjectDocumentation.html" target="_blank"><strong>📚 Full Technical Docs</strong></a>
 </p>
 
 <p align="center">
-  <a href="ProjectDocumentation.html">
+  <a href="https://htmlpreview.github.io/?https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/blob/main/ProjectDocumentation.html" target="_blank">
     <img src="https://img.shields.io/badge/📚%20Full%20Technical%20Documentation-Open%20Now-6C1D5F?style=for-the-badge&labelColor=4A1E47" alt="Full Technical Documentation"/>
   </a>
 </p>
@@ -234,7 +234,7 @@ Xebia-Enterprise-LMS/
 
 > **👉 For a full, beginner-friendly step-by-step setup guide (with Java installation, Docker setup, and environment variables), please read the [Complete SETUP.md Guide](setup.md).**
 >
-> **📚 For in-depth technical architecture, API reference, entity diagrams, flowcharts and more — open the [Project Technical Documentation](ProjectDocumentation.html).**
+> **📚 For in-depth technical architecture, API reference, entity diagrams, flowcharts and more — open the [Project Technical Documentation](https://htmlpreview.github.io/?https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/blob/main/ProjectDocumentation.html) (Opens in browser).**
 
 ### Prerequisites
 - Node.js 18+ and npm
