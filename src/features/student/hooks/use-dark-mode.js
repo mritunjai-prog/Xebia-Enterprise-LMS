@@ -8,7 +8,7 @@ export function useDarkMode() {
   const [isDark, setIsDark] = useState(() => {
     if (typeof window === "undefined") return false;
     return document.documentElement.classList.contains("dark");
-});
+  });
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDark(document.documentElement.classList.contains("dark"));

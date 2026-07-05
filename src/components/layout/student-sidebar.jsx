@@ -8,10 +8,11 @@ import {
   Bell,
   MessageSquare,
   LogOut,
-  User,
 } from "lucide-react";
 import { studentProfile } from "@/features/student/mocks/dummy-data";
 import { clsx } from "clsx";
+import { useAppStore } from "@/admin/store/useAppStore";
+import { useEffect } from "react";
 
 const navItems = [
   { name: "Dashboard", href: "/student", icon: LayoutDashboard },
@@ -26,12 +27,25 @@ const navItems = [
 export function StudentSidebar({ isMobileOpen, setIsMobileOpen, isSidebarCollapsed }) {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { setActiveSidebarItem } = useAppStore();
 
   const initials = studentProfile.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase();
+
+  // Update breadcrumb based on current path
+  useEffect(() => {
+    const activeItem = navItems.find((item) =>
+      item.href === "/student"
+        ? currentPath === "/student" || currentPath === "/student/"
+        : currentPath.startsWith(item.href),
+    );
+    if (activeItem) {
+      setActiveSidebarItem(activeItem.name);
+    }
+  }, [currentPath, setActiveSidebarItem]);
 
   const handleNavClick = () => {
     if (setIsMobileOpen) {
@@ -43,7 +57,12 @@ export function StudentSidebar({ isMobileOpen, setIsMobileOpen, isSidebarCollaps
     <div className={clsx("sidebar sidebar-student", isSidebarCollapsed && "collapsed")}>
       {/* Brand */}
       <div className="sidebar-brand">
-        <Link to="/student" onClick={() => handleNavClick()} className="logo" style={{ textDecoration: "none" }}>
+        <Link
+          to="/student"
+          onClick={() => handleNavClick()}
+          className="logo"
+          style={{ textDecoration: "none" }}
+        >
           <div className="logo-mark">
             <span>X</span>
           </div>
@@ -57,16 +76,19 @@ export function StudentSidebar({ isMobileOpen, setIsMobileOpen, isSidebarCollaps
       {/* Navigation */}
       <div className="sidebar-nav">
         <div className="nav-section">Main Menu</div>
-        
+
         {navItems.map((item) => {
+          const isActive =
+            item.href === "/student"
+              ? currentPath === "/student" || currentPath === "/student/"
+              : currentPath.startsWith(item.href);
+
           return (
             <Link
               key={item.name}
               to={item.href}
               onClick={() => handleNavClick()}
-              className="nav-item"
-              activeProps={{ className: "active" }}
-              activeOptions={{ exact: item.href === "/student" }}
+              className={clsx("nav-item", isActive && "active")}
               style={{ textDecoration: "none" }}
             >
               <item.icon className="nav-icon" />
@@ -78,21 +100,14 @@ export function StudentSidebar({ isMobileOpen, setIsMobileOpen, isSidebarCollaps
 
       {/* Bottom section */}
       <div className="sidebar-footer">
-        <Link
-          to="/student/profile"
-          className="sidebar-user"
-          style={{ textDecoration: "none" }}
-        >
-          <div className="user-avatar">
-            {initials}
-          </div>
+        <div className="sidebar-user" style={{ textDecoration: "none" }}>
+          <div className="user-avatar">{initials}</div>
           <div className="user-info">
             <div className="user-name">{studentProfile.name}</div>
-            <div className="user-role">View Profile</div>
           </div>
-        </Link>
+        </div>
         <button className="sidebar-user w-full text-left mt-1 border-none bg-transparent">
-          <div className="user-avatar" style={{ background: 'transparent', color: 'inherit' }}>
+          <div className="user-avatar" style={{ background: "transparent", color: "inherit" }}>
             <LogOut className="w-[18px] h-[18px] opacity-60" />
           </div>
           <div className="user-info">

@@ -1,14 +1,6 @@
 const CLOUDINARY_HOST = "res.cloudinary.com";
 
-const DOCUMENT_EXTENSIONS = new Set([
-  "pdf",
-  "doc",
-  "docx",
-  "ppt",
-  "pptx",
-  "xls",
-  "xlsx",
-]);
+const DOCUMENT_EXTENSIONS = new Set(["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"]);
 
 function getUrlExtension(url) {
   if (!url || typeof url !== "string") return "";
@@ -58,7 +50,16 @@ function createDocumentPreviewUrl(url, format = "jpg") {
   const publicId = fileName.replace(/\.[^.]+$/, "");
   const versionSegment = segments.pop() || "";
   const folderPath = segments.length ? `${segments.join("/")}/` : "";
-  const versionAndPath = [versionSegment, folderPath ? `${folderPath}${publicId}.${fileFormat}` : publicId ? `${publicId}.${fileFormat}` : ""].filter(Boolean).join("/");
+  const versionAndPath = [
+    versionSegment,
+    folderPath
+      ? `${folderPath}${publicId}.${fileFormat}`
+      : publicId
+        ? `${publicId}.${fileFormat}`
+        : "",
+  ]
+    .filter(Boolean)
+    .join("/");
 
   return `${prefix}/upload/pg_1,f_${fileFormat}/${versionAndPath}`;
 }

@@ -1,1 +1,0 @@
-import{n as e,s as t}from"./jsx-runtime-BseJUIpC.js";var n=t(e(),1),r=globalThis?.document?n.useLayoutEffect:()=>{};function i(e){let t=n.useRef(e);return n.useEffect(()=>{t.current=e}),n.useMemo(()=>((...e)=>t.current?.(...e)),[])}export{r as n,i as t};

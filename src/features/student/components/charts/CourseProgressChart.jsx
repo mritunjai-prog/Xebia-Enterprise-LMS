@@ -1,12 +1,4 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useDarkMode } from "@/features/student/hooks/use-dark-mode";
 
 /**
@@ -18,11 +10,7 @@ export function CourseProgressChart({ data }) {
 
   return (
     <ResponsiveContainer width="100%" height="100%" key={isDark ? "dark" : "light"}>
-      <BarChart
-        data={data}
-        layout="vertical"
-        margin={{ top: 20, right: 30, left: 20, bottom: 0 }}
-      >
+      <BarChart data={data} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 0 }}>
         <CartesianGrid
           strokeDasharray="3 3"
           opacity={0.15}
@@ -46,12 +34,7 @@ export function CourseProgressChart({ data }) {
           itemStyle={{ color: "var(--foreground)" }}
           formatter={(value) => [`${value}%`, "Progress"]}
         />
-        <Bar
-          dataKey="progress"
-          fill="var(--primary)"
-          radius={[0, 4, 4, 0]}
-          barSize={20}
-        />
+        <Bar dataKey="progress" fill="var(--primary)" radius={[0, 4, 4, 0]} barSize={20} />
       </BarChart>
     </ResponsiveContainer>
   );

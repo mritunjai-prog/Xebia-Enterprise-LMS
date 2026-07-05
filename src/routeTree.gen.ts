@@ -9,65 +9,61 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TrainerRouteImport } from './routes/trainer'
 import { Route as StudentRouteImport } from './routes/student'
-import { Route as OrganiserRouteImport } from './routes/organiser'
-import { Route as CurriculumRouteImport } from './routes/curriculum'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentIndexRouteImport } from './routes/student/index'
-import { Route as CoursesIndexRouteImport } from './routes/courses/index'
-import { Route as CategoriesIndexRouteImport } from './routes/categories/index'
-import { Route as AnalyticsIndexRouteImport } from './routes/analytics/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as StudentResultsRouteImport } from './routes/student/results'
 import { Route as StudentProfileRouteImport } from './routes/student/profile'
 import { Route as StudentNotificationsRouteImport } from './routes/student/notifications'
 import { Route as StudentFeedbackRouteImport } from './routes/student/feedback'
 import { Route as StudentCoursesRouteImport } from './routes/student/courses'
+import { Route as StudentBatchesRouteImport } from './routes/student/batches'
 import { Route as StudentAssessmentsRouteImport } from './routes/student/assessments'
-import { Route as CoursesBuilderRouteImport } from './routes/courses/builder'
-import { Route as CoursesCourseSlugRouteImport } from './routes/courses/$courseSlug'
-import { Route as CategoriesCategorySlugRouteImport } from './routes/categories/$categorySlug'
-import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
+import { Route as AdminCurriculumRouteImport } from './routes/admin/curriculum'
 import { Route as AdminCurriculumIndexRouteImport } from './routes/admin/curriculum/index'
+import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
 import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categories/index'
 import { Route as AdminAnalyticsIndexRouteImport } from './routes/admin/analytics/index'
 import { Route as StudentCourseCourseIdRouteImport } from './routes/student/course/$courseId'
 import { Route as StudentAssessmentAssessmentIdRouteImport } from './routes/student/assessment/$assessmentId'
 import { Route as AdminCurriculumCourseIdRouteImport } from './routes/admin/curriculum/$courseId'
+import { Route as AdminCoursesBuilderRouteImport } from './routes/admin/courses/builder'
 import { Route as AdminCoursesCourseSlugRouteImport } from './routes/admin/courses/$courseSlug'
-import { Route as AdminCategoriesCategoryIdRouteImport } from './routes/admin/categories/$categoryId'
-import { Route as AdminAnalyticsTrainingEffectivenessRouteImport } from './routes/admin/analytics/training-effectiveness'
-import { Route as AdminAnalyticsProjectInvestmentRouteImport } from './routes/admin/analytics/project-investment'
+import { Route as AdminCategoriesCategorySlugRouteImport } from './routes/admin/categories/$categorySlug'
+import { Route as AdminAnalyticsTrendsRouteImport } from './routes/admin/analytics/trends'
+import { Route as AdminAnalyticsSkillGapRouteImport } from './routes/admin/analytics/skill-gap'
+import { Route as AdminAnalyticsRecommendationsRouteImport } from './routes/admin/analytics/recommendations'
+import { Route as AdminAnalyticsProgramsRouteImport } from './routes/admin/analytics/programs'
+import { Route as AdminAnalyticsPredictiveRouteImport } from './routes/admin/analytics/predictive'
 import { Route as AdminAnalyticsPillarsRouteImport } from './routes/admin/analytics/pillars'
-import { Route as AdminAnalyticsLearningTrendsRouteImport } from './routes/admin/analytics/learning-trends'
-import { Route as AdminAnalyticsLearningChampionsRouteImport } from './routes/admin/analytics/learning-champions'
+import { Route as AdminAnalyticsInvestmentRouteImport } from './routes/admin/analytics/investment'
 import { Route as AdminAnalyticsHoursRouteImport } from './routes/admin/analytics/hours'
-import { Route as AdminAnalyticsFresherJourneyRouteImport } from './routes/admin/analytics/fresher-journey'
-import { Route as AdminAnalyticsFlagshipProgramsRouteImport } from './routes/admin/analytics/flagship-programs'
 import { Route as AdminAnalyticsExecutiveRouteImport } from './routes/admin/analytics/executive'
+import { Route as AdminAnalyticsEffectivenessRouteImport } from './routes/admin/analytics/effectiveness'
 import { Route as AdminAnalyticsCoverageRouteImport } from './routes/admin/analytics/coverage'
+import { Route as AdminAnalyticsChampionsRouteImport } from './routes/admin/analytics/champions'
 import { Route as AdminAnalyticsCertificationsRouteImport } from './routes/admin/analytics/certifications'
-import { Route as AdminAnalyticsAiTransformationRouteImport } from './routes/admin/analytics/ai-transformation'
+import { Route as AdminAnalyticsApprenticeRouteImport } from './routes/admin/analytics/apprentice'
+import { Route as AdminAnalyticsAiRouteImport } from './routes/admin/analytics/ai'
+import { Route as AdminAnalyticsAnalyticsIndexRouteImport } from './routes/admin/analytics/analytics/index'
 import { Route as AdminSubmodulesSubmoduleIdContentRouteImport } from './routes/admin/submodules/$submoduleId/content'
 
-const TrainerRoute = TrainerRouteImport.update({
-  id: '/trainer',
-  path: '/trainer',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const StudentRoute = StudentRouteImport.update({
   id: '/student',
   path: '/student',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OrganiserRoute = OrganiserRouteImport.update({
-  id: '/organiser',
-  path: '/organiser',
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CurriculumRoute = CurriculumRouteImport.update({
-  id: '/curriculum',
-  path: '/curriculum',
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -80,20 +76,10 @@ const StudentIndexRoute = StudentIndexRouteImport.update({
   path: '/',
   getParentRoute: () => StudentRoute,
 } as any)
-const CoursesIndexRoute = CoursesIndexRouteImport.update({
-  id: '/courses/',
-  path: '/courses/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
-  id: '/categories/',
-  path: '/categories/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AnalyticsIndexRoute = AnalyticsIndexRouteImport.update({
-  id: '/analytics/',
-  path: '/analytics/',
-  getParentRoute: () => rootRouteImport,
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const StudentResultsRoute = StudentResultsRouteImport.update({
   id: '/results',
@@ -120,45 +106,40 @@ const StudentCoursesRoute = StudentCoursesRouteImport.update({
   path: '/courses',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentBatchesRoute = StudentBatchesRouteImport.update({
+  id: '/batches',
+  path: '/batches',
+  getParentRoute: () => StudentRoute,
+} as any)
 const StudentAssessmentsRoute = StudentAssessmentsRouteImport.update({
   id: '/assessments',
   path: '/assessments',
   getParentRoute: () => StudentRoute,
 } as any)
-const CoursesBuilderRoute = CoursesBuilderRouteImport.update({
-  id: '/courses/builder',
-  path: '/courses/builder',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CoursesCourseSlugRoute = CoursesCourseSlugRouteImport.update({
-  id: '/courses/$courseSlug',
-  path: '/courses/$courseSlug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CategoriesCategorySlugRoute = CategoriesCategorySlugRouteImport.update({
-  id: '/categories/$categorySlug',
-  path: '/categories/$categorySlug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
-  id: '/admin/analytics',
-  path: '/admin/analytics',
-  getParentRoute: () => rootRouteImport,
+const AdminCurriculumRoute = AdminCurriculumRouteImport.update({
+  id: '/curriculum',
+  path: '/curriculum',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminCurriculumIndexRoute = AdminCurriculumIndexRouteImport.update({
-  id: '/admin/curriculum/',
-  path: '/admin/curriculum/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminCategoriesIndexRoute = AdminCategoriesIndexRouteImport.update({
-  id: '/admin/categories/',
-  path: '/admin/categories/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminAnalyticsIndexRoute = AdminAnalyticsIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AdminAnalyticsRoute,
+  getParentRoute: () => AdminCurriculumRoute,
+} as any)
+const AdminCoursesIndexRoute = AdminCoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCategoriesIndexRoute = AdminCategoriesIndexRouteImport.update({
+  id: '/categories/',
+  path: '/categories/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsIndexRoute = AdminAnalyticsIndexRouteImport.update({
+  id: '/analytics/',
+  path: '/analytics/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const StudentCourseCourseIdRoute = StudentCourseCourseIdRouteImport.update({
   id: '/course/$courseId',
@@ -172,378 +153,385 @@ const StudentAssessmentAssessmentIdRoute =
     getParentRoute: () => StudentRoute,
   } as any)
 const AdminCurriculumCourseIdRoute = AdminCurriculumCourseIdRouteImport.update({
-  id: '/admin/curriculum/$courseId',
-  path: '/admin/curriculum/$courseId',
-  getParentRoute: () => rootRouteImport,
+  id: '/$courseId',
+  path: '/$courseId',
+  getParentRoute: () => AdminCurriculumRoute,
+} as any)
+const AdminCoursesBuilderRoute = AdminCoursesBuilderRouteImport.update({
+  id: '/courses/builder',
+  path: '/courses/builder',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminCoursesCourseSlugRoute = AdminCoursesCourseSlugRouteImport.update({
-  id: '/admin/courses/$courseSlug',
-  path: '/admin/courses/$courseSlug',
-  getParentRoute: () => rootRouteImport,
+  id: '/courses/$courseSlug',
+  path: '/courses/$courseSlug',
+  getParentRoute: () => AdminRoute,
 } as any)
-const AdminCategoriesCategoryIdRoute =
-  AdminCategoriesCategoryIdRouteImport.update({
-    id: '/admin/categories/$categoryId',
-    path: '/admin/categories/$categoryId',
-    getParentRoute: () => rootRouteImport,
+const AdminCategoriesCategorySlugRoute =
+  AdminCategoriesCategorySlugRouteImport.update({
+    id: '/categories/$categorySlug',
+    path: '/categories/$categorySlug',
+    getParentRoute: () => AdminRoute,
   } as any)
-const AdminAnalyticsTrainingEffectivenessRoute =
-  AdminAnalyticsTrainingEffectivenessRouteImport.update({
-    id: '/training-effectiveness',
-    path: '/training-effectiveness',
-    getParentRoute: () => AdminAnalyticsRoute,
+const AdminAnalyticsTrendsRoute = AdminAnalyticsTrendsRouteImport.update({
+  id: '/analytics/trends',
+  path: '/analytics/trends',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsSkillGapRoute = AdminAnalyticsSkillGapRouteImport.update({
+  id: '/analytics/skill-gap',
+  path: '/analytics/skill-gap',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRecommendationsRoute =
+  AdminAnalyticsRecommendationsRouteImport.update({
+    id: '/analytics/recommendations',
+    path: '/analytics/recommendations',
+    getParentRoute: () => AdminRoute,
   } as any)
-const AdminAnalyticsProjectInvestmentRoute =
-  AdminAnalyticsProjectInvestmentRouteImport.update({
-    id: '/project-investment',
-    path: '/project-investment',
-    getParentRoute: () => AdminAnalyticsRoute,
+const AdminAnalyticsProgramsRoute = AdminAnalyticsProgramsRouteImport.update({
+  id: '/analytics/programs',
+  path: '/analytics/programs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsPredictiveRoute =
+  AdminAnalyticsPredictiveRouteImport.update({
+    id: '/analytics/predictive',
+    path: '/analytics/predictive',
+    getParentRoute: () => AdminRoute,
   } as any)
 const AdminAnalyticsPillarsRoute = AdminAnalyticsPillarsRouteImport.update({
-  id: '/pillars',
-  path: '/pillars',
-  getParentRoute: () => AdminAnalyticsRoute,
+  id: '/analytics/pillars',
+  path: '/analytics/pillars',
+  getParentRoute: () => AdminRoute,
 } as any)
-const AdminAnalyticsLearningTrendsRoute =
-  AdminAnalyticsLearningTrendsRouteImport.update({
-    id: '/learning-trends',
-    path: '/learning-trends',
-    getParentRoute: () => AdminAnalyticsRoute,
-  } as any)
-const AdminAnalyticsLearningChampionsRoute =
-  AdminAnalyticsLearningChampionsRouteImport.update({
-    id: '/learning-champions',
-    path: '/learning-champions',
-    getParentRoute: () => AdminAnalyticsRoute,
+const AdminAnalyticsInvestmentRoute =
+  AdminAnalyticsInvestmentRouteImport.update({
+    id: '/analytics/investment',
+    path: '/analytics/investment',
+    getParentRoute: () => AdminRoute,
   } as any)
 const AdminAnalyticsHoursRoute = AdminAnalyticsHoursRouteImport.update({
-  id: '/hours',
-  path: '/hours',
-  getParentRoute: () => AdminAnalyticsRoute,
+  id: '/analytics/hours',
+  path: '/analytics/hours',
+  getParentRoute: () => AdminRoute,
 } as any)
-const AdminAnalyticsFresherJourneyRoute =
-  AdminAnalyticsFresherJourneyRouteImport.update({
-    id: '/fresher-journey',
-    path: '/fresher-journey',
-    getParentRoute: () => AdminAnalyticsRoute,
-  } as any)
-const AdminAnalyticsFlagshipProgramsRoute =
-  AdminAnalyticsFlagshipProgramsRouteImport.update({
-    id: '/flagship-programs',
-    path: '/flagship-programs',
-    getParentRoute: () => AdminAnalyticsRoute,
-  } as any)
 const AdminAnalyticsExecutiveRoute = AdminAnalyticsExecutiveRouteImport.update({
-  id: '/executive',
-  path: '/executive',
-  getParentRoute: () => AdminAnalyticsRoute,
+  id: '/analytics/executive',
+  path: '/analytics/executive',
+  getParentRoute: () => AdminRoute,
 } as any)
+const AdminAnalyticsEffectivenessRoute =
+  AdminAnalyticsEffectivenessRouteImport.update({
+    id: '/analytics/effectiveness',
+    path: '/analytics/effectiveness',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminAnalyticsCoverageRoute = AdminAnalyticsCoverageRouteImport.update({
-  id: '/coverage',
-  path: '/coverage',
-  getParentRoute: () => AdminAnalyticsRoute,
+  id: '/analytics/coverage',
+  path: '/analytics/coverage',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsChampionsRoute = AdminAnalyticsChampionsRouteImport.update({
+  id: '/analytics/champions',
+  path: '/analytics/champions',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminAnalyticsCertificationsRoute =
   AdminAnalyticsCertificationsRouteImport.update({
-    id: '/certifications',
-    path: '/certifications',
-    getParentRoute: () => AdminAnalyticsRoute,
+    id: '/analytics/certifications',
+    path: '/analytics/certifications',
+    getParentRoute: () => AdminRoute,
   } as any)
-const AdminAnalyticsAiTransformationRoute =
-  AdminAnalyticsAiTransformationRouteImport.update({
-    id: '/ai-transformation',
-    path: '/ai-transformation',
-    getParentRoute: () => AdminAnalyticsRoute,
+const AdminAnalyticsApprenticeRoute =
+  AdminAnalyticsApprenticeRouteImport.update({
+    id: '/analytics/apprentice',
+    path: '/analytics/apprentice',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminAnalyticsAiRoute = AdminAnalyticsAiRouteImport.update({
+  id: '/analytics/ai',
+  path: '/analytics/ai',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsAnalyticsIndexRoute =
+  AdminAnalyticsAnalyticsIndexRouteImport.update({
+    id: '/analytics/analytics/',
+    path: '/analytics/analytics/',
+    getParentRoute: () => AdminRoute,
   } as any)
 const AdminSubmodulesSubmoduleIdContentRoute =
   AdminSubmodulesSubmoduleIdContentRouteImport.update({
-    id: '/admin/submodules/$submoduleId/content',
-    path: '/admin/submodules/$submoduleId/content',
-    getParentRoute: () => rootRouteImport,
+    id: '/submodules/$submoduleId/content',
+    path: '/submodules/$submoduleId/content',
+    getParentRoute: () => AdminRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/curriculum': typeof CurriculumRoute
-  '/organiser': typeof OrganiserRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/analytics': typeof AnalyticsRoute
   '/student': typeof StudentRouteWithChildren
-  '/trainer': typeof TrainerRoute
-  '/admin/analytics': typeof AdminAnalyticsRouteWithChildren
-  '/categories/$categorySlug': typeof CategoriesCategorySlugRoute
-  '/courses/$courseSlug': typeof CoursesCourseSlugRoute
-  '/courses/builder': typeof CoursesBuilderRoute
+  '/admin/curriculum': typeof AdminCurriculumRouteWithChildren
   '/student/assessments': typeof StudentAssessmentsRoute
+  '/student/batches': typeof StudentBatchesRoute
   '/student/courses': typeof StudentCoursesRoute
   '/student/feedback': typeof StudentFeedbackRoute
   '/student/notifications': typeof StudentNotificationsRoute
   '/student/profile': typeof StudentProfileRoute
   '/student/results': typeof StudentResultsRoute
-  '/analytics/': typeof AnalyticsIndexRoute
-  '/categories/': typeof CategoriesIndexRoute
-  '/courses/': typeof CoursesIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/student/': typeof StudentIndexRoute
-  '/admin/analytics/ai-transformation': typeof AdminAnalyticsAiTransformationRoute
+  '/admin/analytics/ai': typeof AdminAnalyticsAiRoute
+  '/admin/analytics/apprentice': typeof AdminAnalyticsApprenticeRoute
   '/admin/analytics/certifications': typeof AdminAnalyticsCertificationsRoute
+  '/admin/analytics/champions': typeof AdminAnalyticsChampionsRoute
   '/admin/analytics/coverage': typeof AdminAnalyticsCoverageRoute
+  '/admin/analytics/effectiveness': typeof AdminAnalyticsEffectivenessRoute
   '/admin/analytics/executive': typeof AdminAnalyticsExecutiveRoute
-  '/admin/analytics/flagship-programs': typeof AdminAnalyticsFlagshipProgramsRoute
-  '/admin/analytics/fresher-journey': typeof AdminAnalyticsFresherJourneyRoute
   '/admin/analytics/hours': typeof AdminAnalyticsHoursRoute
-  '/admin/analytics/learning-champions': typeof AdminAnalyticsLearningChampionsRoute
-  '/admin/analytics/learning-trends': typeof AdminAnalyticsLearningTrendsRoute
+  '/admin/analytics/investment': typeof AdminAnalyticsInvestmentRoute
   '/admin/analytics/pillars': typeof AdminAnalyticsPillarsRoute
-  '/admin/analytics/project-investment': typeof AdminAnalyticsProjectInvestmentRoute
-  '/admin/analytics/training-effectiveness': typeof AdminAnalyticsTrainingEffectivenessRoute
-  '/admin/categories/$categoryId': typeof AdminCategoriesCategoryIdRoute
+  '/admin/analytics/predictive': typeof AdminAnalyticsPredictiveRoute
+  '/admin/analytics/programs': typeof AdminAnalyticsProgramsRoute
+  '/admin/analytics/recommendations': typeof AdminAnalyticsRecommendationsRoute
+  '/admin/analytics/skill-gap': typeof AdminAnalyticsSkillGapRoute
+  '/admin/analytics/trends': typeof AdminAnalyticsTrendsRoute
+  '/admin/categories/$categorySlug': typeof AdminCategoriesCategorySlugRoute
   '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
+  '/admin/courses/builder': typeof AdminCoursesBuilderRoute
   '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
   '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
   '/admin/analytics/': typeof AdminAnalyticsIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
+  '/admin/analytics/analytics/': typeof AdminAnalyticsAnalyticsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/curriculum': typeof CurriculumRoute
-  '/organiser': typeof OrganiserRoute
-  '/trainer': typeof TrainerRoute
-  '/categories/$categorySlug': typeof CategoriesCategorySlugRoute
-  '/courses/$courseSlug': typeof CoursesCourseSlugRoute
-  '/courses/builder': typeof CoursesBuilderRoute
+  '/analytics': typeof AnalyticsRoute
   '/student/assessments': typeof StudentAssessmentsRoute
+  '/student/batches': typeof StudentBatchesRoute
   '/student/courses': typeof StudentCoursesRoute
   '/student/feedback': typeof StudentFeedbackRoute
   '/student/notifications': typeof StudentNotificationsRoute
   '/student/profile': typeof StudentProfileRoute
   '/student/results': typeof StudentResultsRoute
-  '/analytics': typeof AnalyticsIndexRoute
-  '/categories': typeof CategoriesIndexRoute
-  '/courses': typeof CoursesIndexRoute
+  '/admin': typeof AdminIndexRoute
   '/student': typeof StudentIndexRoute
-  '/admin/analytics/ai-transformation': typeof AdminAnalyticsAiTransformationRoute
+  '/admin/analytics/ai': typeof AdminAnalyticsAiRoute
+  '/admin/analytics/apprentice': typeof AdminAnalyticsApprenticeRoute
   '/admin/analytics/certifications': typeof AdminAnalyticsCertificationsRoute
+  '/admin/analytics/champions': typeof AdminAnalyticsChampionsRoute
   '/admin/analytics/coverage': typeof AdminAnalyticsCoverageRoute
+  '/admin/analytics/effectiveness': typeof AdminAnalyticsEffectivenessRoute
   '/admin/analytics/executive': typeof AdminAnalyticsExecutiveRoute
-  '/admin/analytics/flagship-programs': typeof AdminAnalyticsFlagshipProgramsRoute
-  '/admin/analytics/fresher-journey': typeof AdminAnalyticsFresherJourneyRoute
   '/admin/analytics/hours': typeof AdminAnalyticsHoursRoute
-  '/admin/analytics/learning-champions': typeof AdminAnalyticsLearningChampionsRoute
-  '/admin/analytics/learning-trends': typeof AdminAnalyticsLearningTrendsRoute
+  '/admin/analytics/investment': typeof AdminAnalyticsInvestmentRoute
   '/admin/analytics/pillars': typeof AdminAnalyticsPillarsRoute
-  '/admin/analytics/project-investment': typeof AdminAnalyticsProjectInvestmentRoute
-  '/admin/analytics/training-effectiveness': typeof AdminAnalyticsTrainingEffectivenessRoute
-  '/admin/categories/$categoryId': typeof AdminCategoriesCategoryIdRoute
+  '/admin/analytics/predictive': typeof AdminAnalyticsPredictiveRoute
+  '/admin/analytics/programs': typeof AdminAnalyticsProgramsRoute
+  '/admin/analytics/recommendations': typeof AdminAnalyticsRecommendationsRoute
+  '/admin/analytics/skill-gap': typeof AdminAnalyticsSkillGapRoute
+  '/admin/analytics/trends': typeof AdminAnalyticsTrendsRoute
+  '/admin/categories/$categorySlug': typeof AdminCategoriesCategorySlugRoute
   '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
+  '/admin/courses/builder': typeof AdminCoursesBuilderRoute
   '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
   '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
   '/admin/analytics': typeof AdminAnalyticsIndexRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
+  '/admin/courses': typeof AdminCoursesIndexRoute
   '/admin/curriculum': typeof AdminCurriculumIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
+  '/admin/analytics/analytics': typeof AdminAnalyticsAnalyticsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/curriculum': typeof CurriculumRoute
-  '/organiser': typeof OrganiserRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/analytics': typeof AnalyticsRoute
   '/student': typeof StudentRouteWithChildren
-  '/trainer': typeof TrainerRoute
-  '/admin/analytics': typeof AdminAnalyticsRouteWithChildren
-  '/categories/$categorySlug': typeof CategoriesCategorySlugRoute
-  '/courses/$courseSlug': typeof CoursesCourseSlugRoute
-  '/courses/builder': typeof CoursesBuilderRoute
+  '/admin/curriculum': typeof AdminCurriculumRouteWithChildren
   '/student/assessments': typeof StudentAssessmentsRoute
+  '/student/batches': typeof StudentBatchesRoute
   '/student/courses': typeof StudentCoursesRoute
   '/student/feedback': typeof StudentFeedbackRoute
   '/student/notifications': typeof StudentNotificationsRoute
   '/student/profile': typeof StudentProfileRoute
   '/student/results': typeof StudentResultsRoute
-  '/analytics/': typeof AnalyticsIndexRoute
-  '/categories/': typeof CategoriesIndexRoute
-  '/courses/': typeof CoursesIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/student/': typeof StudentIndexRoute
-  '/admin/analytics/ai-transformation': typeof AdminAnalyticsAiTransformationRoute
+  '/admin/analytics/ai': typeof AdminAnalyticsAiRoute
+  '/admin/analytics/apprentice': typeof AdminAnalyticsApprenticeRoute
   '/admin/analytics/certifications': typeof AdminAnalyticsCertificationsRoute
+  '/admin/analytics/champions': typeof AdminAnalyticsChampionsRoute
   '/admin/analytics/coverage': typeof AdminAnalyticsCoverageRoute
+  '/admin/analytics/effectiveness': typeof AdminAnalyticsEffectivenessRoute
   '/admin/analytics/executive': typeof AdminAnalyticsExecutiveRoute
-  '/admin/analytics/flagship-programs': typeof AdminAnalyticsFlagshipProgramsRoute
-  '/admin/analytics/fresher-journey': typeof AdminAnalyticsFresherJourneyRoute
   '/admin/analytics/hours': typeof AdminAnalyticsHoursRoute
-  '/admin/analytics/learning-champions': typeof AdminAnalyticsLearningChampionsRoute
-  '/admin/analytics/learning-trends': typeof AdminAnalyticsLearningTrendsRoute
+  '/admin/analytics/investment': typeof AdminAnalyticsInvestmentRoute
   '/admin/analytics/pillars': typeof AdminAnalyticsPillarsRoute
-  '/admin/analytics/project-investment': typeof AdminAnalyticsProjectInvestmentRoute
-  '/admin/analytics/training-effectiveness': typeof AdminAnalyticsTrainingEffectivenessRoute
-  '/admin/categories/$categoryId': typeof AdminCategoriesCategoryIdRoute
+  '/admin/analytics/predictive': typeof AdminAnalyticsPredictiveRoute
+  '/admin/analytics/programs': typeof AdminAnalyticsProgramsRoute
+  '/admin/analytics/recommendations': typeof AdminAnalyticsRecommendationsRoute
+  '/admin/analytics/skill-gap': typeof AdminAnalyticsSkillGapRoute
+  '/admin/analytics/trends': typeof AdminAnalyticsTrendsRoute
+  '/admin/categories/$categorySlug': typeof AdminCategoriesCategorySlugRoute
   '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
+  '/admin/courses/builder': typeof AdminCoursesBuilderRoute
   '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
   '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
   '/admin/analytics/': typeof AdminAnalyticsIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
+  '/admin/analytics/analytics/': typeof AdminAnalyticsAnalyticsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/curriculum'
-    | '/organiser'
+    | '/admin'
+    | '/analytics'
     | '/student'
-    | '/trainer'
-    | '/admin/analytics'
-    | '/categories/$categorySlug'
-    | '/courses/$courseSlug'
-    | '/courses/builder'
+    | '/admin/curriculum'
     | '/student/assessments'
+    | '/student/batches'
     | '/student/courses'
     | '/student/feedback'
     | '/student/notifications'
     | '/student/profile'
     | '/student/results'
-    | '/analytics/'
-    | '/categories/'
-    | '/courses/'
+    | '/admin/'
     | '/student/'
-    | '/admin/analytics/ai-transformation'
+    | '/admin/analytics/ai'
+    | '/admin/analytics/apprentice'
     | '/admin/analytics/certifications'
+    | '/admin/analytics/champions'
     | '/admin/analytics/coverage'
+    | '/admin/analytics/effectiveness'
     | '/admin/analytics/executive'
-    | '/admin/analytics/flagship-programs'
-    | '/admin/analytics/fresher-journey'
     | '/admin/analytics/hours'
-    | '/admin/analytics/learning-champions'
-    | '/admin/analytics/learning-trends'
+    | '/admin/analytics/investment'
     | '/admin/analytics/pillars'
-    | '/admin/analytics/project-investment'
-    | '/admin/analytics/training-effectiveness'
-    | '/admin/categories/$categoryId'
+    | '/admin/analytics/predictive'
+    | '/admin/analytics/programs'
+    | '/admin/analytics/recommendations'
+    | '/admin/analytics/skill-gap'
+    | '/admin/analytics/trends'
+    | '/admin/categories/$categorySlug'
     | '/admin/courses/$courseSlug'
+    | '/admin/courses/builder'
     | '/admin/curriculum/$courseId'
     | '/student/assessment/$assessmentId'
     | '/student/course/$courseId'
     | '/admin/analytics/'
     | '/admin/categories/'
+    | '/admin/courses/'
     | '/admin/curriculum/'
     | '/admin/submodules/$submoduleId/content'
+    | '/admin/analytics/analytics/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/curriculum'
-    | '/organiser'
-    | '/trainer'
-    | '/categories/$categorySlug'
-    | '/courses/$courseSlug'
-    | '/courses/builder'
+    | '/analytics'
     | '/student/assessments'
+    | '/student/batches'
     | '/student/courses'
     | '/student/feedback'
     | '/student/notifications'
     | '/student/profile'
     | '/student/results'
-    | '/analytics'
-    | '/categories'
-    | '/courses'
+    | '/admin'
     | '/student'
-    | '/admin/analytics/ai-transformation'
+    | '/admin/analytics/ai'
+    | '/admin/analytics/apprentice'
     | '/admin/analytics/certifications'
+    | '/admin/analytics/champions'
     | '/admin/analytics/coverage'
+    | '/admin/analytics/effectiveness'
     | '/admin/analytics/executive'
-    | '/admin/analytics/flagship-programs'
-    | '/admin/analytics/fresher-journey'
     | '/admin/analytics/hours'
-    | '/admin/analytics/learning-champions'
-    | '/admin/analytics/learning-trends'
+    | '/admin/analytics/investment'
     | '/admin/analytics/pillars'
-    | '/admin/analytics/project-investment'
-    | '/admin/analytics/training-effectiveness'
-    | '/admin/categories/$categoryId'
+    | '/admin/analytics/predictive'
+    | '/admin/analytics/programs'
+    | '/admin/analytics/recommendations'
+    | '/admin/analytics/skill-gap'
+    | '/admin/analytics/trends'
+    | '/admin/categories/$categorySlug'
     | '/admin/courses/$courseSlug'
+    | '/admin/courses/builder'
     | '/admin/curriculum/$courseId'
     | '/student/assessment/$assessmentId'
     | '/student/course/$courseId'
     | '/admin/analytics'
     | '/admin/categories'
+    | '/admin/courses'
     | '/admin/curriculum'
     | '/admin/submodules/$submoduleId/content'
+    | '/admin/analytics/analytics'
   id:
     | '__root__'
     | '/'
-    | '/curriculum'
-    | '/organiser'
+    | '/admin'
+    | '/analytics'
     | '/student'
-    | '/trainer'
-    | '/admin/analytics'
-    | '/categories/$categorySlug'
-    | '/courses/$courseSlug'
-    | '/courses/builder'
+    | '/admin/curriculum'
     | '/student/assessments'
+    | '/student/batches'
     | '/student/courses'
     | '/student/feedback'
     | '/student/notifications'
     | '/student/profile'
     | '/student/results'
-    | '/analytics/'
-    | '/categories/'
-    | '/courses/'
+    | '/admin/'
     | '/student/'
-    | '/admin/analytics/ai-transformation'
+    | '/admin/analytics/ai'
+    | '/admin/analytics/apprentice'
     | '/admin/analytics/certifications'
+    | '/admin/analytics/champions'
     | '/admin/analytics/coverage'
+    | '/admin/analytics/effectiveness'
     | '/admin/analytics/executive'
-    | '/admin/analytics/flagship-programs'
-    | '/admin/analytics/fresher-journey'
     | '/admin/analytics/hours'
-    | '/admin/analytics/learning-champions'
-    | '/admin/analytics/learning-trends'
+    | '/admin/analytics/investment'
     | '/admin/analytics/pillars'
-    | '/admin/analytics/project-investment'
-    | '/admin/analytics/training-effectiveness'
-    | '/admin/categories/$categoryId'
+    | '/admin/analytics/predictive'
+    | '/admin/analytics/programs'
+    | '/admin/analytics/recommendations'
+    | '/admin/analytics/skill-gap'
+    | '/admin/analytics/trends'
+    | '/admin/categories/$categorySlug'
     | '/admin/courses/$courseSlug'
+    | '/admin/courses/builder'
     | '/admin/curriculum/$courseId'
     | '/student/assessment/$assessmentId'
     | '/student/course/$courseId'
     | '/admin/analytics/'
     | '/admin/categories/'
+    | '/admin/courses/'
     | '/admin/curriculum/'
     | '/admin/submodules/$submoduleId/content'
+    | '/admin/analytics/analytics/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CurriculumRoute: typeof CurriculumRoute
-  OrganiserRoute: typeof OrganiserRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AnalyticsRoute: typeof AnalyticsRoute
   StudentRoute: typeof StudentRouteWithChildren
-  TrainerRoute: typeof TrainerRoute
-  AdminAnalyticsRoute: typeof AdminAnalyticsRouteWithChildren
-  CategoriesCategorySlugRoute: typeof CategoriesCategorySlugRoute
-  CoursesCourseSlugRoute: typeof CoursesCourseSlugRoute
-  CoursesBuilderRoute: typeof CoursesBuilderRoute
-  AnalyticsIndexRoute: typeof AnalyticsIndexRoute
-  CategoriesIndexRoute: typeof CategoriesIndexRoute
-  CoursesIndexRoute: typeof CoursesIndexRoute
-  AdminCategoriesCategoryIdRoute: typeof AdminCategoriesCategoryIdRoute
-  AdminCoursesCourseSlugRoute: typeof AdminCoursesCourseSlugRoute
-  AdminCurriculumCourseIdRoute: typeof AdminCurriculumCourseIdRoute
-  AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
-  AdminCurriculumIndexRoute: typeof AdminCurriculumIndexRoute
-  AdminSubmodulesSubmoduleIdContentRoute: typeof AdminSubmodulesSubmoduleIdContentRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/trainer': {
-      id: '/trainer'
-      path: '/trainer'
-      fullPath: '/trainer'
-      preLoaderRoute: typeof TrainerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/student': {
       id: '/student'
       path: '/student'
@@ -551,18 +539,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/organiser': {
-      id: '/organiser'
-      path: '/organiser'
-      fullPath: '/organiser'
-      preLoaderRoute: typeof OrganiserRouteImport
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/curriculum': {
-      id: '/curriculum'
-      path: '/curriculum'
-      fullPath: '/curriculum'
-      preLoaderRoute: typeof CurriculumRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -579,26 +567,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentIndexRouteImport
       parentRoute: typeof StudentRoute
     }
-    '/courses/': {
-      id: '/courses/'
-      path: '/courses'
-      fullPath: '/courses/'
-      preLoaderRoute: typeof CoursesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/categories/': {
-      id: '/categories/'
-      path: '/categories'
-      fullPath: '/categories/'
-      preLoaderRoute: typeof CategoriesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/analytics/': {
-      id: '/analytics/'
-      path: '/analytics'
-      fullPath: '/analytics/'
-      preLoaderRoute: typeof AnalyticsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/student/results': {
       id: '/student/results'
@@ -635,6 +609,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentCoursesRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/batches': {
+      id: '/student/batches'
+      path: '/batches'
+      fullPath: '/student/batches'
+      preLoaderRoute: typeof StudentBatchesRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/student/assessments': {
       id: '/student/assessments'
       path: '/assessments'
@@ -642,54 +623,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentAssessmentsRouteImport
       parentRoute: typeof StudentRoute
     }
-    '/courses/builder': {
-      id: '/courses/builder'
-      path: '/courses/builder'
-      fullPath: '/courses/builder'
-      preLoaderRoute: typeof CoursesBuilderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/courses/$courseSlug': {
-      id: '/courses/$courseSlug'
-      path: '/courses/$courseSlug'
-      fullPath: '/courses/$courseSlug'
-      preLoaderRoute: typeof CoursesCourseSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/categories/$categorySlug': {
-      id: '/categories/$categorySlug'
-      path: '/categories/$categorySlug'
-      fullPath: '/categories/$categorySlug'
-      preLoaderRoute: typeof CategoriesCategorySlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/analytics': {
-      id: '/admin/analytics'
-      path: '/admin/analytics'
-      fullPath: '/admin/analytics'
-      preLoaderRoute: typeof AdminAnalyticsRouteImport
-      parentRoute: typeof rootRouteImport
+    '/admin/curriculum': {
+      id: '/admin/curriculum'
+      path: '/curriculum'
+      fullPath: '/admin/curriculum'
+      preLoaderRoute: typeof AdminCurriculumRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/curriculum/': {
       id: '/admin/curriculum/'
-      path: '/admin/curriculum'
+      path: '/'
       fullPath: '/admin/curriculum/'
       preLoaderRoute: typeof AdminCurriculumIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminCurriculumRoute
+    }
+    '/admin/courses/': {
+      id: '/admin/courses/'
+      path: '/courses'
+      fullPath: '/admin/courses/'
+      preLoaderRoute: typeof AdminCoursesIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/categories/': {
       id: '/admin/categories/'
-      path: '/admin/categories'
+      path: '/categories'
       fullPath: '/admin/categories/'
       preLoaderRoute: typeof AdminCategoriesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/analytics/': {
       id: '/admin/analytics/'
-      path: '/'
+      path: '/analytics'
       fullPath: '/admin/analytics/'
       preLoaderRoute: typeof AdminAnalyticsIndexRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+      parentRoute: typeof AdminRoute
     }
     '/student/course/$courseId': {
       id: '/student/course/$courseId'
@@ -707,121 +674,230 @@ declare module '@tanstack/react-router' {
     }
     '/admin/curriculum/$courseId': {
       id: '/admin/curriculum/$courseId'
-      path: '/admin/curriculum/$courseId'
+      path: '/$courseId'
       fullPath: '/admin/curriculum/$courseId'
       preLoaderRoute: typeof AdminCurriculumCourseIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminCurriculumRoute
+    }
+    '/admin/courses/builder': {
+      id: '/admin/courses/builder'
+      path: '/courses/builder'
+      fullPath: '/admin/courses/builder'
+      preLoaderRoute: typeof AdminCoursesBuilderRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/courses/$courseSlug': {
       id: '/admin/courses/$courseSlug'
-      path: '/admin/courses/$courseSlug'
+      path: '/courses/$courseSlug'
       fullPath: '/admin/courses/$courseSlug'
       preLoaderRoute: typeof AdminCoursesCourseSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/admin/categories/$categoryId': {
-      id: '/admin/categories/$categoryId'
-      path: '/admin/categories/$categoryId'
-      fullPath: '/admin/categories/$categoryId'
-      preLoaderRoute: typeof AdminCategoriesCategoryIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/admin/categories/$categorySlug': {
+      id: '/admin/categories/$categorySlug'
+      path: '/categories/$categorySlug'
+      fullPath: '/admin/categories/$categorySlug'
+      preLoaderRoute: typeof AdminCategoriesCategorySlugRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/admin/analytics/training-effectiveness': {
-      id: '/admin/analytics/training-effectiveness'
-      path: '/training-effectiveness'
-      fullPath: '/admin/analytics/training-effectiveness'
-      preLoaderRoute: typeof AdminAnalyticsTrainingEffectivenessRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+    '/admin/analytics/trends': {
+      id: '/admin/analytics/trends'
+      path: '/analytics/trends'
+      fullPath: '/admin/analytics/trends'
+      preLoaderRoute: typeof AdminAnalyticsTrendsRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/admin/analytics/project-investment': {
-      id: '/admin/analytics/project-investment'
-      path: '/project-investment'
-      fullPath: '/admin/analytics/project-investment'
-      preLoaderRoute: typeof AdminAnalyticsProjectInvestmentRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+    '/admin/analytics/skill-gap': {
+      id: '/admin/analytics/skill-gap'
+      path: '/analytics/skill-gap'
+      fullPath: '/admin/analytics/skill-gap'
+      preLoaderRoute: typeof AdminAnalyticsSkillGapRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics/recommendations': {
+      id: '/admin/analytics/recommendations'
+      path: '/analytics/recommendations'
+      fullPath: '/admin/analytics/recommendations'
+      preLoaderRoute: typeof AdminAnalyticsRecommendationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics/programs': {
+      id: '/admin/analytics/programs'
+      path: '/analytics/programs'
+      fullPath: '/admin/analytics/programs'
+      preLoaderRoute: typeof AdminAnalyticsProgramsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics/predictive': {
+      id: '/admin/analytics/predictive'
+      path: '/analytics/predictive'
+      fullPath: '/admin/analytics/predictive'
+      preLoaderRoute: typeof AdminAnalyticsPredictiveRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/analytics/pillars': {
       id: '/admin/analytics/pillars'
-      path: '/pillars'
+      path: '/analytics/pillars'
       fullPath: '/admin/analytics/pillars'
       preLoaderRoute: typeof AdminAnalyticsPillarsRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+      parentRoute: typeof AdminRoute
     }
-    '/admin/analytics/learning-trends': {
-      id: '/admin/analytics/learning-trends'
-      path: '/learning-trends'
-      fullPath: '/admin/analytics/learning-trends'
-      preLoaderRoute: typeof AdminAnalyticsLearningTrendsRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
-    }
-    '/admin/analytics/learning-champions': {
-      id: '/admin/analytics/learning-champions'
-      path: '/learning-champions'
-      fullPath: '/admin/analytics/learning-champions'
-      preLoaderRoute: typeof AdminAnalyticsLearningChampionsRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+    '/admin/analytics/investment': {
+      id: '/admin/analytics/investment'
+      path: '/analytics/investment'
+      fullPath: '/admin/analytics/investment'
+      preLoaderRoute: typeof AdminAnalyticsInvestmentRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/analytics/hours': {
       id: '/admin/analytics/hours'
-      path: '/hours'
+      path: '/analytics/hours'
       fullPath: '/admin/analytics/hours'
       preLoaderRoute: typeof AdminAnalyticsHoursRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
-    }
-    '/admin/analytics/fresher-journey': {
-      id: '/admin/analytics/fresher-journey'
-      path: '/fresher-journey'
-      fullPath: '/admin/analytics/fresher-journey'
-      preLoaderRoute: typeof AdminAnalyticsFresherJourneyRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
-    }
-    '/admin/analytics/flagship-programs': {
-      id: '/admin/analytics/flagship-programs'
-      path: '/flagship-programs'
-      fullPath: '/admin/analytics/flagship-programs'
-      preLoaderRoute: typeof AdminAnalyticsFlagshipProgramsRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+      parentRoute: typeof AdminRoute
     }
     '/admin/analytics/executive': {
       id: '/admin/analytics/executive'
-      path: '/executive'
+      path: '/analytics/executive'
       fullPath: '/admin/analytics/executive'
       preLoaderRoute: typeof AdminAnalyticsExecutiveRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics/effectiveness': {
+      id: '/admin/analytics/effectiveness'
+      path: '/analytics/effectiveness'
+      fullPath: '/admin/analytics/effectiveness'
+      preLoaderRoute: typeof AdminAnalyticsEffectivenessRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/analytics/coverage': {
       id: '/admin/analytics/coverage'
-      path: '/coverage'
+      path: '/analytics/coverage'
       fullPath: '/admin/analytics/coverage'
       preLoaderRoute: typeof AdminAnalyticsCoverageRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics/champions': {
+      id: '/admin/analytics/champions'
+      path: '/analytics/champions'
+      fullPath: '/admin/analytics/champions'
+      preLoaderRoute: typeof AdminAnalyticsChampionsRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/analytics/certifications': {
       id: '/admin/analytics/certifications'
-      path: '/certifications'
+      path: '/analytics/certifications'
       fullPath: '/admin/analytics/certifications'
       preLoaderRoute: typeof AdminAnalyticsCertificationsRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+      parentRoute: typeof AdminRoute
     }
-    '/admin/analytics/ai-transformation': {
-      id: '/admin/analytics/ai-transformation'
-      path: '/ai-transformation'
-      fullPath: '/admin/analytics/ai-transformation'
-      preLoaderRoute: typeof AdminAnalyticsAiTransformationRouteImport
-      parentRoute: typeof AdminAnalyticsRoute
+    '/admin/analytics/apprentice': {
+      id: '/admin/analytics/apprentice'
+      path: '/analytics/apprentice'
+      fullPath: '/admin/analytics/apprentice'
+      preLoaderRoute: typeof AdminAnalyticsApprenticeRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics/ai': {
+      id: '/admin/analytics/ai'
+      path: '/analytics/ai'
+      fullPath: '/admin/analytics/ai'
+      preLoaderRoute: typeof AdminAnalyticsAiRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics/analytics/': {
+      id: '/admin/analytics/analytics/'
+      path: '/analytics/analytics'
+      fullPath: '/admin/analytics/analytics/'
+      preLoaderRoute: typeof AdminAnalyticsAnalyticsIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/submodules/$submoduleId/content': {
       id: '/admin/submodules/$submoduleId/content'
-      path: '/admin/submodules/$submoduleId/content'
+      path: '/submodules/$submoduleId/content'
       fullPath: '/admin/submodules/$submoduleId/content'
       preLoaderRoute: typeof AdminSubmodulesSubmoduleIdContentRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
   }
 }
 
+interface AdminCurriculumRouteChildren {
+  AdminCurriculumCourseIdRoute: typeof AdminCurriculumCourseIdRoute
+  AdminCurriculumIndexRoute: typeof AdminCurriculumIndexRoute
+}
+
+const AdminCurriculumRouteChildren: AdminCurriculumRouteChildren = {
+  AdminCurriculumCourseIdRoute: AdminCurriculumCourseIdRoute,
+  AdminCurriculumIndexRoute: AdminCurriculumIndexRoute,
+}
+
+const AdminCurriculumRouteWithChildren = AdminCurriculumRoute._addFileChildren(
+  AdminCurriculumRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminCurriculumRoute: typeof AdminCurriculumRouteWithChildren
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminAnalyticsAiRoute: typeof AdminAnalyticsAiRoute
+  AdminAnalyticsApprenticeRoute: typeof AdminAnalyticsApprenticeRoute
+  AdminAnalyticsCertificationsRoute: typeof AdminAnalyticsCertificationsRoute
+  AdminAnalyticsChampionsRoute: typeof AdminAnalyticsChampionsRoute
+  AdminAnalyticsCoverageRoute: typeof AdminAnalyticsCoverageRoute
+  AdminAnalyticsEffectivenessRoute: typeof AdminAnalyticsEffectivenessRoute
+  AdminAnalyticsExecutiveRoute: typeof AdminAnalyticsExecutiveRoute
+  AdminAnalyticsHoursRoute: typeof AdminAnalyticsHoursRoute
+  AdminAnalyticsInvestmentRoute: typeof AdminAnalyticsInvestmentRoute
+  AdminAnalyticsPillarsRoute: typeof AdminAnalyticsPillarsRoute
+  AdminAnalyticsPredictiveRoute: typeof AdminAnalyticsPredictiveRoute
+  AdminAnalyticsProgramsRoute: typeof AdminAnalyticsProgramsRoute
+  AdminAnalyticsRecommendationsRoute: typeof AdminAnalyticsRecommendationsRoute
+  AdminAnalyticsSkillGapRoute: typeof AdminAnalyticsSkillGapRoute
+  AdminAnalyticsTrendsRoute: typeof AdminAnalyticsTrendsRoute
+  AdminCategoriesCategorySlugRoute: typeof AdminCategoriesCategorySlugRoute
+  AdminCoursesCourseSlugRoute: typeof AdminCoursesCourseSlugRoute
+  AdminCoursesBuilderRoute: typeof AdminCoursesBuilderRoute
+  AdminAnalyticsIndexRoute: typeof AdminAnalyticsIndexRoute
+  AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
+  AdminCoursesIndexRoute: typeof AdminCoursesIndexRoute
+  AdminSubmodulesSubmoduleIdContentRoute: typeof AdminSubmodulesSubmoduleIdContentRoute
+  AdminAnalyticsAnalyticsIndexRoute: typeof AdminAnalyticsAnalyticsIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminCurriculumRoute: AdminCurriculumRouteWithChildren,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminAnalyticsAiRoute: AdminAnalyticsAiRoute,
+  AdminAnalyticsApprenticeRoute: AdminAnalyticsApprenticeRoute,
+  AdminAnalyticsCertificationsRoute: AdminAnalyticsCertificationsRoute,
+  AdminAnalyticsChampionsRoute: AdminAnalyticsChampionsRoute,
+  AdminAnalyticsCoverageRoute: AdminAnalyticsCoverageRoute,
+  AdminAnalyticsEffectivenessRoute: AdminAnalyticsEffectivenessRoute,
+  AdminAnalyticsExecutiveRoute: AdminAnalyticsExecutiveRoute,
+  AdminAnalyticsHoursRoute: AdminAnalyticsHoursRoute,
+  AdminAnalyticsInvestmentRoute: AdminAnalyticsInvestmentRoute,
+  AdminAnalyticsPillarsRoute: AdminAnalyticsPillarsRoute,
+  AdminAnalyticsPredictiveRoute: AdminAnalyticsPredictiveRoute,
+  AdminAnalyticsProgramsRoute: AdminAnalyticsProgramsRoute,
+  AdminAnalyticsRecommendationsRoute: AdminAnalyticsRecommendationsRoute,
+  AdminAnalyticsSkillGapRoute: AdminAnalyticsSkillGapRoute,
+  AdminAnalyticsTrendsRoute: AdminAnalyticsTrendsRoute,
+  AdminCategoriesCategorySlugRoute: AdminCategoriesCategorySlugRoute,
+  AdminCoursesCourseSlugRoute: AdminCoursesCourseSlugRoute,
+  AdminCoursesBuilderRoute: AdminCoursesBuilderRoute,
+  AdminAnalyticsIndexRoute: AdminAnalyticsIndexRoute,
+  AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
+  AdminCoursesIndexRoute: AdminCoursesIndexRoute,
+  AdminSubmodulesSubmoduleIdContentRoute:
+    AdminSubmodulesSubmoduleIdContentRoute,
+  AdminAnalyticsAnalyticsIndexRoute: AdminAnalyticsAnalyticsIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface StudentRouteChildren {
   StudentAssessmentsRoute: typeof StudentAssessmentsRoute
+  StudentBatchesRoute: typeof StudentBatchesRoute
   StudentCoursesRoute: typeof StudentCoursesRoute
   StudentFeedbackRoute: typeof StudentFeedbackRoute
   StudentNotificationsRoute: typeof StudentNotificationsRoute
@@ -834,6 +910,7 @@ interface StudentRouteChildren {
 
 const StudentRouteChildren: StudentRouteChildren = {
   StudentAssessmentsRoute: StudentAssessmentsRoute,
+  StudentBatchesRoute: StudentBatchesRoute,
   StudentCoursesRoute: StudentCoursesRoute,
   StudentFeedbackRoute: StudentFeedbackRoute,
   StudentNotificationsRoute: StudentNotificationsRoute,
@@ -847,63 +924,11 @@ const StudentRouteChildren: StudentRouteChildren = {
 const StudentRouteWithChildren =
   StudentRoute._addFileChildren(StudentRouteChildren)
 
-interface AdminAnalyticsRouteChildren {
-  AdminAnalyticsAiTransformationRoute: typeof AdminAnalyticsAiTransformationRoute
-  AdminAnalyticsCertificationsRoute: typeof AdminAnalyticsCertificationsRoute
-  AdminAnalyticsCoverageRoute: typeof AdminAnalyticsCoverageRoute
-  AdminAnalyticsExecutiveRoute: typeof AdminAnalyticsExecutiveRoute
-  AdminAnalyticsFlagshipProgramsRoute: typeof AdminAnalyticsFlagshipProgramsRoute
-  AdminAnalyticsFresherJourneyRoute: typeof AdminAnalyticsFresherJourneyRoute
-  AdminAnalyticsHoursRoute: typeof AdminAnalyticsHoursRoute
-  AdminAnalyticsLearningChampionsRoute: typeof AdminAnalyticsLearningChampionsRoute
-  AdminAnalyticsLearningTrendsRoute: typeof AdminAnalyticsLearningTrendsRoute
-  AdminAnalyticsPillarsRoute: typeof AdminAnalyticsPillarsRoute
-  AdminAnalyticsProjectInvestmentRoute: typeof AdminAnalyticsProjectInvestmentRoute
-  AdminAnalyticsTrainingEffectivenessRoute: typeof AdminAnalyticsTrainingEffectivenessRoute
-  AdminAnalyticsIndexRoute: typeof AdminAnalyticsIndexRoute
-}
-
-const AdminAnalyticsRouteChildren: AdminAnalyticsRouteChildren = {
-  AdminAnalyticsAiTransformationRoute: AdminAnalyticsAiTransformationRoute,
-  AdminAnalyticsCertificationsRoute: AdminAnalyticsCertificationsRoute,
-  AdminAnalyticsCoverageRoute: AdminAnalyticsCoverageRoute,
-  AdminAnalyticsExecutiveRoute: AdminAnalyticsExecutiveRoute,
-  AdminAnalyticsFlagshipProgramsRoute: AdminAnalyticsFlagshipProgramsRoute,
-  AdminAnalyticsFresherJourneyRoute: AdminAnalyticsFresherJourneyRoute,
-  AdminAnalyticsHoursRoute: AdminAnalyticsHoursRoute,
-  AdminAnalyticsLearningChampionsRoute: AdminAnalyticsLearningChampionsRoute,
-  AdminAnalyticsLearningTrendsRoute: AdminAnalyticsLearningTrendsRoute,
-  AdminAnalyticsPillarsRoute: AdminAnalyticsPillarsRoute,
-  AdminAnalyticsProjectInvestmentRoute: AdminAnalyticsProjectInvestmentRoute,
-  AdminAnalyticsTrainingEffectivenessRoute:
-    AdminAnalyticsTrainingEffectivenessRoute,
-  AdminAnalyticsIndexRoute: AdminAnalyticsIndexRoute,
-}
-
-const AdminAnalyticsRouteWithChildren = AdminAnalyticsRoute._addFileChildren(
-  AdminAnalyticsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CurriculumRoute: CurriculumRoute,
-  OrganiserRoute: OrganiserRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AnalyticsRoute: AnalyticsRoute,
   StudentRoute: StudentRouteWithChildren,
-  TrainerRoute: TrainerRoute,
-  AdminAnalyticsRoute: AdminAnalyticsRouteWithChildren,
-  CategoriesCategorySlugRoute: CategoriesCategorySlugRoute,
-  CoursesCourseSlugRoute: CoursesCourseSlugRoute,
-  CoursesBuilderRoute: CoursesBuilderRoute,
-  AnalyticsIndexRoute: AnalyticsIndexRoute,
-  CategoriesIndexRoute: CategoriesIndexRoute,
-  CoursesIndexRoute: CoursesIndexRoute,
-  AdminCategoriesCategoryIdRoute: AdminCategoriesCategoryIdRoute,
-  AdminCoursesCourseSlugRoute: AdminCoursesCourseSlugRoute,
-  AdminCurriculumCourseIdRoute: AdminCurriculumCourseIdRoute,
-  AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
-  AdminCurriculumIndexRoute: AdminCurriculumIndexRoute,
-  AdminSubmodulesSubmoduleIdContentRoute:
-    AdminSubmodulesSubmoduleIdContentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

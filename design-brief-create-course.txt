@@ -1,0 +1,275 @@
+================================================================================
+  XEBIA LMS — CREATE COURSE PAGE
+  AI Design Generation Brief — "Reinvent from Scratch"
+  Goal: Generate a BRAND NEW, ultra-premium, visually stunning UI design
+================================================================================
+
+--------------------------------------------------------------------------------
+  DESIGN PHILOSOPHY
+--------------------------------------------------------------------------------
+
+We want a COMPLETELY NEW, MODERN, PREMIUM design for this admin form.
+Do NOT reference or mimic existing LMS platforms (Udemy, Coursera admin, etc.).
+Think: "What would a world-class product team at Stripe, Vercel, or Linear design
+for a course creation wizard in 2025?"
+
+The design should feel:
+  ✦ Like a professional content studio — creating a course should feel powerful
+  ✦ Graphic-rich — use illustrations, data visualizations, glassmorphism,
+    gradient blobs, icon-based section headers, abstract decorative shapes
+  ✦ Highly structured but visually exciting — lots of data fields, but
+    organized in a way that feels like a guided creative journey
+  ✦ Smart — AI-powered features should feel futuristic and impressive
+  ✦ Both Light & Dark modes must feel like separate, intentional designs
+
+The color palette will be provided separately by the design team.
+The AI should pick layout, cards, typography, spacing, and all visual elements
+completely from scratch. No constraints — only the features listed below are required.
+
+--------------------------------------------------------------------------------
+  PURPOSE OF THE SCREEN
+--------------------------------------------------------------------------------
+
+An admin user creates a new "Course" in this LMS platform. A course is a
+structured learning program (video lessons, assessments, modules) that students
+enroll in and complete to gain skills and certificates.
+
+Creating a course is a significant, detailed task. The admin must fill in:
+  → Core identity (title, category, level, language, duration)
+  → Descriptions (short tagline + full markdown description)
+  → Media (course icon, thumbnail, banner, videos)
+  → Learning design (outcomes, prerequisites, audience, highlights)
+  → Publishing settings (active, featured, published, enrollment)
+
+The experience should feel like a "course production studio" — premium,
+powerful, and guided. The admin is building something meaningful.
+
+--------------------------------------------------------------------------------
+  FEATURES TO DESIGN
+--------------------------------------------------------------------------------
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+  SECTION 1: COURSE IDENTITY  🎓
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+  FIELD: title *
+    - Large, hero-level text input — the most important field
+    - AI GENERATE button right next to it:
+        The admin can type just a topic (like "Java") and hit AI Generate
+        to get a full professional course title back.
+        Button states: default, loading (spinning), success
+    - A real-time "✓ Unique" badge should appear inside the input when
+      the title is filled, confirming it's not a duplicate
+    - Auto-generates a URL slug below it in real time
+
+  FIELD: categoryId * (dropdown)
+    - Populated dynamically from API — list of all active categories
+    - Each option shows the category name
+    - "Select a Category" as the default empty prompt option
+
+  FIELD: level * (dropdown)
+    - Options: Beginner | Intermediate | Advanced | Expert
+    - Maybe each level has a different color/icon treatment
+
+  FIELD: language (dropdown)
+    - Options: English | Hindi | Spanish | French | German | Japanese | Chinese
+    - Default: English
+
+  FIELD: durationHours & durationMinutes *
+    - Two number inputs side by side: "0 hrs" and "0 min"
+    - Should look like a time picker, not two plain number fields
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+  SECTION 2: DESCRIPTIONS  📝
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+  FIELD: shortDescription * (max 200 chars)
+    - A short, catchy tagline for the course
+    - AI GENERATE button that creates a punchy 1-2 sentence tagline
+    - Character counter (e.g. "45/200")
+    - Small textarea (2 rows)
+
+  FIELD: description * (no char limit, supports markdown)
+    - Detailed course overview — could be long
+    - AI GENERATE button that creates a full multi-paragraph description
+    - Larger textarea (5+ rows)
+    - Hint that markdown is supported (bold, bullets, headings)
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+  SECTION 3: MEDIA  🖼️
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+  This section is VISUALLY CRITICAL — make it beautiful!
+
+  THREE UPLOAD ZONES in a row (or creative grid):
+    1. icon              — small square/circle icon for the course
+    2. thumbnail         — the main card image (shown in course listings)
+    3. bannerImage       — wide hero image for the course detail page
+
+  Each upload zone supports:
+    → Drag and drop with animated feedback (border glow, icon change on hover)
+    → Click to browse files
+    → URL input below for pasting external image URLs
+    → Once uploaded: shows image preview with hover-to-delete overlay
+
+  Image Preview Area:
+    → Show live preview of thumbnail and ogImage side by side
+    → Placeholder states should use attractive empty-state illustrations
+      (not just a gray box with emoji)
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+  SECTION 4: ADDITIONAL INFORMATION  📋
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Each of the following is a DYNAMIC LIST where the admin can add / remove
+  text items (like bullet points). Each list also has an AI Generate button.
+  Make the add/remove interaction feel smooth and delightful.
+
+  ① learningOutcomes * — "What will students learn?"
+      AI generates 5-7 professional bullet points
+      Placeholder per row: "e.g. Build REST APIs with Spring Boot"
+
+  ② prerequisites — "What should students already know?"
+      Optional. AI generates relevant prerequisites.
+      Placeholder: "e.g. Basic Java knowledge"
+
+  ③ targetAudience — "Who is this course for?"
+      Optional. AI generates a learner profile.
+      Placeholder: "e.g. Backend developers who want to learn Spring Boot"
+
+  ④ highlights — Key selling points (max 10)
+      AI generates 5 compelling feature bullets
+      Placeholder: "e.g. 3 Real-world projects included"
+
+  ⑤ careerOpportunities — Jobs/roles this unlocks (max 5)
+      AI generates career paths relevant to the course topic
+      Placeholder: "e.g. Backend Developer, Cloud Engineer"
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+  SECTION 5: COURSE SETTINGS  ⚙️
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Five toggle switches — make them visually rich (not just colored pills):
+  1. active         — Makes the course visible to learners (default: ON)
+  2. isPublished    — Publish the course now (default: OFF)
+  3. isFeatured     — Show in the featured section (default: OFF)
+  4. allowEnrolling — Allow new student enrollments (default: ON)
+  5. showOnCourse   — Show in the course listing page (default: ON)
+
+  Design the toggles in a grid/card with good visual separation.
+  Each toggle should have a label and a short hint describing what it controls.
+
+--------------------------------------------------------------------------------
+  SIDEBAR PANEL (sticky on scroll)
+--------------------------------------------------------------------------------
+
+Design a PREMIUM right-side panel that stays visible as the user scrolls.
+This sidebar serves multiple purposes:
+
+  1. LIVE COURSE CARD PREVIEW:
+       A real-time preview of the course card as it appears in listings.
+       Updates instantly as the admin types.
+       Should include: thumbnail, category badge, level badge, title,
+       short description, duration, and an enroll button.
+       Make this feel like a product mockup — floating, glowing, elevated.
+
+  2. REQUIRED FIELDS CHECKLIST:
+       Visual list of required fields with ✓ / ○ completion indicators.
+       Fields: Title, Category, Level, Duration, Short Description, Full Description.
+       As fields are filled, the checklist animates to "checked" state.
+
+  3. CATEGORY BADGE:
+       Once a category is selected, show a small colored pill with the
+       category name and its color dot.
+
+--------------------------------------------------------------------------------
+  ERROR MODALS TO DESIGN
+--------------------------------------------------------------------------------
+
+  MODAL A — Duplicate Course Error:
+    The same course title + category + level combination already exists.
+    → Frosted glass or premium overlay backdrop
+    → Large error icon (not a boring red circle — make it graphic)
+    → Title: "Duplicate Found"
+    → Body: friendly explanation, not harsh error speak
+    → Action: "Okay, I'll update it" button
+
+  MODAL B — Missing Fields Validation:
+    Required fields were left empty.
+    → Same premium modal style
+    → Title: "Missing Fields"
+    → Lists the specific fields that need to be filled
+    → Action: "Okay, I'll fill them" button
+
+--------------------------------------------------------------------------------
+  VISUAL ELEMENTS TO INCORPORATE
+--------------------------------------------------------------------------------
+
+We strongly ENCOURAGE the designer to include:
+
+  ✦ An illustrated or graphic empty-state for image upload zones (not gray boxes)
+  ✦ Glassmorphism or frosted-glass card panels for section containers
+  ✦ The AI Generate button with a visually exciting loading animation
+     (shimmer effect, pulsing wand icon, or an animated gradient)
+  ✦ The Live Course Card Preview as a floating, elevated card with a soft
+     drop shadow or subtle glow — it should look like an actual product mockup
+  ✦ The dynamic list editor (Learning Outcomes, etc.) should have
+     a smooth "add new item" animation — items slide in, numbers recount
+  ✦ Section headers with illustrated icons or colored left-border accent lines
+  ✦ A background with subtle texture, gradient mesh, or ambient shapes
+     (nothing distracting — should feel like tasteful depth)
+  ✦ Dropdown selects should be custom-styled (no browser default dropdowns)
+
+--------------------------------------------------------------------------------
+  ACTION BAR (page footer)
+--------------------------------------------------------------------------------
+
+A persistent footer bar anchored to the bottom of the page:
+
+  LEFT : "← Back" or "Cancel" button
+  RIGHT: "Save as Draft" button + "Create Course" button (primary)
+
+Also show an "Auto-saved · just now" indicator to reassure the user their
+progress is not lost.
+
+--------------------------------------------------------------------------------
+  BOTH LIGHT & DARK MODE REQUIRED
+--------------------------------------------------------------------------------
+
+LIGHT MODE:
+  - Clean, airy, but not flat or boring
+  - Elevated cards with subtle shadows
+  - Color accents should pop and feel exciting
+  - The upload zones should feel inviting with warm hover states
+
+DARK MODE:
+  - Rich, deep, cinematic feel — not just gray forms
+  - Use layered dark tones (ultra-dark page bg, slightly lighter cards)
+  - Accent colors should glow or emit a subtle ambient light
+  - The live card preview should have a neon-glow border or ambient shadow
+    in the category's chosen color
+
+--------------------------------------------------------------------------------
+  WHAT TO AVOID
+--------------------------------------------------------------------------------
+
+  ✗ Do NOT make a plain gray/white form with basic input fields
+  ✗ Do NOT use a standard sidebar navigation — this is a focused creation task
+  ✗ Do NOT hide the AI features — they should be prominent and feel exciting
+  ✗ Do NOT design the list editors as plain text inputs — make them feel dynamic
+
+--------------------------------------------------------------------------------
+  DELIVERABLE
+--------------------------------------------------------------------------------
+
+  → Full page UI for Course Creation (admin portal)
+  → Both LIGHT MODE and DARK MODE = 2 screens total
+  → Sidebar panel visible
+  → All sections and features from this brief must be included
+  → Ready to hand off to a React developer for implementation
+
+================================================================================
+  END OF BRIEF — CREATE COURSE PAGE
+================================================================================

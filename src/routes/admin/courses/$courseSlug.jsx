@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Detail from "@/admin/pages/Courses/Detail";
+import CourseDetail from "@/admin/pages/Courses/CourseDetail";
 
 export const Route = createFileRoute("/admin/courses/$courseSlug")({
-  component: Detail,
+  component: CourseDetail,
 });
