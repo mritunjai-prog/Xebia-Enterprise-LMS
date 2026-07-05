@@ -2,6 +2,12 @@
 
 > **This guide is designed to be completely foolproof. Follow every single step in order, and you will have the full platform running on your computer — even if you have never written Java or used Docker before.**
 
+<p align="center">
+  <a href="ProjectDocumentation.html">
+    <img src="https://img.shields.io/badge/📚%20Full%20Technical%20Documentation-View%20Architecture%2C%20APIs%20%26%20Flowcharts-6C1D5F?style=for-the-badge&labelColor=4A1E47" alt="Full Technical Documentation"/>
+  </a>
+</p>
+
 ---
 
 ## 📑 Table of Contents
@@ -472,3 +478,12 @@ npm install
 ---
 
 *If you have followed every step in this guide and still have trouble, please open an issue on the GitHub repository with the full error message, and the team will help you!* 🚀
+
+---
+
+<p align="center">
+  <strong>Need to understand the system architecture, API endpoints, database schema, or routing flowcharts?</strong><br/>
+  <a href="ProjectDocumentation.html">
+    <img src="https://img.shields.io/badge/📚%20Open%20Technical%20Documentation-ProjectDocumentation.html-6C1D5F?style=for-the-badge&labelColor=4A1E47" alt="Open Technical Documentation"/>
+  </a>
+</p>

@@ -21,10 +21,15 @@
 </p>
 
 <p align="center">
-  <a href="https://xebia-enterprise-lms.vercel.app" target="_blank"><strong>🌐 Live Demo</strong></a> •
-  <a href="setup.md"><strong>📖 Setup Guide</strong></a> •
-  <a href="ARCHITECTURE.md"><strong>🏗️ Architecture Docs</strong></a> •
-  <a href="API.md"><strong>⚙️ API Reference</strong></a>
+  <a href="https://xebia-enterprise-lms.vercel.app" target="_blank"><strong>🌐 Live Demo</strong></a> &nbsp;•&nbsp;
+  <a href="setup.md"><strong>📖 Setup Guide</strong></a> &nbsp;•&nbsp;
+  <a href="ProjectDocumentation.html"><strong>📚 Full Technical Docs</strong></a>
+</p>
+
+<p align="center">
+  <a href="ProjectDocumentation.html">
+    <img src="https://img.shields.io/badge/📚%20Full%20Technical%20Documentation-Open%20Now-6C1D5F?style=for-the-badge&labelColor=4A1E47" alt="Full Technical Documentation"/>
+  </a>
 </p>
 
 ---
@@ -220,8 +225,7 @@ Xebia-Enterprise-LMS/
 │
 ├── README.md                        # This file
 ├── setup.md                         # Complete local setup guide
-├── API.md                           # API endpoints reference
-└── ARCHITECTURE.md                  # Deep architecture documentation
+└── ProjectDocumentation.html        # 📚 Full enterprise technical documentation
 ```
 
 ---
@@ -229,6 +233,8 @@ Xebia-Enterprise-LMS/
 ## 🚀 Quick Start
 
 > **👉 For a full, beginner-friendly step-by-step setup guide (with Java installation, Docker setup, and environment variables), please read the [Complete SETUP.md Guide](setup.md).**
+>
+> **📚 For in-depth technical architecture, API reference, entity diagrams, flowcharts and more — open the [Project Technical Documentation](ProjectDocumentation.html).**
 
 ### Prerequisites
 - Node.js 18+ and npm
