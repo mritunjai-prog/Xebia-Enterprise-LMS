@@ -562,7 +562,7 @@ export default function Courses() {
                   <div className="p-4 flex-1 flex flex-col relative">
                     {/* Title */}
                     <div className="mb-1">
-                      <span className="text-base font-bold text-gray-900 dark:text-white group-hover:text-[#6C1D5F] dark:group-hover:text-[#84117C] transition-colors leading-tight block mb-1 line-clamp-2">
+                      <span className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-[#6C1D5F] dark:group-hover:text-[#84117C] transition-colors leading-tight block mb-1 line-clamp-2">
                         {course.title}
                       </span>
                     </div>
