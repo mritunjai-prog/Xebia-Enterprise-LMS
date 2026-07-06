@@ -8,6 +8,8 @@ import com.xebia.lms.course.repository.CategoryRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 @Service
 public class CategoryService {
@@ -20,12 +22,14 @@ public class CategoryService {
         this.guard = guard;
     }
 
+    @Cacheable(value = "categories", key = "T(com.xebia.lms.common.security.TenantContext).tenantId()")
     public List<Category> list() {
         guard.requireTenant();
         return categories.findByTenantId(TenantContext.tenantId());
     }
 
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public Category create(CategoryRequest request) {
         guard.requireTenant();
         Category category = new Category();
@@ -47,6 +51,7 @@ public class CategoryService {
     }
 
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public Category update(java.util.UUID id, CategoryRequest request) {
         Category category = get(id);
         category.setName(request.name());
@@ -59,6 +64,7 @@ public class CategoryService {
     }
 
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public void delete(java.util.UUID id) {
         Category category = get(id);
         categories.delete(category);

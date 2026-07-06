@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 @Service
 public class CourseService {
@@ -32,9 +34,11 @@ public class CourseService {
         this.courses = courses; this.modules = modules; this.subModules = subModules; this.contentItems = contentItems; this.guard = guard;
     }
 
+    @Cacheable(value = "courses", key = "T(com.xebia.lms.common.security.TenantContext).tenantId()")
     public List<Course> list() { guard.requireTenant(); return courses.findByTenantId(TenantContext.tenantId()); }
 
     @Transactional
+    @CacheEvict(value = {"courses", "hierarchy"}, allEntries = true)
     public Course create(CourseRequest request) {
         guard.requireTenant();
         Course course = new Course();
@@ -46,6 +50,7 @@ public class CourseService {
     }
 
     @Transactional
+    @CacheEvict(value = {"courses", "hierarchy"}, allEntries = true)
     public Course update(UUID courseId, CourseRequest request) {
         guard.requireTenant();
         Course course = courses.findById(courseId)
@@ -57,6 +62,7 @@ public class CourseService {
     }
 
     @Transactional
+    @CacheEvict(value = {"courses", "hierarchy"}, allEntries = true)
     public void delete(UUID courseId) {
         guard.requireTenant();
         Course course = courses.findById(courseId)
@@ -241,6 +247,7 @@ public class CourseService {
         contentItems.delete(item);
     }
 
+    @Cacheable(value = "hierarchy", key = "#courseId")
     public com.xebia.lms.course.dto.CourseHierarchyDto getHierarchy(UUID courseId) {
         guard.requireTenant();
         Course course = courses.findById(courseId)
