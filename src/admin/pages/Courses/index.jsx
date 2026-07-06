@@ -464,7 +464,7 @@ export default function Courses() {
 
       {/* ── Grid / Card View ── */}
       {viewMode === "grid" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <AnimatePresence>
             {paginated.map((course, idx) => {
               const level = course.difficultyLevel || course.level || "Beginner";
@@ -499,7 +499,7 @@ export default function Courses() {
                   }}
                 >
                   {/* Thumbnail */}
-                  <div className="relative h-44 bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0">
+                  <div className="relative h-32 bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0">
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 z-0">
                       <span className="text-4xl font-bold opacity-30 uppercase tracking-wider">
                         {course.title ? course.title.substring(0, 2) : "CO"}
@@ -559,24 +559,24 @@ export default function Courses() {
                   </div>
 
                   {/* Body */}
-                  <div className="p-5 flex-1 flex flex-col relative">
+                  <div className="p-4 flex-1 flex flex-col relative">
                     {/* Title */}
-                    <div className="mb-2">
-                      <span className="text-xl font-extrabold text-gray-900 dark:text-white group-hover:text-[#6C1D5F] dark:group-hover:text-[#84117C] transition-colors leading-tight block mb-2 line-clamp-2">
+                    <div className="mb-1">
+                      <span className="text-base font-bold text-gray-900 dark:text-white group-hover:text-[#6C1D5F] dark:group-hover:text-[#84117C] transition-colors leading-tight block mb-1 line-clamp-2">
                         {course.title}
                       </span>
                     </div>
 
                     {/* Meta Top (Level) */}
-                    <div className="mb-4">
+                    <div className="mb-2">
                       <span
                         className={clsx(
-                          "inline-flex items-center text-sm font-bold px-4 py-1.5 rounded-lg text-white shadow-md tracking-wide",
+                          "inline-flex items-center text-[10px] font-bold px-2 py-1 rounded-md text-white shadow-sm tracking-wide",
                           level === "Beginner"
-                            ? "bg-[#01AC9F] shadow-[0_0_15px_rgba(1,172,159,0.4)]"
+                            ? "bg-[#01AC9F]"
                             : level === "Intermediate"
-                              ? "bg-[#84117C] shadow-[0_0_15px_rgba(132,17,124,0.4)]"
-                              : "bg-[#FF6200] shadow-[0_0_15px_rgba(255,98,0,0.4)]",
+                              ? "bg-[#84117C]"
+                              : "bg-[#FF6200]",
                         )}
                       >
                         {level}
@@ -584,14 +584,14 @@ export default function Courses() {
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed mb-6 font-medium">
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed mb-3">
                       {course.description ||
                         course.shortDescription ||
                         "No description available for this course. Click to learn more."}
                     </p>
 
                     {/* Meta Stats */}
-                    <div className="mt-auto flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-gray-500 dark:text-gray-400">
+                    <div className="mt-auto pt-3 border-t border-gray-100 dark:border-[#2e2e3e] flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-gray-500 dark:text-gray-400">
                       <div className="flex items-center gap-2 sm:gap-3">
                         <span className="flex items-center gap-1 whitespace-nowrap">
                           <BookOpen className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
