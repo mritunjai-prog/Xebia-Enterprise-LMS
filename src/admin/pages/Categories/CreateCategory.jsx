@@ -340,10 +340,10 @@ export default function CreateCategory({ onBack, editData = null }) {
             {form.iconType === "emoji" ? (
               <div className="flex gap-4 relative">
                 <div
-                  className="w-14 h-14 rounded-2xl border-2 flex items-center justify-center text-3xl shrink-0 bg-white/80 dark:bg-black/30 shadow-inner group-hover:scale-110 transition-transform duration-500"
+                  className="w-14 h-14 rounded-2xl border-2 flex items-center justify-center text-3xl shrink-0 bg-white/80 dark:bg-black/30 shadow-inner group-hover:scale-110 transition-transform duration-500 overflow-hidden"
                   style={{ borderColor: form.color }}
                 >
-                  {form.icon || "🏷️"}
+                  <span className="truncate">{form.icon || "🏷️"}</span>
                 </div>
                 <div className="flex-1 relative">
                   <input
@@ -665,7 +665,7 @@ export default function CreateCategory({ onBack, editData = null }) {
                       className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700"
                     />
                   ) : form.iconType === "emoji" && form.icon ? (
-                    <span className="text-[120px] leading-none absolute flex items-center justify-center w-full h-full group-hover/img:scale-110 transition-transform duration-700">
+                    <span className="text-[120px] leading-none absolute flex items-center justify-center w-full h-full group-hover/img:scale-110 transition-transform duration-700 truncate px-4">
                       {form.icon}
                     </span>
                   ) : null}
