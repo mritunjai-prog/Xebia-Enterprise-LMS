@@ -10,7 +10,7 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: 6379
   cache:
-    type: redis
+    type: ${CACHE_TYPE:redis}
   jpa:
     hibernate.ddl-auto: validate
     properties.hibernate.default_schema: course
