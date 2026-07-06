@@ -22,7 +22,7 @@ public class CategoryService {
         this.guard = guard;
     }
 
-    @Cacheable(value = "categories", key = "T(com.xebia.lms.common.security.TenantContext).tenantId()")
+    @Cacheable(value = "categories", key = "T(com.xebia.lms.common.security.TenantContext).tenantId()", condition = "T(com.xebia.lms.common.security.TenantContext).tenantId() != null")
     public List<Category> list() {
         guard.requireTenant();
         return categories.findByTenantId(TenantContext.tenantId());

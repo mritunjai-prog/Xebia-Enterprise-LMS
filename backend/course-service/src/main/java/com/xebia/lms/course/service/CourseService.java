@@ -34,7 +34,7 @@ public class CourseService {
         this.courses = courses; this.modules = modules; this.subModules = subModules; this.contentItems = contentItems; this.guard = guard;
     }
 
-    @Cacheable(value = "courses", key = "T(com.xebia.lms.common.security.TenantContext).tenantId()")
+    @Cacheable(value = "courses", key = "T(com.xebia.lms.common.security.TenantContext).tenantId()", condition = "T(com.xebia.lms.common.security.TenantContext).tenantId() != null")
     public List<Course> list() { guard.requireTenant(); return courses.findByTenantId(TenantContext.tenantId()); }
 
     @Transactional
