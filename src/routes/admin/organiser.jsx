@@ -2,9 +2,24 @@ import { createFileRoute, Outlet, Link } from "@tanstack/react-router";
 import { OrganiserSidebar } from "@/components/organiser-sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import {
-  Bell, Search, Sun, Moon, Menu, User, Settings, LogOut,
-  BookOpen, Users, CalendarCheck, ClipboardList, X,
-  CheckCheck, AlertCircle, Info, Zap, GraduationCap,
+  Bell,
+  Search,
+  Sun,
+  Moon,
+  Menu,
+  User,
+  Settings,
+  LogOut,
+  BookOpen,
+  Users,
+  CalendarCheck,
+  ClipboardList,
+  X,
+  CheckCheck,
+  AlertCircle,
+  Info,
+  Zap,
+  GraduationCap,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,31 +30,146 @@ export const Route = createFileRoute("/admin/organiser")({
 
 // ── Mock search data ─────────────────────────────────────────────────────────
 const SEARCH_DATA = [
-  { id: 1, type: "Course",      icon: BookOpen,       label: "Cloud Architecture Masterclass",    sub: "CS-308 • Published",      href: "/organiser/courses" },
-  { id: 2, type: "Course",      icon: BookOpen,       label: "Spring Boot Middleware Patterns",    sub: "CS-210 • Draft",          href: "/organiser/courses" },
-  { id: 3, type: "Course",      icon: BookOpen,       label: "React Query In-Depth",              sub: "CS-402 • Published",      href: "/organiser/courses" },
-  { id: 4, type: "Student",     icon: GraduationCap,  label: "Aryan Mehta",                      sub: "aryan.m@techuni.edu",     href: "/organiser/students" },
-  { id: 5, type: "Student",     icon: GraduationCap,  label: "Priya Sharma",                     sub: "priya.s@techuni.edu",     href: "/organiser/students" },
-  { id: 6, type: "Student",     icon: GraduationCap,  label: "Rohit Kumar",                      sub: "rohit.k@central.edu",     href: "/organiser/students" },
-  { id: 7, type: "Batch",       icon: CalendarCheck,  label: "Spring Boot Jan 2026",              sub: "42 students • Active",    href: "/organiser/batches" },
-  { id: 8, type: "Batch",       icon: CalendarCheck,  label: "React Advanced Cohort",             sub: "28 students • Active",    href: "/organiser/batches" },
-  { id: 9, type: "Assessment",  icon: ClipboardList,  label: "Midterm MCQ — Cloud Architecture", sub: "Pending 12 submissions",  href: "/organiser/assessments" },
-  { id: 10, type: "Assessment", icon: ClipboardList,  label: "React Practical Exam",             sub: "Graded • 84% avg",        href: "/organiser/assessments" },
+  {
+    id: 1,
+    type: "Course",
+    icon: BookOpen,
+    label: "Cloud Architecture Masterclass",
+    sub: "CS-308 • Published",
+    href: "/organiser/courses",
+  },
+  {
+    id: 2,
+    type: "Course",
+    icon: BookOpen,
+    label: "Spring Boot Middleware Patterns",
+    sub: "CS-210 • Draft",
+    href: "/organiser/courses",
+  },
+  {
+    id: 3,
+    type: "Course",
+    icon: BookOpen,
+    label: "React Query In-Depth",
+    sub: "CS-402 • Published",
+    href: "/organiser/courses",
+  },
+  {
+    id: 4,
+    type: "Student",
+    icon: GraduationCap,
+    label: "Aryan Mehta",
+    sub: "aryan.m@techuni.edu",
+    href: "/organiser/students",
+  },
+  {
+    id: 5,
+    type: "Student",
+    icon: GraduationCap,
+    label: "Priya Sharma",
+    sub: "priya.s@techuni.edu",
+    href: "/organiser/students",
+  },
+  {
+    id: 6,
+    type: "Student",
+    icon: GraduationCap,
+    label: "Rohit Kumar",
+    sub: "rohit.k@central.edu",
+    href: "/organiser/students",
+  },
+  {
+    id: 7,
+    type: "Batch",
+    icon: CalendarCheck,
+    label: "Spring Boot Jan 2026",
+    sub: "42 students • Active",
+    href: "/organiser/batches",
+  },
+  {
+    id: 8,
+    type: "Batch",
+    icon: CalendarCheck,
+    label: "React Advanced Cohort",
+    sub: "28 students • Active",
+    href: "/organiser/batches",
+  },
+  {
+    id: 9,
+    type: "Assessment",
+    icon: ClipboardList,
+    label: "Midterm MCQ — Cloud Architecture",
+    sub: "Pending 12 submissions",
+    href: "/organiser/assessments",
+  },
+  {
+    id: 10,
+    type: "Assessment",
+    icon: ClipboardList,
+    label: "React Practical Exam",
+    sub: "Graded • 84% avg",
+    href: "/organiser/assessments",
+  },
 ];
 
 // ── Mock notifications ────────────────────────────────────────────────────────
 const INITIAL_NOTIFS = [
-  { id: 1, read: false, icon: AlertCircle, color: "text-destructive",    bg: "bg-destructive/10",     title: "Submission Deadline Missed",  body: "4 students missed the React Exam submission.",         time: "2 min ago" },
-  { id: 2, read: false, icon: Zap,         color: "text-destructive",  bg: "bg-destructive/10",   title: "Batch Sync Required",         body: "Spring Boot Jan 2026 timetable needs confirmation.",   time: "18 min ago" },
-  { id: 3, read: false, icon: Info,        color: "text-accent-2",   bg: "bg-accent-2/10",    title: "New Student Enrolled",        body: "Aryan Mehta joined Cloud Architecture Masterclass.",   time: "1 hr ago" },
-  { id: 4, read: true,  icon: CheckCheck,  color: "text-accent-2",bg: "bg-accent-2/10", title: "Report Export Ready",         body: "Your June analytics PDF is ready to download.",        time: "3 hr ago" },
-  { id: 5, read: true,  icon: BookOpen,    color: "text-primary",    bg: "bg-primary/10",     title: "Course Published",            body: "Spring Boot Middleware Patterns is now live.",          time: "Yesterday" },
+  {
+    id: 1,
+    read: false,
+    icon: AlertCircle,
+    color: "text-destructive",
+    bg: "bg-destructive/10",
+    title: "Submission Deadline Missed",
+    body: "4 students missed the React Exam submission.",
+    time: "2 min ago",
+  },
+  {
+    id: 2,
+    read: false,
+    icon: Zap,
+    color: "text-destructive",
+    bg: "bg-destructive/10",
+    title: "Batch Sync Required",
+    body: "Spring Boot Jan 2026 timetable needs confirmation.",
+    time: "18 min ago",
+  },
+  {
+    id: 3,
+    read: false,
+    icon: Info,
+    color: "text-accent-2",
+    bg: "bg-accent-2/10",
+    title: "New Student Enrolled",
+    body: "Aryan Mehta joined Cloud Architecture Masterclass.",
+    time: "1 hr ago",
+  },
+  {
+    id: 4,
+    read: true,
+    icon: CheckCheck,
+    color: "text-accent-2",
+    bg: "bg-accent-2/10",
+    title: "Report Export Ready",
+    body: "Your June analytics PDF is ready to download.",
+    time: "3 hr ago",
+  },
+  {
+    id: 5,
+    read: true,
+    icon: BookOpen,
+    color: "text-primary",
+    bg: "bg-primary/10",
+    title: "Course Published",
+    body: "Spring Boot Middleware Patterns is now live.",
+    time: "Yesterday",
+  },
 ];
 
 const TYPE_COLORS = {
-  Course:     "text-primary bg-primary/10",
-  Student:    "text-accent-2   bg-accent-2/10",
-  Batch:      "text-accent-2   bg-accent-2/10",
+  Course: "text-primary bg-primary/10",
+  Student: "text-accent-2   bg-accent-2/10",
+  Batch: "text-accent-2   bg-accent-2/10",
   Assessment: "text-primary-glow   bg-primary-glow/10",
 };
 
@@ -107,21 +237,27 @@ function OrganiserLayout() {
     localStorage.setItem("theme", next ? "dark" : "light");
   };
 
-  const filteredResults = searchQuery.trim().length > 0
-    ? SEARCH_DATA.filter(
-        (item) =>
-          item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.sub.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : SEARCH_DATA;
+  const filteredResults =
+    searchQuery.trim().length > 0
+      ? SEARCH_DATA.filter(
+          (item) =>
+            item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.sub.toLowerCase().includes(searchQuery.toLowerCase()),
+        )
+      : SEARCH_DATA;
 
   const markAllRead = () => setNotifs((prev) => prev.map((n) => ({ ...n, read: true })));
-  const markRead = (id) => setNotifs((prev) => prev.map((n) => n.id === id ? { ...n, read: true } : n));
+  const markRead = (id) =>
+    setNotifs((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground transition-colors duration-300">
-      <OrganiserSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} isMobile={isMobile} />
+      <OrganiserSidebar
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
+        isMobile={isMobile}
+      />
 
       <div className="flex flex-col flex-1 h-full overflow-hidden relative" style={{ zoom: 0.8 }}>
         {/* ── Top Header ─────────────────────────────────────────────────── */}
@@ -150,8 +286,12 @@ function OrganiserLayout() {
                 className="bg-secondary/0 border-none outline-none font-semibold text-foreground cursor-pointer text-xs [color-scheme:inherit]"
                 style={{ background: "transparent" }}
               >
-                <option style={{ backgroundColor: "var(--card)", color: "var(--foreground)" }}>University of Technology</option>
-                <option style={{ backgroundColor: "var(--card)", color: "var(--foreground)" }}>Corporate Training Corp</option>
+                <option style={{ backgroundColor: "var(--card)", color: "var(--foreground)" }}>
+                  University of Technology
+                </option>
+                <option style={{ backgroundColor: "var(--card)", color: "var(--foreground)" }}>
+                  Corporate Training Corp
+                </option>
               </select>
             </div>
 
@@ -170,13 +310,20 @@ function OrganiserLayout() {
               aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
               className="h-9 w-9 rounded-full border border-border/40 bg-card hover:bg-secondary grid place-items-center cursor-pointer transition-colors"
             >
-              {dark ? <Sun className="h-4 w-4 text-muted-foreground" /> : <Moon className="h-4 w-4 text-muted-foreground" />}
+              {dark ? (
+                <Sun className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <Moon className="h-4 w-4 text-muted-foreground" />
+              )}
             </button>
 
             {/* ── Notification Button ───────────────────────────────────── */}
             <div className="relative">
               <button
-                onClick={() => { setNotifOpen((v) => !v); setIsDropdownOpen(false); }}
+                onClick={() => {
+                  setNotifOpen((v) => !v);
+                  setIsDropdownOpen(false);
+                }}
                 aria-label="Open notifications"
                 className="h-9 w-9 rounded-full border border-border/40 bg-card hover:bg-secondary grid place-items-center relative cursor-pointer transition-colors"
               >
@@ -234,12 +381,16 @@ function OrganiserLayout() {
                             onClick={() => markRead(n.id)}
                             className={`flex gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-secondary/30 ${!n.read ? "bg-primary/[0.04]" : ""}`}
                           >
-                            <div className={`shrink-0 h-8 w-8 rounded-xl flex items-center justify-center ${n.bg}`}>
+                            <div
+                              className={`shrink-0 h-8 w-8 rounded-xl flex items-center justify-center ${n.bg}`}
+                            >
                               <n.icon className={`w-3.5 h-3.5 ${n.color}`} />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between gap-1">
-                                <p className={`text-xs font-bold truncate ${!n.read ? "text-foreground" : "text-muted-foreground"}`}>
+                                <p
+                                  className={`text-xs font-bold truncate ${!n.read ? "text-foreground" : "text-muted-foreground"}`}
+                                >
                                   {n.title}
                                 </p>
                                 {!n.read && (
@@ -249,7 +400,9 @@ function OrganiserLayout() {
                               <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">
                                 {n.body}
                               </p>
-                              <p className="text-[9px] text-muted-foreground/60 mt-1 font-semibold">{n.time}</p>
+                              <p className="text-[9px] text-muted-foreground/60 mt-1 font-semibold">
+                                {n.time}
+                              </p>
                             </div>
                           </motion.div>
                         ))}
@@ -274,7 +427,10 @@ function OrganiserLayout() {
             {/* Profile Dropdown */}
             <div className="relative">
               <button
-                onClick={() => { setIsDropdownOpen(!isDropdownOpen); setNotifOpen(false); }}
+                onClick={() => {
+                  setIsDropdownOpen(!isDropdownOpen);
+                  setNotifOpen(false);
+                }}
                 className="flex flex-col items-center justify-center cursor-pointer group select-none"
               >
                 <img
@@ -383,7 +539,9 @@ function OrganiserLayout() {
                       className="flex-1 bg-transparent border-none outline-none text-sm text-foreground placeholder:text-muted-foreground/60"
                     />
                     <div className="flex items-center gap-1.5">
-                      <kbd className="hidden sm:block text-[9px] font-bold px-1.5 py-0.5 rounded border border-border/50 text-muted-foreground bg-secondary/50">ESC</kbd>
+                      <kbd className="hidden sm:block text-[9px] font-bold px-1.5 py-0.5 rounded border border-border/50 text-muted-foreground bg-secondary/50">
+                        ESC
+                      </kbd>
                       <button onClick={() => setSearchOpen(false)} className="cursor-pointer">
                         <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                       </button>
@@ -393,7 +551,10 @@ function OrganiserLayout() {
                   {/* Results */}
                   <div className="max-h-72 overflow-y-auto py-2">
                     {filteredResults.length === 0 ? (
-                      <p className="text-center text-xs text-muted-foreground py-8">No results found for "<span className="font-semibold text-foreground">{searchQuery}</span>"</p>
+                      <p className="text-center text-xs text-muted-foreground py-8">
+                        No results found for "
+                        <span className="font-semibold text-foreground">{searchQuery}</span>"
+                      </p>
                     ) : (
                       filteredResults.map((item) => (
                         <Link
@@ -402,7 +563,9 @@ function OrganiserLayout() {
                           onClick={() => setSearchOpen(false)}
                           className="flex items-center gap-3 px-4 py-2.5 hover:bg-secondary/40 cursor-pointer transition-colors group"
                         >
-                          <div className={`h-8 w-8 shrink-0 rounded-xl flex items-center justify-center text-xs font-bold ${TYPE_COLORS[item.type]}`}>
+                          <div
+                            className={`h-8 w-8 shrink-0 rounded-xl flex items-center justify-center text-xs font-bold ${TYPE_COLORS[item.type]}`}
+                          >
                             <item.icon className="w-3.5 h-3.5" />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -411,7 +574,9 @@ function OrganiserLayout() {
                             </p>
                             <p className="text-[10px] text-muted-foreground">{item.sub}</p>
                           </div>
-                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${TYPE_COLORS[item.type]}`}>
+                          <span
+                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${TYPE_COLORS[item.type]}`}
+                          >
                             {item.type}
                           </span>
                         </Link>
@@ -425,9 +590,18 @@ function OrganiserLayout() {
                       {filteredResults.length} result{filteredResults.length !== 1 ? "s" : ""}
                     </span>
                     <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                      <kbd className="px-1.5 py-0.5 rounded border border-border/50 bg-secondary/50 font-bold">↑↓</kbd> navigate
-                      <kbd className="px-1.5 py-0.5 rounded border border-border/50 bg-secondary/50 font-bold">↵</kbd> open
-                      <kbd className="px-1.5 py-0.5 rounded border border-border/50 bg-secondary/50 font-bold">Ctrl K</kbd> toggle
+                      <kbd className="px-1.5 py-0.5 rounded border border-border/50 bg-secondary/50 font-bold">
+                        ↑↓
+                      </kbd>{" "}
+                      navigate
+                      <kbd className="px-1.5 py-0.5 rounded border border-border/50 bg-secondary/50 font-bold">
+                        ↵
+                      </kbd>{" "}
+                      open
+                      <kbd className="px-1.5 py-0.5 rounded border border-border/50 bg-secondary/50 font-bold">
+                        Ctrl K
+                      </kbd>{" "}
+                      toggle
                     </div>
                   </div>
                 </div>
@@ -442,17 +616,33 @@ function OrganiserLayout() {
           style={{ background: "var(--color-background)" }}
         >
           {/* Light mode base wash */}
-          <div className="absolute inset-0 pointer-events-none dark:opacity-0 transition-opacity duration-500 -z-10"
-            style={{ background: "radial-gradient(ellipse 80% 60% at 20% 0%, oklch(0.92 0.06 320 / 0.45) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 100%, oklch(0.9 0.07 200 / 0.35) 0%, transparent 60%)" }}
+          <div
+            className="absolute inset-0 pointer-events-none dark:opacity-0 transition-opacity duration-500 -z-10"
+            style={{
+              background:
+                "radial-gradient(ellipse 80% 60% at 20% 0%, oklch(0.92 0.06 320 / 0.45) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 100%, oklch(0.9 0.07 200 / 0.35) 0%, transparent 60%)",
+            }}
           />
           {/* Dark mode deep space wash */}
-          <div className="absolute inset-0 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-500 -z-10"
-            style={{ background: "radial-gradient(ellipse 70% 50% at 10% 0%, oklch(0.22 0.08 310 / 0.5) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 90% 100%, oklch(0.2 0.07 200 / 0.4) 0%, transparent 60%)" }}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-500 -z-10"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 50% at 10% 0%, oklch(0.22 0.08 310 / 0.5) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 90% 100%, oklch(0.2 0.07 200 / 0.4) 0%, transparent 60%)",
+            }}
           />
           <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-primary/10 blur-[120px] animate-blob pointer-events-none -z-10" />
-          <div className="absolute bottom-10 right-0 h-[500px] w-[500px] rounded-full bg-accent/10 blur-[120px] animate-blob pointer-events-none -z-10" style={{ animationDelay: "4s" }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[350px] w-[350px] rounded-full pointer-events-none -z-10 animate-blob"
-            style={{ background: "oklch(0.76 0.14 165 / 0.07)", filter: "blur(90px)", animationDelay: "8s" }}
+          <div
+            className="absolute bottom-10 right-0 h-[500px] w-[500px] rounded-full bg-accent/10 blur-[120px] animate-blob pointer-events-none -z-10"
+            style={{ animationDelay: "4s" }}
+          />
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[350px] w-[350px] rounded-full pointer-events-none -z-10 animate-blob"
+            style={{
+              background: "oklch(0.76 0.14 165 / 0.07)",
+              filter: "blur(90px)",
+              animationDelay: "8s",
+            }}
           />
           <Outlet />
         </main>

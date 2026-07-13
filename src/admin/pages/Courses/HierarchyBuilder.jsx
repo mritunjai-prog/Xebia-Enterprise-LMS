@@ -211,9 +211,9 @@ export default function HierarchyBuilder({ course }) {
         setModules(modules.map((mod) => (mod.id === editModuleId ? { ...mod, ...updated } : mod)));
         setEditModuleId(null);
         setShowModuleForm(false);
-        addToast('Module Updated', 'success');
+        addToast("Module Updated", "success");
       } catch (err) {
-        addToast('Failed to update module', 'error');
+        addToast("Failed to update module", "error");
       }
       return;
     }
@@ -266,9 +266,9 @@ export default function HierarchyBuilder({ course }) {
         );
         setEditSubmoduleId(null);
         setShowSubmoduleForm(false);
-        addToast('Submodule Updated', 'success');
+        addToast("Submodule Updated", "success");
       } catch (err) {
-        addToast('Failed to update submodule', 'error');
+        addToast("Failed to update submodule", "error");
       }
       return;
     }
@@ -361,19 +361,19 @@ export default function HierarchyBuilder({ course }) {
   };
 
   const handleDeleteModule = async (id) => {
-    if (window.confirm('Delete this module and all its content?')) {
+    if (window.confirm("Delete this module and all its content?")) {
       try {
         await CourseService.deleteModule(id);
         setModules(modules.filter((m) => m.id !== id));
         if (selectedModuleId === id) setSelectedModuleId(null);
-        addToast('Module deleted', 'success');
+        addToast("Module deleted", "success");
       } catch (err) {
-        addToast('Failed to delete module', 'error');
+        addToast("Failed to delete module", "error");
       }
     }
   };
   const handleDeleteSubmodule = async (sid) => {
-    if (window.confirm('Delete this submodule and all its content?')) {
+    if (window.confirm("Delete this submodule and all its content?")) {
       try {
         await CourseService.deleteSubmodule(sid);
         setModules(
@@ -383,14 +383,14 @@ export default function HierarchyBuilder({ course }) {
               : m,
           ),
         );
-        addToast('Submodule deleted', 'success');
+        addToast("Submodule deleted", "success");
       } catch (err) {
-        addToast('Failed to delete submodule', 'error');
+        addToast("Failed to delete submodule", "error");
       }
     }
   };
   const handleDeleteContent = async (sid, cid) => {
-    if (window.confirm('Delete this content?')) {
+    if (window.confirm("Delete this content?")) {
       try {
         await CourseService.deleteContentItem(cid);
         setModules(
@@ -407,9 +407,9 @@ export default function HierarchyBuilder({ course }) {
               : m,
           ),
         );
-        addToast('Content deleted', 'success');
+        addToast("Content deleted", "success");
       } catch (err) {
-        addToast('Failed to delete content', 'error');
+        addToast("Failed to delete content", "error");
       }
     }
   };

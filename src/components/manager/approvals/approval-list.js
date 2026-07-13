@@ -17,14 +17,14 @@ export function ApprovalList() {
   const handleApprove = (id) => {
     updateApproval.mutate(
       { id, status: "approved" },
-      { onSuccess: () => toast.success("Request approved successfully") }
+      { onSuccess: () => toast.success("Request approved successfully") },
     );
   };
 
   const handleReject = (id) => {
     updateApproval.mutate(
       { id, status: "rejected" },
-      { onSuccess: () => toast.success("Request rejected") }
+      { onSuccess: () => toast.success("Request rejected") },
     );
   };
 
@@ -43,23 +43,48 @@ export function ApprovalList() {
       }
     : { all: 0, pending: 0, approved: 0, rejected: 0 };
 
-  return (
-    _jsxs(motion.div, {
-      initial: { opacity: 0, y: 10 },
-      animate: { opacity: 1, y: 0 },
-      transition: { duration: 0.4 },
-      className: "space-y-6",
-      children: [
-        /* Summary Stats */
-        _jsx("div", {
-          className: "grid grid-cols-2 gap-3 sm:grid-cols-4",
-          children: [
-            { label: "Total Requests", value: counts.all, icon: ListFilter, color: "text-[#6C1D5F]", bg: "bg-[#6C1D5F]/8" },
-            { label: "Pending", value: counts.pending, icon: Clock, color: "text-[#FF6A00]", bg: "bg-[#FF6A00]/8" },
-            { label: "Approved", value: counts.approved, icon: CheckCircle2, color: "text-[#00A99D]", bg: "bg-[#00A99D]/8" },
-            { label: "Rejected", value: counts.rejected, icon: XCircle, color: "text-red-500", bg: "bg-red-50" },
-          ].map((stat) =>
-            _jsx(Card, {
+  return _jsxs(motion.div, {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.4 },
+    className: "space-y-6",
+    children: [
+      /* Summary Stats */
+      _jsx("div", {
+        className: "grid grid-cols-2 gap-3 sm:grid-cols-4",
+        children: [
+          {
+            label: "Total Requests",
+            value: counts.all,
+            icon: ListFilter,
+            color: "text-[#6C1D5F]",
+            bg: "bg-[#6C1D5F]/8",
+          },
+          {
+            label: "Pending",
+            value: counts.pending,
+            icon: Clock,
+            color: "text-[#FF6A00]",
+            bg: "bg-[#FF6A00]/8",
+          },
+          {
+            label: "Approved",
+            value: counts.approved,
+            icon: CheckCircle2,
+            color: "text-[#00A99D]",
+            bg: "bg-[#00A99D]/8",
+          },
+          {
+            label: "Rejected",
+            value: counts.rejected,
+            icon: XCircle,
+            color: "text-red-500",
+            bg: "bg-red-50",
+          },
+        ].map((stat) =>
+          _jsx(
+            Card,
+            {
               className: "border-0 bg-white shadow-sm",
               children: _jsxs(CardContent, {
                 className: "flex items-center gap-3 p-4",
@@ -82,60 +107,69 @@ export function ApprovalList() {
                   }),
                 ],
               }),
-            }, stat.label)
+            },
+            stat.label,
           ),
-        }),
+        ),
+      }),
 
-        /* Tabs */
-        _jsxs(Tabs, {
-          value: filter,
-          onValueChange: setFilter,
-          children: [
-            _jsxs(TabsList, {
-              className: "h-11 bg-[#EDEDED] p-1",
-              children: [
-                _jsxs(TabsTrigger, {
-                  value: "all",
-                  className: "text-sm data-[state=active]:bg-white data-[state=active]:text-[#6C1D5F] data-[state=active]:shadow-sm",
-                  children: ["All (", counts.all, ")"],
-                }),
-                _jsxs(TabsTrigger, {
-                  value: "pending",
-                  className: "text-sm data-[state=active]:bg-white data-[state=active]:text-[#FF6A00] data-[state=active]:shadow-sm",
-                  children: ["Pending (", counts.pending, ")"],
-                }),
-                _jsxs(TabsTrigger, {
-                  value: "approved",
-                  className: "text-sm data-[state=active]:bg-white data-[state=active]:text-[#00A99D] data-[state=active]:shadow-sm",
-                  children: ["Approved (", counts.approved, ")"],
-                }),
-                _jsxs(TabsTrigger, {
-                  value: "rejected",
-                  className: "text-sm data-[state=active]:bg-white data-[state=active]:text-red-500 data-[state=active]:shadow-sm",
-                  children: ["Rejected (", counts.rejected, ")"],
-                }),
-              ],
-            }),
+      /* Tabs */
+      _jsxs(Tabs, {
+        value: filter,
+        onValueChange: setFilter,
+        children: [
+          _jsxs(TabsList, {
+            className: "h-11 bg-[#EDEDED] p-1",
+            children: [
+              _jsxs(TabsTrigger, {
+                value: "all",
+                className:
+                  "text-sm data-[state=active]:bg-white data-[state=active]:text-[#6C1D5F] data-[state=active]:shadow-sm",
+                children: ["All (", counts.all, ")"],
+              }),
+              _jsxs(TabsTrigger, {
+                value: "pending",
+                className:
+                  "text-sm data-[state=active]:bg-white data-[state=active]:text-[#FF6A00] data-[state=active]:shadow-sm",
+                children: ["Pending (", counts.pending, ")"],
+              }),
+              _jsxs(TabsTrigger, {
+                value: "approved",
+                className:
+                  "text-sm data-[state=active]:bg-white data-[state=active]:text-[#00A99D] data-[state=active]:shadow-sm",
+                children: ["Approved (", counts.approved, ")"],
+              }),
+              _jsxs(TabsTrigger, {
+                value: "rejected",
+                className:
+                  "text-sm data-[state=active]:bg-white data-[state=active]:text-red-500 data-[state=active]:shadow-sm",
+                children: ["Rejected (", counts.rejected, ")"],
+              }),
+            ],
+          }),
 
-            _jsx("div", {
-              className: "mt-4",
-              children: isLoading
-                ? _jsx("div", {
-                    className: "space-y-3",
-                    children: Array.from({ length: 4 }).map((_, i) =>
-                      _jsx(Skeleton, { className: "h-28 w-full rounded-xl" }, i)
-                    ),
-                  })
-                : _jsx(AnimatePresence, {
-                    mode: "popLayout",
-                    children: filteredApprovals.length === 0
+          _jsx("div", {
+            className: "mt-4",
+            children: isLoading
+              ? _jsx("div", {
+                  className: "space-y-3",
+                  children: Array.from({ length: 4 }).map((_, i) =>
+                    _jsx(Skeleton, { className: "h-28 w-full rounded-xl" }, i),
+                  ),
+                })
+              : _jsx(AnimatePresence, {
+                  mode: "popLayout",
+                  children:
+                    filteredApprovals.length === 0
                       ? _jsx(motion.div, {
                           initial: { opacity: 0 },
                           animate: { opacity: 1 },
                           className: "rounded-xl bg-white p-12 text-center shadow-sm",
                           children: _jsxs("div", {
                             children: [
-                              _jsx(CheckCircle2, { className: "mx-auto h-12 w-12 text-[#00A99D]/40" }),
+                              _jsx(CheckCircle2, {
+                                className: "mx-auto h-12 w-12 text-[#00A99D]/40",
+                              }),
                               _jsx("p", {
                                 className: "mt-3 text-sm font-medium text-[#5A5A5A]",
                                 children: "No approvals in this category",
@@ -146,19 +180,22 @@ export function ApprovalList() {
                       : _jsx("div", {
                           className: "space-y-3",
                           children: filteredApprovals.map((approval, index) =>
-                            _jsx(ApprovalCard, {
-                              approval,
-                              onApprove: handleApprove,
-                              onReject: handleReject,
-                              index,
-                            }, approval.id)
+                            _jsx(
+                              ApprovalCard,
+                              {
+                                approval,
+                                onApprove: handleApprove,
+                                onReject: handleReject,
+                                index,
+                              },
+                              approval.id,
+                            ),
                           ),
                         }),
-                  }),
-            }),
-          ],
-        }),
-      ],
-    })
-  );
+                }),
+          }),
+        ],
+      }),
+    ],
+  });
 }

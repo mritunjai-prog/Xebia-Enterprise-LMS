@@ -1,16 +1,16 @@
-const API_GATEWAY = '/api/v1';
+const API_GATEWAY = "/api/v1";
 
 export const apiClient = {
   // Users
   getUsers: async (role) => {
-    const res = await fetch(`${API_GATEWAY}/users${role ? '?role=' + role : ''}`);
+    const res = await fetch(`${API_GATEWAY}/users${role ? "?role=" + role : ""}`);
     return res.json();
   },
   createUser: async (userData) => {
     const res = await fetch(`${API_GATEWAY}/users`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
     });
     return res.json();
   },
@@ -22,23 +22,23 @@ export const apiClient = {
   },
   createBatch: async (batchData) => {
     const res = await fetch(`${API_GATEWAY}/batches`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(batchData)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(batchData),
     });
     return res.json();
   },
   updateBatch: async (id, batchData) => {
     const res = await fetch(`${API_GATEWAY}/batches/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(batchData)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(batchData),
     });
     return res.json();
   },
   deleteBatch: async (id) => {
-    const res = await fetch(`${API_GATEWAY}/batches/${id}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error('Failed to delete batch');
+    const res = await fetch(`${API_GATEWAY}/batches/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Failed to delete batch");
     return true;
   },
 
@@ -49,55 +49,76 @@ export const apiClient = {
   },
   createAssessment: async (assessmentData) => {
     const res = await fetch(`${API_GATEWAY}/assessments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(assessmentData)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(assessmentData),
     });
     return res.json();
   },
   deleteAssessment: async (id) => {
-    const res = await fetch(`${API_GATEWAY}/assessments/${id}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error('Failed to delete assessment');
+    const res = await fetch(`${API_GATEWAY}/assessments/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Failed to delete assessment");
     return true;
   },
   updateAssessment: async (id, assessmentData) => {
     const res = await fetch(`${API_GATEWAY}/assessments/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(assessmentData)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(assessmentData),
     });
     return res.json();
   },
 
   // Submissions
   getSubmissions: async (studentId) => {
-    const res = await fetch(`${API_GATEWAY}/submissions${studentId ? '?studentId=' + studentId : ''}`);
+    const res = await fetch(
+      `${API_GATEWAY}/submissions${studentId ? "?studentId=" + studentId : ""}`,
+    );
     const data = await res.json();
-    return data.map(sub => ({
+    return data.map((sub) => ({
       ...sub,
-      answers: sub.answers?.map(a => {
+      answers: sub.answers?.map((a) => {
         let parsed = a.answer;
         try {
-          if (parsed && typeof parsed === 'string' && (parsed.startsWith('[') || parsed.startsWith('{'))) {
+          if (
+            parsed &&
+            typeof parsed === "string" &&
+            (parsed.startsWith("[") || parsed.startsWith("{"))
+          ) {
             parsed = JSON.parse(parsed);
           }
-        } catch(e) {}
+        } catch (e) {}
         return { ...a, answer: parsed };
-      })
+      }),
     }));
   },
   createSubmission: async (submissionData) => {
     const payload = {
       ...submissionData,
-      answers: submissionData.answers?.map(a => ({
+      answers: submissionData.answers?.map((a) => ({
         ...a,
-        answer: typeof a.answer === 'object' ? JSON.stringify(a.answer) : String(a.answer || '')
-      }))
+        answer: typeof a.answer === "object" ? JSON.stringify(a.answer) : String(a.answer || ""),
+      })),
     };
     const res = await fetch(`${API_GATEWAY}/submissions`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  },
+  updateSubmission: async (id, submissionData) => {
+    const payload = {
+      ...submissionData,
+      answers: submissionData.answers?.map((a) => ({
+        ...a,
+        answer: typeof a.answer === "object" ? JSON.stringify(a.answer) : String(a.answer || ""),
+      })),
+    };
+    const res = await fetch(`${API_GATEWAY}/submissions/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
     return res.json();
   },
@@ -105,9 +126,9 @@ export const apiClient = {
   // Redis Drafts
   saveDraft: async (studentId, assessmentId, draftData) => {
     await fetch(`${API_GATEWAY}/assessments/drafts/${studentId}/${assessmentId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(draftData)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(draftData),
     });
   },
   getDraft: async (studentId, assessmentId) => {
@@ -119,10 +140,10 @@ export const apiClient = {
   // AI Description Generation
   generateDescription: async (topic) => {
     const res = await fetch(`${API_GATEWAY}/assessments/ai/generate-description`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic }),
     });
     return res.json();
-  }
+  },
 };

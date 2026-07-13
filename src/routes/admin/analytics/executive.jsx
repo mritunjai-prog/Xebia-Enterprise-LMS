@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from "@tanstack/react-router";
 import { ExecutiveHeader } from "@/components/analytics/ExecutiveHeader";
 import { GlobalFilters } from "@/components/analytics/GlobalFilters";
 import { ExecutiveKPIs } from "@/components/analytics/ExecutiveKPIs";
@@ -6,14 +6,13 @@ import { ExecutiveCharts } from "@/components/analytics/ExecutiveCharts";
 import { ExecutiveInsights } from "@/components/analytics/ExecutiveInsights";
 import { ActivityTimeline } from "@/components/analytics/ActivityTimeline";
 
-export const Route = createFileRoute('/admin/analytics/executive')({
+export const Route = createFileRoute("/admin/analytics/executive")({
   component: ExecutiveDashboard,
 });
 
 function ExecutiveDashboard() {
   return (
     <div className="min-h-screen bg-background text-gray-900 dark:text-gray-100 p-6 md:p-8 font-sans transition-colors duration-300">
-      
       {/* Premium Header */}
       <ExecutiveHeader />
 
@@ -31,7 +30,6 @@ function ExecutiveDashboard() {
         <ExecutiveInsights />
         <ActivityTimeline />
       </div>
-
     </div>
   );
 }

@@ -35,35 +35,36 @@ const typeColorMap = {
 export function RecentActivity() {
   const { data: activities, isLoading } = useRecentActivity();
 
-  return (
-    _jsxs(Card, {
-      className: "border-0 bg-white shadow-sm",
-      children: [
-        _jsx(CardHeader, {
-          className: "pb-3",
-          children: _jsx(CardTitle, {
-            className: "text-base font-semibold text-[#000000]",
-            children: "Recent Activity",
-          }),
+  return _jsxs(Card, {
+    className: "border-0 bg-white shadow-sm",
+    children: [
+      _jsx(CardHeader, {
+        className: "pb-3",
+        children: _jsx(CardTitle, {
+          className: "text-base font-semibold text-[#000000]",
+          children: "Recent Activity",
         }),
-        _jsx(CardContent, {
-          className: "p-0",
-          children: _jsx(ScrollArea, {
-            className: "h-[400px] px-6 pb-4",
-            children: isLoading
-              ? _jsx("div", {
-                  className: "space-y-4",
-                  children: Array.from({ length: 6 }).map((_, i) =>
-                    _jsx(Skeleton, { className: "h-12 w-full rounded-lg" }, i)
-                  ),
-                })
-              : _jsx("div", {
-                  className: "space-y-1",
-                  children: activities.map((activity, index) => {
-                    const IconComp = iconComponentMap[activity.icon] || CheckCircle2;
-                    const colorClass = typeColorMap[activity.type] || typeColorMap.enrollment;
+      }),
+      _jsx(CardContent, {
+        className: "p-0",
+        children: _jsx(ScrollArea, {
+          className: "h-[400px] px-6 pb-4",
+          children: isLoading
+            ? _jsx("div", {
+                className: "space-y-4",
+                children: Array.from({ length: 6 }).map((_, i) =>
+                  _jsx(Skeleton, { className: "h-12 w-full rounded-lg" }, i),
+                ),
+              })
+            : _jsx("div", {
+                className: "space-y-1",
+                children: activities.map((activity, index) => {
+                  const IconComp = iconComponentMap[activity.icon] || CheckCircle2;
+                  const colorClass = typeColorMap[activity.type] || typeColorMap.enrollment;
 
-                    return _jsx(motion.div, {
+                  return _jsx(
+                    motion.div,
+                    {
                       initial: { opacity: 0, x: -10 },
                       animate: { opacity: 1, x: 0 },
                       transition: { duration: 0.3, delay: index * 0.05 },
@@ -92,12 +93,13 @@ export function RecentActivity() {
                           }),
                         ],
                       }),
-                    }, activity.id);
-                  }),
+                    },
+                    activity.id,
+                  );
                 }),
-          }),
+              }),
         }),
-      ],
-    })
-  );
+      }),
+    ],
+  });
 }

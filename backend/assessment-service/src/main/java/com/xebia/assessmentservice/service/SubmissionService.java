@@ -23,4 +23,12 @@ public class SubmissionService {
     public Submission createSubmission(Submission submission) {
         return submissionRepository.save(submission);
     }
+    
+    public Submission updateSubmission(String id, Submission submission) {
+        if (!submissionRepository.existsById(id)) {
+            throw new RuntimeException("Submission not found with id: " + id);
+        }
+        submission.setId(id);
+        return submissionRepository.save(submission);
+    }
 }

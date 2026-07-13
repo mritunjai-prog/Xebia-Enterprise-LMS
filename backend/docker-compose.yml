@@ -34,6 +34,9 @@ services:
       JWT_SECRET: ${JWT_SECRET:-replace-with-at-least-32-characters}
       REDIS_HOST: redis
       SERVICES_COURSE: http://course-service:8084
+      SERVICES_USER: http://user-service:8081
+      SERVICES_BATCH: http://batch-service:8085
+      SERVICES_ASSESSMENT: http://assessment-service:8086
     ports:
       - "8080:8080"
     depends_on:
@@ -56,6 +59,60 @@ services:
       - "8084:8084"
     depends_on:
       postgres:
+        condition: service_healthy
+
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    environment:
+      SERVER_PORT: 8081
+      DB_HOST: postgres
+      DB_NAME: lms
+      DB_USERNAME: lms
+      DB_PASSWORD: lms
+      JWT_SECRET: ${JWT_SECRET:-replace-with-at-least-32-characters}
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  batch-service:
+    build:
+      context: .
+      dockerfile: batch-service/Dockerfile
+    environment:
+      SERVER_PORT: 8085
+      DB_HOST: postgres
+      DB_NAME: lms
+      DB_USERNAME: lms
+      DB_PASSWORD: lms
+      JWT_SECRET: ${JWT_SECRET:-replace-with-at-least-32-characters}
+    ports:
+      - "8085:8085"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  assessment-service:
+    build:
+      context: .
+      dockerfile: assessment-service/Dockerfile
+    environment:
+      SERVER_PORT: 8086
+      DB_HOST: postgres
+      DB_NAME: lms
+      DB_USERNAME: lms
+      DB_PASSWORD: lms
+      REDIS_HOST: redis
+      JWT_SECRET: ${JWT_SECRET:-replace-with-at-least-32-characters}
+    ports:
+      - "8086:8086"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
 volumes:

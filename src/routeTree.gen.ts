@@ -22,7 +22,6 @@ import { Route as TrainerReportsRouteImport } from './routes/trainer/reports'
 import { Route as TrainerLeaderboardRouteImport } from './routes/trainer/leaderboard'
 import { Route as TrainerEvaluationRouteImport } from './routes/trainer/evaluation'
 import { Route as TrainerAssessmentBuilderRouteImport } from './routes/trainer/assessment-builder'
-import { Route as StudentResultsRouteImport } from './routes/student/results'
 import { Route as StudentProfileRouteImport } from './routes/student/profile'
 import { Route as StudentNotificationsRouteImport } from './routes/student/notifications'
 import { Route as StudentFeedbackRouteImport } from './routes/student/feedback'
@@ -33,6 +32,7 @@ import { Route as AdminTrainerRouteImport } from './routes/admin/trainer'
 import { Route as AdminOrganiserRouteImport } from './routes/admin/organiser'
 import { Route as AdminCurriculumRouteImport } from './routes/admin/curriculum'
 import { Route as TrainerBatchesIndexRouteImport } from './routes/trainer/batches/index'
+import { Route as StudentResultsIndexRouteImport } from './routes/student/results/index'
 import { Route as AdminCurriculumIndexRouteImport } from './routes/admin/curriculum/index'
 import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
 import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categories/index'
@@ -41,6 +41,7 @@ import { Route as TrainerBatchesIdRouteImport } from './routes/trainer/batches/$
 import { Route as StudentTakeSlugRouteImport } from './routes/student/take/$slug'
 import { Route as StudentTakeCodingSlugRouteImport } from './routes/student/take-coding/$slug'
 import { Route as StudentCourseCourseIdRouteImport } from './routes/student/course/$courseId'
+import { Route as StudentCertificateSubmissionIdRouteImport } from './routes/student/certificate/$submissionId'
 import { Route as StudentAssessmentAssessmentIdRouteImport } from './routes/student/assessment/$assessmentId'
 import { Route as AdminCurriculumCourseIdRouteImport } from './routes/admin/curriculum/$courseId'
 import { Route as AdminCoursesBuilderRouteImport } from './routes/admin/courses/builder'
@@ -131,11 +132,6 @@ const TrainerAssessmentBuilderRoute =
     path: '/assessment-builder',
     getParentRoute: () => TrainerRoute,
   } as any)
-const StudentResultsRoute = StudentResultsRouteImport.update({
-  id: '/results',
-  path: '/results',
-  getParentRoute: () => StudentRoute,
-} as any)
 const StudentProfileRoute = StudentProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -186,6 +182,11 @@ const TrainerBatchesIndexRoute = TrainerBatchesIndexRouteImport.update({
   path: '/batches/',
   getParentRoute: () => TrainerRoute,
 } as any)
+const StudentResultsIndexRoute = StudentResultsIndexRouteImport.update({
+  id: '/results/',
+  path: '/results/',
+  getParentRoute: () => StudentRoute,
+} as any)
 const AdminCurriculumIndexRoute = AdminCurriculumIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -226,6 +227,12 @@ const StudentCourseCourseIdRoute = StudentCourseCourseIdRouteImport.update({
   path: '/course/$courseId',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentCertificateSubmissionIdRoute =
+  StudentCertificateSubmissionIdRouteImport.update({
+    id: '/certificate/$submissionId',
+    path: '/certificate/$submissionId',
+    getParentRoute: () => StudentRoute,
+  } as any)
 const StudentAssessmentAssessmentIdRoute =
   StudentAssessmentAssessmentIdRouteImport.update({
     id: '/assessment/$assessmentId',
@@ -341,9 +348,9 @@ const AdminAnalyticsAnalyticsIndexRoute =
     getParentRoute: () => AdminRoute,
   } as any)
 const StudentResultsSlugIdRoute = StudentResultsSlugIdRouteImport.update({
-  id: '/$slug/$id',
-  path: '/$slug/$id',
-  getParentRoute: () => StudentResultsRoute,
+  id: '/results/$slug/$id',
+  path: '/results/$slug/$id',
+  getParentRoute: () => StudentRoute,
 } as any)
 const AdminSubmodulesSubmoduleIdContentRoute =
   AdminSubmodulesSubmoduleIdContentRouteImport.update({
@@ -367,7 +374,6 @@ export interface FileRoutesByFullPath {
   '/student/feedback': typeof StudentFeedbackRoute
   '/student/notifications': typeof StudentNotificationsRoute
   '/student/profile': typeof StudentProfileRoute
-  '/student/results': typeof StudentResultsRouteWithChildren
   '/trainer/assessment-builder': typeof TrainerAssessmentBuilderRoute
   '/trainer/evaluation': typeof TrainerEvaluationRoute
   '/trainer/leaderboard': typeof TrainerLeaderboardRoute
@@ -396,6 +402,7 @@ export interface FileRoutesByFullPath {
   '/admin/courses/builder': typeof AdminCoursesBuilderRoute
   '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
   '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
+  '/student/certificate/$submissionId': typeof StudentCertificateSubmissionIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
   '/student/take-coding/$slug': typeof StudentTakeCodingSlugRoute
   '/student/take/$slug': typeof StudentTakeSlugRoute
@@ -404,6 +411,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
+  '/student/results/': typeof StudentResultsIndexRoute
   '/trainer/batches/': typeof TrainerBatchesIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
   '/student/results/$slug/$id': typeof StudentResultsSlugIdRoute
@@ -420,7 +428,6 @@ export interface FileRoutesByTo {
   '/student/feedback': typeof StudentFeedbackRoute
   '/student/notifications': typeof StudentNotificationsRoute
   '/student/profile': typeof StudentProfileRoute
-  '/student/results': typeof StudentResultsRouteWithChildren
   '/trainer/assessment-builder': typeof TrainerAssessmentBuilderRoute
   '/trainer/evaluation': typeof TrainerEvaluationRoute
   '/trainer/leaderboard': typeof TrainerLeaderboardRoute
@@ -449,6 +456,7 @@ export interface FileRoutesByTo {
   '/admin/courses/builder': typeof AdminCoursesBuilderRoute
   '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
   '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
+  '/student/certificate/$submissionId': typeof StudentCertificateSubmissionIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
   '/student/take-coding/$slug': typeof StudentTakeCodingSlugRoute
   '/student/take/$slug': typeof StudentTakeSlugRoute
@@ -457,6 +465,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/courses': typeof AdminCoursesIndexRoute
   '/admin/curriculum': typeof AdminCurriculumIndexRoute
+  '/student/results': typeof StudentResultsIndexRoute
   '/trainer/batches': typeof TrainerBatchesIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
   '/student/results/$slug/$id': typeof StudentResultsSlugIdRoute
@@ -478,7 +487,6 @@ export interface FileRoutesById {
   '/student/feedback': typeof StudentFeedbackRoute
   '/student/notifications': typeof StudentNotificationsRoute
   '/student/profile': typeof StudentProfileRoute
-  '/student/results': typeof StudentResultsRouteWithChildren
   '/trainer/assessment-builder': typeof TrainerAssessmentBuilderRoute
   '/trainer/evaluation': typeof TrainerEvaluationRoute
   '/trainer/leaderboard': typeof TrainerLeaderboardRoute
@@ -507,6 +515,7 @@ export interface FileRoutesById {
   '/admin/courses/builder': typeof AdminCoursesBuilderRoute
   '/admin/curriculum/$courseId': typeof AdminCurriculumCourseIdRoute
   '/student/assessment/$assessmentId': typeof StudentAssessmentAssessmentIdRoute
+  '/student/certificate/$submissionId': typeof StudentCertificateSubmissionIdRoute
   '/student/course/$courseId': typeof StudentCourseCourseIdRoute
   '/student/take-coding/$slug': typeof StudentTakeCodingSlugRoute
   '/student/take/$slug': typeof StudentTakeSlugRoute
@@ -515,6 +524,7 @@ export interface FileRoutesById {
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
+  '/student/results/': typeof StudentResultsIndexRoute
   '/trainer/batches/': typeof TrainerBatchesIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
   '/student/results/$slug/$id': typeof StudentResultsSlugIdRoute
@@ -537,7 +547,6 @@ export interface FileRouteTypes {
     | '/student/feedback'
     | '/student/notifications'
     | '/student/profile'
-    | '/student/results'
     | '/trainer/assessment-builder'
     | '/trainer/evaluation'
     | '/trainer/leaderboard'
@@ -566,6 +575,7 @@ export interface FileRouteTypes {
     | '/admin/courses/builder'
     | '/admin/curriculum/$courseId'
     | '/student/assessment/$assessmentId'
+    | '/student/certificate/$submissionId'
     | '/student/course/$courseId'
     | '/student/take-coding/$slug'
     | '/student/take/$slug'
@@ -574,6 +584,7 @@ export interface FileRouteTypes {
     | '/admin/categories/'
     | '/admin/courses/'
     | '/admin/curriculum/'
+    | '/student/results/'
     | '/trainer/batches/'
     | '/admin/submodules/$submoduleId/content'
     | '/student/results/$slug/$id'
@@ -590,7 +601,6 @@ export interface FileRouteTypes {
     | '/student/feedback'
     | '/student/notifications'
     | '/student/profile'
-    | '/student/results'
     | '/trainer/assessment-builder'
     | '/trainer/evaluation'
     | '/trainer/leaderboard'
@@ -619,6 +629,7 @@ export interface FileRouteTypes {
     | '/admin/courses/builder'
     | '/admin/curriculum/$courseId'
     | '/student/assessment/$assessmentId'
+    | '/student/certificate/$submissionId'
     | '/student/course/$courseId'
     | '/student/take-coding/$slug'
     | '/student/take/$slug'
@@ -627,6 +638,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/courses'
     | '/admin/curriculum'
+    | '/student/results'
     | '/trainer/batches'
     | '/admin/submodules/$submoduleId/content'
     | '/student/results/$slug/$id'
@@ -647,7 +659,6 @@ export interface FileRouteTypes {
     | '/student/feedback'
     | '/student/notifications'
     | '/student/profile'
-    | '/student/results'
     | '/trainer/assessment-builder'
     | '/trainer/evaluation'
     | '/trainer/leaderboard'
@@ -676,6 +687,7 @@ export interface FileRouteTypes {
     | '/admin/courses/builder'
     | '/admin/curriculum/$courseId'
     | '/student/assessment/$assessmentId'
+    | '/student/certificate/$submissionId'
     | '/student/course/$courseId'
     | '/student/take-coding/$slug'
     | '/student/take/$slug'
@@ -684,6 +696,7 @@ export interface FileRouteTypes {
     | '/admin/categories/'
     | '/admin/courses/'
     | '/admin/curriculum/'
+    | '/student/results/'
     | '/trainer/batches/'
     | '/admin/submodules/$submoduleId/content'
     | '/student/results/$slug/$id'
@@ -791,13 +804,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrainerAssessmentBuilderRouteImport
       parentRoute: typeof TrainerRoute
     }
-    '/student/results': {
-      id: '/student/results'
-      path: '/results'
-      fullPath: '/student/results'
-      preLoaderRoute: typeof StudentResultsRouteImport
-      parentRoute: typeof StudentRoute
-    }
     '/student/profile': {
       id: '/student/profile'
       path: '/profile'
@@ -868,6 +874,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrainerBatchesIndexRouteImport
       parentRoute: typeof TrainerRoute
     }
+    '/student/results/': {
+      id: '/student/results/'
+      path: '/results'
+      fullPath: '/student/results/'
+      preLoaderRoute: typeof StudentResultsIndexRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/admin/curriculum/': {
       id: '/admin/curriculum/'
       path: '/'
@@ -922,6 +935,13 @@ declare module '@tanstack/react-router' {
       path: '/course/$courseId'
       fullPath: '/student/course/$courseId'
       preLoaderRoute: typeof StudentCourseCourseIdRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/certificate/$submissionId': {
+      id: '/student/certificate/$submissionId'
+      path: '/certificate/$submissionId'
+      fullPath: '/student/certificate/$submissionId'
+      preLoaderRoute: typeof StudentCertificateSubmissionIdRouteImport
       parentRoute: typeof StudentRoute
     }
     '/student/assessment/$assessmentId': {
@@ -1073,10 +1093,10 @@ declare module '@tanstack/react-router' {
     }
     '/student/results/$slug/$id': {
       id: '/student/results/$slug/$id'
-      path: '/$slug/$id'
+      path: '/results/$slug/$id'
       fullPath: '/student/results/$slug/$id'
       preLoaderRoute: typeof StudentResultsSlugIdRouteImport
-      parentRoute: typeof StudentResultsRoute
+      parentRoute: typeof StudentRoute
     }
     '/admin/submodules/$submoduleId/content': {
       id: '/admin/submodules/$submoduleId/content'
@@ -1165,18 +1185,6 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface StudentResultsRouteChildren {
-  StudentResultsSlugIdRoute: typeof StudentResultsSlugIdRoute
-}
-
-const StudentResultsRouteChildren: StudentResultsRouteChildren = {
-  StudentResultsSlugIdRoute: StudentResultsSlugIdRoute,
-}
-
-const StudentResultsRouteWithChildren = StudentResultsRoute._addFileChildren(
-  StudentResultsRouteChildren,
-)
-
 interface StudentRouteChildren {
   StudentAssessmentsRoute: typeof StudentAssessmentsRoute
   StudentBatchesRoute: typeof StudentBatchesRoute
@@ -1184,12 +1192,14 @@ interface StudentRouteChildren {
   StudentFeedbackRoute: typeof StudentFeedbackRoute
   StudentNotificationsRoute: typeof StudentNotificationsRoute
   StudentProfileRoute: typeof StudentProfileRoute
-  StudentResultsRoute: typeof StudentResultsRouteWithChildren
   StudentIndexRoute: typeof StudentIndexRoute
   StudentAssessmentAssessmentIdRoute: typeof StudentAssessmentAssessmentIdRoute
+  StudentCertificateSubmissionIdRoute: typeof StudentCertificateSubmissionIdRoute
   StudentCourseCourseIdRoute: typeof StudentCourseCourseIdRoute
   StudentTakeCodingSlugRoute: typeof StudentTakeCodingSlugRoute
   StudentTakeSlugRoute: typeof StudentTakeSlugRoute
+  StudentResultsIndexRoute: typeof StudentResultsIndexRoute
+  StudentResultsSlugIdRoute: typeof StudentResultsSlugIdRoute
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
@@ -1199,12 +1209,14 @@ const StudentRouteChildren: StudentRouteChildren = {
   StudentFeedbackRoute: StudentFeedbackRoute,
   StudentNotificationsRoute: StudentNotificationsRoute,
   StudentProfileRoute: StudentProfileRoute,
-  StudentResultsRoute: StudentResultsRouteWithChildren,
   StudentIndexRoute: StudentIndexRoute,
   StudentAssessmentAssessmentIdRoute: StudentAssessmentAssessmentIdRoute,
+  StudentCertificateSubmissionIdRoute: StudentCertificateSubmissionIdRoute,
   StudentCourseCourseIdRoute: StudentCourseCourseIdRoute,
   StudentTakeCodingSlugRoute: StudentTakeCodingSlugRoute,
   StudentTakeSlugRoute: StudentTakeSlugRoute,
+  StudentResultsIndexRoute: StudentResultsIndexRoute,
+  StudentResultsSlugIdRoute: StudentResultsSlugIdRoute,
 }
 
 const StudentRouteWithChildren =

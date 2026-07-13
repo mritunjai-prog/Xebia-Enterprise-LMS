@@ -3,7 +3,13 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Star, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FeedbackCard } from "./feedback-card";
@@ -50,79 +56,89 @@ export function FeedbackPanel() {
   }, [feedbackData]);
 
   if (isLoading) {
-    return (
-      _jsx("div", {
-        className: "space-y-6",
-        children: [
-          _jsx(Skeleton, { className: "h-48 w-full rounded-xl" }),
-          _jsx(Skeleton, { className: "h-48 w-full rounded-xl" }),
-        ],
-      })
-    );
-  }
-
-  return (
-    _jsxs(motion.div, {
-      initial: { opacity: 0, y: 10 },
-      animate: { opacity: 1, y: 0 },
-      transition: { duration: 0.4 },
+    return _jsx("div", {
       className: "space-y-6",
       children: [
-        /* Overview Cards */
-        _jsx("div", {
-          className: "grid grid-cols-1 gap-5 lg:grid-cols-3",
-          children: [
-            /* Average Rating */
-            _jsx(Card, {
-              className: "border-0 bg-white shadow-sm",
-              children: _jsx(CardContent, {
-                className: "flex flex-col items-center justify-center p-6",
-                children: _jsxs("div", {
-                  className: "text-center",
-                  children: [
-                    _jsx("p", {
-                      className: "text-5xl font-bold text-[#6C1D5F]",
-                      children: stats.avg,
-                    }),
-                    _jsx("div", {
-                      className: "mt-2 flex justify-center gap-0.5",
-                      children: Array.from({ length: 5 }).map((_, i) =>
-                        _jsx("span", {
+        _jsx(Skeleton, { className: "h-48 w-full rounded-xl" }),
+        _jsx(Skeleton, { className: "h-48 w-full rounded-xl" }),
+      ],
+    });
+  }
+
+  return _jsxs(motion.div, {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.4 },
+    className: "space-y-6",
+    children: [
+      /* Overview Cards */
+      _jsx("div", {
+        className: "grid grid-cols-1 gap-5 lg:grid-cols-3",
+        children: [
+          /* Average Rating */
+          _jsx(Card, {
+            className: "border-0 bg-white shadow-sm",
+            children: _jsx(CardContent, {
+              className: "flex flex-col items-center justify-center p-6",
+              children: _jsxs("div", {
+                className: "text-center",
+                children: [
+                  _jsx("p", {
+                    className: "text-5xl font-bold text-[#6C1D5F]",
+                    children: stats.avg,
+                  }),
+                  _jsx("div", {
+                    className: "mt-2 flex justify-center gap-0.5",
+                    children: Array.from({ length: 5 }).map((_, i) =>
+                      _jsx(
+                        "span",
+                        {
                           className: `text-lg ${i < Math.round(stats.avg) ? "text-[#FF6A00]" : "text-gray-200"}`,
                           children: "★",
-                        }, i)
+                        },
+                        i,
                       ),
-                    }),
-                    _jsxs("p", {
-                      className: "mt-1 text-sm text-[#5A5A5A]",
-                      children: ["Based on ", stats.total, " reviews"],
-                    }),
-                  ],
-                }),
+                    ),
+                  }),
+                  _jsxs("p", {
+                    className: "mt-1 text-sm text-[#5A5A5A]",
+                    children: ["Based on ", stats.total, " reviews"],
+                  }),
+                ],
               }),
             }),
+          }),
 
-            /* Rating Distribution */
-            _jsxs(Card, {
-              className: "border-0 bg-white shadow-sm",
-              children: [
-                _jsx(CardHeader, {
-                  className: "pb-2",
-                  children: _jsx(CardTitle, {
-                    className: "text-sm font-semibold text-[#000000]",
-                    children: "Rating Distribution",
-                  }),
+          /* Rating Distribution */
+          _jsxs(Card, {
+            className: "border-0 bg-white shadow-sm",
+            children: [
+              _jsx(CardHeader, {
+                className: "pb-2",
+                children: _jsx(CardTitle, {
+                  className: "text-sm font-semibold text-[#000000]",
+                  children: "Rating Distribution",
                 }),
-                _jsx(CardContent, {
-                  children: _jsx("div", {
-                    className: "space-y-2.5",
-                    children: stats.distribution.map((d) =>
-                      _jsxs("div", {
+              }),
+              _jsx(CardContent, {
+                children: _jsx("div", {
+                  className: "space-y-2.5",
+                  children: stats.distribution.map((d) =>
+                    _jsxs(
+                      "div",
+                      {
                         className: "flex items-center gap-3",
                         children: [
                           _jsxs("span", {
-                            className: "flex w-6 items-center gap-0.5 text-sm font-medium text-[#5A5A5A]",
-                            children: [d.rating, _jsx("span", { className: "text-[10px] text-[#FF6A00]", children: "★" })],
+                            className:
+                              "flex w-6 items-center gap-0.5 text-sm font-medium text-[#5A5A5A]",
+                            children: [
+                              d.rating,
+                              _jsx("span", {
+                                className: "text-[10px] text-[#FF6A00]",
+                                children: "★",
+                              }),
+                            ],
                           }),
                           _jsx(Progress, {
                             value: d.percentage,
@@ -133,33 +149,55 @@ export function FeedbackPanel() {
                             children: [d.count],
                           }),
                         ],
-                      }, d.rating)
+                      },
+                      d.rating,
                     ),
-                  }),
+                  ),
                 }),
-              ],
-            }),
+              }),
+            ],
+          }),
 
-            /* Sentiment Summary */
-            _jsxs(Card, {
-              className: "border-0 bg-white shadow-sm",
-              children: [
-                _jsx(CardHeader, {
-                  className: "pb-2",
-                  children: _jsx(CardTitle, {
-                    className: "text-sm font-semibold text-[#000000]",
-                    children: "Sentiment Analysis",
-                  }),
+          /* Sentiment Summary */
+          _jsxs(Card, {
+            className: "border-0 bg-white shadow-sm",
+            children: [
+              _jsx(CardHeader, {
+                className: "pb-2",
+                children: _jsx(CardTitle, {
+                  className: "text-sm font-semibold text-[#000000]",
+                  children: "Sentiment Analysis",
                 }),
-                _jsx(CardContent, {
-                  children: _jsx("div", {
-                    className: "space-y-4",
-                    children: [
-                      { label: "Positive", value: stats.sentiments.positive, icon: ThumbsUp, color: "text-[#00A99D]", bg: "bg-[#00A99D]/8" },
-                      { label: "Neutral", value: stats.sentiments.neutral, icon: Minus, color: "text-[#FF6A00]", bg: "bg-[#FF6A00]/8" },
-                      { label: "Negative", value: stats.sentiments.negative, icon: ThumbsDown, color: "text-red-500", bg: "bg-red-50" },
-                    ].map((s) =>
-                      _jsxs("div", {
+              }),
+              _jsx(CardContent, {
+                children: _jsx("div", {
+                  className: "space-y-4",
+                  children: [
+                    {
+                      label: "Positive",
+                      value: stats.sentiments.positive,
+                      icon: ThumbsUp,
+                      color: "text-[#00A99D]",
+                      bg: "bg-[#00A99D]/8",
+                    },
+                    {
+                      label: "Neutral",
+                      value: stats.sentiments.neutral,
+                      icon: Minus,
+                      color: "text-[#FF6A00]",
+                      bg: "bg-[#FF6A00]/8",
+                    },
+                    {
+                      label: "Negative",
+                      value: stats.sentiments.negative,
+                      icon: ThumbsDown,
+                      color: "text-red-500",
+                      bg: "bg-red-50",
+                    },
+                  ].map((s) =>
+                    _jsxs(
+                      "div",
+                      {
                         className: "flex items-center justify-between",
                         children: [
                           _jsxs("div", {
@@ -180,64 +218,65 @@ export function FeedbackPanel() {
                             children: s.value,
                           }),
                         ],
-                      }, s.label)
+                      },
+                      s.label,
                     ),
-                  }),
+                  ),
                 }),
-              ],
-            }),
-          ],
-        }),
+              }),
+            ],
+          }),
+        ],
+      }),
 
-        /* Filters */
-        _jsxs("div", {
-          className: "flex flex-col gap-3 sm:flex-row",
-          children: [
-            _jsxs(Select, {
-              value: courseFilter,
-              onValueChange: setCourseFilter,
-              children: [
-                _jsx(SelectTrigger, {
-                  className: "h-10 w-full border-[#EDEDED] bg-white shadow-sm sm:w-[250px]",
-                  children: _jsx(SelectValue, { placeholder: "Filter by course" }),
-                }),
-                _jsxs(SelectContent, {
-                  children: [
-                    _jsx(SelectItem, { value: "all", children: "All Courses" }),
-                    ...courses.map((c) =>
-                      _jsx(SelectItem, { value: c, children: c }, c)
-                    ),
-                  ],
-                }),
-              ],
-            }),
-            _jsxs(Select, {
-              value: ratingFilter,
-              onValueChange: setRatingFilter,
-              children: [
-                _jsx(SelectTrigger, {
-                  className: "h-10 w-full border-[#EDEDED] bg-white shadow-sm sm:w-[150px]",
-                  children: _jsx(SelectValue, { placeholder: "Rating" }),
-                }),
-                _jsxs(SelectContent, {
-                  children: [
-                    _jsx(SelectItem, { value: "all", children: "All Ratings" }),
-                    _jsx(SelectItem, { value: "5", children: "5 Stars" }),
-                    _jsx(SelectItem, { value: "4", children: "4 Stars" }),
-                    _jsx(SelectItem, { value: "3", children: "3 Stars" }),
-                    _jsx(SelectItem, { value: "2", children: "2 Stars" }),
-                    _jsx(SelectItem, { value: "1", children: "1 Star" }),
-                  ],
-                }),
-              ],
-            }),
-          ],
-        }),
+      /* Filters */
+      _jsxs("div", {
+        className: "flex flex-col gap-3 sm:flex-row",
+        children: [
+          _jsxs(Select, {
+            value: courseFilter,
+            onValueChange: setCourseFilter,
+            children: [
+              _jsx(SelectTrigger, {
+                className: "h-10 w-full border-[#EDEDED] bg-white shadow-sm sm:w-[250px]",
+                children: _jsx(SelectValue, { placeholder: "Filter by course" }),
+              }),
+              _jsxs(SelectContent, {
+                children: [
+                  _jsx(SelectItem, { value: "all", children: "All Courses" }),
+                  ...courses.map((c) => _jsx(SelectItem, { value: c, children: c }, c)),
+                ],
+              }),
+            ],
+          }),
+          _jsxs(Select, {
+            value: ratingFilter,
+            onValueChange: setRatingFilter,
+            children: [
+              _jsx(SelectTrigger, {
+                className: "h-10 w-full border-[#EDEDED] bg-white shadow-sm sm:w-[150px]",
+                children: _jsx(SelectValue, { placeholder: "Rating" }),
+              }),
+              _jsxs(SelectContent, {
+                children: [
+                  _jsx(SelectItem, { value: "all", children: "All Ratings" }),
+                  _jsx(SelectItem, { value: "5", children: "5 Stars" }),
+                  _jsx(SelectItem, { value: "4", children: "4 Stars" }),
+                  _jsx(SelectItem, { value: "3", children: "3 Stars" }),
+                  _jsx(SelectItem, { value: "2", children: "2 Stars" }),
+                  _jsx(SelectItem, { value: "1", children: "1 Star" }),
+                ],
+              }),
+            ],
+          }),
+        ],
+      }),
 
-        /* Feedback List */
-        _jsx("div", {
-          className: "space-y-3",
-          children: filtered.length === 0
+      /* Feedback List */
+      _jsx("div", {
+        className: "space-y-3",
+        children:
+          filtered.length === 0
             ? _jsx("div", {
                 className: "rounded-xl bg-white p-12 text-center shadow-sm",
                 children: _jsxs("div", {
@@ -250,11 +289,8 @@ export function FeedbackPanel() {
                   ],
                 }),
               })
-            : filtered.map((fb, index) =>
-                _jsx(FeedbackCard, { feedback: fb, index }, fb.id)
-              ),
-        }),
-      ],
-    })
-  );
+            : filtered.map((fb, index) => _jsx(FeedbackCard, { feedback: fb, index }, fb.id)),
+      }),
+    ],
+  });
 }

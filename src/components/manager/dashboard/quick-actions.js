@@ -36,22 +36,23 @@ const actions = [
 ];
 
 export function QuickActions() {
-  return (
-    _jsxs(Card, {
-      className: "border-0 bg-white shadow-sm",
-      children: [
-        _jsx(CardHeader, {
-          className: "pb-3",
-          children: _jsx(CardTitle, {
-            className: "text-base font-semibold text-[#000000]",
-            children: "Quick Actions",
-          }),
+  return _jsxs(Card, {
+    className: "border-0 bg-white shadow-sm",
+    children: [
+      _jsx(CardHeader, {
+        className: "pb-3",
+        children: _jsx(CardTitle, {
+          className: "text-base font-semibold text-[#000000]",
+          children: "Quick Actions",
         }),
-        _jsx(CardContent, {
-          children: _jsx("div", {
-            className: "grid grid-cols-1 gap-3 sm:grid-cols-2",
-            children: actions.map((action, index) =>
-              _jsx(motion.div, {
+      }),
+      _jsx(CardContent, {
+        children: _jsx("div", {
+          className: "grid grid-cols-1 gap-3 sm:grid-cols-2",
+          children: actions.map((action, index) =>
+            _jsx(
+              motion.div,
+              {
                 initial: { opacity: 0, scale: 0.95 },
                 animate: { opacity: 1, scale: 1 },
                 transition: { duration: 0.3, delay: index * 0.08 },
@@ -90,11 +91,12 @@ export function QuickActions() {
                     ],
                   }),
                 }),
-              }, action.title)
+              },
+              action.title,
             ),
-          }),
+          ),
         }),
-      ],
-    })
-  );
+      }),
+    ],
+  });
 }

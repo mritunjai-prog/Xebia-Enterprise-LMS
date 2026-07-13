@@ -45,7 +45,7 @@ const stats = [
     icon: BrainCircuit,
     colorClass: "text-[#84117C]",
     bgClass: "bg-[#84117C]/10",
-  }
+  },
 ];
 
 export function StatsSection() {
@@ -54,16 +54,22 @@ export function StatsSection() {
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {stats.map((stat) => (
-            <div 
+            <div
               key={stat.id}
               className="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
             >
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${stat.bgClass} ${stat.colorClass}`}>
+              <div
+                className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${stat.bgClass} ${stat.colorClass}`}
+              >
                 <stat.icon className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">{stat.value}</h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1">{stat.label}</p>
+                <h4 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
+                  {stat.value}
+                </h4>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1">
+                  {stat.label}
+                </p>
                 <div className="flex items-center gap-1 text-[10px] text-accent-2 dark:text-accent-2 font-semibold">
                   <TrendingUp className="w-3 h-3" />
                   <span>{stat.trend} this month</span>

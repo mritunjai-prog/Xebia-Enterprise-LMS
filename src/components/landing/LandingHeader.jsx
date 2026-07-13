@@ -70,25 +70,34 @@ export function LandingHeader() {
       if (id === "home") {
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
       }
       setActiveSection(href);
     }
   };
 
   return (
-    <header 
+    <header
       className={clsx(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled 
-          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm py-3 border-b border-gray-200 dark:border-gray-800" 
-          : "bg-transparent py-5"
+        isScrolled
+          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm py-3 border-b border-gray-200 dark:border-gray-800"
+          : "bg-transparent py-5",
       )}
     >
       <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" onClick={() => window.scrollTo(0,0)} className="flex items-center gap-2" style={{ textDecoration: "none" }}>
-          <img src={isDark ? logoWhite : logoPurple} alt="Xebia LMS" className="h-12 md:h-14 object-contain transition-all" />
+        <Link
+          to="/"
+          onClick={() => window.scrollTo(0, 0)}
+          className="flex items-center gap-2"
+          style={{ textDecoration: "none" }}
+        >
+          <img
+            src={isDark ? logoWhite : logoPurple}
+            alt="Xebia LMS"
+            className="h-12 md:h-14 object-contain transition-all"
+          />
         </Link>
 
         {/* Desktop Nav */}
@@ -100,9 +109,9 @@ export function LandingHeader() {
               onClick={(e) => handleLinkClick(e, link.href)}
               className={clsx(
                 "text-sm font-bold transition-colors relative tracking-wide py-2",
-                activeSection === link.href 
-                  ? "text-[#6C1D5F] dark:text-[#FFACE8]" 
-                  : "text-gray-900 hover:text-[#6C1D5F] dark:text-gray-200 dark:hover:text-white"
+                activeSection === link.href
+                  ? "text-[#6C1D5F] dark:text-[#FFACE8]"
+                  : "text-gray-900 hover:text-[#6C1D5F] dark:text-gray-200 dark:hover:text-white",
               )}
             >
               {link.name}
@@ -115,18 +124,16 @@ export function LandingHeader() {
 
         {/* Actions */}
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={toggleTheme}
             className="p-2 text-gray-700 hover:text-[#6C1D5F] dark:text-gray-300 dark:hover:text-white transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
             aria-label="Toggle dark mode"
           >
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          
+
           <a href="#portals" onClick={(e) => handleLinkClick(e, "#portals")}>
-            <Button 
-              className="bg-[#6C1D5F] hover:bg-[#4A1E47] text-white rounded-md px-6 py-2 h-auto text-sm font-semibold flex items-center gap-2 transition-all shadow-md hover:shadow-lg"
-            >
+            <Button className="bg-[#6C1D5F] hover:bg-[#4A1E47] text-white rounded-md px-6 py-2 h-auto text-sm font-semibold flex items-center gap-2 transition-all shadow-md hover:shadow-lg">
               Get Started <ArrowRight className="w-4 h-4" />
             </Button>
           </a>

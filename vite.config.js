@@ -12,11 +12,19 @@ export default defineConfig({
     server: { entry: "server" },
   },
   nitro: {
-    preset: process.env.VERCEL ? "vercel" : "cloudflare"
+    preset: process.env.VERCEL ? "vercel" : "node-server"
   },
   vite: {
     optimizeDeps: {
       exclude: ["framer-motion", "@radix-ui/react-progress"]
+    },
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true
+        }
+      }
     }
   }
 });

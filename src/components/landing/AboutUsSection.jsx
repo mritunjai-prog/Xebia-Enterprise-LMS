@@ -18,12 +18,14 @@ export function AboutUsSection() {
             </span>
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto font-medium leading-relaxed">
-            Engineered for scale and designed for engagement, Xebia Enterprise LMS is a production-grade learning ecosystem. 
-            It seamlessly bridges the gap between organizational learning goals and continuous employee development.
+            Engineered for scale and designed for engagement, Xebia Enterprise LMS is a
+            production-grade learning ecosystem. It seamlessly bridges the gap between
+            organizational learning goals and continuous employee development.
           </p>
           <p className="text-base md:text-lg text-gray-400 max-w-3xl mx-auto mt-6 font-normal leading-relaxed">
-            Our platform supports the entire learning lifecycle—from AI-driven content generation and multi-tier curriculum 
-            management to immersive course playback, automated assessments, and a powerful predictive analytics suite.
+            Our platform supports the entire learning lifecycle—from AI-driven content generation
+            and multi-tier curriculum management to immersive course playback, automated
+            assessments, and a powerful predictive analytics suite.
           </p>
         </div>
 
@@ -36,10 +38,18 @@ export function AboutUsSection() {
               Admin Portal
             </h3>
             <ul className="space-y-4 text-sm md:text-base text-gray-300 font-medium">
-              <li className="flex items-start gap-3"><span className="text-[#01AC9F]">✦</span> AI-Powered Course Creation (Groq API)</li>
-              <li className="flex items-start gap-3"><span className="text-[#01AC9F]">✦</span> Advanced 4-Level Curriculum Builder</li>
-              <li className="flex items-start gap-3"><span className="text-[#01AC9F]">✦</span> Category & Content Management</li>
-              <li className="flex items-start gap-3"><span className="text-[#01AC9F]">✦</span> Profile Settings & Cloudinary Uploads</li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#01AC9F]">✦</span> AI-Powered Course Creation (Groq API)
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#01AC9F]">✦</span> Advanced 4-Level Curriculum Builder
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#01AC9F]">✦</span> Category & Content Management
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#01AC9F]">✦</span> Profile Settings & Cloudinary Uploads
+              </li>
             </ul>
           </div>
 
@@ -51,10 +61,18 @@ export function AboutUsSection() {
               Student Portal
             </h3>
             <ul className="space-y-4 text-sm md:text-base text-gray-300 font-medium">
-              <li className="flex items-start gap-3"><span className="text-[#FFACE8]">✦</span> Personalized Learning Dashboard</li>
-              <li className="flex items-start gap-3"><span className="text-[#FFACE8]">✦</span> Course Catalogue & Full Playback</li>
-              <li className="flex items-start gap-3"><span className="text-[#FFACE8]">✦</span> Interactive Assessments & Feedback</li>
-              <li className="flex items-start gap-3"><span className="text-[#FFACE8]">✦</span> Notifications Centre</li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#FFACE8]">✦</span> Personalized Learning Dashboard
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#FFACE8]">✦</span> Course Catalogue & Full Playback
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#FFACE8]">✦</span> Interactive Assessments & Feedback
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#FFACE8]">✦</span> Notifications Centre
+              </li>
             </ul>
           </div>
 
@@ -66,11 +84,21 @@ export function AboutUsSection() {
               Analytics Suite
             </h3>
             <ul className="space-y-4 text-sm md:text-base text-gray-300 font-medium">
-              <li className="flex items-start gap-3"><span className="text-[#FF6200]">✦</span> 15-Page Predictive Analytics Dashboard</li>
-              <li className="flex items-start gap-3"><span className="text-[#FF6200]">✦</span> Skill Gaps & AI Transformation Readiness</li>
-              <li className="flex items-start gap-3"><span className="text-[#FF6200]">✦</span> Coverage Maps & Learning Pillars</li>
-              <li className="flex items-start gap-3"><span className="text-[#FF6200]">✦</span> Flagship Programs & Project Investments</li>
-              <li className="flex items-start gap-3"><span className="text-[#FF6200]">✦</span> Apprentice Journey & Recommendations</li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#FF6200]">✦</span> 15-Page Predictive Analytics Dashboard
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#FF6200]">✦</span> Skill Gaps & AI Transformation Readiness
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#FF6200]">✦</span> Coverage Maps & Learning Pillars
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#FF6200]">✦</span> Flagship Programs & Project Investments
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[#FF6200]">✦</span> Apprentice Journey & Recommendations
+              </li>
             </ul>
           </div>
 
@@ -83,25 +111,24 @@ export function AboutUsSection() {
             </h3>
             <ul className="space-y-4 text-sm md:text-base text-gray-300 font-medium">
               <li className="flex items-start gap-3">
-                <span className="font-bold text-white min-w-[90px]">Frontend:</span> 
+                <span className="font-bold text-white min-w-[90px]">Frontend:</span>
                 React 19, Vite, Tailwind CSS, Zustand
               </li>
               <li className="flex items-start gap-3">
-                <span className="font-bold text-white min-w-[90px]">Backend:</span> 
+                <span className="font-bold text-white min-w-[90px]">Backend:</span>
                 Java 21, Spring Boot 3.3.6, Microservices
               </li>
               <li className="flex items-start gap-3">
-                <span className="font-bold text-white min-w-[90px]">Database:</span> 
+                <span className="font-bold text-white min-w-[90px]">Database:</span>
                 PostgreSQL 15, Flyway, Redis Caching
               </li>
               <li className="flex items-start gap-3">
-                <span className="font-bold text-white min-w-[90px]">AI Cloud:</span> 
+                <span className="font-bold text-white min-w-[90px]">AI Cloud:</span>
                 Groq LLaMA 3, Cloudinary Edge Network
               </li>
             </ul>
           </div>
         </div>
-
       </div>
     </section>
   );

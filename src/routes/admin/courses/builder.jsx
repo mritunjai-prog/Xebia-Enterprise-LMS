@@ -4,7 +4,7 @@ import { CourseService } from "@/services/api";
 
 export const Route = createFileRoute("/admin/courses/builder")({
   validateSearch: (search) => ({
-    courseId: search.courseId || '',
+    courseId: search.courseId || "",
   }),
   loaderDeps: ({ search: { courseId } }) => ({ courseId }),
   loader: async ({ deps: { courseId } }) => {
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/admin/courses/builder")({
         const hierarchy = await CourseService.getCourseHierarchy(courseId);
         if (hierarchy) return { course: hierarchy };
       }
-      
+
       let courses = await CourseService.getCourses();
       if (!courses || courses.length === 0) {
         // Create a dummy course so the builder has a valid foreign key for modules
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/admin/courses/builder")({
           courseCode: "DRAFT-101",
           level: "Beginner",
           language: "English",
-          isActive: true
+          isActive: true,
         });
         const hierarchy = await CourseService.getCourseHierarchy(dummyCourse.id);
         return { course: hierarchy };
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/admin/courses/builder")({
 
 function BuilderWrapper() {
   const { course } = Route.useLoaderData();
-  
+
   if (!course) {
     return (
       <div className="p-8 text-center text-muted-foreground">

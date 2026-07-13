@@ -1,16 +1,16 @@
-const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || "";
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 export const callGroqApi = async (messages, responseFormat = "text") => {
   try {
     const response = await fetch(GROQ_API_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${GROQ_API_KEY}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: "llama-3.3-70b-versatile",
         messages: messages,
         temperature: 0.7,
         response_format: responseFormat === "json" ? { type: "json_object" } : { type: "text" },
@@ -31,27 +31,28 @@ export const callGroqApi = async (messages, responseFormat = "text") => {
 
 export const generateAssessmentDescription = async (title, subject, difficulty) => {
   const prompt = `Write a professional, concise description for an assessment. 
-Title: ${title || 'Untitled Assessment'}
-Subject: ${subject || 'General'}
-Difficulty: ${difficulty || 'Medium'}
+Title: ${title || "Untitled Assessment"}
+Subject: ${subject || "General"}
+Difficulty: ${difficulty || "Medium"}
 
 The description should be 2-3 sentences long and suitable for an enterprise Learning Management System.`;
 
   try {
     return await callGroqApi([
-      { role: 'system', content: 'You are an expert assessment designer for an enterprise LMS.' },
-      { role: 'user', content: prompt }
+      { role: "system", content: "You are an expert assessment designer for an enterprise LMS." },
+      { role: "user", content: prompt },
     ]);
   } catch (error) {
     console.warn("API Error, falling back to dummy description.");
-    return `This is a comprehensive assessment covering key concepts in ${subject || 'this topic'}. Designed for ${difficulty || 'all'} proficiency levels, it evaluates your understanding and application of core principles effectively.`;
+    return `This is a comprehensive assessment covering key concepts in ${subject || "this topic"}. Designed for ${difficulty || "all"} proficiency levels, it evaluates your understanding and application of core principles effectively.`;
   }
 };
 
 export const generateQuestions = async (topic, count, taxonomy, type) => {
-  const typeInstruction = type === 'Mixed Types (All)' 
-    ? 'The questions MUST be of randomly selected types from: "mcq", "true_false", "multiple_select", "short_answer", "paragraph", "file_upload", "coding". Ensure a good mix of different types.'
-    : `The questions MUST be of type "${type}".`;
+  const typeInstruction =
+    type === "Mixed Types (All)"
+      ? 'The questions MUST be of randomly selected types from: "mcq", "true_false", "multiple_select", "short_answer", "paragraph", "file_upload", "coding". Ensure a good mix of different types.'
+      : `The questions MUST be of type "${type}".`;
 
   const prompt = `Generate ${count} questions about "${topic}" at the "${taxonomy}" level of Bloom's Taxonomy.
 ${typeInstruction}
@@ -69,35 +70,48 @@ If type is "coding": { "id": "q_timestamp_index", "type": "coding", "question": 
 Output MUST be strictly valid JSON.`;
 
   try {
-    const responseContent = await callGroqApi([
-      { role: 'system', content: 'You are an expert curriculum designer. You only respond with strictly valid JSON.' },
-      { role: 'user', content: prompt }
-    ], "json");
+    const responseContent = await callGroqApi(
+      [
+        {
+          role: "system",
+          content:
+            "You are an expert curriculum designer. You only respond with strictly valid JSON.",
+        },
+        { role: "user", content: prompt },
+      ],
+      "json",
+    );
     const parsed = JSON.parse(responseContent);
     return parsed.questions || [];
   } catch (err) {
     console.warn("API Error, falling back to dummy questions.");
     const dummyQuestions = Array.from({ length: count }).map((_, i) => ({
       id: `q_dummy_${Date.now()}_${i}`,
-      type: type === 'Mixed Types (All)' ? 'mcq' : type,
+      type: type === "Mixed Types (All)" ? "mcq" : type,
       question: `Mock AI Question ${i + 1} about ${topic} (${taxonomy})`,
-      options: ['Option A', 'Option B', 'Option C', 'Option D'],
-      correctAnswer: 'Option B',
-      marks: 2
+      options: ["Option A", "Option B", "Option C", "Option D"],
+      correctAnswer: "Option B",
+      marks: 2,
     }));
     return dummyQuestions;
   }
 };
 
-export const evaluateSubmission = async (questionText, answerText, maxMarks, questionType, correctAnswer) => {
-  if (!answerText || answerText.trim() === '') {
-    return { suggestedMarks: 0, remarks: 'No answer provided.' };
+export const evaluateSubmission = async (
+  questionText,
+  answerText,
+  maxMarks,
+  questionType,
+  correctAnswer,
+) => {
+  if (!answerText || answerText.trim() === "") {
+    return { suggestedMarks: 0, remarks: "No answer provided." };
   }
 
   const prompt = `You are evaluating a student's answer for an assessment.
 Question Type: ${questionType}
 Question: ${questionText}
-Correct Answer (Rubric): ${correctAnswer || 'Not provided'}
+Correct Answer (Rubric): ${correctAnswer || "Not provided"}
 Student's Answer: ${answerText}
 Maximum Marks: ${maxMarks}
 
@@ -107,25 +121,41 @@ Return ONLY a valid JSON object with exactly these two keys:
 - "remarks" (string)`;
 
   try {
-    const responseContent = await callGroqApi([
-      { role: 'system', content: 'You are a strict but fair AI grader for an enterprise LMS. You only respond with strictly valid JSON.' },
-      { role: 'user', content: prompt }
-    ], "json");
+    const responseContent = await callGroqApi(
+      [
+        {
+          role: "system",
+          content:
+            "You are a strict but fair AI grader for an enterprise LMS. You only respond with strictly valid JSON.",
+        },
+        { role: "user", content: prompt },
+      ],
+      "json",
+    );
     const parsed = JSON.parse(responseContent);
     return {
-      suggestedMarks: typeof parsed.suggestedMarks === 'number' ? parsed.suggestedMarks : Math.round(maxMarks * 0.5),
-      remarks: parsed.remarks || 'Evaluated by AI.'
+      suggestedMarks:
+        typeof parsed.suggestedMarks === "number"
+          ? parsed.suggestedMarks
+          : Math.round(maxMarks * 0.5),
+      remarks: parsed.remarks || "Evaluated by AI.",
     };
   } catch (err) {
     console.warn("API Error, falling back to dummy evaluation.");
-    return { 
-      suggestedMarks: Math.round(maxMarks * 0.8), 
-      remarks: 'Good effort, but could be improved (Mock AI Evaluation).' 
+    return {
+      suggestedMarks: Math.round(maxMarks * 0.8),
+      remarks: "Good effort, but could be improved (Mock AI Evaluation).",
     };
   }
 };
 
-export const evaluateCodeExecution = async (code, language, problemStatement, testCases, isCustomInput = false) => {
+export const evaluateCodeExecution = async (
+  code,
+  language,
+  problemStatement,
+  testCases,
+  isCustomInput = false,
+) => {
   const prompt = `You are a strict code execution engine simulator (like HackerRank).
   
 Problem: ${problemStatement}
@@ -160,10 +190,16 @@ Return ONLY a valid JSON object with the following structure:
 DO NOT wrap the JSON in markdown blocks. Return raw JSON.`;
 
   try {
-    const responseContent = await callGroqApi([
-      { role: 'system', content: 'You are a code execution engine that outputs strictly valid JSON.' },
-      { role: 'user', content: prompt }
-    ], "json");
+    const responseContent = await callGroqApi(
+      [
+        {
+          role: "system",
+          content: "You are a code execution engine that outputs strictly valid JSON.",
+        },
+        { role: "user", content: prompt },
+      ],
+      "json",
+    );
     return JSON.parse(responseContent);
   } catch (error) {
     console.error("AI Execution error:", error);
@@ -171,7 +207,13 @@ DO NOT wrap the JSON in markdown blocks. Return raw JSON.`;
   }
 };
 
-export const evaluateFinalSubmission = async (code, language, problemStatement, testCases, maxMarks) => {
+export const evaluateFinalSubmission = async (
+  code,
+  language,
+  problemStatement,
+  testCases,
+  maxMarks,
+) => {
   const prompt = `You are an automated grading system.
   
 Problem: ${problemStatement}
@@ -207,10 +249,16 @@ Return ONLY a valid JSON object with the following structure:
 `;
 
   try {
-    const responseContent = await callGroqApi([
-      { role: 'system', content: 'You are a strict grading engine that outputs strictly valid JSON.' },
-      { role: 'user', content: prompt }
-    ], "json");
+    const responseContent = await callGroqApi(
+      [
+        {
+          role: "system",
+          content: "You are a strict grading engine that outputs strictly valid JSON.",
+        },
+        { role: "user", content: prompt },
+      ],
+      "json",
+    );
     return JSON.parse(responseContent);
   } catch (error) {
     console.error("AI Evaluation error:", error);
@@ -236,10 +284,13 @@ DO NOT give the full correct code solution. Your goal is to guide the student to
 Return the response as plain text/markdown.`;
 
   try {
-    return await callGroqApi([
-      { role: 'system', content: 'You are a helpful coding tutor.' },
-      { role: 'user', content: prompt }
-    ], "text");
+    return await callGroqApi(
+      [
+        { role: "system", content: "You are a helpful coding tutor." },
+        { role: "user", content: prompt },
+      ],
+      "text",
+    );
   } catch (error) {
     console.error("AI Debug error:", error);
     return "The AI Tutor is currently unavailable. Please check your syntax and logic carefully.";
@@ -273,16 +324,22 @@ Example Output Format:
 `;
 
   try {
-    const responseContent = await callGroqApi([
-      { role: 'system', content: 'You are an intelligent data parser that outputs strictly valid JSON.' },
-      { role: 'user', content: prompt }
-    ], "json");
+    const responseContent = await callGroqApi(
+      [
+        {
+          role: "system",
+          content: "You are an intelligent data parser that outputs strictly valid JSON.",
+        },
+        { role: "user", content: prompt },
+      ],
+      "json",
+    );
     const parsed = JSON.parse(responseContent);
-    
+
     // Inject a unique ID for each question
     const questions = (parsed.questions || []).map((q, idx) => ({
       ...q,
-      id: `q_ai_excel_${Date.now()}_${idx}`
+      id: `q_ai_excel_${Date.now()}_${idx}`,
     }));
     return questions;
   } catch (err) {

@@ -27,4 +27,9 @@ public class SubmissionController {
     public Submission createSubmission(@RequestBody Submission submission) {
         return submissionService.createSubmission(submission);
     }
+    
+    @PutMapping("/{id}")
+    public Submission updateSubmission(@PathVariable String id, @RequestBody Submission submission) {
+        return submissionService.updateSubmission(id, submission);
+    }
 }

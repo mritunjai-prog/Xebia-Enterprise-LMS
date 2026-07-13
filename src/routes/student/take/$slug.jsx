@@ -8,4 +8,3 @@ export const Route = createFileRoute("/student/take/$slug")({
 function TakeQuizWrapper() {
   return <TakeQuiz />;
 }
-

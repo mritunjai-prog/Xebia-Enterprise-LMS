@@ -4,4 +4,3 @@ import { BatchManagement } from "@/pages/BatchManagement";
 export const Route = createFileRoute("/trainer/batches/")({
   component: BatchManagement,
 });
-

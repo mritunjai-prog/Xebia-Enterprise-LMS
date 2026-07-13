@@ -137,58 +137,62 @@ export function OrganiserSidebar({ isCollapsed, setIsCollapsed, isMobile }) {
 
         {/* Sidebar Navigation Items */}
         <div className="flex-1 py-4 overflow-y-hidden px-3 space-y-1.5">
-          {sidebarItems.filter(item => !item.isLogout).map((item) => {
-            const isActive =
-              item.name === "Profile"
-                ? currentPath === "/organiser/settings" &&
-                  (location.search?.tab === "profile" || !location.search?.tab)
-                : item.name === "Settings"
-                ? currentPath === "/organiser/settings" && location.search?.tab === "settings"
-                : currentPath === item.href ||
-                  (item.href !== "/organiser" && currentPath.startsWith(item.href));
+          {sidebarItems
+            .filter((item) => !item.isLogout)
+            .map((item) => {
+              const isActive =
+                item.name === "Profile"
+                  ? currentPath === "/organiser/settings" &&
+                    (location.search?.tab === "profile" || !location.search?.tab)
+                  : item.name === "Settings"
+                    ? currentPath === "/organiser/settings" && location.search?.tab === "settings"
+                    : currentPath === item.href ||
+                      (item.href !== "/organiser" && currentPath.startsWith(item.href));
 
-            return (
-              <div key={item.name}>
-                <Tooltip delayDuration={150}>
-                  <TooltipTrigger asChild>
-                    <Link
-                      to={item.href}
-                      search={item.search}
-                      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 cursor-pointer ${
-                        isActive
-                          ? "bg-primary/10 text-primary font-bold shadow-sm border-l-2 border-primary"
-                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/40"
-                      }`}
-                    >
-                      <item.icon
-                        className={`h-4.5 w-4.5 shrink-0 ${
-                          isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+              return (
+                <div key={item.name}>
+                  <Tooltip delayDuration={150}>
+                    <TooltipTrigger asChild>
+                      <Link
+                        to={item.href}
+                        search={item.search}
+                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 cursor-pointer ${
+                          isActive
+                            ? "bg-primary/10 text-primary font-bold shadow-sm border-l-2 border-primary"
+                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/40"
                         }`}
-                      />
-                      {!isCollapsed && (
-                        <motion.span
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -10 }}
-                          className="text-xs font-semibold truncate"
-                        >
-                          {item.name}
-                        </motion.span>
-                      )}
-                    </Link>
-                  </TooltipTrigger>
-                  {isCollapsed && (
-                    <TooltipContent
-                      side="right"
-                      className="bg-card/95 backdrop-blur text-foreground border border-border/40 shadow-elegant font-bold text-xs rounded-lg p-2.5"
-                    >
-                      {item.name}
-                    </TooltipContent>
-                  )}
-                </Tooltip>
-              </div>
-            );
-          })}
+                      >
+                        <item.icon
+                          className={`h-4.5 w-4.5 shrink-0 ${
+                            isActive
+                              ? "text-primary"
+                              : "text-muted-foreground group-hover:text-foreground"
+                          }`}
+                        />
+                        {!isCollapsed && (
+                          <motion.span
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            className="text-xs font-semibold truncate"
+                          >
+                            {item.name}
+                          </motion.span>
+                        )}
+                      </Link>
+                    </TooltipTrigger>
+                    {isCollapsed && (
+                      <TooltipContent
+                        side="right"
+                        className="bg-card/95 backdrop-blur text-foreground border border-border/40 shadow-elegant font-bold text-xs rounded-lg p-2.5"
+                      >
+                        {item.name}
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </div>
+              );
+            })}
 
           {/* Divider + Logout */}
           <div className="pt-2 pb-1">

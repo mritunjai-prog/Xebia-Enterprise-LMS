@@ -7,7 +7,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
-  Navigate
+  Navigate,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 import appCss from "../styles.css?url";
@@ -64,8 +64,9 @@ function ErrorComponent({ error, reset }) {
           children: "Something went wrong on our end. You can try refreshing or head back home.",
         }),
         _jsx("div", {
-          className: "mt-4 p-4 bg-red-100 text-red-800 rounded text-left overflow-auto max-h-40 text-xs",
-          children: error?.message || String(error)
+          className:
+            "mt-4 p-4 bg-red-100 text-red-800 rounded text-left overflow-auto max-h-40 text-xs",
+          children: error?.message || String(error),
         }),
         _jsxs("div", {
           className: "mt-6 flex flex-wrap justify-center gap-2",

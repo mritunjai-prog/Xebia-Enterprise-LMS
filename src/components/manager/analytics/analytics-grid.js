@@ -7,25 +7,50 @@ import { CompletionChart } from "./completion-chart";
 import { PerformanceChart } from "./performance-chart";
 
 const summaryStats = [
-  { label: "Total Enrollments", value: "9,360", icon: Users, color: "text-[#6C1D5F]", bg: "bg-[#6C1D5F]/8" },
-  { label: "Avg. Completion Time", value: "4.2 wks", icon: Clock, color: "text-[#00A99D]", bg: "bg-[#00A99D]/8" },
-  { label: "Avg. Score", value: "84.8%", icon: Award, color: "text-[#FF6A00]", bg: "bg-[#FF6A00]/8" },
-  { label: "Growth Rate", value: "+18.3%", icon: TrendingUp, color: "text-[#8A177D]", bg: "bg-[#8A177D]/8" },
+  {
+    label: "Total Enrollments",
+    value: "9,360",
+    icon: Users,
+    color: "text-[#6C1D5F]",
+    bg: "bg-[#6C1D5F]/8",
+  },
+  {
+    label: "Avg. Completion Time",
+    value: "4.2 wks",
+    icon: Clock,
+    color: "text-[#00A99D]",
+    bg: "bg-[#00A99D]/8",
+  },
+  {
+    label: "Avg. Score",
+    value: "84.8%",
+    icon: Award,
+    color: "text-[#FF6A00]",
+    bg: "bg-[#FF6A00]/8",
+  },
+  {
+    label: "Growth Rate",
+    value: "+18.3%",
+    icon: TrendingUp,
+    color: "text-[#8A177D]",
+    bg: "bg-[#8A177D]/8",
+  },
 ];
 
 export function AnalyticsGrid() {
-  return (
-    _jsxs(motion.div, {
-      initial: { opacity: 0 },
-      animate: { opacity: 1 },
-      transition: { duration: 0.4 },
-      className: "space-y-6",
-      children: [
-        /* Summary Cards */
-        _jsx("div", {
-          className: "grid grid-cols-2 gap-4 lg:grid-cols-4",
-          children: summaryStats.map((stat, index) =>
-            _jsx(motion.div, {
+  return _jsxs(motion.div, {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: { duration: 0.4 },
+    className: "space-y-6",
+    children: [
+      /* Summary Cards */
+      _jsx("div", {
+        className: "grid grid-cols-2 gap-4 lg:grid-cols-4",
+        children: summaryStats.map((stat, index) =>
+          _jsx(
+            motion.div,
+            {
               initial: { opacity: 0, y: 15 },
               animate: { opacity: 1, y: 0 },
               transition: { duration: 0.3, delay: index * 0.08 },
@@ -53,21 +78,19 @@ export function AnalyticsGrid() {
                   ],
                 }),
               }),
-            }, stat.label)
+            },
+            stat.label,
           ),
-        }),
+        ),
+      }),
 
-        /* Charts Grid */
-        _jsx(EnrollmentChart, {}),
+      /* Charts Grid */
+      _jsx(EnrollmentChart, {}),
 
-        _jsxs("div", {
-          className: "grid grid-cols-1 gap-6 lg:grid-cols-2",
-          children: [
-            _jsx(CompletionChart, {}),
-            _jsx(PerformanceChart, {}),
-          ],
-        }),
-      ],
-    })
-  );
+      _jsxs("div", {
+        className: "grid grid-cols-1 gap-6 lg:grid-cols-2",
+        children: [_jsx(CompletionChart, {}), _jsx(PerformanceChart, {})],
+      }),
+    ],
+  });
 }

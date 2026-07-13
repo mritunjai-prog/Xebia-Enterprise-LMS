@@ -8,4 +8,3 @@ export const Route = createFileRoute("/student/results/$slug/$id")({
 function ResultsWrapper() {
   return <Results />;
 }
-

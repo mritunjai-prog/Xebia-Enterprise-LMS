@@ -4,4 +4,3 @@ import { Settings } from "@/pages/Settings";
 export const Route = createFileRoute("/trainer/settings")({
   component: Settings,
 });
-

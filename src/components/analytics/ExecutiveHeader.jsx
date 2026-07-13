@@ -23,7 +23,7 @@ export function ExecutiveHeader() {
 
   const handleFullscreen = () => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(err => {
+      document.documentElement.requestFullscreen().catch((err) => {
         console.log(`Error attempting to enable fullscreen: ${err.message}`);
       });
     } else {
@@ -38,13 +38,14 @@ export function ExecutiveHeader() {
           Executive Overview
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 flex items-center gap-2">
-          <Calendar className="w-4 h-4" /> Reporting Period: April 1 - June 30, 2026 • Last updated: {lastUpdated}
+          <Calendar className="w-4 h-4" /> Reporting Period: April 1 - June 30, 2026 • Last updated:{" "}
+          {lastUpdated}
         </p>
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
-        <Button 
-          size="sm" 
+        <Button
+          size="sm"
           className="bg-[#6C1D5F] hover:bg-[#4A1E47] text-white shadow-sm transition-all"
         >
           <Download className="w-4 h-4 mr-2" />

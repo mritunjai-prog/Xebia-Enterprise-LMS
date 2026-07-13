@@ -1,62 +1,77 @@
-import React, { useState } from 'react';
-import { useLMS } from '../context/LMSContext';
-import { toast } from '../components/Toast';
-import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Search, CheckCircle, Clock, FileText, User, ChevronRight, 
-  Bot, AlertCircle, Award, MessageSquare, Send, CheckSquare, 
-  Layers, ChevronDown, Loader2, Download
-} from 'lucide-react';
-import * as XLSX from 'xlsx';
-import { evaluateSubmission as evaluateSubmissionAI } from '../utils/aiService';
+import React, { useState } from "react";
+import { useLMS } from "../context/LMSContext";
+import { toast } from "../components/Toast";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Search,
+  CheckCircle,
+  Clock,
+  FileText,
+  User,
+  ChevronRight,
+  Bot,
+  AlertCircle,
+  Award,
+  MessageSquare,
+  Send,
+  CheckSquare,
+  Layers,
+  ChevronDown,
+  Loader2,
+  Download,
+} from "lucide-react";
+import * as XLSX from "xlsx";
+import { evaluateSubmission as evaluateSubmissionAI } from "../utils/aiService";
 
 export const Evaluation = () => {
   const { submissions, students, assessments, batches, evaluateSubmission } = useLMS();
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterGraded, setFilterGraded] = useState('pending');
-  const [selectedBatchId, setSelectedBatchId] = useState('all');
-  const [selectedAssId, setSelectedAssId] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterGraded, setFilterGraded] = useState("pending");
+  const [selectedBatchId, setSelectedBatchId] = useState("all");
+  const [selectedAssId, setSelectedAssId] = useState("all");
   const [selectedSubId, setSelectedSubId] = useState(null);
   const [isEvaluatingAi, setIsEvaluatingAi] = useState(false);
 
   // Form states for the selected submission
   const [questionMarks, setQuestionMarks] = useState({});
   const [questionRemarks, setQuestionRemarks] = useState({});
-  const [overallRemarks, setOverallRemarks] = useState('');
+  const [overallRemarks, setOverallRemarks] = useState("");
 
   // Derived data
-  const activeSubmissions = submissions.filter((s) => s.status === 'submitted');
+  const activeSubmissions = submissions.filter((s) => s.status === "submitted");
 
   const filteredSubs = activeSubmissions.filter((s) => {
     const student = students.find((stud) => stud.id === s.studentId);
     const assessment = assessments.find((a) => a.id === s.assessmentId);
 
-    const matchesSearch = 
-      (student?.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (assessment?.title || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      (student?.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (assessment?.title || "").toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesBatch = selectedBatchId === 'all' || (student && student.batches && student.batches.includes(selectedBatchId));
-    const matchesAssessment = selectedAssId === 'all' || s.assessmentId === selectedAssId;
+    const matchesBatch =
+      selectedBatchId === "all" ||
+      (student && student.batches && student.batches.includes(selectedBatchId));
+    const matchesAssessment = selectedAssId === "all" || s.assessmentId === selectedAssId;
 
-    const matchesGraded = 
-      filterGraded === 'all' ||
-      (filterGraded === 'pending' && !s.isEvaluated) ||
-      (filterGraded === 'graded' && s.isEvaluated);
+    const matchesGraded =
+      filterGraded === "all" ||
+      (filterGraded === "pending" && !s.isEvaluated) ||
+      (filterGraded === "graded" && s.isEvaluated);
 
     return matchesSearch && matchesBatch && matchesAssessment && matchesGraded;
   });
 
   const handleSelectSubmission = (sub) => {
     setSelectedSubId(sub.id);
-    setOverallRemarks(sub.remarks || '');
+    setOverallRemarks(sub.remarks || "");
 
     // Prep state
     const marks = {};
     const remarks = {};
     sub.answers.forEach((ans) => {
       marks[ans.questionId] = ans.marksAwarded || 0;
-      remarks[ans.questionId] = ans.remarks || '';
+      remarks[ans.questionId] = ans.remarks || "";
     });
     setQuestionMarks(marks);
     setQuestionRemarks(remarks);
@@ -74,39 +89,45 @@ export const Evaluation = () => {
   const handleSubmitEvaluation = () => {
     if (!selectedSubId) return;
     evaluateSubmission(selectedSubId, questionMarks, questionRemarks, overallRemarks.trim());
-    toast.add('Evaluation Published! Student notified instantly.', 'success');
+    toast.add("Evaluation Published! Student notified instantly.", "success");
     setSelectedSubId(null);
   };
 
   const handleAutoEvaluate = async () => {
     if (!currentSub || !currentAssessment) return;
     setIsEvaluatingAi(true);
-    toast.add('AI is analyzing the submission...', 'info');
+    toast.add("AI is analyzing the submission...", "info");
 
     const newMarks = { ...questionMarks };
     const newRemarks = { ...questionRemarks };
-    
+
     try {
       for (const q of currentAssessment.questions) {
-        const answerObj = currentSub.answers.find(a => a.questionId === q.id);
-        const answerText = answerObj ? answerObj.answer : '';
+        const answerObj = currentSub.answers.find((a) => a.questionId === q.id);
+        const answerText = answerObj ? answerObj.answer : "";
         const formattedAnswerText = getAnswerString(q, answerText);
-        
+
         let formattedCorrectAnswer = q.correctAnswer;
         if (Array.isArray(q.correctAnswer)) {
-          formattedCorrectAnswer = q.correctAnswer.join(', ');
+          formattedCorrectAnswer = q.correctAnswer.join(", ");
         }
-        
-        const aiResult = await evaluateSubmissionAI(q.text, formattedAnswerText, q.marks, currentAssessment.type, formattedCorrectAnswer);
-        
+
+        const aiResult = await evaluateSubmissionAI(
+          q.text,
+          formattedAnswerText,
+          q.marks,
+          currentAssessment.type,
+          formattedCorrectAnswer,
+        );
+
         newMarks[q.id] = aiResult.suggestedMarks;
         newRemarks[q.id] = `[AI Auto-Scored]: ${aiResult.remarks}`;
       }
       setQuestionMarks(newMarks);
       setQuestionRemarks(newRemarks);
-      toast.add('Auto-evaluation complete! Review and publish.', 'success');
+      toast.add("Auto-evaluation complete! Review and publish.", "success");
     } catch (err) {
-      toast.add('Auto-evaluation failed. Check API key.', 'error');
+      toast.add("Auto-evaluation failed. Check API key.", "error");
     } finally {
       setIsEvaluatingAi(false);
     }
@@ -114,83 +135,98 @@ export const Evaluation = () => {
 
   const currentSub = submissions.find((s) => s.id === selectedSubId);
   const currentStudent = currentSub ? students.find((s) => s.id === currentSub.studentId) : null;
-  const currentAssessment = currentSub ? assessments.find((a) => a.id === currentSub.assessmentId) : null;
+  const currentAssessment = currentSub
+    ? assessments.find((a) => a.id === currentSub.assessmentId)
+    : null;
 
   const formatAnswerText = (q, answerVal) => {
-    if (answerVal === undefined || answerVal === null || answerVal === '') return <span className="italic text-neutral-400">No answer provided</span>;
-    if (typeof answerVal === 'boolean') return answerVal ? 'True' : 'False';
-    if (typeof answerVal === 'object' && !Array.isArray(answerVal)) return answerVal.name || 'File Uploaded';
-    
-    if (q.type === 'mcq' || q.type === 'true_false') {
+    if (answerVal === undefined || answerVal === null || answerVal === "")
+      return <span className="italic text-neutral-400">No answer provided</span>;
+    if (typeof answerVal === "boolean") return answerVal ? "True" : "False";
+    if (typeof answerVal === "object" && !Array.isArray(answerVal))
+      return answerVal.name || "File Uploaded";
+
+    if (q.type === "mcq" || q.type === "true_false") {
       const idx = Number(answerVal);
       if (!isNaN(idx) && q.options && q.options[idx]) return q.options[idx];
       return answerVal;
     }
-    
-    if (q.type === 'multiple_select' || q.type === 'multi_select') {
+
+    if (q.type === "multiple_select" || q.type === "multi_select") {
       if (Array.isArray(answerVal)) {
-        return answerVal.map(idx => q.options && q.options[Number(idx)] ? q.options[Number(idx)] : idx).join(', ');
+        return answerVal
+          .map((idx) => (q.options && q.options[Number(idx)] ? q.options[Number(idx)] : idx))
+          .join(", ");
       }
       return answerVal;
     }
-    
+
     return answerVal;
   };
 
   const getAnswerString = (q, answerVal) => {
-    if (answerVal === undefined || answerVal === null || answerVal === '') return 'No answer provided';
-    if (typeof answerVal === 'boolean') return answerVal ? 'True' : 'False';
-    if (typeof answerVal === 'object' && !Array.isArray(answerVal)) return answerVal.name || 'File Uploaded';
-    
-    if (q.type === 'mcq' || q.type === 'true_false') {
+    if (answerVal === undefined || answerVal === null || answerVal === "")
+      return "No answer provided";
+    if (typeof answerVal === "boolean") return answerVal ? "True" : "False";
+    if (typeof answerVal === "object" && !Array.isArray(answerVal))
+      return answerVal.name || "File Uploaded";
+
+    if (q.type === "mcq" || q.type === "true_false") {
       const idx = Number(answerVal);
       if (!isNaN(idx) && q.options && q.options[idx]) return q.options[idx];
       return String(answerVal);
     }
-    
-    if (q.type === 'multiple_select' || q.type === 'multi_select') {
+
+    if (q.type === "multiple_select" || q.type === "multi_select") {
       if (Array.isArray(answerVal)) {
-        return answerVal.map(idx => q.options && q.options[Number(idx)] ? q.options[Number(idx)] : idx).join(', ');
+        return answerVal
+          .map((idx) => (q.options && q.options[Number(idx)] ? q.options[Number(idx)] : idx))
+          .join(", ");
       }
       return String(answerVal);
     }
-    
+
     return String(answerVal);
   };
 
   const handleExportAssessmentResults = () => {
-    if (selectedAssId === 'all') {
-      toast.add('Please select a specific assessment to export bulk results.', 'warning');
+    if (selectedAssId === "all") {
+      toast.add("Please select a specific assessment to export bulk results.", "warning");
       return;
     }
 
-    const currentAssessment = assessments.find(a => a.id === selectedAssId);
+    const currentAssessment = assessments.find((a) => a.id === selectedAssId);
     if (!currentAssessment) return;
 
-    const subsToExport = filteredSubs.filter(s => s.assessmentId === selectedAssId);
+    const subsToExport = filteredSubs.filter((s) => s.assessmentId === selectedAssId);
 
     if (subsToExport.length === 0) {
-      toast.add('No submissions found for this assessment in the current filter.', 'warning');
+      toast.add("No submissions found for this assessment in the current filter.", "warning");
       return;
     }
 
-    const rowData = subsToExport.map(sub => {
-      const student = students.find(s => s.id === sub.studentId);
+    const rowData = subsToExport.map((sub) => {
+      const student = students.find((s) => s.id === sub.studentId);
       const row = {
-        "Student Name": student?.name || 'Unknown',
-        "Batch ID": student?.batches?.join(', ') || 'N/A',
-        "Email ID": student?.email || 'N/A',
-        "Score": sub.score || 0,
-        "Percentage": sub.percentage || 0,
-        "Status": sub.isEvaluated ? 'Evaluated' : 'Pending',
-        "Submitted At": sub.submittedAt ? new Date(sub.submittedAt).toLocaleString() : 'N/A'
+        "Student Name": student?.name || "Unknown",
+        "Batch ID": student?.batches?.join(", ") || "N/A",
+        "Email ID": student?.email || "N/A",
+        Score: sub.score || 0,
+        Percentage: sub.percentage || 0,
+        Status: sub.isEvaluated ? "Evaluated" : "Pending",
+        "Submitted At": sub.submittedAt ? new Date(sub.submittedAt).toLocaleString() : "N/A",
       };
 
       currentAssessment.questions.forEach((q, idx) => {
-        const answerObj = sub.answers.find(a => a.questionId === q.id);
+        const answerObj = sub.answers.find((a) => a.questionId === q.id);
         let answerText = "No answer provided";
-        if (answerObj && answerObj.answer !== undefined && answerObj.answer !== null && answerObj.answer !== '') {
-            answerText = getAnswerString(q, answerObj.answer);
+        if (
+          answerObj &&
+          answerObj.answer !== undefined &&
+          answerObj.answer !== null &&
+          answerObj.answer !== ""
+        ) {
+          answerText = getAnswerString(q, answerObj.answer);
         }
         row[`Q${idx + 1}`] = answerText;
         row[`Q${idx + 1} Marks`] = answerObj?.marksAwarded || 0;
@@ -202,7 +238,7 @@ export const Evaluation = () => {
     const worksheet = XLSX.utils.json_to_sheet(rowData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Assessment Results");
-    XLSX.writeFile(workbook, `${currentAssessment.title.replace(/\s+/g, '_')}_Bulk_Results.xlsx`);
+    XLSX.writeFile(workbook, `${currentAssessment.title.replace(/\s+/g, "_")}_Bulk_Results.xlsx`);
   };
 
   const handleExportExcel = () => {
@@ -211,44 +247,54 @@ export const Evaluation = () => {
     const rowData = [
       {
         "Student Name": currentStudent.name,
-        "Batch ID": currentStudent.batches?.join(', ') || 'N/A',
+        "Batch ID": currentStudent.batches?.join(", ") || "N/A",
         "Student ID": currentStudent.id,
         "Email ID": currentStudent.email,
         "Assessment Score": `${currentSub.score || 0} / ${currentAssessment.marks}`,
         "Assessment Title": currentAssessment.title,
-        "Submitted At": currentSub.submittedAt ? new Date(currentSub.submittedAt).toLocaleString() : 'N/A'
-      }
+        "Submitted At": currentSub.submittedAt
+          ? new Date(currentSub.submittedAt).toLocaleString()
+          : "N/A",
+      },
     ];
 
     currentAssessment.questions.forEach((q, idx) => {
-      const answerObj = currentSub.answers.find(a => a.questionId === q.id);
+      const answerObj = currentSub.answers.find((a) => a.questionId === q.id);
       let answerText = "No answer provided";
-      if (answerObj && answerObj.answer !== undefined && answerObj.answer !== null && answerObj.answer !== '') {
-          answerText = getAnswerString(q, answerObj.answer);
+      if (
+        answerObj &&
+        answerObj.answer !== undefined &&
+        answerObj.answer !== null &&
+        answerObj.answer !== ""
+      ) {
+        answerText = getAnswerString(q, answerObj.answer);
       }
-      rowData[0][`Q${idx + 1}: ${q.text || q.question || 'Untitled'}`] = answerText;
+      rowData[0][`Q${idx + 1}: ${q.text || q.question || "Untitled"}`] = answerText;
       rowData[0][`Q${idx + 1} Marks Awarded`] = answerObj?.marksAwarded || 0;
     });
 
     const worksheet = XLSX.utils.json_to_sheet(rowData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Evaluation Data");
-    XLSX.writeFile(workbook, `${currentStudent.name.replace(/\s+/g, '_')}_${currentAssessment.title.replace(/\s+/g, '_')}_Evaluation.xlsx`);
+    XLSX.writeFile(
+      workbook,
+      `${currentStudent.name.replace(/\s+/g, "_")}_${currentAssessment.title.replace(/\s+/g, "_")}_Evaluation.xlsx`,
+    );
   };
 
   return (
     <div className="h-[calc(100vh-6rem)] -mt-6 -mx-6 bg-neutral-100 dark:bg-[#0a0a0a] flex flex-col lg:flex-row overflow-hidden">
-      
       {/* LEFT COLUMN: Queue */}
       <div className="w-full lg:w-[380px] h-1/3 lg:h-auto shrink-0 bg-white dark:bg-neutral-900 border-b lg:border-b-0 lg:border-r border-neutral-200 dark:border-neutral-800 flex flex-col z-10">
-        
         {/* Header & Filters */}
         <div className="p-5 border-b border-neutral-200 dark:border-neutral-800 space-y-4">
           <div>
             <h2 className="font-display font-black text-xl text-neutral-900 dark:text-white flex items-center gap-2">
               <CheckSquare className="w-6 h-6 text-[#6C1D5F]" /> Evaluation
             </h2>
-            <p className="text-xs text-neutral-500 mt-1">Review submissions and provide feedback.</p>
+            <p className="text-xs text-neutral-500 mt-1">
+              Review submissions and provide feedback.
+            </p>
           </div>
 
           <div className="relative">
@@ -271,8 +317,10 @@ export const Evaluation = () => {
               className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white"
             >
               <option value="all">All Batches</option>
-              {batches?.map(b => (
-                <option key={b.id} value={b.id}>{b.name}</option>
+              {batches?.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.name}
+                </option>
               ))}
             </select>
 
@@ -282,13 +330,15 @@ export const Evaluation = () => {
               className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white"
             >
               <option value="all">All Assessments</option>
-              {assessments?.map(a => (
-                <option key={a.id} value={a.id}>{a.title}</option>
+              {assessments?.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.title}
+                </option>
               ))}
             </select>
           </div>
 
-          {selectedAssId !== 'all' && (
+          {selectedAssId !== "all" && (
             <button
               onClick={handleExportAssessmentResults}
               className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-accent-2/10 text-accent-2 hover:bg-accent-2/10 dark:bg-accent-2 dark:text-accent-2 dark:hover:bg-accent-2 rounded-xl text-sm font-bold border border-accent-2/20 dark:border-accent-2 transition-colors"
@@ -298,11 +348,11 @@ export const Evaluation = () => {
           )}
 
           <div className="flex bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl">
-            {['pending', 'graded', 'all'].map(mode => (
+            {["pending", "graded", "all"].map((mode) => (
               <button
                 key={mode}
                 onClick={() => setFilterGraded(mode)}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all capitalize ${filterGraded === mode ? 'bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'}`}
+                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all capitalize ${filterGraded === mode ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
               >
                 {mode}
               </button>
@@ -327,18 +377,22 @@ export const Evaluation = () => {
                 <button
                   key={sub.id}
                   onClick={() => handleSelectSubmission(sub)}
-                  className={`w-full text-left p-4 rounded-2xl transition-all border ${isSelected ? 'bg-primary/10 dark:bg-primary border-primary/20 dark:border-primary shadow-sm' : 'bg-white dark:bg-neutral-900 border-transparent hover:border-neutral-200 dark:hover:border-neutral-700'}`}
+                  className={`w-full text-left p-4 rounded-2xl transition-all border ${isSelected ? "bg-primary/10 dark:bg-primary border-primary/20 dark:border-primary shadow-sm" : "bg-white dark:bg-neutral-900 border-transparent hover:border-neutral-200 dark:hover:border-neutral-700"}`}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#6C1D5F] to-[#84117C] text-white flex items-center justify-center font-bold text-xs shadow-inner">
-                        {student?.name?.charAt(0) || '?'}
+                        {student?.name?.charAt(0) || "?"}
                       </div>
                       <div>
-                        <p className={`text-sm font-bold ${isSelected ? 'text-[#6C1D5F] dark:text-primary' : 'text-neutral-900 dark:text-white'}`}>
-                          {student?.name || 'Unknown Student'}
+                        <p
+                          className={`text-sm font-bold ${isSelected ? "text-[#6C1D5F] dark:text-primary" : "text-neutral-900 dark:text-white"}`}
+                        >
+                          {student?.name || "Unknown Student"}
                         </p>
-                        <p className="text-[10px] text-neutral-500 line-clamp-1">{assessment?.title || 'Unknown Assessment'}</p>
+                        <p className="text-[10px] text-neutral-500 line-clamp-1">
+                          {assessment?.title || "Unknown Assessment"}
+                        </p>
                       </div>
                     </div>
                     {sub.isEvaluated ? (
@@ -347,10 +401,11 @@ export const Evaluation = () => {
                       <Clock className="w-4 h-4 text-destructive" />
                     )}
                   </div>
-                  
+
                   <div className="flex justify-between items-center mt-3">
                     <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
-                      Submitted: {sub.submittedAt ? new Date(sub.submittedAt).toLocaleDateString() : 'N/A'}
+                      Submitted:{" "}
+                      {sub.submittedAt ? new Date(sub.submittedAt).toLocaleDateString() : "N/A"}
                     </span>
                     {!sub.isEvaluated && sub.aiConfidence && (
                       <span className="flex items-center gap-1 text-[10px] font-bold text-accent-2 bg-accent-2/10 dark:bg-accent-2 px-2 py-0.5 rounded-full border border-accent-2/20 dark:border-accent-2">
@@ -368,22 +423,22 @@ export const Evaluation = () => {
       {/* CENTER & RIGHT COLUMNS */}
       {selectedSubId && currentSub && currentStudent && currentAssessment ? (
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-          
           {/* CENTER: Submission Content Viewer */}
           <div className="flex-1 overflow-y-auto bg-neutral-50 dark:bg-[#0a0a0a] relative">
             <div className="max-w-3xl mx-auto p-8 space-y-8">
-              
               <div className="pb-6 border-b border-neutral-200 dark:border-neutral-800">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-full text-xs font-bold text-neutral-600 dark:text-neutral-300 mb-4 shadow-sm">
                   <FileText className="w-3.5 h-3.5" />
-                  {currentAssessment.type.replace('_', ' ').toUpperCase()} Assessment
+                  {currentAssessment.type.replace("_", " ").toUpperCase()} Assessment
                 </div>
                 <div className="flex justify-between items-start">
                   <div>
-                    <h1 className="text-3xl font-display font-black text-neutral-900 dark:text-white mb-2">{currentAssessment.title}</h1>
+                    <h1 className="text-3xl font-display font-black text-neutral-900 dark:text-white mb-2">
+                      {currentAssessment.title}
+                    </h1>
                     <p className="text-sm text-neutral-500">Submitted by {currentStudent.name}</p>
                   </div>
-                  <button 
+                  <button
                     onClick={handleExportExcel}
                     className="flex items-center gap-2 px-4 py-2 bg-accent-2/10 text-accent-2 hover:bg-accent-2/10 dark:bg-accent-2 dark:text-accent-2 dark:hover:bg-accent-2 rounded-xl text-sm font-bold border border-accent-2/20 dark:border-accent-2 transition-colors"
                   >
@@ -395,30 +450,44 @@ export const Evaluation = () => {
               {/* Answers Map */}
               <div className="space-y-6">
                 {currentAssessment.questions?.map((q, idx) => {
-                  const answerObj = currentSub.answers.find(a => a.questionId === q.id);
+                  const answerObj = currentSub.answers.find((a) => a.questionId === q.id);
                   return (
-                    <div key={q.id} className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden">
+                    <div
+                      key={q.id}
+                      className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden"
+                    >
                       <div className="p-5 border-b border-neutral-100 dark:border-neutral-800">
                         <div className="flex justify-between items-start gap-4">
                           <h4 className="font-bold text-sm text-neutral-800 dark:text-neutral-200 flex-1">
-                            <span className="text-neutral-400 mr-2">{idx + 1}.</span> 
-                            {q.text || q.question || 'Untitled Question'}
+                            <span className="text-neutral-400 mr-2">{idx + 1}.</span>
+                            {q.text || q.question || "Untitled Question"}
                           </h4>
                           <div className="shrink-0 text-xs font-bold text-neutral-500 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded">
                             {q.marks} Marks
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="p-5 bg-neutral-50 dark:bg-[#0a0a0a]">
-                        <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Student's Answer:</p>
-                        {currentAssessment.type === 'coding' ? (
+                        <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">
+                          Student's Answer:
+                        </p>
+                        {currentAssessment.type === "coding" ? (
                           <div className="bg-[#1e1e1e] rounded-xl p-4 overflow-x-auto shadow-inner border border-neutral-800 text-neutral-300 font-mono text-xs whitespace-pre-wrap">
-                            {answerObj?.answer ? (typeof answerObj.answer === 'object' && !Array.isArray(answerObj.answer) ? answerObj.answer.code : answerObj.answer) : 'No code submitted.'}
+                            {answerObj?.answer
+                              ? typeof answerObj.answer === "object" &&
+                                !Array.isArray(answerObj.answer)
+                                ? answerObj.answer.code
+                                : answerObj.answer
+                              : "No code submitted."}
                           </div>
                         ) : (
                           <div className="bg-white dark:bg-neutral-900 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm text-sm text-neutral-700 dark:text-neutral-300">
-                            {answerObj ? formatAnswerText(q, answerObj.answer) : <span className="italic text-neutral-400">No answer provided</span>}
+                            {answerObj ? (
+                              formatAnswerText(q, answerObj.answer)
+                            ) : (
+                              <span className="italic text-neutral-400">No answer provided</span>
+                            )}
                           </div>
                         )}
 
@@ -427,18 +496,35 @@ export const Evaluation = () => {
                             <CheckCircle className="w-3.5 h-3.5" /> Expected Correct Answer:
                           </p>
                           <div className="bg-accent-2/10 dark:bg-accent-2 p-4 rounded-xl border border-accent-2/20 dark:border-accent-2 shadow-sm text-sm text-accent-2 dark:text-accent-2">
-                            {((q.correctAnswer !== undefined && q.correctAnswer !== null && q.correctAnswer !== '') || (q.correctAnswers && q.correctAnswers.length > 0))
-                              ? formatAnswerText(q, q.correctAnswer !== undefined ? q.correctAnswer : q.correctAnswers) 
-                              : q.type === 'coding' && (q.codingTestCases || q.testCases) ? (
-                                <div className="space-y-1.5 mt-1">
-                                  <span className="text-xs font-bold text-accent-2 dark:text-accent-2">Code must pass {(q.codingTestCases || q.testCases).length} test cases</span>
-                                  {(q.codingTestCases || q.testCases).map((tc, i) => (
-                                    <div key={i} className="text-[10px] font-mono bg-accent-2/10 dark:bg-accent-2 p-1.5 rounded border border-accent-2/20 dark:border-accent-2 text-accent-2 dark:text-accent-2">
-                                      <span className="opacity-70">IN:</span> {tc.input} <span className="opacity-70 ml-2">OUT:</span> {tc.output}
-                                    </div>
-                                  ))}
-                                </div>
-                              ) : <span className="italic opacity-60">Manual evaluation required / No strict rubric defined</span>}
+                            {(q.correctAnswer !== undefined &&
+                              q.correctAnswer !== null &&
+                              q.correctAnswer !== "") ||
+                            (q.correctAnswers && q.correctAnswers.length > 0) ? (
+                              formatAnswerText(
+                                q,
+                                q.correctAnswer !== undefined ? q.correctAnswer : q.correctAnswers,
+                              )
+                            ) : q.type === "coding" && (q.codingTestCases || q.testCases) ? (
+                              <div className="space-y-1.5 mt-1">
+                                <span className="text-xs font-bold text-accent-2 dark:text-accent-2">
+                                  Code must pass {(q.codingTestCases || q.testCases).length} test
+                                  cases
+                                </span>
+                                {(q.codingTestCases || q.testCases).map((tc, i) => (
+                                  <div
+                                    key={i}
+                                    className="text-[10px] font-mono bg-accent-2/10 dark:bg-accent-2 p-1.5 rounded border border-accent-2/20 dark:border-accent-2 text-accent-2 dark:text-accent-2"
+                                  >
+                                    <span className="opacity-70">IN:</span> {tc.input}{" "}
+                                    <span className="opacity-70 ml-2">OUT:</span> {tc.output}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <span className="italic opacity-60">
+                                Manual evaluation required / No strict rubric defined
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -446,7 +532,6 @@ export const Evaluation = () => {
                   );
                 })}
               </div>
-
             </div>
           </div>
 
@@ -456,29 +541,37 @@ export const Evaluation = () => {
               <h3 className="font-bold text-sm flex items-center gap-2 dark:text-white">
                 <Award className="w-4 h-4 text-[#6C1D5F]" /> Grading Panel
               </h3>
-              <button 
+              <button
                 onClick={handleAutoEvaluate}
                 disabled={isEvaluatingAi || currentSub.isEvaluated}
                 className="text-[10px] font-bold flex items-center gap-1 text-white bg-[#6C1D5F] hover:bg-[#84117C] px-3 py-1.5 rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {isEvaluatingAi ? <Loader2 className="w-3 h-3 animate-spin" /> : <Bot className="w-3 h-3" />}
-                {isEvaluatingAi ? 'Analyzing...' : 'Auto Evaluation Using AI'}
+                {isEvaluatingAi ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <Bot className="w-3 h-3" />
+                )}
+                {isEvaluatingAi ? "Analyzing..." : "Auto Evaluation Using AI"}
               </button>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto p-5 space-y-6">
-              
               <div className="space-y-4">
                 {currentAssessment.questions?.map((q, idx) => (
-                  <div key={q.id} className="p-4 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl space-y-3">
+                  <div
+                    key={q.id}
+                    className="p-4 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl space-y-3"
+                  >
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300">Q{idx + 1} Marks</span>
+                      <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                        Q{idx + 1} Marks
+                      </span>
                       <div className="flex items-center gap-1">
                         <input
                           type="number"
                           min="0"
                           max={q.marks}
-                          value={questionMarks[q.id] !== undefined ? questionMarks[q.id] : ''}
+                          value={questionMarks[q.id] !== undefined ? questionMarks[q.id] : ""}
                           onChange={(e) => handleMarkChange(q.id, Number(e.target.value), q.marks)}
                           className="w-16 px-2 py-1 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded text-sm text-center font-bold focus:ring-2 focus:ring-[#6C1D5F] focus:outline-none dark:text-white"
                         />
@@ -487,21 +580,27 @@ export const Evaluation = () => {
                     </div>
 
                     {!currentSub.isEvaluated && currentSub.aiConfidence && (
-                       <div className="flex items-start gap-2 p-2 bg-accent-2/10 dark:bg-accent-2 rounded border border-accent-2/20 dark:border-accent-2">
-                         <Bot className="w-3.5 h-3.5 text-accent-2 shrink-0 mt-0.5" />
-                         <div>
-                           <p className="text-[10px] font-bold text-accent-2 dark:text-accent-2">AI Suggestion: {Math.round(q.marks * 0.8)} / {q.marks}</p>
-                           <p className="text-[9px] text-accent-2/70 dark:text-accent-2/70">"Answer covers most key points correctly."</p>
-                         </div>
-                       </div>
+                      <div className="flex items-start gap-2 p-2 bg-accent-2/10 dark:bg-accent-2 rounded border border-accent-2/20 dark:border-accent-2">
+                        <Bot className="w-3.5 h-3.5 text-accent-2 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-[10px] font-bold text-accent-2 dark:text-accent-2">
+                            AI Suggestion: {Math.round(q.marks * 0.8)} / {q.marks}
+                          </p>
+                          <p className="text-[9px] text-accent-2/70 dark:text-accent-2/70">
+                            "Answer covers most key points correctly."
+                          </p>
+                        </div>
+                      </div>
                     )}
 
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-neutral-500 uppercase">Remarks</label>
+                      <label className="text-[10px] font-bold text-neutral-500 uppercase">
+                        Remarks
+                      </label>
                       <input
                         type="text"
                         placeholder="Optional feedback..."
-                        value={questionRemarks[q.id] || ''}
+                        value={questionRemarks[q.id] || ""}
                         onChange={(e) => handleRemarkChange(q.id, e.target.value)}
                         className="w-full px-3 py-1.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg text-xs focus:ring-2 focus:ring-[#6C1D5F] focus:outline-none dark:text-white"
                       />
@@ -522,14 +621,14 @@ export const Evaluation = () => {
                   className="w-full p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm focus:ring-2 focus:ring-[#6C1D5F] focus:outline-none resize-none dark:text-white shadow-sm"
                 />
               </div>
-
             </div>
 
             <div className="p-5 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950/50">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-sm font-bold text-neutral-500">Total Score:</span>
                 <span className="text-2xl font-black text-[#6C1D5F] dark:text-primary">
-                  {Object.values(questionMarks).reduce((a, b) => a + b, 0)} <span className="text-sm text-neutral-400">/ {currentAssessment.marks}</span>
+                  {Object.values(questionMarks).reduce((a, b) => a + b, 0)}{" "}
+                  <span className="text-sm text-neutral-400">/ {currentAssessment.marks}</span>
                 </span>
               </div>
               <button
@@ -540,17 +639,16 @@ export const Evaluation = () => {
               </button>
             </div>
           </div>
-
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center text-neutral-400 bg-neutral-50/50 dark:bg-neutral-950/20">
           <Layers className="w-16 h-16 mb-4 opacity-20" />
-          <p className="text-lg font-bold text-neutral-500 dark:text-neutral-400">Select a submission to evaluate</p>
+          <p className="text-lg font-bold text-neutral-500 dark:text-neutral-400">
+            Select a submission to evaluate
+          </p>
           <p className="text-sm mt-1">Click on any student in the queue to begin grading.</p>
         </div>
       )}
-
     </div>
   );
 };
-

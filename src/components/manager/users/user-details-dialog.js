@@ -16,88 +16,89 @@ const statusColors = {
 export function UserDetailsDialog({ user, open, onOpenChange, type }) {
   if (!user) return null;
 
-  return (
-    _jsx(Dialog, {
-      open,
-      onOpenChange,
-      children: _jsxs(DialogContent, {
-        className: "max-w-md border-0 bg-white shadow-xl",
-        children: [
-          _jsx(DialogHeader, {
-            children: _jsx(DialogTitle, {
-              className: "text-lg font-semibold text-[#000000]",
-              children: "User Details",
-            }),
+  return _jsx(Dialog, {
+    open,
+    onOpenChange,
+    children: _jsxs(DialogContent, {
+      className: "max-w-md border-0 bg-white shadow-xl",
+      children: [
+        _jsx(DialogHeader, {
+          children: _jsx(DialogTitle, {
+            className: "text-lg font-semibold text-[#000000]",
+            children: "User Details",
           }),
+        }),
 
-          _jsxs("div", {
-            className: "space-y-6",
-            children: [
-              /* Profile Section */
-              _jsxs("div", {
-                className: "flex items-center gap-4",
-                children: [
-                  _jsx(Avatar, {
-                    className: "h-14 w-14 border-2 border-[#6C1D5F]/10",
-                    children: _jsx(AvatarFallback, {
-                      className: "bg-[#6C1D5F]/8 text-base font-semibold text-[#6C1D5F]",
-                      children: user.avatar || user.logo || user.name?.slice(0, 2),
+        _jsxs("div", {
+          className: "space-y-6",
+          children: [
+            /* Profile Section */
+            _jsxs("div", {
+              className: "flex items-center gap-4",
+              children: [
+                _jsx(Avatar, {
+                  className: "h-14 w-14 border-2 border-[#6C1D5F]/10",
+                  children: _jsx(AvatarFallback, {
+                    className: "bg-[#6C1D5F]/8 text-base font-semibold text-[#6C1D5F]",
+                    children: user.avatar || user.logo || user.name?.slice(0, 2),
+                  }),
+                }),
+                _jsxs("div", {
+                  children: [
+                    _jsx("h3", {
+                      className: "font-semibold text-[#000000]",
+                      children: user.name,
                     }),
-                  }),
-                  _jsxs("div", {
-                    children: [
-                      _jsx("h3", {
-                        className: "font-semibold text-[#000000]",
-                        children: user.name,
+                    user.email &&
+                      _jsx("p", {
+                        className: "text-sm text-[#5A5A5A]",
+                        children: user.email,
                       }),
-                      user.email &&
-                        _jsx("p", {
-                          className: "text-sm text-[#5A5A5A]",
-                          children: user.email,
-                        }),
-                      user.location &&
-                        _jsx("p", {
-                          className: "text-sm text-[#5A5A5A]",
-                          children: user.location,
-                        }),
-                      _jsx(Badge, {
-                        variant: "outline",
-                        className: `mt-1 text-[10px] font-medium uppercase ${statusColors[user.status] || ""}`,
-                        children: user.status,
+                    user.location &&
+                      _jsx("p", {
+                        className: "text-sm text-[#5A5A5A]",
+                        children: user.location,
                       }),
-                    ],
-                  }),
-                ],
-              }),
+                    _jsx(Badge, {
+                      variant: "outline",
+                      className: `mt-1 text-[10px] font-medium uppercase ${statusColors[user.status] || ""}`,
+                      children: user.status,
+                    }),
+                  ],
+                }),
+              ],
+            }),
 
-              _jsx(Separator, {}),
+            _jsx(Separator, {}),
 
-              /* Details Grid */
-              _jsx("div", {
-                className: "grid grid-cols-2 gap-4",
-                children: (() => {
-                  const details = [];
-                  if (type === "universities") {
-                    details.push(
-                      { label: "Students", value: user.students?.toLocaleString() },
-                      { label: "Courses", value: user.courses }
-                    );
-                  } else if (type === "trainers") {
-                    details.push(
-                      { label: "Specialization", value: user.specialization, span: true },
-                      { label: "Rating", value: `${user.rating} / 5.0` },
-                      { label: "Courses", value: user.courses },
-                      { label: "Students", value: user.students?.toLocaleString() }
-                    );
-                  } else {
-                    details.push(
-                      { label: "University", value: user.university, span: true },
-                      { label: "Courses Enrolled", value: user.coursesEnrolled },
-                      { label: "Status", value: user.status }
-                    );
-                  }
-                  return details.map((d) =>
-                    _jsxs("div", {
+            /* Details Grid */
+            _jsx("div", {
+              className: "grid grid-cols-2 gap-4",
+              children: (() => {
+                const details = [];
+                if (type === "universities") {
+                  details.push(
+                    { label: "Students", value: user.students?.toLocaleString() },
+                    { label: "Courses", value: user.courses },
+                  );
+                } else if (type === "trainers") {
+                  details.push(
+                    { label: "Specialization", value: user.specialization, span: true },
+                    { label: "Rating", value: `${user.rating} / 5.0` },
+                    { label: "Courses", value: user.courses },
+                    { label: "Students", value: user.students?.toLocaleString() },
+                  );
+                } else {
+                  details.push(
+                    { label: "University", value: user.university, span: true },
+                    { label: "Courses Enrolled", value: user.coursesEnrolled },
+                    { label: "Status", value: user.status },
+                  );
+                }
+                return details.map((d) =>
+                  _jsxs(
+                    "div",
+                    {
                       className: d.span ? "col-span-2" : "",
                       children: [
                         _jsx("p", {
@@ -109,41 +110,42 @@ export function UserDetailsDialog({ user, open, onOpenChange, type }) {
                           children: d.value,
                         }),
                       ],
-                    }, d.label)
-                  );
-                })(),
-              }),
+                    },
+                    d.label,
+                  ),
+                );
+              })(),
+            }),
 
-              /* Progress (for students) */
-              {
-                ...(type === "students" && user.progress != null
-                  ? _jsxs("div", {
-                      children: [
-                        _jsxs("div", {
-                          className: "flex items-center justify-between text-sm",
-                          children: [
-                            _jsx("span", {
-                              className: "font-medium text-[#5A5A5A]",
-                              children: "Overall Progress",
-                            }),
-                            _jsx("span", {
-                              className: "font-semibold text-[#000000]",
-                              children: `${user.progress}%`,
-                            }),
-                          ],
-                        }),
-                        _jsx(Progress, {
-                          value: user.progress,
-                          className: "mt-2 h-2 bg-[#EDEDED]",
-                        }),
-                      ],
-                    })
-                  : _jsx("span", {})),
-              },
-            ],
-          }),
-        ],
-      }),
-    })
-  );
+            /* Progress (for students) */
+            {
+              ...(type === "students" && user.progress != null
+                ? _jsxs("div", {
+                    children: [
+                      _jsxs("div", {
+                        className: "flex items-center justify-between text-sm",
+                        children: [
+                          _jsx("span", {
+                            className: "font-medium text-[#5A5A5A]",
+                            children: "Overall Progress",
+                          }),
+                          _jsx("span", {
+                            className: "font-semibold text-[#000000]",
+                            children: `${user.progress}%`,
+                          }),
+                        ],
+                      }),
+                      _jsx(Progress, {
+                        value: user.progress,
+                        className: "mt-2 h-2 bg-[#EDEDED]",
+                      }),
+                    ],
+                  })
+                : _jsx("span", {})),
+            },
+          ],
+        }),
+      ],
+    }),
+  });
 }

@@ -10,24 +10,34 @@ export function CoverageInsights() {
           <Lightbulb className="w-5 h-5 text-[#FFACE8] dark:text-[#FFACE8]" />
           Coverage Insights
         </h3>
-        
+
         <div className="space-y-4 flex-1">
           <div className="p-4 rounded-xl bg-accent-2/10 dark:bg-accent-2 border border-accent-2/20 dark:border-accent-2">
             <div className="flex items-start gap-3">
               <TrendingUp className="w-5 h-5 text-accent-2 dark:text-accent-2 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">Coverage Milestone</h4>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Overall Learning Coverage increased by 15% this quarter. The APAC region leads globally, achieving a record 98% coverage.</p>
+                <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">
+                  Coverage Milestone
+                </h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Overall Learning Coverage increased by 15% this quarter. The APAC region leads
+                  globally, achieving a record 98% coverage.
+                </p>
               </div>
             </div>
           </div>
-          
+
           <div className="p-4 rounded-xl bg-[#FF6200]/5 border border-[#FF6200]/10">
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-[#FF6200] shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">Low Participation Alert</h4>
-                <p className="text-xs text-gray-600 dark:text-gray-400">The Middle East region and specifically the 'Sales' business unit are showing below-target participation rates (65%). Intervention is recommended.</p>
+                <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">
+                  Low Participation Alert
+                </h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  The Middle East region and specifically the 'Sales' business unit are showing
+                  below-target participation rates (65%). Intervention is recommended.
+                </p>
               </div>
             </div>
           </div>
@@ -36,8 +46,13 @@ export function CoverageInsights() {
             <div className="flex items-start gap-3">
               <Target className="w-5 h-5 text-[#01AC9F] shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">Grade Coverage Trends</h4>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Junior and Senior grades show 90%+ coverage, but Executive-level participation is lagging at 40%. Specialized executive tracks should be promoted.</p>
+                <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">
+                  Grade Coverage Trends
+                </h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Junior and Senior grades show 90%+ coverage, but Executive-level participation is
+                  lagging at 40%. Specialized executive tracks should be promoted.
+                </p>
               </div>
             </div>
           </div>
@@ -52,10 +67,11 @@ export function CoverageInsights() {
         </h3>
 
         <div className="flex flex-col gap-8 flex-1">
-          
           {/* Top Regions */}
           <div>
-            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-200 dark:border-white/10 pb-2">Top Performing Regions</h4>
+            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-200 dark:border-white/10 pb-2">
+              Top Performing Regions
+            </h4>
             <div className="space-y-4">
               {[
                 { name: "APAC", score: "98%", trend: "+2%" },
@@ -65,14 +81,23 @@ export function CoverageInsights() {
               ].map((item, i) => (
                 <div key={i} className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <span className={`text-xs font-black w-5 h-5 rounded-full flex items-center justify-center ${i === 0 ? 'bg-[#FFACE8] text-[#6C1D5F]' : 'bg-gray-100 dark:bg-white/10 text-gray-500'}`}>
+                    <span
+                      className={`text-xs font-black w-5 h-5 rounded-full flex items-center justify-center ${i === 0 ? "bg-[#FFACE8] text-[#6C1D5F]" : "bg-gray-100 dark:bg-white/10 text-gray-500"}`}
+                    >
                       {i + 1}
                     </span>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-[#6C1D5F] dark:group-hover:text-[#FFACE8] transition-colors">{item.name}</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-[#6C1D5F] dark:group-hover:text-[#FFACE8] transition-colors">
+                      {item.name}
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-gray-500">{item.trend}</span>
-                    <Badge variant="outline" className="font-bold border-[#01AC9F]/20 text-[#01AC9F] bg-[#01AC9F]/5">{item.score}</Badge>
+                    <Badge
+                      variant="outline"
+                      className="font-bold border-[#01AC9F]/20 text-[#01AC9F] bg-[#01AC9F]/5"
+                    >
+                      {item.score}
+                    </Badge>
                   </div>
                 </div>
               ))}
@@ -81,7 +106,9 @@ export function CoverageInsights() {
 
           {/* Top Projects */}
           <div>
-            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-200 dark:border-white/10 pb-2">Highest Engagement Projects</h4>
+            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-200 dark:border-white/10 pb-2">
+              Highest Engagement Projects
+            </h4>
             <div className="space-y-4">
               {[
                 { name: "Project Alpha (AI)", score: "100%", trend: "-" },
@@ -91,23 +118,30 @@ export function CoverageInsights() {
               ].map((item, i) => (
                 <div key={i} className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <span className={`text-xs font-black w-5 h-5 rounded-full flex items-center justify-center ${i === 0 ? 'bg-[#01AC9F]/20 text-[#01AC9F]' : 'bg-gray-100 dark:bg-white/10 text-gray-500'}`}>
+                    <span
+                      className={`text-xs font-black w-5 h-5 rounded-full flex items-center justify-center ${i === 0 ? "bg-[#01AC9F]/20 text-[#01AC9F]" : "bg-gray-100 dark:bg-white/10 text-gray-500"}`}
+                    >
                       {i + 1}
                     </span>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-[#01AC9F] transition-colors">{item.name}</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-[#01AC9F] transition-colors">
+                      {item.name}
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-gray-500">{item.trend}</span>
-                    <Badge variant="outline" className="font-bold border-[#6C1D5F]/20 text-[#6C1D5F] dark:text-[#FFACE8] bg-[#6C1D5F]/5 dark:bg-[#FFACE8]/5">{item.score}</Badge>
+                    <Badge
+                      variant="outline"
+                      className="font-bold border-[#6C1D5F]/20 text-[#6C1D5F] dark:text-[#FFACE8] bg-[#6C1D5F]/5 dark:bg-[#FFACE8]/5"
+                    >
+                      {item.score}
+                    </Badge>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
         </div>
       </div>
-      
     </>
   );
 }

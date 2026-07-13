@@ -75,10 +75,7 @@ export function ModuleHeroBanner({ breadcrumb, title, subtitle, badgeText, actio
             height: i % 3 === 0 ? "3px" : "2px",
             left: `${i * 7.2 + 2}%`,
             bottom: "-6px",
-            background:
-              i % 2 === 0
-                ? "oklch(0.65 0.22 320 / 0.7)"
-                : "oklch(0.75 0.18 200 / 0.6)",
+            background: i % 2 === 0 ? "oklch(0.65 0.22 320 / 0.7)" : "oklch(0.75 0.18 200 / 0.6)",
           }}
           animate={{
             y: [-5, -180],
@@ -176,7 +173,9 @@ export function ModuleHeroBanner({ breadcrumb, title, subtitle, badgeText, actio
               {badgeText}
             </motion.span>
           )}
-          {actions && <div className="flex items-center gap-2 flex-wrap justify-end">{actions}</div>}
+          {actions && (
+            <div className="flex items-center gap-2 flex-wrap justify-end">{actions}</div>
+          )}
         </div>
       </div>
     </div>

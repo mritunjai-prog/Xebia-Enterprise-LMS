@@ -1,29 +1,43 @@
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, AreaChart, Area, Legend } from 'recharts';
+import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip as RechartsTooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  AreaChart,
+  Area,
+  Legend,
+} from "recharts";
 
-const COLORS = ['#6C1D5F', '#01AC9F', '#FF6200', '#84117C', '#4A1E47'];
+const COLORS = ["#6C1D5F", "#01AC9F", "#FF6200", "#84117C", "#4A1E47"];
 
 const donutData = [
-  { name: 'Engineering', value: 45 },
-  { name: 'Consulting', value: 25 },
-  { name: 'Sales', value: 15 },
-  { name: 'Operations', value: 10 },
-  { name: 'HR', value: 5 },
+  { name: "Engineering", value: 45 },
+  { name: "Consulting", value: 25 },
+  { name: "Sales", value: 15 },
+  { name: "Operations", value: 10 },
+  { name: "HR", value: 5 },
 ];
 
 const barData = [
-  { name: 'North America', achieved: 85, target: 100 },
-  { name: 'Europe', achieved: 70, target: 90 },
-  { name: 'APAC', achieved: 95, target: 80 },
-  { name: 'Middle East', achieved: 55, target: 70 },
+  { name: "North America", achieved: 85, target: 100 },
+  { name: "Europe", achieved: 70, target: 90 },
+  { name: "APAC", achieved: 95, target: 80 },
+  { name: "Middle East", achieved: 55, target: 70 },
 ];
 
 const areaData = [
-  { month: 'Jan', completions: 400, enrollments: 600 },
-  { month: 'Feb', completions: 550, enrollments: 750 },
-  { month: 'Mar', completions: 650, enrollments: 800 },
-  { month: 'Apr', completions: 500, enrollments: 950 },
-  { month: 'May', completions: 800, enrollments: 1100 },
-  { month: 'Jun', completions: 950, enrollments: 1200 },
+  { month: "Jan", completions: 400, enrollments: 600 },
+  { month: "Feb", completions: 550, enrollments: 750 },
+  { month: "Mar", completions: 650, enrollments: 800 },
+  { month: "Apr", completions: 500, enrollments: 950 },
+  { month: "May", completions: 800, enrollments: 1100 },
+  { month: "Jun", completions: 950, enrollments: 1200 },
 ];
 
 // Custom 3D Filter
@@ -47,10 +61,11 @@ const filter3D = (
 export function ExecutiveCharts() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-
       {/* 3D Donut Chart */}
       <div className="bg-white dark:bg-[#111111] p-6 rounded-2xl border border-gray-200 dark:border-white/10 hover:border-[#6C1D5F] dark:hover:border-[#FFACE8] transition-colors duration-300">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Training Distribution by BU</h3>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">
+          Training Distribution by BU
+        </h3>
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -64,15 +79,19 @@ export function ExecutiveCharts() {
                 paddingAngle={4}
                 dataKey="value"
                 stroke="none"
-                style={{ filter: 'url(#3d-effect)' }}
+                style={{ filter: "url(#3d-effect)" }}
               >
                 {donutData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <RechartsTooltip
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                itemStyle={{ color: '#111', fontWeight: 'bold' }}
+                contentStyle={{
+                  borderRadius: "12px",
+                  border: "none",
+                  boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                }}
+                itemStyle={{ color: "#111", fontWeight: "bold" }}
               />
               <Legend verticalAlign="bottom" height={36} iconType="circle" />
             </PieChart>
@@ -82,7 +101,9 @@ export function ExecutiveCharts() {
 
       {/* 3D Area Chart */}
       <div className="bg-white dark:bg-[#111111] p-6 rounded-2xl border border-gray-200 dark:border-white/10 hover:border-[#01AC9F] dark:hover:border-[#01AC9F] transition-colors duration-300">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Enrollment vs Completion Trends</h3>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">
+          Enrollment vs Completion Trends
+        </h3>
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={areaData}>
@@ -98,12 +119,41 @@ export function ExecutiveCharts() {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" opacity={0.2} />
-              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} />
-              <RechartsTooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
+              <XAxis
+                dataKey="month"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#888", fontSize: 12 }}
+              />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill: "#888", fontSize: 12 }} />
+              <RechartsTooltip
+                contentStyle={{
+                  borderRadius: "12px",
+                  border: "none",
+                  boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                }}
+              />
               <Legend verticalAlign="top" height={36} iconType="circle" />
-              <Area type="monotone" dataKey="enrollments" name="Enrollments" stroke="#01AC9F" strokeWidth={3} fillOpacity={1} fill="url(#colorEnrollments)" style={{ filter: 'url(#3d-effect)' }} />
-              <Area type="monotone" dataKey="completions" name="Completions" stroke="#FF6200" strokeWidth={3} fillOpacity={1} fill="url(#colorCompletions)" style={{ filter: 'url(#3d-effect)' }} />
+              <Area
+                type="monotone"
+                dataKey="enrollments"
+                name="Enrollments"
+                stroke="#01AC9F"
+                strokeWidth={3}
+                fillOpacity={1}
+                fill="url(#colorEnrollments)"
+                style={{ filter: "url(#3d-effect)" }}
+              />
+              <Area
+                type="monotone"
+                dataKey="completions"
+                name="Completions"
+                stroke="#FF6200"
+                strokeWidth={3}
+                fillOpacity={1}
+                fill="url(#colorCompletions)"
+                style={{ filter: "url(#3d-effect)" }}
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -111,23 +161,50 @@ export function ExecutiveCharts() {
 
       {/* 3D Bar Chart - Full Width */}
       <div className="col-span-1 lg:col-span-2 bg-white dark:bg-[#111111] p-6 rounded-2xl border border-gray-200 dark:border-white/10 hover:border-[#FF6200] dark:hover:border-[#FF6200] transition-colors duration-300">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Regional Performance vs Targets</h3>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">
+          Regional Performance vs Targets
+        </h3>
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
               {filter3D}
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" opacity={0.2} />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} />
-              <RechartsTooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
+              <XAxis
+                dataKey="name"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#888", fontSize: 12 }}
+              />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill: "#888", fontSize: 12 }} />
+              <RechartsTooltip
+                cursor={{ fill: "transparent" }}
+                contentStyle={{
+                  borderRadius: "12px",
+                  border: "none",
+                  boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                }}
+              />
               <Legend verticalAlign="top" height={36} iconType="circle" />
-              <Bar dataKey="target" fill="#01AC9F" radius={[4, 4, 0, 0]} barSize={40} name="Target Score" style={{ filter: 'url(#3d-effect)' }} />
-              <Bar dataKey="achieved" fill="#6C1D5F" radius={[4, 4, 0, 0]} barSize={40} name="Achieved Score" style={{ filter: 'url(#3d-effect)' }} />
+              <Bar
+                dataKey="target"
+                fill="#01AC9F"
+                radius={[4, 4, 0, 0]}
+                barSize={40}
+                name="Target Score"
+                style={{ filter: "url(#3d-effect)" }}
+              />
+              <Bar
+                dataKey="achieved"
+                fill="#6C1D5F"
+                radius={[4, 4, 0, 0]}
+                barSize={40}
+                name="Achieved Score"
+                style={{ filter: "url(#3d-effect)" }}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
-
     </div>
   );
 }
