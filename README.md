@@ -1,354 +1,818 @@
-<h1 align="center">
-  <img src="https://img.icons8.com/clouds/100/000000/learning.png" alt="LMS Logo" width="100"/>
-  <br/>
-  <b>Xebia Enterprise LMS</b>
-</h1>
+# 🎓 Xebia LMS — Learning Management System
 
-<p align="center">
-  <strong>A production-grade, full-stack Learning Management System</strong><br/>
-  Built with React 19, Spring Boot 3.3, and PostgreSQL — deployed on Vercel + Render.
-</p>
+> **An enterprise-grade, AI-powered Learning Management System for trainers and students — built with React 19, Spring Boot 4, and PostgreSQL.**
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-19-00D8FF?style=for-the-badge&logo=react&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Spring_Boot-3.3.6-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"/>
-  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Groq_AI-FF6B35?style=for-the-badge&logo=ai&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white"/>
-</p>
+[![React](https://img.shields.io/badge/React-19.0.1-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-6.2.3-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1.0-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)](https://adoptium.net)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1.14-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![License](https://img.shields.io/badge/License-TBD-lightgrey)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/mritunjai-prog/Xebia-Student-Trainer?color=6C1D5F)](https://github.com/mritunjai-prog/Xebia-Student-Trainer/commits)
 
-<p align="center">
-  <a href="https://xebia-enterprise-lms.vercel.app" target="_blank"><strong>🌐 Live Demo</strong></a> &nbsp;•&nbsp;
-  <a href="setup.md"><strong>📖 Setup Guide</strong></a> &nbsp;•&nbsp;
-  <a href="https://htmlpreview.github.io/?https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/blob/main/ProjectDocumentation.html" target="_blank"><strong>📚 Full Technical Docs</strong></a>
-</p>
-
-<p align="center">
-  <a href="https://htmlpreview.github.io/?https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/blob/main/ProjectDocumentation.html" target="_blank">
-    <img src="https://img.shields.io/badge/📚%20Full%20Technical%20Documentation-Open%20Now-6C1D5F?style=for-the-badge&labelColor=4A1E47" alt="Full Technical Documentation"/>
-  </a>
-</p>
+Xebia LMS is a full-stack, microservices-based learning management platform designed for enterprise training programs. It enables **trainers** to build, publish, and evaluate assessments with AI assistance, while **students** can take quizzes, submit coding challenges, track their progress, and earn verifiable certificates — all from a single, beautifully designed interface.
 
 ---
 
 ## 📋 Table of Contents
 
-- [About the Project](#-about-the-project)
-- [Live Links](#-live-links)
-- [Key Features](#-key-features)
+- [Demo / Preview](#-demo--preview)
+- [Features](#-features)
 - [Tech Stack](#-tech-stack)
-- [Microservices Architecture](#-microservices-architecture)
-- [Project Structure](#-project-structure)
-- [Portal Walkthroughs](#-portal-walkthroughs)
-  - [Admin Portal](#admin-portal)
-  - [Student Portal](#student-portal)
-  - [Analytics Suite](#analytics-suite)
-- [Quick Start](#-quick-start)
-- [Meet the Team](#-meet-the-team)
+- [Project Architecture](#-project-architecture)
+- [Getting Started / Installation](#-getting-started--installation)
+- [API Documentation](#-api-documentation)
+- [Database Schema](#-database-schema)
+- [Folder-by-Folder Breakdown](#-folder-by-folder-breakdown)
+- [Testing](#-testing)
+- [Deployment](#-deployment)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [Contributors](#-contributors)
+- [License](#-license)
+- [Acknowledgements / Credits](#-acknowledgements--credits)
 
 ---
 
-## 🌟 About the Project
+## 🖼️ Demo / Preview
 
-**Xebia Enterprise LMS** is a full-stack, production-deployed Learning Management System built for enterprise training at scale. It powers **two distinct user portals** — a feature-rich **Admin Portal** for course architects and platform administrators, and a beautifully designed **Student Portal** for learners — all running on a scalable Java microservices backend.
+> **[TODO: Add live deployment URL here]**
 
-The platform was built over several weeks of intensive development and covers the full LMS lifecycle: from AI-assisted content creation and deep curriculum hierarchy building, all the way to student enrolment, course playback, assessments, and a 15-page enterprise analytics suite.
-
----
-
-## 🔗 Live Links
-
-| Service | URL |
+| Screenshot | Description |
 |---|---|
-| 🎓 Frontend (Vercel) | https://xebia-enterprise-lms.vercel.app |
-| ⚙️ API Gateway (Render) | https://xebia-api-gateway-mritunjai.onrender.com |
-| 📦 Course Service (Render) | https://xebia-course-service-mritunjai.onrender.com |
+| ![Login Page](docs/screenshots/login.png) | **Login Page** — Role-based login with animated glassmorphism UI, dark/light mode, and quick-login shortcuts for demo accounts |
+| ![Trainer Dashboard](docs/screenshots/trainer-dashboard.png) | **Trainer Dashboard** — Overview of active batches, published assessments, pending evaluations, and leaderboard stats |
+| ![Assessment Builder](docs/screenshots/builder.png) | **AI Assessment Builder** — 3-panel enterprise builder with AI question generation (Groq/LLaMA), manual question input, and live preview |
+| ![Student Dashboard](docs/screenshots/student-dashboard.png) | **Student Dashboard** — Upcoming assessments, completion history, and score tracking |
+| ![Take Quiz](docs/screenshots/take-quiz.png) | **Quiz Interface** — Full-screen timed quiz with MCQ, true/false, multi-select, short-answer, and file-upload question types |
+| ![Coding Challenge](docs/screenshots/coding.png) | **Coding Challenge** — Monaco Editor with AI-powered code execution simulation, multi-language support, and AI debug assistant |
+| ![Certificate](docs/screenshots/certificate.png) | **Certificate of Completion** — Branded, printable certificate with QR verification, gold laurel badge, and PDF download |
+| ![Evaluation](docs/screenshots/evaluation.png) | **Trainer Evaluation Panel** — Manual grading with per-question mark override, AI-suggested scores, and overall remarks |
 
 ---
 
-## 🔥 Key Features
+## ✨ Features
 
-### 🛡️ Admin Portal
-- **AI-Powered Course Creation** — Uses Groq API to auto-generate course descriptions, learning outcomes, prerequisites, and complete curriculum outlines.
-- **Advanced Curriculum Builder** — A fully drag-and-drop hierarchy with 4 levels: Courses → Modules → Submodules → Content Blocks. Supports reordering, renaming, editing, and deletion.
-- **Category Management** — Create, edit, and browse categories with image uploads (Cloudinary), subcategories, and linked course previews.
-- **Content Manager** — Rich text content blocks per submodule, supporting video, text, and interactive item types.
-- **Profile Settings** — Admins can update their avatar, name, and email directly from the platform header.
+### Implemented Features
 
-### 🎓 Student Portal
-- **Personalized Learning Dashboard** — Welcome banner, quick-action cards, stat tiles, and interactive charts for learning activity and subject performance.
-- **Course Catalogue** — Browse, search, and filter all available courses with card-style previews.
-- **Course Playback** — Full curriculum sidebar with module/submodule navigation and content rendering per section.
-- **Assessments** — View and take assessments linked to enrolled courses.
-- **Results & Feedback** — Review assessment results and submit course feedback.
-- **Notifications Centre** — Receive and manage platform notifications.
-- **Profile Page** — Student profile overview.
+**Trainer / Educator**
+- ✅ Role-based authentication (trainer vs. student)
+- ✅ Trainer dashboard with KPI cards (batches, assessments, pending evaluations)
+- ✅ Batch creation, management, and student assignment
+- ✅ Enterprise Assessment Builder (3-panel: Config → Questions → Preview)
+- ✅ AI question generation via Groq LLaMA-3.3-70B (MCQ, true/false, coding, etc.)
+- ✅ Excel / XLSX bulk question import with AI parsing
+- ✅ Manual question builder with rich question types
+- ✅ Assessment configuration: duration, dates, passing threshold, negative marking, shuffle, auto-submit
+- ✅ Assessment publishing/archiving workflow (draft → published → archived)
+- ✅ Manual evaluation panel with per-question mark override
+- ✅ AI-suggested scores for subjective answers (short answer, paragraph)
+- ✅ Overall remarks and evaluation finalization
+- ✅ Reports page with charts (Recharts) — score distribution, batch performance
+- ✅ Global leaderboard with student rankings
+- ✅ Dark / Light theme toggle
 
-### 📊 Analytics Suite (7 Pages)
-- **Executive Dashboard** — High-level KPI overview with engagement trends and completion metrics.
-- **AI Transformation Report** — Tracks AI-generated vs. manually created courses and content adoption.
-- **Certifications Overview** — Certification issuance trends across cohorts.
-- **Coverage Map** — Course coverage across departments and disciplines.
-- **Flagship Programs** — Key programme summaries with cohort data.
-- **Learning Hours** — Time-in-learning metrics by team, role, and date range.
-- **Learning Pillars** — Visualizes content structured around company learning pillars.
+**Student / Learner**
+- ✅ Student dashboard with enrolled batches, upcoming assessments, and score history
+- ✅ Full-screen timed quiz with auto-submit on timeout
+- ✅ Question types: MCQ, True/False, Multiple-Select, Short Answer, Paragraph, File Upload
+- ✅ Coding challenge interface with Monaco Editor
+- ✅ Multi-language code support (JavaScript, Python, Java, C++)
+- ✅ AI-powered code execution simulation (test case runner)
+- ✅ AI debug assistant ("Why is my code failing?")
+- ✅ Auto-save draft during quiz (server-side via in-memory cache)
+- ✅ Results page with per-question breakdown and correct answer reveal
+- ✅ Certificate of Completion (auto-generated on passing threshold)
+- ✅ Certificate features: Xebia branding, QR code verification, gold laurel badge, PDF print/download
 
-### 🏗️ Infrastructure
-- **API Gateway (Spring Cloud)** — Routes frontend traffic to the correct microservice.
-- **Flyway Database Migrations** — Fully versioned and automated schema management.
-- **Dockerized PostgreSQL** — Reproducible local database via `docker-compose`.
-- **Mobile Responsive UI** — CSS breakpoints for tablets and phones, with a sliding mobile sidebar.
+### Planned / In-Progress Features
+- 🚧 Redis integration for production-grade draft caching (currently uses ConcurrentHashMap)
+- 🚧 JWT-based authentication (currently session is stored in localStorage)
+- 🚧 Real code execution engine (currently simulated via Groq AI)
+- 🚧 File upload storage backend (currently UI stub only)
+- 🚧 Email notifications for assessment scheduling
+- 🚧 Spring Cloud API Gateway routing (configured but not fully deployed)
+- 🚧 Containerisation with Docker Compose
+- 🚧 Prometheus / Grafana monitoring
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-| Category | Technology |
-|---|---|
-| Framework | React 19 + Vite |
-| Routing | TanStack Router (type-safe file-based routing) |
-| Server State | TanStack Query (data fetching & caching) |
-| Global State | Zustand |
-| Styling | Tailwind CSS + Custom Design Tokens (Purple/Teal theme) |
-| Animations | Framer Motion |
-| AI | Groq SDK (`llama-3.3-70b-versatile` model) |
-| Media | Cloudinary Upload API |
-| Charts | Recharts |
-| Icons | Lucide React |
+| Layer | Technology | Version | Purpose |
+|---|---|---|---|
+| **Frontend Framework** | React | 19.0.1 | UI rendering and component architecture |
+| **Build Tool** | Vite | 6.2.3 | HMR dev server, production bundling |
+| **Styling** | Tailwind CSS | 4.1.14 | Utility-first styling with dark mode |
+| **Animation** | Motion (Framer Motion) | 12.23 | Page transitions and micro-animations |
+| **Routing** | React Router DOM | 7.18 | Client-side SPA routing |
+| **Charts** | Recharts | 3.9.2 | Dashboard analytics and score charts |
+| **Code Editor** | Monaco Editor | 4.7.0 | VS Code-grade in-browser code editor |
+| **Icons** | Lucide React | 0.546.0 | Icon library |
+| **Markdown** | React Markdown | 10.1.0 | Render AI-generated markdown content |
+| **Excel** | SheetJS (xlsx) | 0.18.5 | Parse uploaded Excel question files |
+| **AI (Frontend)** | Groq API (LLaMA-3.3-70B) | — | Question generation, code eval, AI grading |
+| **AI (Backend)** | Google Gemini API | ^2.4.0 | Server-side AI description generation |
+| **Backend Framework** | Spring Boot | 4.1.0 | Microservices REST API framework |
+| **Java Version** | OpenJDK | 21 | Backend runtime (LTS) |
+| **ORM** | Spring Data JPA + Hibernate | — | Database access and schema management |
+| **Validation** | Spring Boot Validation | — | Request body validation |
+| **API Gateway** | Spring Cloud Gateway (MVC) | 2025.1.2 | Central routing across microservices |
+| **Database** | PostgreSQL | 15+ | Primary relational database |
+| **Caching** | In-memory ConcurrentHashMap (→ Redis) | — | Draft auto-save during exams |
+| **Code Reduction** | Lombok | — | Boilerplate elimination in Java models |
+| **Build System** | Maven Wrapper (mvnw) | — | Java build and dependency management |
 
-### Backend
-| Category | Technology |
-|---|---|
-| Language | Java 21 |
-| Framework | Spring Boot 3.3.6 |
-| API Layer | Spring Web MVC (REST) |
-| Database ORM | Spring Data JPA + Hibernate |
-| Migrations | Flyway |
-| Database | PostgreSQL 15 |
-| Gateway | Spring Cloud Gateway |
-| Build Tool | Apache Maven |
-
-### DevOps / Deployment
-| Category | Technology |
-|---|---|
-| Frontend Hosting | Vercel |
-| Backend Hosting | Render (Web Services) |
-| Database Hosting | Render PostgreSQL (Free Tier) |
-| Local DB | Docker Compose |
-| CI/CD | GitHub → Vercel Auto Deploy, GitHub → Render Deploy Hooks |
+> **Why this stack?** Spring Boot microservices provide independently deployable, loosely coupled services — ideal for an enterprise LMS where the user, batch, and assessment domains can scale independently. React 19 with Vite delivers a fast, modern DX with excellent HMR. Groq's LLaMA-3.3-70B is used for low-latency AI features, making question generation feel instant.
 
 ---
 
-## 🏗️ Microservices Architecture
+## 🏗️ Project Architecture
+
+### High-Level Overview
+
+The frontend is a React SPA served by Vite on **port 3000**. All API calls are prefixed `/api/v1/` and proxied by Vite (in development) to the appropriate microservice. In production, the **Spring Cloud API Gateway** on **port 8080** handles routing.
+
+Three Spring Boot microservices each own their domain:
+- **User Service** (`:8081`) — users (teachers, students)
+- **Batch Service** (`:8082`) — training batches and enrollments
+- **Assessment Service** (`:8083`) — assessments, questions, submissions, drafts, AI
+
+All three services connect to a shared **PostgreSQL** database and use **Hibernate DDL auto-update** to manage their own tables.
+
+```mermaid
+flowchart TB
+    Browser["🌐 React SPA\n(Vite :3000)"]
+
+    subgraph Backend ["Backend (Spring Boot Microservices)"]
+        GW["API Gateway\n:8080\n(Spring Cloud Gateway)"]
+        US["User Service\n:8081"]
+        BS["Batch Service\n:8082"]
+        AS["Assessment Service\n:8083"]
+    end
+
+    DB[("PostgreSQL\n:5432")]
+    Cache["In-Memory Cache\n(ConcurrentHashMap\n→ Redis planned)"]
+    Groq["☁️ Groq API\n(LLaMA-3.3-70B)"]
+    Gemini["☁️ Gemini API\n(Google AI)"]
+
+    Browser -- "Dev: Vite Proxy\nProd: Direct" --> GW
+    GW -- "/api/v1/users/**" --> US
+    GW -- "/api/v1/batches/**" --> BS
+    GW -- "/api/v1/assessments/**\n/api/v1/submissions/**" --> AS
+
+    US --> DB
+    BS --> DB
+    AS --> DB
+    AS --> Cache
+
+    Browser -- "Direct HTTPS (AI features)" --> Groq
+    AS -- "AI description generation" --> Gemini
+```
+
+### Request Flow — Submitting a Quiz
+
+```mermaid
+sequenceDiagram
+    participant S as Student Browser
+    participant V as Vite Dev Server
+    participant AS as Assessment Service :8083
+    participant DB as PostgreSQL
+
+    S->>V: POST /api/v1/submissions (answers payload)
+    V->>AS: Proxy → POST /api/v1/submissions
+    AS->>DB: INSERT INTO submissions + answers
+    DB-->>AS: Saved submission with ID
+    AS-->>V: 200 OK { submission JSON }
+    V-->>S: Response
+    S->>S: LMSContext grades MCQ/multi-select answers
+    S->>S: Navigate to /results/:id
+```
+
+### Folder Structure
 
 ```
-Browser (Vercel Frontend)
-         │
-         ▼
-  ┌─────────────────────────────┐
-  │   API Gateway (Port 8080)   │  ← Routes all /api/* requests
-  └─────────────┬───────────────┘
-                │
-                ▼
-  ┌─────────────────────────────┐
-  │  Course Service (Port 8084) │  ← Core business logic
-  │                             │    Courses, Categories,
-  │                             │    Modules, Submodules,
-  │                             │    Content, Enrollments
-  └─────────────┬───────────────┘
-                │
-                ▼
-  ┌─────────────────────────────┐
-  │  PostgreSQL Database        │  ← Schema: course.*
-  │  (Docker / Render)          │    Managed by Flyway
-  └─────────────────────────────┘
-```
-
-### API Gateway Routes
-| Incoming Request | Forwards To |
-|---|---|
-| `GET /api/courses/**` | Course Service |
-| `GET /api/categories/**` | Course Service |
-| `GET /api/modules/**` | Course Service |
-| `GET /api/enrollments/**` | Course Service |
-| `GET /api/health` | API Gateway Health |
-
----
-
-## 📁 Project Structure
-
-```
-Xebia-Enterprise-LMS/
-├── 📁 src/                          # React Frontend Source
-│   ├── 📁 routes/                   # TanStack file-based routing
-│   │   ├── __root.jsx               # Root layout (Sidebar + Header)
-│   │   ├── index.jsx                # Admin Dashboard (/)
-│   │   ├── 📁 admin/                # Admin-only routes
-│   │   │   ├── 📁 analytics/        # 7 analytics sub-pages
-│   │   │   ├── 📁 categories/       # Category management pages
-│   │   │   ├── 📁 courses/          # Course detail pages
-│   │   │   └── 📁 curriculum/       # Curriculum builder pages
-│   │   ├── 📁 student/              # Student portal routes
-│   │   │   ├── index.jsx            # Student dashboard
-│   │   │   ├── courses.jsx          # Course catalogue
-│   │   │   ├── assessments.jsx      # Assessments listing
-│   │   │   ├── results.jsx          # Assessment results
-│   │   │   ├── feedback.jsx         # Course feedback
-│   │   │   ├── notifications.jsx    # Notifications centre
-│   │   │   └── 📁 course/           # Course playback
-│   │   └── organiser.jsx            # Organiser/Trainer portal
-│   ├── 📁 admin/                    # Admin page components
-│   │   ├── 📁 pages/                # Dashboard, Courses, Categories, Curriculum
-│   │   ├── 📁 components/           # Shared UI, layout (Sidebar, Header)
-│   │   ├── index.css                # Admin design tokens & layout CSS
-│   │   └── responsive.css           # Mobile responsiveness breakpoints
-│   ├── 📁 components/               # Global components
-│   │   ├── 📁 layout/               # Student sidebar & navbar
-│   │   └── cursor-trail.jsx         # Premium cursor trail effect
-│   ├── 📁 features/                 # Feature-scoped modules
-│   │   └── 📁 student/              # Student dashboard widgets & charts
-│   ├── 📁 services/                 # API service layer
-│   │   └── api.js                   # Axios calls to API Gateway
-│   └── 📁 lib/                      # Utilities (Groq AI, store, helpers)
+Xebia-Student-Trainer/
+├── src/                          # React frontend source
+│   ├── api/
+│   │   └── client.js             # All HTTP calls to backend (users, batches, assessments, submissions, drafts)
+│   ├── components/
+│   │   ├── Header.jsx            # Top navigation bar with notifications and user profile
+│   │   ├── Sidebar.jsx           # Left navigation with role-based menu items
+│   │   ├── Toast.jsx             # Lightweight toast notification system
+│   │   ├── assessment-builder/
+│   │   │   ├── ConfigPanel.jsx   # Assessment configuration form (dates, marks, rules)
+│   │   │   ├── EnterpriseBuilderLayout.jsx  # 3-panel builder shell and orchestration
+│   │   │   ├── PreviewAIPanel.jsx           # Live question preview panel
+│   │   │   └── QuestionBuilderPanel.jsx     # Manual + AI question creation panel
+│   │   └── ui/
+│   │       └── DateTimePicker.jsx           # Custom date/time picker component
+│   ├── context/
+│   │   └── LMSContext.jsx        # Global state (React Context) — users, batches, assessments, submissions, auth, grading logic
+│   ├── data/                     # (Static seed data, if any)
+│   ├── pages/
+│   │   ├── AssessmentBuilder.jsx # Full-page builder wrapping EnterpriseBuilderLayout
+│   │   ├── AssessmentDetail.jsx  # Trainer view of a single published assessment
+│   │   ├── BatchDetail.jsx       # Detailed batch view with student list and assessment assignment
+│   │   ├── BatchManagement.jsx   # Trainer batch management with CRUD
+│   │   ├── CertificateView.jsx   # Printable completion certificate with QR code
+│   │   ├── Evaluation.jsx        # Trainer manual evaluation and grading interface
+│   │   ├── Leaderboard.jsx       # Global student leaderboard
+│   │   ├── Login.jsx             # Role-based login with animated background
+│   │   ├── Reports.jsx           # Analytics charts and batch performance reports
+│   │   ├── Results.jsx           # Student quiz results breakdown page
+│   │   ├── Settings.jsx          # User settings (theme, profile, notifications)
+│   │   ├── StudentAssessments.jsx # Student assessment listing and enrollment view
+│   │   ├── StudentDashboard.jsx  # Student home dashboard
+│   │   ├── TakeCoding.jsx        # Full coding challenge interface with Monaco Editor + AI
+│   │   ├── TakeQuiz.jsx          # Full quiz-taking interface with timer and auto-submit
+│   │   └── TeacherDashboard.jsx  # Trainer home dashboard with KPIs
+│   ├── utils/
+│   │   └── aiService.js          # Groq API wrapper (generate questions, eval code, debug code, parse Excel)
+│   ├── App.jsx                   # Root app, routing, layout shell
+│   ├── index.css                 # Global CSS and Tailwind base
+│   └── main.jsx                  # React 19 app entry point
 │
-├── 📁 backend/                      # Java Backend Monorepo
-│   ├── 📁 api-gateway/              # Spring Cloud Gateway (Port 8080)
-│   ├── 📁 course-service/           # Core service (Port 8084)
-│   │   └── 📁 db/migration/         # Flyway SQL migrations (V1–V10.2)
-│   ├── 📁 common-lib/               # Shared DTOs and utilities
-│   ├── docker-compose.yml           # Local PostgreSQL setup
-│   └── pom.xml                      # Parent Maven build file
+├── backend/                      # All Java Spring Boot microservices
+│   ├── api-gateway/              # Spring Cloud Gateway — central routing (:8080)
+│   ├── user-service/             # User CRUD REST API (:8081)
+│   ├── batch-service/            # Batch CRUD REST API (:8082)
+│   ├── assessment-service/       # Assessment, Question, Submission, Draft, AI REST API (:8083)
+│   └── start_backend.ps1         # PowerShell script to launch all 4 services simultaneously
 │
-├── README.md                        # This file
-├── setup.md                         # Complete local setup guide
-└── ProjectDocumentation.html        # 📚 Full enterprise technical documentation
+├── public/                       # Static assets served by Vite
+│   ├── logo-light.png            # Xebia logo (purple blob, white text) — used in certificates and header
+│   └── logo-dark.png             # Xebia logo (flat purple wordmark on white)
+│
+├── .env                          # Local environment variables (never commit)
+├── .env.example                  # Environment variable template
+├── vite.config.js                # Vite config with API proxy rules
+├── package.json                  # Frontend dependencies and npm scripts
+├── index.html                    # HTML entry point for Vite
+├── create_accounts.js            # Utility script: seed default trainer and student accounts
+└── remove_dummy_data.py          # Utility script: clean up test data from the database
 ```
 
 ---
 
-## 🚀 Quick Start
-
-> **👉 For a full, beginner-friendly step-by-step setup guide (with Java installation, Docker setup, and environment variables), please read the [Complete SETUP.md Guide](setup.md).**
->
-> **📚 For in-depth technical architecture, API reference, entity diagrams, flowcharts and more — open the [Project Technical Documentation](https://htmlpreview.github.io/?https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/blob/main/ProjectDocumentation.html) (Opens in browser).**
+## 🚀 Getting Started / Installation
 
 ### Prerequisites
-- Node.js 18+ and npm
-- Java 21 (JDK)
-- Apache Maven 3.9+
-- Docker Desktop (running)
 
-### 1. Clone
+Ensure the following tools are installed before proceeding:
+
+| Tool | Version | Download |
+|---|---|---|
+| Node.js | >= 18.x (LTS recommended) | [nodejs.org](https://nodejs.org) |
+| npm | >= 9.x (comes with Node) | Included with Node.js |
+| Java (JDK) | 21 (LTS) | [Adoptium](https://adoptium.net/temurin/releases/) |
+| PostgreSQL | 15+ | [postgresql.org](https://www.postgresql.org/download/) |
+| Git | Any modern version | [git-scm.com](https://git-scm.com) |
+
+> **Optional:** Redis (for production-grade draft caching — currently falls back to in-memory store)
+
+---
+
+### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/mritunjai-prog/Xebia-Enterprise-LMS.git
-cd Xebia-Enterprise-LMS
+git clone https://github.com/mritunjai-prog/Xebia-Student-Trainer.git
+cd Xebia-Student-Trainer
 ```
 
-### 2. Start the Backend (Database + Microservices)
+---
+
+### 2. Configure Environment Variables
+
 ```bash
-cd backend
-docker compose up --build -d
+# Copy the example file
+cp .env.example .env
 ```
 
-### 3. Start Frontend
+Open `.env` and fill in the required values:
+
+```env
+GEMINI_API_KEY="your-google-gemini-api-key-here"
+APP_URL="http://localhost:3000"
+VITE_GROQ_API_KEY="your-groq-api-key-here"
+```
+
+<details>
+<summary>📄 Full Environment Variable Reference</summary>
+
+| Variable | Required | Description | Example Value |
+|---|---|---|---|
+| `GEMINI_API_KEY` | Yes | Google Gemini API key for server-side AI description generation | `AIzaSy...` |
+| `VITE_GROQ_API_KEY` | Yes | Groq API key for frontend AI features (question gen, code eval) | `gsk_...` |
+| `APP_URL` | Yes | The base URL of the running application (used for links/callbacks) | `http://localhost:3000` |
+
+> 🔑 **Groq API key** is used directly from the browser. Get a free key at [console.groq.com](https://console.groq.com).
+> 🔑 **Gemini API key** is used by the backend assessment service. Get one at [aistudio.google.com](https://aistudio.google.com).
+
+</details>
+
+---
+
+### 3. Database Setup
+
+Ensure PostgreSQL is running on port `5432`. The default configuration uses the `postgres` database.
+
 ```bash
-# In project root (Terminal 3)
+# Connect to PostgreSQL
+psql -U postgres
+
+# The services use ddl-auto: update, so tables are created automatically on first start.
+# No manual migration is needed.
+```
+
+> ⚠️ **The database password** is currently hardcoded in each service's `application.yml` as `Hanusuman11!`.
+> Update the password in all four `application.yml` files before running in any shared environment:
+> - `backend/user-service/src/main/resources/application.yml`
+> - `backend/batch-service/src/main/resources/application.yml`
+> - `backend/assessment-service/src/main/resources/application.yml`
+
+**Seed default accounts** (trainer + student) after the backend is running for the first time:
+
+```bash
+node create_accounts.js
+```
+
+---
+
+### 4. Install Frontend Dependencies
+
+```bash
 npm install
+```
+
+---
+
+### 5. Start the Backend Services
+
+All four Spring Boot services must be running. Use the provided PowerShell script:
+
+```powershell
+# From the project root — opens 4 separate terminal windows
+cd backend
+.\start_backend.ps1
+```
+
+Or start each service individually:
+
+```bash
+# Terminal 1 — API Gateway (port 8080)
+cd backend/api-gateway
+./mvnw spring-boot:run
+
+# Terminal 2 — User Service (port 8081)
+cd backend/user-service
+./mvnw spring-boot:run
+
+# Terminal 3 — Batch Service (port 8082)
+cd backend/batch-service
+./mvnw spring-boot:run
+
+# Terminal 4 — Assessment Service (port 8083)
+cd backend/assessment-service
+./mvnw spring-boot:run
+```
+
+> ⏱️ First startup takes longer as Maven downloads dependencies. Subsequent starts are fast.
+
+---
+
+### 6. Start the Frontend Dev Server
+
+```bash
 npm run dev
 ```
 
-### 4. Create your `.env` file in the root
-```env
-VITE_API_BASE_URL=http://localhost:8080
-VITE_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
-VITE_GROQ_API_KEY=your_groq_api_key
+The application will be available at: **http://localhost:3000**
+
+---
+
+### 7. Verify Everything is Working
+
+1. Open **http://localhost:3000** — you should see the animated Xebia login page.
+2. The console should show successful API connections (no red 500 errors).
+3. Use the **Quick Login** buttons to log in as:
+   - **Trainer:** `trainer@xebia.com`
+   - **Student:** `student@xebia.com`
+4. Check backend health by hitting: `http://localhost:8081/api/v1/users` — you should get a JSON array.
+
+---
+
+## 📡 API Documentation
+
+All endpoints are prefixed with `/api/v1`. In development, requests go through the Vite proxy on `:3000`. In production, they route through the API Gateway on `:8080`.
+
+<details>
+<summary>👤 User Service — <code>:8081</code></summary>
+
+| Method | Route | Description | Auth | Request Body | Response |
+|---|---|---|---|---|---|
+| `GET` | `/api/v1/users` | Get all users (optionally filter by `?role=student` or `?role=teacher`) | None | — | `[{id, name, email, role, department, ...}]` |
+| `POST` | `/api/v1/users` | Create a new user | None | `{name, email, role, department}` | `{id, name, email, role, ...}` |
+
+</details>
+
+<details>
+<summary>📦 Batch Service — <code>:8082</code></summary>
+
+| Method | Route | Description | Auth | Request Body | Response |
+|---|---|---|---|---|---|
+| `GET` | `/api/v1/batches` | Get all batches | None | — | `[{id, name, description, students: [...ids], ...}]` |
+| `POST` | `/api/v1/batches` | Create a new batch | None | `{name, description, startDate, endDate}` | `{id, name, ...}` |
+| `PUT` | `/api/v1/batches/{id}` | Update a batch (including adding students) | None | `{name, students: [...ids], ...}` | `{id, name, ...}` |
+| `DELETE` | `/api/v1/batches/{id}` | Delete a batch | None | — | `204 No Content` |
+
+</details>
+
+<details>
+<summary>📝 Assessment Service — <code>:8083</code></summary>
+
+**Assessments**
+
+| Method | Route | Description | Auth | Request Body | Response |
+|---|---|---|---|---|---|
+| `GET` | `/api/v1/assessments` | Get all assessments | None | — | `[{id, title, questions: [...], ...}]` |
+| `POST` | `/api/v1/assessments` | Create a new assessment with questions | None | `{title, description, questions, duration, passingMarks, ...}` | `{id, title, ...}` |
+| `PUT` | `/api/v1/assessments/{id}` | Update an existing assessment | None | Full assessment object | `{id, title, ...}` |
+| `DELETE` | `/api/v1/assessments/{id}` | Delete an assessment | None | — | `204 No Content` |
+
+**Submissions**
+
+| Method | Route | Description | Auth | Request Body | Response |
+|---|---|---|---|---|---|
+| `GET` | `/api/v1/submissions` | Get all submissions (optionally filter by `?studentId=...`) | None | — | `[{id, assessmentId, studentId, answers, score, ...}]` |
+| `POST` | `/api/v1/submissions` | Submit a student's completed assessment | None | `{id, assessmentId, studentId, answers: [{questionId, answer}], ...}` | `{id, ...}` |
+
+**Draft Auto-Save (In-Memory)**
+
+| Method | Route | Description | Auth | Request Body | Response |
+|---|---|---|---|---|---|
+| `POST` | `/api/v1/assessments/drafts/{studentId}/{assessmentId}` | Save an in-progress quiz draft | None | `{answers: {...}, currentIndex: 0, ...}` | `204 No Content` |
+| `GET` | `/api/v1/assessments/drafts/{studentId}/{assessmentId}` | Retrieve a saved draft | None | — | Draft object or `null` |
+
+**AI Generation (Backend)**
+
+| Method | Route | Description | Auth | Request Body | Response |
+|---|---|---|---|---|---|
+| `POST` | `/api/v1/assessments/ai/generate-description` | Generate an assessment description using Gemini AI | None | `{topic: "Java Inheritance"}` | `{description: "..."}` |
+
+</details>
+
+---
+
+## 🗄️ Database Schema
+
+All services share a single PostgreSQL database (`postgres`). Tables are created automatically by Hibernate on startup.
+
+```mermaid
+erDiagram
+    USERS {
+        string id PK "UUID auto-generated"
+        string name
+        string email "UNIQUE"
+        string role "teacher | student"
+        string department
+        string avatar
+        int averageScore
+        int assessmentsCompleted
+    }
+
+    BATCHES {
+        string id PK "UUID auto-generated"
+        string name
+        string description
+        string startDate
+        string endDate
+    }
+
+    BATCH_STUDENTS {
+        string batch_id FK
+        string student_id "References USERS"
+    }
+
+    ASSESSMENTS {
+        string id PK "UUID auto-generated"
+        string title
+        string description
+        string instructions
+        string difficulty
+        int marks
+        int passingMarks
+        int duration
+        string startDate
+        string endDate
+        int attemptsAllowed
+        boolean autoGrade
+        boolean manualGrade
+        string status "draft | published | archived"
+        string type "mcq | assignment | mixed"
+        string createdBy
+        boolean shuffleQuestions
+        boolean negativeMarking
+        int negativeMarksValue
+    }
+
+    QUESTIONS {
+        string id PK "UUID auto-generated"
+        string assessment_id FK
+        string type "mcq | true_false | multiple_select | short_answer | paragraph | file_upload | coding"
+        string question
+        string correctAnswer
+        int marks
+        string starterCode
+    }
+
+    SUBMISSIONS {
+        string id PK
+        string assessmentId FK
+        string studentId FK
+        string status "in_progress | submitted"
+        string startedAt
+        string submittedAt
+        int score
+        int percentage
+        int timeTaken
+        boolean isEvaluated
+        string remarks
+        string evaluatedBy
+    }
+
+    ANSWERS {
+        string id PK "UUID auto-generated"
+        string submission_id FK
+        string questionId
+        string answer "TEXT - JSON stringified for arrays"
+        int marksAwarded
+        string remarks
+    }
+
+    BATCHES ||--o{ BATCH_STUDENTS : "enrolls"
+    ASSESSMENTS ||--o{ QUESTIONS : "contains"
+    SUBMISSIONS ||--o{ ANSWERS : "has"
+    ASSESSMENTS ||--o{ ASSESSMENT_BATCHES : "assigned to"
 ```
 
-Open `http://localhost:5173` — you're in! 🎉
+---
+
+## 📂 Folder-by-Folder Breakdown
+
+### `src/context/LMSContext.jsx`
+The **brain of the frontend**. This is a React Context provider that manages all global application state. Key responsibilities:
+- **Bootstrapping**: On mount, fetches all users, batches, assessments, and submissions from the backend and stores them in React state.
+- **Session**: Reads/writes the logged-in user from `localStorage` (key: `session`).
+- **Auth**: `login(email, role)` function matches credentials against the fetched users list.
+- **Business Logic**: Contains the auto-grading engine (`submitAssessment`) that resolves MCQ answer indices to option text before comparing to `correctAnswer`, handles negative marking, and calculates `score` and `percentage`.
+- **Trainer Actions**: `evaluateSubmission()` for manual grading overrides.
+- **State sync**: Persists coding submissions, leaderboard, and notifications to `localStorage` for offline resilience.
+
+### `src/utils/aiService.js`
+A wrapper around the **Groq REST API** (LLaMA-3.3-70B model). Exports:
+- `generateAssessmentDescription(title, subject, difficulty)` — 2-3 sentence description
+- `generateQuestions(topic, count, taxonomy, type)` — returns a JSON array of questions
+- `evaluateSubmission(question, answer, maxMarks, type, correctAnswer)` — AI grading for subjective answers
+- `evaluateCodeExecution(code, language, problem, testCases)` — simulates code running against test cases
+- `evaluateFinalSubmission(code, language, problem, testCases, maxMarks)` — grading for coding submissions
+- `debugCodeWithAI(code, language, problem, logs)` — "AI Tutor" hint for debugging
+- `parseExcelToQuestions(rawJson)` — converts parsed Excel rows into the question schema
+
+All functions include fallback responses so the UI never breaks if the API is down.
+
+### `src/pages/TakeCoding.jsx`
+The most complex frontend file (~59KB). Renders a full-screen HackerRank-style coding environment:
+- Monaco Editor with language selection
+- Console output panel
+- Test case results panel (public + hidden)
+- Custom input runner
+- AI Debug button
+- Timer and auto-submit logic
+
+### `src/pages/CertificateView.jsx`
+Generates a branded, printable certificate. Features:
+- Xebia logo (`/public/logo-light.png`)
+- Tranquil Velvet (`#6C1D5F`) and Gold (`#C9A84C`) brand colors
+- Cinzel, EB Garamond, Dancing Script, and Lato Google Fonts
+- Deterministic SVG QR code based on Certificate ID
+- Gold SVG laurel wreath badge
+- Decorative purple/gold bottom arch
+- CSS print media query for PDF generation
+
+### `backend/assessment-service/`
+The most feature-rich microservice. Contains four controllers:
+- `AssessmentController` — CRUD for assessments
+- `SubmissionController` — CRUD for submissions and answers
+- `DraftController` — In-memory draft save/retrieve
+- `AIController` — Proxies AI description generation requests to Gemini
+
+### `backend/api-gateway/`
+A **Spring Cloud Gateway** (MVC mode) that routes incoming requests by path prefix to the correct downstream service. Configured in `application.yml` — no Java code is needed for basic routing.
 
 ---
 
-## 🖥️ Portal Walkthroughs
+## 🧪 Testing
 
-### Admin Portal
-The admin portal (`/`) is the control centre for platform administrators. It features:
-- A collapsible **Sidebar** with dark mode support.
-- **Dashboard** with live KPI metrics and course/category overviews.
-- **Courses** module — Create, list, edit courses; build a full 4-level curriculum hierarchy.
-- **Categories** module — Organise courses by category with image uploads and AI-generated descriptions.
-- **Analytics** menu — 7 sub-pages providing enterprise learning analytics with charts and data tables.
+### Current Test Coverage
 
-### Student Portal
-The student portal (`/student`) is a dedicated, fully separate experience:
-- A **dark purple sidebar** with independent navigation, profile, and settings.
-- **Dashboard** with personalized metrics, activity charts, and quick action cards.
-- **Course Catalogue** — Browse enrolled and available courses with search and filter.
-- **Course Playback** — Full video/content viewer with curriculum sidebar navigation.
-- **Assessments** — Take quizzes and assessments tied to courses.
-- **Results, Feedback, and Notifications** — Post-course activities.
+| Service | Unit Tests | Integration Tests | Status |
+|---|---|---|---|
+| user-service | None | None | ⚠️ Not written |
+| batch-service | None | None | ⚠️ Not written |
+| assessment-service | None | None | ⚠️ Not written |
+| Frontend (React) | None | None | ⚠️ Not written |
 
-### Analytics Suite
-Accessible from the Admin sidebar under "Analytics", this 7-page suite provides:
-- **Executive**: Top-level KPI cards — completions, certifications, NPS, hours.
-- **Coverage**: Heatmap-style view of content coverage across the organization.
-- **Hours**: Learning hours tracked by team, role, and time range.
-- **AI Transformation**: Metrics on AI-generated vs. manual content.
-- **Flagship Programs**: Key program enrolment and performance summaries.
-- **Certifications**: Certification completion trends over time.
-- **Pillars**: Learning content organised by enterprise learning pillars.
+> All four Spring Boot services have the JPA, Validation, and WebMVC test starter dependencies declared in their `pom.xml`, indicating tests are planned but not yet implemented.
+
+### How to Run Tests (When Available)
+
+**Backend (per service):**
+```bash
+cd backend/user-service
+./mvnw test
+
+cd backend/assessment-service
+./mvnw test
+```
+
+**Frontend:**
+```bash
+# Vitest is not yet configured. To add it:
+npm install --save-dev vitest @testing-library/react
+npx vitest run
+```
 
 ---
 
-## 👥 Meet the Team
+## 🚢 Deployment
 
-<table align="center">
+> 🚧 **Deployment (Coming Soon)**
+>
+> Containerization and CI/CD are planned. The architecture is deployment-ready with the following target configuration:
+
+| Component | Planned Platform |
+|---|---|
+| Frontend (React/Vite) | [TODO: Vercel / Nginx / Cloud Run] |
+| API Gateway | [TODO: Cloud Run / EC2 / K8s] |
+| User Service | [TODO: Cloud Run / EC2 / K8s] |
+| Batch Service | [TODO: Cloud Run / EC2 / K8s] |
+| Assessment Service | [TODO: Cloud Run / EC2 / K8s] |
+| Database | [TODO: Cloud SQL (PostgreSQL) / RDS] |
+| Caching | [TODO: Redis (Memorystore / ElastiCache)] |
+
+**Production Build (Frontend):**
+```bash
+npm run build
+# Output: ./dist/ — serve this with any static file server or CDN
+```
+
+**Production Packaging (Backend):**
+```bash
+cd backend/user-service
+./mvnw package -DskipTests
+# Output: target/user-service-0.0.1-SNAPSHOT.jar
+java -jar target/user-service-0.0.1-SNAPSHOT.jar
+```
+
+---
+
+## 🗺️ Roadmap
+
+- [x] Role-based authentication (trainer / student)
+- [x] Trainer dashboard with KPIs
+- [x] Batch management (CRUD, student enrollment)
+- [x] AI-powered Assessment Builder (Groq + LLaMA-3.3)
+- [x] Excel question import with AI parsing
+- [x] Quiz-taking interface (MCQ, true/false, multi-select, short-answer)
+- [x] Coding challenge interface (Monaco Editor + AI simulation)
+- [x] Auto-grading engine with negative marking support
+- [x] Manual evaluation panel with AI scoring suggestions
+- [x] Draft auto-save during quiz sessions
+- [x] Reports and analytics with charts
+- [x] Global leaderboard
+- [x] Certificate of Completion with QR code and PDF download
+- [x] Dark / Light theme
+- [x] Microservices architecture with Spring Cloud Gateway
+- [ ] JWT authentication and Spring Security
+- [ ] Redis integration for production draft caching
+- [ ] Real code execution engine (Docker sandbox or Judge0)
+- [ ] Email notifications for assessment scheduling
+- [ ] Docker Compose for one-command local setup
+- [ ] CI/CD pipeline (GitHub Actions)
+- [ ] Prometheus + Grafana monitoring
+- [ ] Student peer review feature
+- [ ] Mobile-responsive quiz interface
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Please follow these guidelines to keep the codebase consistent and high-quality.
+
+### Branch Naming Convention
+
+```
+feature/<short-description>     # New features
+fix/<short-description>         # Bug fixes
+chore/<short-description>       # Tooling, deps, refactors
+docs/<short-description>        # Documentation only changes
+```
+
+**Example:** `feature/redis-draft-caching`, `fix/mcq-grading-index-bug`
+
+### Commit Message Style
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>): <short description>
+
+feat(assessment): add negative marking support to grading engine
+fix(certificate): resolve scrolling bug in certificate page
+docs(readme): add API documentation section
+chore(deps): upgrade React to 19.0.1
+```
+
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+### Submitting a Pull Request
+
+1. Fork the repository
+2. Create a branch from `main` following the naming convention above
+3. Make your changes, ensuring all existing features still work
+4. Write or update tests if applicable
+5. Submit a PR against the `main` branch with a clear title and description
+6. Reference any related issues with `Closes #<issue-number>`
+
+### Coding Standards
+
+**Frontend (JavaScript/React):**
+- Use functional components with hooks — no class components
+- Keep components focused on a single responsibility
+- Use `LMSContext` for shared state; avoid prop-drilling more than 2 levels
+- All API calls must go through `src/api/client.js`
+- Use Tailwind utility classes; avoid inline styles except for dynamic values
+
+**Backend (Java/Spring Boot):**
+- Use Lombok `@Data`, `@NoArgsConstructor`, `@AllArgsConstructor` on entities
+- Keep controllers thin — business logic belongs in service classes
+- Use `@CrossOrigin(origins = "*")` on all controllers for CORS
+- Follow standard Spring layering: Controller → Service → Repository
+
+### Code of Conduct
+
+This project follows a standard open-source Code of Conduct. Be respectful, inclusive, and constructive in all interactions.
+
+---
+
+## 👥 Contributors
+
+<table>
   <tr>
     <td align="center">
       <a href="https://github.com/mritunjai-prog">
-        <img src="https://github.com/mritunjai-prog.png" width="90px;" alt="Mritunjai Singh"/><br/>
-        <b>Mritunjai Singh</b>
-      </a><br/>
-      <sub>Full Stack Lead</sub>
+        <img src="https://avatars.githubusercontent.com/mritunjai-prog" width="80px;" alt="mritunjai-prog"/><br />
+        <sub><b>mritunjai-prog</b></sub>
+      </a><br />
+      <sub>Lead Developer</sub>
     </td>
-    <td align="center">
-      <a href="https://github.com/Abhijeet0Tiwari">
-        <img src="https://github.com/Abhijeet0Tiwari.png" width="90px;" alt="Abhijeet Tiwari"/><br/>
-        <b>Abhijeet Tiwari</b>
-      </a><br/>
-      <sub>Backend Developer</sub>
-    </td>
-    <td align="center">
-      <a href="https://github.com/ManishKumawat450">
-        <img src="https://github.com/ManishKumawat450.png" width="90px;" alt="Manish Kumawat"/><br/>
-        <b>Manish Kumawat</b>
-      </a><br/>
-      <sub>Frontend Developer</sub>
-    </td>
-    <td align="center">
-      <a href="https://github.com/Vijay-Menaria">
-        <img src="https://github.com/github.png" width="90px;" alt="Vijay Menaria"/><br/>
-        <b>Vijay Menaria</b>
-      </a><br/>
-      <sub>UI/UX Developer</sub>
-    </td>
-    <td align="center">
-      <a href="https://github.com/Vinit1120">
-        <img src="https://github.com/github.png" width="90px;" alt="Vinit Menaria"/><br/>
-        <b>Vinit Menaria</b>
-      </a><br/>
-      <sub>Backend Developer</sub>
-    </td>
+    <!-- Add more contributors here using the same block -->
   </tr>
 </table>
+
+> Want to appear here? Make a meaningful contribution and submit a PR!
+
+---
+
+## 📄 License
+
+**License to be decided.**
+
+> [TODO: Add a `LICENSE` file to the repository root. Common choices for an enterprise internal tool: MIT, Apache 2.0, or a proprietary license.]
+
+---
+
+## 🙏 Acknowledgements / Credits
+
+- **[Groq](https://groq.com)** — Ultra-fast LLaMA-3.3-70B inference API used for all frontend AI features
+- **[Google Gemini](https://aistudio.google.com)** — Used for server-side AI description generation
+- **[Monaco Editor](https://microsoft.github.io/monaco-editor/)** — The same editor that powers VS Code, embedded in the coding challenge interface
+- **[Recharts](https://recharts.org)** — Composable charting library for all dashboard analytics
+- **[Lucide Icons](https://lucide.dev)** — Beautiful, consistent open-source icon set
+- **[Motion (Framer Motion)](https://motion.dev)** — Production-ready animation library for React
+- **[SheetJS (xlsx)](https://sheetjs.com)** — Excel parsing library for question bulk import
+- **[Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway)** — API gateway routing solution
+- **[Lombok](https://projectlombok.org)** — Java boilerplate elimination
+- **[Tailwind CSS](https://tailwindcss.com)** — Utility-first CSS framework
+- **[Google Fonts](https://fonts.google.com)** — Cinzel, EB Garamond, Dancing Script, and Lato used in certificate design
+- **[shields.io](https://shields.io)** — Badges in this README
 
 ---
 
 <div align="center">
-  <p>⭐ Star this repository if you found it useful!</p>
-  <p>Built with ❤️ by the Xebia LMS Team</p>
+  <img src="public/logo-light.png" alt="Xebia" height="60"/>
+  <br/>
+  <sub>Built with ❤️ by the Xebia team</sub>
 </div>
