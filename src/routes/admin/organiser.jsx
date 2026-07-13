@@ -29,18 +29,18 @@ const SEARCH_DATA = [
 
 // ── Mock notifications ────────────────────────────────────────────────────────
 const INITIAL_NOTIFS = [
-  { id: 1, read: false, icon: AlertCircle, color: "text-red-500",    bg: "bg-red-500/10",     title: "Submission Deadline Missed",  body: "4 students missed the React Exam submission.",         time: "2 min ago" },
-  { id: 2, read: false, icon: Zap,         color: "text-amber-500",  bg: "bg-amber-500/10",   title: "Batch Sync Required",         body: "Spring Boot Jan 2026 timetable needs confirmation.",   time: "18 min ago" },
-  { id: 3, read: false, icon: Info,        color: "text-blue-500",   bg: "bg-blue-500/10",    title: "New Student Enrolled",        body: "Aryan Mehta joined Cloud Architecture Masterclass.",   time: "1 hr ago" },
-  { id: 4, read: true,  icon: CheckCheck,  color: "text-emerald-500",bg: "bg-emerald-500/10", title: "Report Export Ready",         body: "Your June analytics PDF is ready to download.",        time: "3 hr ago" },
+  { id: 1, read: false, icon: AlertCircle, color: "text-destructive",    bg: "bg-destructive/10",     title: "Submission Deadline Missed",  body: "4 students missed the React Exam submission.",         time: "2 min ago" },
+  { id: 2, read: false, icon: Zap,         color: "text-destructive",  bg: "bg-destructive/10",   title: "Batch Sync Required",         body: "Spring Boot Jan 2026 timetable needs confirmation.",   time: "18 min ago" },
+  { id: 3, read: false, icon: Info,        color: "text-accent-2",   bg: "bg-accent-2/10",    title: "New Student Enrolled",        body: "Aryan Mehta joined Cloud Architecture Masterclass.",   time: "1 hr ago" },
+  { id: 4, read: true,  icon: CheckCheck,  color: "text-accent-2",bg: "bg-accent-2/10", title: "Report Export Ready",         body: "Your June analytics PDF is ready to download.",        time: "3 hr ago" },
   { id: 5, read: true,  icon: BookOpen,    color: "text-primary",    bg: "bg-primary/10",     title: "Course Published",            body: "Spring Boot Middleware Patterns is now live.",          time: "Yesterday" },
 ];
 
 const TYPE_COLORS = {
-  Course:     "text-purple-500 bg-purple-500/10",
-  Student:    "text-cyan-500   bg-cyan-500/10",
-  Batch:      "text-teal-500   bg-teal-500/10",
-  Assessment: "text-pink-500   bg-pink-500/10",
+  Course:     "text-primary bg-primary/10",
+  Student:    "text-accent-2   bg-accent-2/10",
+  Batch:      "text-accent-2   bg-accent-2/10",
+  Assessment: "text-primary-glow   bg-primary-glow/10",
 };
 
 function OrganiserLayout() {
@@ -337,7 +337,7 @@ function OrganiserLayout() {
                       <Link
                         to="/"
                         onClick={() => setIsDropdownOpen(false)}
-                        className="w-full text-left px-3 py-2 hover:bg-red-500/10 text-red-500 rounded-xl font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 hover:bg-destructive/10 text-destructive rounded-xl font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <LogOut className="w-3.5 h-3.5" /> Logout
                       </Link>

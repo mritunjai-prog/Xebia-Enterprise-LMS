@@ -20,7 +20,7 @@ export function CoverageKPIs() {
     { title: "Coverage by Location", value: "94%", icon: MapPin, colorClass: "text-[#6C1D5F] dark:text-[#FFACE8]", hoverBorderClass: "hover:border-[#6C1D5F] dark:hover:border-[#FFACE8]" },
     { title: "Coverage by Project", value: "85%", icon: Briefcase, colorClass: "text-[#FF6200] dark:text-[#FF6200]", hoverBorderClass: "hover:border-[#FF6200] dark:hover:border-[#FF6200]" },
     { title: "Coverage by BU", value: "92%", icon: Layers, colorClass: "text-[#84117C] dark:text-[#D3CCEC]", hoverBorderClass: "hover:border-[#84117C] dark:hover:border-[#D3CCEC]" },
-    { title: "Coverage by Grade", value: "88%", icon: GraduationCap, colorClass: "text-emerald-500", hoverBorderClass: "hover:border-emerald-500 dark:hover:border-emerald-500" },
+    { title: "Coverage by Grade", value: "88%", icon: GraduationCap, colorClass: "text-accent-2", hoverBorderClass: "hover:border-accent-2 dark:hover:border-accent-2" },
   ];
 
   return (

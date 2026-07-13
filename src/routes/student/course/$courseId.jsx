@@ -382,7 +382,7 @@ function CourseViewer() {
   if (isError || !course.title) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center max-w-md mx-auto space-y-4">
-        <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mb-2">
+        <div className="w-16 h-16 bg-destructive/10 dark:bg-destructive text-destructive rounded-full flex items-center justify-center mb-2">
           <X className="w-8 h-8" />
         </div>
         <h2 className="text-xl font-bold text-foreground">Course Unavailable</h2>

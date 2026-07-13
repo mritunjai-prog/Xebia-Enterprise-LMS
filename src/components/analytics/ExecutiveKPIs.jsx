@@ -23,7 +23,7 @@ const KpiCard = ({ title, mainValue, mainLabel, icon: Icon, colorClass, gradient
           <span className={`font-bold flex items-center gap-1.5 ${colorClass}`}>
             {metric.value}
             {metric.trend && (
-              <span className="text-[10px] text-emerald-500 flex items-center">
+              <span className="text-[10px] text-accent-2 flex items-center">
                 <TrendingUp className="w-3 h-3 mr-0.5" />
                 {metric.trend}
               </span>

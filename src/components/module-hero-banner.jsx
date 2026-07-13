@@ -172,7 +172,7 @@ export function ModuleHeroBanner({ breadcrumb, title, subtitle, badgeText, actio
                 color: "oklch(0.55 0.2 320)",
               }}
             >
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_6px_oklch(0.7_0.2_145)]" />
+              <span className="h-2 w-2 rounded-full bg-accent-2 animate-pulse shadow-[0_0_6px_oklch(0.7_0.2_145)]" />
               {badgeText}
             </motion.span>
           )}

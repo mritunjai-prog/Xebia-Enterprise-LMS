@@ -17,7 +17,7 @@ export function StatCard({ title, value, icon: Icon, trend, trendUp, colorClass 
         </div>
         <div className="flex flex-col gap-1 mt-2">
           <div className="text-3xl font-extrabold text-gray-900 dark:text-white">{value}</div>
-          <p className={`text-xs font-semibold ${trendUp ? "text-emerald-500" : "text-gray-500 dark:text-gray-400"}`}>
+          <p className={`text-xs font-semibold ${trendUp ? "text-accent-2" : "text-gray-500 dark:text-gray-400"}`}>
             {trend}
           </p>
         </div>

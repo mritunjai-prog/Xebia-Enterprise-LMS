@@ -51,7 +51,7 @@ export function HoursLeaderboards() {
               <div className="flex justify-between text-xs text-gray-500 pl-9">
                 <span>Avg: {item.avg}h</span>
                 <span>Comp: {item.completion}</span>
-                <span className={item.trend.startsWith('+') ? 'text-emerald-500' : 'text-red-500'}>{item.trend}</span>
+                <span className={item.trend.startsWith('+') ? 'text-accent-2' : 'text-destructive'}>{item.trend}</span>
               </div>
             </div>
           ))}
@@ -81,7 +81,7 @@ export function HoursLeaderboards() {
               <div className="flex justify-between text-xs text-gray-500 pl-9">
                 <span>Active: {item.active}</span>
                 <span>Avg: {item.avg}h</span>
-                <span className="text-emerald-500">{item.growth}</span>
+                <span className="text-accent-2">{item.growth}</span>
               </div>
             </div>
           ))}

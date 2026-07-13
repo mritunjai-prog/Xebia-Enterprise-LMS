@@ -165,7 +165,7 @@ export default function CourseDetail() {
               {formData.level || 'BEGINNER'}
             </span>
             {formData.isFeatured && (
-              <span className="px-3 py-1.5 rounded-xl bg-amber-100 text-amber-700 shadow-sm border border-amber-200 text-xs font-black uppercase tracking-widest flex items-center gap-1.5">
+              <span className="px-3 py-1.5 rounded-xl bg-destructive/10 text-destructive shadow-sm border border-destructive/20 text-xs font-black uppercase tracking-widest flex items-center gap-1.5">
                 <Star className="w-3.5 h-3.5 fill-current" /> Featured
               </span>
             )}
@@ -365,7 +365,7 @@ export default function CourseDetail() {
                         <div>
                           <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Preview Video URL (YouTube or Direct)</label>
                           <div className="relative">
-                            <PlayCircle className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-red-500" />
+                            <PlayCircle className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive" />
                             <input type="text" className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-indigo-500" value={formData.youtubeVideoUrl || ''} onChange={e => setFormData({...formData, youtubeVideoUrl: e.target.value})} />
                           </div>
                         </div>
@@ -401,62 +401,62 @@ export default function CourseDetail() {
 
                     {/* SEO Tab */}
                     <div className={clsx(editorTab !== 'seo' && "hidden")}>
-                      <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><Globe className="w-5 h-5 text-emerald-500" /> Search Engine Optimization</h3>
+                      <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><Globe className="w-5 h-5 text-accent-2" /> Search Engine Optimization</h3>
                       <div className="space-y-6">
 
                         <div className="space-y-4">
-                          <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-500">Core SEO</h4>
+                          <h4 className="text-xs font-bold uppercase tracking-widest text-accent-2">Core SEO</h4>
                           <div>
                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Meta Title</label>
-                            <input type="text" maxLength={70} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500" value={formData.metaTitle || ''} onChange={e => setFormData({...formData, metaTitle: e.target.value})} />
+                            <input type="text" maxLength={70} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2" value={formData.metaTitle || ''} onChange={e => setFormData({...formData, metaTitle: e.target.value})} />
                             <p className="text-[10px] text-gray-500 mt-1 text-right">{(formData.metaTitle || '').length}/70 chars</p>
                           </div>
                           <div>
                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Meta Description</label>
-                            <textarea rows={2} maxLength={320} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500 resize-none" value={formData.metaDescription || ''} onChange={e => setFormData({...formData, metaDescription: e.target.value})} />
+                            <textarea rows={2} maxLength={320} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2 resize-none" value={formData.metaDescription || ''} onChange={e => setFormData({...formData, metaDescription: e.target.value})} />
                             <p className="text-[10px] text-gray-500 mt-1 text-right">{(formData.metaDescription || '').length}/320 chars</p>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Primary Keyword</label>
-                              <input type="text" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500" value={formData.primaryKeyword || ''} onChange={e => setFormData({...formData, primaryKeyword: e.target.value})} />
+                              <input type="text" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2" value={formData.primaryKeyword || ''} onChange={e => setFormData({...formData, primaryKeyword: e.target.value})} />
                             </div>
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Canonical URL</label>
-                              <input type="url" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500" value={formData.canonicalUrl || ''} onChange={e => setFormData({...formData, canonicalUrl: e.target.value})} />
+                              <input type="url" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2" value={formData.canonicalUrl || ''} onChange={e => setFormData({...formData, canonicalUrl: e.target.value})} />
                             </div>
                           </div>
                         </div>
 
                         <div className="border-t border-gray-200 pt-5 space-y-4">
-                          <h4 className="text-xs font-bold uppercase tracking-widest text-blue-400">Advanced SEO</h4>
+                          <h4 className="text-xs font-bold uppercase tracking-widest text-accent-2">Advanced SEO</h4>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Secondary Keywords</label>
-                              <textarea rows={2} placeholder="Comma separated..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500 resize-none" value={formData.secondaryKeywords || ''} onChange={e => setFormData({...formData, secondaryKeywords: e.target.value})} />
+                              <textarea rows={2} placeholder="Comma separated..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2 resize-none" value={formData.secondaryKeywords || ''} onChange={e => setFormData({...formData, secondaryKeywords: e.target.value})} />
                             </div>
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Focus Keywords</label>
-                              <textarea rows={2} placeholder="Comma separated..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500 resize-none" value={formData.focusKeywords || ''} onChange={e => setFormData({...formData, focusKeywords: e.target.value})} />
+                              <textarea rows={2} placeholder="Comma separated..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2 resize-none" value={formData.focusKeywords || ''} onChange={e => setFormData({...formData, focusKeywords: e.target.value})} />
                             </div>
                           </div>
                           <div className="grid grid-cols-3 gap-4">
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Author</label>
-                              <input type="text" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500" value={formData.author || ''} onChange={e => setFormData({...formData, author: e.target.value})} />
+                              <input type="text" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2" value={formData.author || ''} onChange={e => setFormData({...formData, author: e.target.value})} />
                             </div>
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">SEO Category</label>
-                              <input type="text" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500" value={formData.seoCategory || ''} onChange={e => setFormData({...formData, seoCategory: e.target.value})} />
+                              <input type="text" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2" value={formData.seoCategory || ''} onChange={e => setFormData({...formData, seoCategory: e.target.value})} />
                             </div>
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Robots</label>
-                              <input type="text" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500" value={formData.robots || 'index, follow'} onChange={e => setFormData({...formData, robots: e.target.value})} />
+                              <input type="text" className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2" value={formData.robots || 'index, follow'} onChange={e => setFormData({...formData, robots: e.target.value})} />
                             </div>
                           </div>
                           <div>
                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">SEO Tags</label>
-                            <input type="text" placeholder="Comma separated tags..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-emerald-500" value={formData.seoTags || ''} onChange={e => setFormData({...formData, seoTags: e.target.value})} />
+                            <input type="text" placeholder="Comma separated tags..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-accent-2" value={formData.seoTags || ''} onChange={e => setFormData({...formData, seoTags: e.target.value})} />
                           </div>
                         </div>
 
@@ -513,41 +513,41 @@ export default function CourseDetail() {
                         </div>
 
                         <div className="border-t border-gray-200 pt-5 space-y-4">
-                          <h4 className="text-xs font-bold uppercase tracking-widest text-purple-400">Programmatic SEO</h4>
+                          <h4 className="text-xs font-bold uppercase tracking-widest text-primary">Programmatic SEO</h4>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Search Intent</label>
-                              <textarea rows={2} placeholder="e.g. informational, navigational..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-purple-500 resize-none" value={formData.searchIntent || ''} onChange={e => setFormData({...formData, searchIntent: e.target.value})} />
+                              <textarea rows={2} placeholder="e.g. informational, navigational..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-primary resize-none" value={formData.searchIntent || ''} onChange={e => setFormData({...formData, searchIntent: e.target.value})} />
                             </div>
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Semantic Keywords</label>
-                              <textarea rows={2} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-purple-500 resize-none" value={formData.semanticKeywords || ''} onChange={e => setFormData({...formData, semanticKeywords: e.target.value})} />
+                              <textarea rows={2} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-primary resize-none" value={formData.semanticKeywords || ''} onChange={e => setFormData({...formData, semanticKeywords: e.target.value})} />
                             </div>
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Related Topics</label>
-                              <textarea rows={2} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-purple-500 resize-none" value={formData.relatedTopics || ''} onChange={e => setFormData({...formData, relatedTopics: e.target.value})} />
+                              <textarea rows={2} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-primary resize-none" value={formData.relatedTopics || ''} onChange={e => setFormData({...formData, relatedTopics: e.target.value})} />
                             </div>
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Search Synonyms</label>
-                              <textarea rows={2} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-purple-500 resize-none" value={formData.searchSynonyms || ''} onChange={e => setFormData({...formData, searchSynonyms: e.target.value})} />
+                              <textarea rows={2} className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-primary resize-none" value={formData.searchSynonyms || ''} onChange={e => setFormData({...formData, searchSynonyms: e.target.value})} />
                             </div>
                           </div>
                         </div>
 
                         <div className="border-t border-gray-200 pt-5 space-y-4">
-                          <h4 className="text-xs font-bold uppercase tracking-widest text-amber-400">FAQ Content and Custom Scripts</h4>
+                          <h4 className="text-xs font-bold uppercase tracking-widest text-destructive">FAQ Content and Custom Scripts</h4>
                           <div>
                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">FAQ Content (JSON or plain text)</label>
-                            <textarea rows={3} placeholder="Q: ... A: ..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-amber-500 resize-none font-mono" value={formData.faqContent || ''} onChange={e => setFormData({...formData, faqContent: e.target.value})} />
+                            <textarea rows={3} placeholder="Q: ... A: ..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-destructive resize-none font-mono" value={formData.faqContent || ''} onChange={e => setFormData({...formData, faqContent: e.target.value})} />
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Custom Head Script</label>
-                              <textarea rows={3} placeholder="script tag here..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-amber-500 resize-none font-mono" value={formData.customHeadScript || ''} onChange={e => setFormData({...formData, customHeadScript: e.target.value})} />
+                              <textarea rows={3} placeholder="script tag here..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-destructive resize-none font-mono" value={formData.customHeadScript || ''} onChange={e => setFormData({...formData, customHeadScript: e.target.value})} />
                             </div>
                             <div>
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Custom Body Script</label>
-                              <textarea rows={3} placeholder="script tag here..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-amber-500 resize-none font-mono" value={formData.customBodyScript || ''} onChange={e => setFormData({...formData, customBodyScript: e.target.value})} />
+                              <textarea rows={3} placeholder="script tag here..." className="w-full px-3 py-2 bg-white border border-gray-300 shadow-sm focus-within:border-indigo-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-[12px] text-sm outline-none focus:border-destructive resize-none font-mono" value={formData.customBodyScript || ''} onChange={e => setFormData({...formData, customBodyScript: e.target.value})} />
                             </div>
                           </div>
                         </div>
@@ -557,7 +557,7 @@ export default function CourseDetail() {
 
                     {/* Settings Tab */}
                     <div className={clsx(editorTab !== 'settings' && "hidden")}>
-                      <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><Settings className="w-5 h-5 text-amber-500" /> Platform Settings</h3>
+                      <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><Settings className="w-5 h-5 text-destructive" /> Platform Settings</h3>
                       <div className="space-y-5">
                         <div className="p-4 border border-gray-200 rounded-[12px] bg-white/50 flex items-center justify-between">
                           <div>
@@ -566,7 +566,7 @@ export default function CourseDetail() {
                           </div>
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" className="sr-only peer" checked={formData.published || false} onChange={e => setFormData({...formData, published: e.target.checked})} />
-                            <div className="w-11 h-6 bg-secondary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                            <div className="w-11 h-6 bg-secondary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-2"></div>
                           </label>
                         </div>
                         <div className="p-4 border border-gray-200 rounded-[12px] bg-white/50 flex items-center justify-between">
@@ -576,7 +576,7 @@ export default function CourseDetail() {
                           </div>
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" className="sr-only peer" checked={formData.allowIndexing || false} onChange={e => setFormData({...formData, allowIndexing: e.target.checked})} />
-                            <div className="w-11 h-6 bg-secondary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                            <div className="w-11 h-6 bg-secondary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-2"></div>
                           </label>
                         </div>
                         <div className="p-4 border border-gray-200 rounded-[12px] bg-white/50 flex items-center justify-between">
@@ -586,7 +586,7 @@ export default function CourseDetail() {
                           </div>
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" className="sr-only peer" checked={formData.isFeatured || false} onChange={e => setFormData({...formData, isFeatured: e.target.checked})} />
-                            <div className="w-11 h-6 bg-secondary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                            <div className="w-11 h-6 bg-secondary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-2"></div>
                           </label>
                         </div>
                       </div>
@@ -610,21 +610,21 @@ export default function CourseDetail() {
                               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Enrollments</p>
                               <div className="flex items-end gap-3">
                                 <span className="text-4xl font-black text-gray-900">1,248</span>
-                                <span className="text-sm font-bold text-emerald-500 mb-1 flex items-center"><TrendingUp className="w-4 h-4 mr-1"/> +12%</span>
+                                <span className="text-sm font-bold text-accent-2 mb-1 flex items-center"><TrendingUp className="w-4 h-4 mr-1"/> +12%</span>
                               </div>
                             </div>
                             <div className="bg-white/60 backdrop-blur-md border border-white/50 p-6 rounded-[24px] shadow-sm">
                               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Avg. Completion Rate</p>
                               <div className="flex items-end gap-3">
                                 <span className="text-4xl font-black text-gray-900">68%</span>
-                                <span className="text-sm font-bold text-emerald-500 mb-1 flex items-center"><TrendingUp className="w-4 h-4 mr-1"/> +4%</span>
+                                <span className="text-sm font-bold text-accent-2 mb-1 flex items-center"><TrendingUp className="w-4 h-4 mr-1"/> +4%</span>
                               </div>
                             </div>
                             <div className="bg-white/60 backdrop-blur-md border border-white/50 p-6 rounded-[24px] shadow-sm">
                               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Average Rating</p>
                               <div className="flex items-end gap-3">
                                 <span className="text-4xl font-black text-gray-900">4.8</span>
-                                <div className="flex mb-2 text-amber-400">
+                                <div className="flex mb-2 text-destructive">
                                   <Star className="w-4 h-4 fill-current"/>
                                   <Star className="w-4 h-4 fill-current"/>
                                   <Star className="w-4 h-4 fill-current"/>
@@ -672,7 +672,7 @@ export default function CourseDetail() {
             <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.04] transition-opacity duration-700 pointer-events-none">
               <svg className="w-40 h-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
             </div>
-            <h3 className="text-sm font-black text-gray-900 mb-8 flex items-center gap-3 tracking-widest uppercase"><svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> Lifecycle Control</h3>
+            <h3 className="text-sm font-black text-gray-900 mb-8 flex items-center gap-3 tracking-widest uppercase"><svg className="w-5 h-5 text-accent-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> Lifecycle Control</h3>
             <div className="space-y-6 relative z-10">
               <div className="flex items-center justify-between p-5 bg-white/50 rounded-[24px] border border-white/60 shadow-sm transition-all hover:bg-white/80">
                 <div>
@@ -681,7 +681,7 @@ export default function CourseDetail() {
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" className="sr-only peer" checked={formData.published || formData.isPublished || false} onChange={e => setFormData({...formData, published: e.target.checked, isPublished: e.target.checked})} />
-                  <div className="w-12 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-500 shadow-inner"></div>
+                  <div className="w-12 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-accent-2 shadow-inner"></div>
                 </label>
               </div>
               <div className="flex items-center justify-between p-5 bg-white/50 rounded-[24px] border border-white/60 shadow-sm transition-all hover:bg-white/80">

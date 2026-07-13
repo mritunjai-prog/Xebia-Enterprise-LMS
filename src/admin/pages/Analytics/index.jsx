@@ -155,8 +155,8 @@ export default function Analytics() {
         {/* Total Views */}
         <div className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-              <Eye className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <div className="w-10 h-10 rounded-lg bg-accent-2/10 dark:bg-accent-2 flex items-center justify-center">
+              <Eye className="w-5 h-5 text-accent-2 dark:text-accent-2" />
             </div>
           </div>
           <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{totalViews.toLocaleString()}</h3>
@@ -166,8 +166,8 @@ export default function Analytics() {
         {/* Total Clicks */}
         <div className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
-              <MousePointerClick className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            <div className="w-10 h-10 rounded-lg bg-primary/10 dark:bg-primary flex items-center justify-center">
+              <MousePointerClick className="w-5 h-5 text-primary dark:text-primary" />
             </div>
           </div>
           <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{totalClicks.toLocaleString()}</h3>
@@ -177,8 +177,8 @@ export default function Analytics() {
         {/* Click-Through Rate */}
         <div className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center">
-              <Target className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+            <div className="w-10 h-10 rounded-lg bg-destructive/10 dark:bg-destructive flex items-center justify-center">
+              <Target className="w-5 h-5 text-destructive dark:text-destructive" />
             </div>
           </div>
           <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{avgCtr}%</h3>
@@ -188,8 +188,8 @@ export default function Analytics() {
         {/* SEO Score */}
         <div className="bg-white dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#333] shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <div className="w-10 h-10 rounded-lg bg-accent-2/10 dark:bg-accent-2 flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-accent-2 dark:text-accent-2" />
             </div>
           </div>
           <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{avgSeoScore}/100</h3>

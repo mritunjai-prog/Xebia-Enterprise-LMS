@@ -9,67 +9,15 @@ export const Route = createFileRoute("/student/assessment/$assessmentId")({
   component: ExamTakingView,
 });
 
-const dummyQuestions = [
-  {
-    id: 1,
-    question: "What is the primary purpose of a Virtual DOM in modern frontend frameworks?",
-    options: [
-      "To directly manipulate the browser's DOM for better performance",
-      "To create an in-memory representation of the UI and calculate minimal updates",
-      "To store data securely on the client-side",
-      "To manage server-side rendering logic"
-    ],
-    correctAnswer: 1
-  },
-  {
-    id: 2,
-    question: "Which pattern is considered an anti-pattern when managing global state?",
-    options: [
-      "Using React Context for deeply nested thematic data",
-      "Prop drilling through more than 5 levels of components",
-      "Centralizing all application state in a single store",
-      "Using custom hooks to encapsulate local state logic"
-    ],
-    correctAnswer: 1
-  },
-  {
-    id: 3,
-    question: "In Enterprise Architecture, what does 'Micro-frontends' solve?",
-    options: [
-      "Database scaling issues across regions",
-      "CSS specificity conflicts in monolithic applications",
-      "Scaling frontend development across multiple independent teams",
-      "Reducing the size of JavaScript bundles"
-    ],
-    correctAnswer: 2
-  },
-  {
-    id: 4,
-    question: "What is the Time Complexity of searching in a perfectly balanced Binary Search Tree?",
-    options: [
-      "O(1)",
-      "O(log n)",
-      "O(n)",
-      "O(n log n)"
-    ],
-    correctAnswer: 1
-  },
-  {
-    id: 5,
-    question: "Which CSS property is crucial for creating accessible focus rings?",
-    options: [
-      "outline-offset",
-      "box-shadow",
-      "border-radius",
-      "opacity"
-    ],
-    correctAnswer: 0
-  }
-];
+import { useLMS } from "../../../context/LMSContext";
 
 function ExamTakingView() {
   const { assessmentId } = Route.useParams();
   const navigate = useNavigate();
+  const { assessments } = useLMS();
+  
+  const assessment = assessments.find(a => a.id === assessmentId);
+  const questions = assessment?.questions || [];
   
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -122,18 +70,27 @@ function ExamTakingView() {
     }, 2000);
   };
 
-  const currentQ = dummyQuestions[currentIdx];
-  const isLastQ = currentIdx === dummyQuestions.length - 1;
+  const currentQ = questions[currentIdx];
+  const isLastQ = currentIdx === questions.length - 1;
   const isFirstQ = currentIdx === 0;
 
   const attemptedCount = Object.keys(answers).length;
-  const progressPercent = (attemptedCount / dummyQuestions.length) * 100;
+  const progressPercent = questions.length > 0 ? (attemptedCount / questions.length) * 100 : 0;
+
+  if (!questions || questions.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh]">
+        <h2 className="text-2xl font-bold text-neutral-500">No questions found for this assessment.</h2>
+        <button onClick={() => navigate({ to: "/student/assessments" })} className="mt-4 px-4 py-2 bg-[#6C1D5F] text-white rounded-lg">Back to Assessments</button>
+      </div>
+    );
+  }
 
   if (isSubmitted) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] animate-in fade-in zoom-in duration-500">
-        <div className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6">
-          <CheckCircle2 className="w-12 h-12 text-emerald-500" />
+        <div className="w-24 h-24 bg-accent-2/10 rounded-full flex items-center justify-center mb-6">
+          <CheckCircle2 className="w-12 h-12 text-accent-2" />
         </div>
         <h1 className="text-3xl font-extrabold text-foreground mb-2">Assessment Submitted</h1>
         <p className="text-muted-foreground">Your answers have been saved securely.</p>
@@ -157,13 +114,13 @@ function ExamTakingView() {
         <div className="flex items-center gap-6">
           <div className="flex flex-col items-end">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Time Remaining</span>
-            <div className={clsx("flex items-center gap-2 text-3xl font-black font-mono", timeLeft < 300 ? "text-red-500 animate-pulse" : "text-foreground")}>
+            <div className={clsx("flex items-center gap-2 text-3xl font-black font-mono", timeLeft < 300 ? "text-destructive animate-pulse" : "text-foreground")}>
               <Clock className="w-6 h-6" />
               {formatTime(timeLeft)}
             </div>
           </div>
           
-          <button onClick={handleSubmit} className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-[#01AC9F] hover:from-emerald-600 hover:to-[#019085] text-white font-bold rounded-xl shadow-[0_2px_12px_-2px_rgba(1,172,159,0.5)] transition-all hover:-translate-y-0.5">
+          <button onClick={handleSubmit} className="px-6 py-3 bg-gradient-to-r from-accent-2 to-[#01AC9F] hover:from-accent-2 hover:to-[#019085] text-white font-bold rounded-xl shadow-[0_2px_12px_-2px_rgba(1,172,159,0.5)] transition-all hover:-translate-y-0.5">
             Submit Now
           </button>
         </div>
@@ -182,13 +139,13 @@ function ExamTakingView() {
           <div className="p-8 flex-1 flex flex-col">
             <div className="flex items-center justify-between mb-8">
               <span className="text-sm font-extrabold text-primary dark:text-[#b44e9f] uppercase tracking-widest bg-primary/10 dark:bg-[#b44e9f]/10 px-3 py-1.5 rounded-lg">
-                Question {currentIdx + 1} of {dummyQuestions.length}
+                Question {currentIdx + 1} of {questions.length}
               </span>
               
               {answers[currentQ.id] !== undefined && (
                 <button 
                   onClick={() => handleClearSelection(currentQ.id)}
-                  className="text-sm font-bold text-gray-400 hover:text-red-500 transition-colors"
+                  className="text-sm font-bold text-gray-400 hover:text-destructive transition-colors"
                 >
                   Clear Selection
                 </button>
@@ -259,7 +216,7 @@ function ExamTakingView() {
             ) : (
               <button
                 onClick={handleSubmit}
-                className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 text-white font-bold rounded-xl shadow-sm hover:bg-emerald-600 hover:-translate-y-0.5 transition-all"
+                className="flex items-center gap-2 px-6 py-2.5 bg-accent-2 text-white font-bold rounded-xl shadow-sm hover:bg-accent-2 hover:-translate-y-0.5 transition-all"
               >
                 Finish Assessment <CheckCircle2 className="w-5 h-5" />
               </button>
@@ -271,7 +228,7 @@ function ExamTakingView() {
         <div className="bg-card border border-border rounded-2xl p-5 shadow-sm sticky top-6">
           <h3 className="font-extrabold text-foreground mb-4">Questions</h3>
           <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-4 gap-2">
-            {dummyQuestions.map((q, idx) => {
+            {questions.map((q, idx) => {
               const isAttempted = answers[q.id] !== undefined;
               const isActive = currentIdx === idx;
               
@@ -306,7 +263,7 @@ function ExamTakingView() {
               <span className="flex items-center gap-2 text-muted-foreground font-medium">
                 <div className="w-3 h-3 border-2 border-gray-300 dark:border-[#2e2e3e] rounded-full" /> Unattempted
               </span>
-              <span className="font-bold text-foreground">{dummyQuestions.length - attemptedCount}</span>
+              <span className="font-bold text-foreground">{questions.length - attemptedCount}</span>
             </div>
           </div>
         </div>

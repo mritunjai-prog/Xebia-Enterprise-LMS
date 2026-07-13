@@ -13,6 +13,8 @@ import { useEffect } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import "@/admin/index.css";
+import { LMSProvider } from "../context/LMSContext";
+import React from "react";
 
 function NotFoundComponent() {
   return _jsx("div", {
@@ -60,6 +62,10 @@ function ErrorComponent({ error, reset }) {
         _jsx("p", {
           className: "mt-2 text-sm text-muted-foreground",
           children: "Something went wrong on our end. You can try refreshing or head back home.",
+        }),
+        _jsx("div", {
+          className: "mt-4 p-4 bg-red-100 text-red-800 rounded text-left overflow-auto max-h-40 text-xs",
+          children: error?.message || String(error)
         }),
         _jsxs("div", {
           className: "mt-6 flex flex-wrap justify-center gap-2",
@@ -189,8 +195,11 @@ function RootShell({ children }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
-  return _jsx(QueryClientProvider, {
-    client: queryClient,
-    children: _jsx(Outlet, {})
-  });
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LMSProvider>
+        <Outlet />
+      </LMSProvider>
+    </QueryClientProvider>
+  );
 }

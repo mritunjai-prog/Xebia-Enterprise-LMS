@@ -153,10 +153,10 @@ export default function Categories() {
       {/* Premium KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: 'Total Categories', value: totalCategories, icon: Tag, color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-100 dark:bg-pink-500/10', ring: 'ring-pink-100 dark:ring-pink-500/20' },
-          { label: 'Active', value: activeCount, icon: CheckCircle, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-500/10', ring: 'ring-emerald-100 dark:ring-emerald-500/20' },
-          { label: 'Inactive', value: inactiveCount, icon: XCircle, color: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-500/10', ring: 'ring-orange-100 dark:ring-orange-500/20' },
-          { label: 'Total Courses', value: totalCourses, icon: BookOpen, color: 'text-[#6C1D5F] dark:text-purple-400', bg: 'bg-[#6C1D5F]/10 dark:bg-purple-500/10', ring: 'ring-[#6C1D5F]/10 dark:ring-purple-500/20' },
+          { label: 'Total Categories', value: totalCategories, icon: Tag, color: 'text-primary-glow dark:text-primary-glow', bg: 'bg-primary-glow/10 dark:bg-primary-glow/10', ring: 'ring-primary-glow/20 dark:ring-primary-glow/20' },
+          { label: 'Active', value: activeCount, icon: CheckCircle, color: 'text-accent-2 dark:text-accent-2', bg: 'bg-accent-2/10 dark:bg-accent-2/10', ring: 'ring-accent-2/20 dark:ring-accent-2/20' },
+          { label: 'Inactive', value: inactiveCount, icon: XCircle, color: 'text-destructive dark:text-destructive', bg: 'bg-destructive/10 dark:bg-destructive/10', ring: 'ring-destructive/20 dark:ring-destructive/20' },
+          { label: 'Total Courses', value: totalCourses, icon: BookOpen, color: 'text-[#6C1D5F] dark:text-primary', bg: 'bg-[#6C1D5F]/10 dark:bg-primary/10', ring: 'ring-[#6C1D5F]/10 dark:ring-primary/20' },
         ].map(({ label, value, icon: Icon, color, bg, ring }) => (
           <div key={label} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 flex items-center gap-5 hover:shadow-md transition-shadow">
             <div className={clsx('w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ring-8', bg, color, ring)}>
@@ -272,7 +272,7 @@ export default function Categories() {
                       <div className="absolute top-4 right-4">
                         <span className={clsx(
                           'text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm',
-                          cat.active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                          cat.active ? 'bg-accent-2 text-white' : 'bg-destructive text-white'
                         )}>
                           {cat.active ? 'Active' : 'Inactive'}
                         </span>
@@ -320,7 +320,7 @@ export default function Categories() {
                         <button onClick={() => handleEdit(cat)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#252535] text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
                           <Edit3 className="w-4 h-4" />
                         </button>
-                        <button onClick={() => handleDelete(cat.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors">
+                        <button onClick={() => handleDelete(cat.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 dark:hover:bg-destructive text-gray-500 hover:text-destructive dark:text-gray-400 dark:hover:text-destructive transition-colors">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -397,7 +397,7 @@ export default function Categories() {
                       <td className="px-6 py-5 text-center">
                         <span className={clsx(
                           'text-xs font-bold px-3 py-1 rounded-md shadow-sm',
-                          cat.active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                          cat.active ? 'bg-accent-2 text-white' : 'bg-destructive text-white'
                         )}>
                           {cat.active ? 'Active' : 'Inactive'}
                         </span>
@@ -407,7 +407,7 @@ export default function Categories() {
                           <button onClick={() => handleEdit(cat)} className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-[#353545] text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                             <Edit3 className="w-4 h-4" />
                           </button>
-                          <button onClick={() => handleDelete(cat.id)} className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
+                          <button onClick={() => handleDelete(cat.id)} className="p-2 rounded-lg hover:bg-destructive/10 dark:hover:bg-destructive text-gray-500 dark:text-gray-400 hover:text-destructive dark:hover:text-destructive transition-colors">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>

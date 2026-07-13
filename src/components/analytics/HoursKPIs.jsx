@@ -23,7 +23,7 @@ const KpiCard = ({ title, mainValue, mainLabel, icon: Icon, colorClass, gradient
           <span className={`font-bold flex items-center gap-1.5 ${colorClass}`}>
             {metric.value}
             {metric.trend && (
-              <span className="text-[10px] text-emerald-500 flex items-center">
+              <span className="text-[10px] text-accent-2 flex items-center">
                 <TrendingUp className="w-3 h-3 mr-0.5" />
                 {metric.trend}
               </span>
@@ -107,9 +107,9 @@ export function HoursKPIs() {
         mainValue="High" 
         mainLabel="Overall Status"
         icon={User} 
-        colorClass="text-emerald-500"
-        hoverBorderClass="hover:border-emerald-500 dark:hover:border-emerald-500"
-        gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-emerald-500/5 dark:hover:from-[#111] dark:hover:to-emerald-500/10"
+        colorClass="text-accent-2"
+        hoverBorderClass="hover:border-accent-2 dark:hover:border-accent-2"
+        gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-accent-2/5 dark:hover:from-[#111] dark:hover:to-accent-2/10"
         metrics={[
           { label: "Active Learners", value: "85%" },
           { label: "Dormant Learners", value: "15%" }

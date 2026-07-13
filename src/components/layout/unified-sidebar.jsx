@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { studentProfile } from "@/features/student/mocks/dummy-data";
 import { useAppStore } from "@/admin/store/useAppStore";
+import { useLMS } from "../../context/LMSContext";
 import { clsx } from "clsx";
 import logoPurple from "@/assets/logo-purple.png";
 import logoWhite from "@/assets/logo-white.png";
@@ -47,6 +48,15 @@ const navConfig = {
     { name: "Results", href: "/student/results", icon: Award },
     { name: "Notifications", href: "/student/notifications", icon: Bell },
     { name: "Feedback", href: "/student/feedback", icon: MessageSquare },
+  ],
+  trainer: [
+    { name: "Dashboard", href: "/trainer", icon: LayoutDashboard },
+    { name: "Batches", href: "/trainer/batches", icon: Users },
+    { name: "Assessment Builder", href: "/trainer/assessment-builder", icon: Layers },
+    { name: "Evaluation", href: "/trainer/evaluation", icon: ClipboardCheck },
+    { name: "Leaderboard", href: "/trainer/leaderboard", icon: Award },
+    { name: "Reports", href: "/trainer/reports", icon: PieChart },
+    { name: "Settings", href: "/trainer/settings", icon: Settings },
   ],
   admin: [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -75,12 +85,14 @@ const navConfig = {
 
 const portalTitles = {
   student: "Student Portal",
+  trainer: "Trainer Portal",
   admin: "Admin Portal",
   analytics: "Analytics Hub",
 };
 
 export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "student" }) {
   const { isSidebarCollapsed, adminProfile, setActiveSidebarItem, setBreadcrumbs } = useAppStore();
+  const { currentUser } = useLMS();
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
@@ -140,8 +152,12 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
 
   const portalTitle = portalTitles[portalType] || "Portal";
 
-  // Use student profile for student portal, admin profile for admin/analytics
-  const profileName = portalType === "student" ? studentProfile.name : (adminProfile?.name || "Admin User");
+  // Use student profile for student portal, admin profile for admin/analytics, currentUser for trainer
+  const profileName = portalType === "student" 
+    ? studentProfile.name 
+    : portalType === "trainer" 
+      ? (currentUser?.name || "Trainer User") 
+      : (adminProfile?.name || "Admin User");
   const initials = profileName
     .split(" ")
     .map((n) => n[0])
@@ -208,7 +224,7 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
               onClick={() => handleNavClick()}
               className="nav-item"
               activeProps={{ className: "active" }}
-              activeOptions={{ exact: item.href === `/${portalType}` }}
+              activeOptions={{ exact: item.href === `/${portalType}` || item.href === `/${portalType}/` }}
               style={{ textDecoration: "none" }}
             >
               <item.icon className="nav-icon" />
@@ -236,10 +252,10 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
           className="sidebar-user w-full text-left mt-1 border-none bg-transparent"
         >
           <div className="user-avatar" style={{ background: 'transparent', color: 'inherit' }}>
-            <LogOut className="w-[18px] h-[18px] opacity-60 text-red-400" />
+            <LogOut className="w-[18px] h-[18px] opacity-60 text-destructive" />
           </div>
           <div className="user-info">
-            <div className="user-name text-red-400">Logout</div>
+            <div className="user-name text-destructive">Logout</div>
           </div>
         </button>
       </div>

@@ -202,7 +202,7 @@ export default function Courses() {
       <div className="flex flex-col gap-6 mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-[#6C1D5F]/10 dark:bg-purple-500/10 rounded-xl flex items-center justify-center text-[#6C1D5F] dark:text-purple-400">
+            <div className="w-12 h-12 bg-[#6C1D5F]/10 dark:bg-primary/10 rounded-xl flex items-center justify-center text-[#6C1D5F] dark:text-primary">
               <BookOpen className="w-6 h-6" />
             </div>
             <div>
@@ -221,10 +221,10 @@ export default function Courses() {
         {/* 4 Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'TOTAL COURSES', value: courses.length, desc: 'All courses in library', icon: BookOpen, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-500/10' },
-            { label: 'PUBLISHED COURSES', value: courses.filter(c => c.published || c.isPublished).length, desc: 'Courses are live', icon: GraduationCap, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-500/10' },
-            { label: 'DRAFT COURSES', value: courses.length - courses.filter(c => c.published || c.isPublished).length, desc: 'Work in progress', icon: FileText, color: 'text-orange-500 dark:text-orange-400', bg: 'bg-orange-50 dark:bg-orange-500/10' },
-            { label: 'TOTAL ENROLLMENTS', value: courses.reduce((sum, c) => sum + (c.studentsCount || 0), 0), desc: 'Across all courses', icon: Users, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-500/10' },
+            { label: 'TOTAL COURSES', value: courses.length, desc: 'All courses in library', icon: BookOpen, color: 'text-primary dark:text-primary', bg: 'bg-primary/10 dark:bg-primary/10' },
+            { label: 'PUBLISHED COURSES', value: courses.filter(c => c.published || c.isPublished).length, desc: 'Courses are live', icon: GraduationCap, color: 'text-accent-2 dark:text-accent-2', bg: 'bg-accent-2/10 dark:bg-accent-2/10' },
+            { label: 'DRAFT COURSES', value: courses.length - courses.filter(c => c.published || c.isPublished).length, desc: 'Work in progress', icon: FileText, color: 'text-destructive dark:text-destructive', bg: 'bg-destructive/10 dark:bg-destructive/10' },
+            { label: 'TOTAL ENROLLMENTS', value: courses.reduce((sum, c) => sum + (c.studentsCount || 0), 0), desc: 'Across all courses', icon: Users, color: 'text-accent-2 dark:text-accent-2', bg: 'bg-accent-2/10 dark:bg-accent-2/10' },
           ].map((stat, i) => (
             <div key={i} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
               <div className={clsx('w-12 h-12 rounded-2xl flex items-center justify-center shrink-0', stat.bg, stat.color)}>
@@ -382,7 +382,7 @@ export default function Courses() {
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleToggleFeatured(course.id); }}
                       className="absolute bottom-4 right-4 w-8 h-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg flex items-center justify-center hover:scale-105 transition-transform shadow-sm z-20"
                     >
-                      <Bookmark className={clsx('w-4 h-4', course.featured ? 'fill-amber-500 text-amber-500' : 'text-gray-500 dark:text-gray-300')} />
+                      <Bookmark className={clsx('w-4 h-4', course.featured ? 'fill-amber-500 text-destructive' : 'text-gray-500 dark:text-gray-300')} />
                     </button>
                   </div>
 
@@ -441,7 +441,7 @@ export default function Courses() {
                             {isPublished ? 'Unpublish' : 'Publish'}
                           </button>
                           <div className="h-px bg-gray-100 dark:bg-[#2e2e3e] w-full my-0.5"></div>
-                          <button onClick={(e) => { e.stopPropagation(); handleDelete(course.id); }} className="px-4 py-2 text-xs font-bold text-red-600 flex items-center gap-2 hover:bg-red-50 dark:hover:bg-red-900/20">
+                          <button onClick={(e) => { e.stopPropagation(); handleDelete(course.id); }} className="px-4 py-2 text-xs font-bold text-destructive flex items-center gap-2 hover:bg-destructive/10 dark:hover:bg-destructive">
                             <Trash2 className="w-3.5 h-3.5" /> Delete
                           </button>
                         </div>
@@ -537,10 +537,10 @@ export default function Courses() {
                       {/* Status */}
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <span className={clsx('text-xs font-bold px-2.5 py-1 rounded-md text-white', active ? 'bg-green-500' : 'bg-red-500')}>
+                          <span className={clsx('text-xs font-bold px-2.5 py-1 rounded-md text-white', active ? 'bg-accent-2' : 'bg-destructive')}>
                             {active ? 'Active' : 'Inactive'}
                           </span>
-                          <span className={clsx('text-xs font-bold px-2.5 py-1 rounded-md', isPublished ? 'bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-400' : 'bg-gray-100 dark:bg-gray-500/10 text-gray-600 dark:text-gray-400')}>
+                          <span className={clsx('text-xs font-bold px-2.5 py-1 rounded-md', isPublished ? 'bg-primary/10 dark:bg-primary/10 text-primary dark:text-primary' : 'bg-gray-100 dark:bg-gray-500/10 text-gray-600 dark:text-gray-400')}>
                             {isPublished ? 'Published' : 'Draft'}
                           </span>
                         </div>
@@ -565,7 +565,7 @@ export default function Courses() {
                               {isPublished ? 'Unpublish' : 'Publish'}
                             </button>
                             <div className="h-px bg-gray-100 dark:bg-[#2e2e3e] w-full my-0.5"></div>
-                            <button onClick={(e) => { e.stopPropagation(); handleDelete(course.id); }} className="px-4 py-2 text-xs font-bold text-red-600 flex items-center gap-2 hover:bg-red-50 dark:hover:bg-red-900/20">
+                            <button onClick={(e) => { e.stopPropagation(); handleDelete(course.id); }} className="px-4 py-2 text-xs font-bold text-destructive flex items-center gap-2 hover:bg-destructive/10 dark:hover:bg-destructive">
                               <Trash2 className="w-3.5 h-3.5" /> Delete
                             </button>
                           </div>

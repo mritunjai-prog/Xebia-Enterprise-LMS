@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 
 const activities = [
   { id: 1, type: 'milestone', title: 'Coverage Milestone Achieved', desc: 'APAC region hit 98% overall learning coverage.', time: '10 mins ago', icon: CheckCircle2, bg: 'bg-[#01AC9F]', color: 'text-white' },
-  { id: 2, type: 'alert', title: 'Low Participation Alert', desc: 'Global Operations department is tracking 15% below quarterly target.', time: '1 hour ago', icon: AlertTriangle, bg: 'bg-red-500', color: 'text-white' },
+  { id: 2, type: 'alert', title: 'Low Participation Alert', desc: 'Global Operations department is tracking 15% below quarterly target.', time: '1 hour ago', icon: AlertTriangle, bg: 'bg-destructive', color: 'text-white' },
   { id: 3, type: 'course', title: 'Mass Enrollment', desc: '450 employees enrolled in the new AI Readiness track.', time: '3 hours ago', icon: Users, bg: 'bg-[#6C1D5F]', color: 'text-white' },
-  { id: 4, type: 'success', title: 'Project Compliance', desc: 'Project Alpha reached 100% security training compliance.', time: '5 hours ago', icon: BookOpen, bg: 'bg-emerald-500', color: 'text-white' },
+  { id: 4, type: 'success', title: 'Project Compliance', desc: 'Project Alpha reached 100% security training compliance.', time: '5 hours ago', icon: BookOpen, bg: 'bg-accent-2', color: 'text-white' },
 ];
 
 export function CoverageActivity() {

@@ -12,9 +12,9 @@ export function ExecutiveInsights() {
         </h3>
         
         <div className="space-y-4 flex-1">
-          <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30">
+          <div className="p-4 rounded-xl bg-accent-2/10 dark:bg-accent-2 border border-accent-2/20 dark:border-accent-2">
             <div className="flex items-start gap-3">
-              <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+              <TrendingUp className="w-5 h-5 text-accent-2 dark:text-accent-2 shrink-0 mt-0.5" />
               <div>
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">Growth Exceeds Target</h4>
                 <p className="text-xs text-gray-600 dark:text-gray-400">Learning Coverage increased by 12% this quarter, exceeding the 10% organizational target. AI Training adoption improved by a record 18%.</p>

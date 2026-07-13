@@ -38,7 +38,7 @@ function Field({ label, required, hint, children }) {
   return (
     <div>
       <label className="block text-[12px] font-semibold text-gray-600 dark:text-gray-300 mb-1">
-        {label}{required && <span className="text-red-500 ml-0.5">*</span>}
+        {label}{required && <span className="text-destructive ml-0.5">*</span>}
       </label>
       {children}
       {hint && <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">{hint}</p>}
@@ -103,7 +103,7 @@ function ListEditor({ items, onChange, placeholder }) {
         <div key={i} className="flex items-center gap-2">
           <span className="w-5 h-5 rounded-full bg-gray-100 dark:bg-[#252535] text-gray-500 dark:text-gray-400 text-[11px] font-bold flex items-center justify-center shrink-0">{i + 1}</span>
           <Input value={item} onChange={e => update(i, e.target.value)} placeholder={placeholder} />
-          <button type="button" onClick={() => remove(i)} className="p-1 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors shrink-0">
+          <button type="button" onClick={() => remove(i)} className="p-1 text-gray-400 dark:text-gray-500 hover:text-destructive dark:hover:text-destructive transition-colors shrink-0">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -544,7 +544,7 @@ function SeoMetaStep({ form, setForm }) {
     form.metaKeywords ? 10 : 0,
   ].reduce((a, b) => a + b, 0));
 
-  const scoreColor = seoScore >= 70 ? 'text-[#01AC9F]' : seoScore >= 40 ? 'text-orange-400' : 'text-red-500';
+  const scoreColor = seoScore >= 70 ? 'text-[#01AC9F]' : seoScore >= 40 ? 'text-destructive' : 'text-destructive';
 
   return (
     <div className="space-y-5">
@@ -1002,13 +1002,13 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
                   <div className="absolute top-2 right-2 flex flex-col gap-1 z-20 items-end pointer-events-none">
                     <span className={clsx(
                       'text-[9px] font-bold px-1.5 py-0.5 rounded-sm shadow-sm',
-                      form.isPublished ? 'bg-purple-600 text-white' : 'bg-amber-500 text-white'
+                      form.isPublished ? 'bg-primary text-white' : 'bg-destructive text-white'
                     )}>
                       {form.isPublished ? 'Published' : 'Draft'}
                     </span>
                     <span className={clsx(
                       'text-[9px] font-bold px-1.5 py-0.5 rounded-sm shadow-sm',
-                      form.active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                      form.active ? 'bg-accent-2 text-white' : 'bg-destructive text-white'
                     )}>
                       {form.active ? 'Active' : 'Inactive'}
                     </span>
@@ -1017,7 +1017,7 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
                 <div className="p-3 space-y-2 bg-white dark:bg-[#1a1a24]">
                   <div className="flex gap-1.5 flex-wrap">
                     {selectedCat && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#6C1D5F]/10 dark:bg-[#84117C]/20 text-[#6C1D5F] dark:text-[#84117C]">{selectedCat.name}</span>}
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400">{form.level}</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-destructive/10 dark:bg-destructive/20 text-destructive dark:text-destructive">{form.level}</span>
                   </div>
                   <p className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2">{form.title || 'Spring Boot Masterclass'}</p>
                   <p className="text-[11px] text-gray-400 dark:text-gray-500 line-clamp-2">{form.shortDescription || 'Course description preview...'}</p>
@@ -1044,9 +1044,9 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
               ].map(({ label, val, ok }) => (
                 <div key={label} className="flex justify-between items-center text-[12px]">
                   <span className="text-gray-500 dark:text-gray-400">{label}</span>
-                  <span className={clsx('font-medium flex items-center gap-1', ok ? 'text-gray-800 dark:text-gray-200' : 'text-orange-400')}>
+                  <span className={clsx('font-medium flex items-center gap-1', ok ? 'text-gray-800 dark:text-gray-200' : 'text-destructive')}>
                     {val ? (val.length > 16 ? val.slice(0, 14) + '...' : val) : '—'}
-                    {ok ? <Check className="w-3 h-3 text-[#01AC9F]" /> : <AlertCircle className="w-3 h-3 text-orange-400" />}
+                    {ok ? <Check className="w-3 h-3 text-[#01AC9F]" /> : <AlertCircle className="w-3 h-3 text-destructive" />}
                   </span>
                 </div>
               ))}
@@ -1054,7 +1054,7 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
                 <div className="pt-2 border-t border-gray-100 dark:border-[#2e2e3e]">
                   <div className="flex items-center justify-between">
                     <span className="text-[12px] text-gray-500 dark:text-gray-400">SEO Score</span>
-                    <span className={clsx('text-sm font-black', seoScore >= 70 ? 'text-[#01AC9F]' : 'text-orange-400')}>{seoScore}</span>
+                    <span className={clsx('text-sm font-black', seoScore >= 70 ? 'text-[#01AC9F]' : 'text-destructive')}>{seoScore}</span>
                   </div>
                 </div>
               )}
@@ -1086,7 +1086,7 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white dark:bg-[#15151f] rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="p-6 text-center">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-destructive/10 dark:bg-destructive text-destructive dark:text-destructive rounded-full flex items-center justify-center mx-auto mb-4">
                 <X className="w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Duplicate Found</h3>
@@ -1109,7 +1109,7 @@ export default function CreateCourse({ editData, categories = [], onBack, onSave
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white dark:bg-[#15151f] rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="p-6 text-center">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-destructive/10 dark:bg-destructive text-destructive dark:text-destructive rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Missing Fields</h3>

@@ -359,7 +359,7 @@ function MyCourses() {
           {course.progress === 100 ? (
             <button
               onClick={(e) => { e.stopPropagation(); setCertCourse(course); }}
-              className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-[#01AC9F] text-white shadow-[0_2px_10px_-2px_rgba(1,172,159,0.4)] hover:shadow-[0_4px_14px_-2px_rgba(1,172,159,0.5)] hover:-translate-y-0.5"
+              className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-accent-2 to-[#01AC9F] text-white shadow-[0_2px_10px_-2px_rgba(1,172,159,0.4)] hover:shadow-[0_4px_14px_-2px_rgba(1,172,159,0.5)] hover:-translate-y-0.5"
             >
               <Award className="w-4 h-4" /> View Certificate
             </button>
@@ -447,7 +447,7 @@ function MyCourses() {
                       </td>
                       <td className="px-6 py-4 text-center">
                         {course.progress === 100 ? (
-                          <button onClick={(e) => { e.stopPropagation(); setCertCourse(course); }} className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-[#01AC9F] text-white font-bold text-xs shadow-sm hover:shadow-md transition-all">
+                          <button onClick={(e) => { e.stopPropagation(); setCertCourse(course); }} className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-accent-2 to-[#01AC9F] text-white font-bold text-xs shadow-sm hover:shadow-md transition-all">
                             <Award className="w-3.5 h-3.5" /> View Certificate
                           </button>
                         ) : (

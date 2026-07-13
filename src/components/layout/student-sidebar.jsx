@@ -111,7 +111,7 @@ export function StudentSidebar({ isMobileOpen, setIsMobileOpen, isSidebarCollaps
             <LogOut className="w-[18px] h-[18px] opacity-60" />
           </div>
           <div className="user-info">
-            <div className="user-name text-red-500">Logout</div>
+            <div className="user-name text-destructive">Logout</div>
           </div>
         </button>
       </div>

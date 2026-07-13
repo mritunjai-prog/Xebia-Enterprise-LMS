@@ -5,7 +5,7 @@ const activities = [
   { id: 1, type: 'cert', title: 'New Certification Achieved', desc: 'Sarah Jenkins completed AWS Solutions Architect Professional.', time: '10 mins ago', icon: Award, color: 'text-[#01AC9F]', bg: 'bg-[#01AC9F]/10' },
   { id: 2, type: 'alert', title: 'Low Participation Alert', desc: 'Engineering department compliance training is at 45% (Target: 90%).', time: '1 hour ago', icon: AlertTriangle, color: 'text-[#FF6200]', bg: 'bg-[#FF6200]/10' },
   { id: 3, type: 'launch', title: 'New Training Launched', desc: 'Enterprise AI Readiness Workshop is now live for all regions.', time: '3 hours ago', icon: PlayCircle, color: 'text-[#6C1D5F]', bg: 'bg-[#6C1D5F]/10' },
-  { id: 4, type: 'feedback', title: 'High Satisfaction Score', desc: 'Leadership track received an average rating of 4.9/5 this week.', time: '5 hours ago', icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+  { id: 4, type: 'feedback', title: 'High Satisfaction Score', desc: 'Leadership track received an average rating of 4.9/5 this week.', time: '5 hours ago', icon: CheckCircle2, color: 'text-accent-2', bg: 'bg-accent-2/10' },
 ];
 
 export function ActivityTimeline() {

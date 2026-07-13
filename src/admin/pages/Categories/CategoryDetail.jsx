@@ -94,7 +94,7 @@ export default function CategoryDetail() {
       try {
         await CategoryService.deleteCategory(category.id);
         addToast(`Category "${category.name}" deleted successfully`, 'success');
-        navigate({ to: '/categories' });
+        navigate({ to: '/admin/categories' });
       } catch (err) {
         addToast('Failed to delete category', 'error');
         console.error(err);
@@ -195,8 +195,8 @@ export default function CategoryDetail() {
                 </h1>
                   <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full text-white ${
                     category.active
-                      ? 'bg-green-500'
-                      : 'bg-red-500'
+                      ? 'bg-accent-2'
+                      : 'bg-destructive'
                   }`}>
                     {category.active ? 'Active' : 'Inactive'}
                   </span>
@@ -214,14 +214,14 @@ export default function CategoryDetail() {
           <div className="flex items-center gap-3 shrink-0 mt-2 sm:mt-0">
             <button
               onClick={() => setIsEditing(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border-2 border-[#6C1D5F] dark:border-purple-400 text-[#6C1D5F] dark:text-purple-400 hover:bg-[#6C1D5F] dark:hover:bg-purple-400 hover:text-white dark:hover:text-[#15151f] transition-all"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border-2 border-[#6C1D5F] dark:border-primary text-[#6C1D5F] dark:text-primary hover:bg-[#6C1D5F] dark:hover:bg-primary hover:text-white dark:hover:text-[#15151f] transition-all"
             >
               <Edit3 className="w-4 h-4" /> Edit Category
             </button>
 
             <button
               onClick={handleDelete}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border-2 border-destructive text-destructive hover:bg-destructive hover:text-white transition-all"
             >
               <Trash2 className="w-4 h-4" /> Delete
             </button>
@@ -231,7 +231,7 @@ export default function CategoryDetail() {
               className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border-2 transition-all shadow-sm hover:shadow-md ${
                 category.active
                   ? 'border-gray-200 dark:border-[#444] text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#222]'
-                  : 'border-emerald-500 text-emerald-500 hover:bg-emerald-500/10'
+                  : 'border-accent-2 text-accent-2 hover:bg-accent-2/10'
               }`}
             >
               {category.active ? <Archive className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
@@ -250,8 +250,8 @@ export default function CategoryDetail() {
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           <div className="flex items-start justify-between">
-            <div className="p-2.5 rounded-xl bg-purple-100 dark:bg-purple-950/30">
-              <BookOpen className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary">
+              <BookOpen className="w-5 h-5 text-primary dark:text-primary" />
             </div>
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 font-semibold mt-3 uppercase tracking-wider">Total Courses</p>
@@ -265,8 +265,8 @@ export default function CategoryDetail() {
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           <div className="flex items-start justify-between">
-            <div className="p-2.5 rounded-xl bg-emerald-100 dark:bg-emerald-950/30">
-              <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <div className="p-2.5 rounded-xl bg-accent-2/10 dark:bg-accent-2">
+              <CheckCircle className="w-5 h-5 text-accent-2 dark:text-accent-2" />
             </div>
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 font-semibold mt-3 uppercase tracking-wider">Published</p>
@@ -280,8 +280,8 @@ export default function CategoryDetail() {
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           <div className="flex items-start justify-between">
-            <div className="p-2.5 rounded-xl bg-orange-100 dark:bg-orange-950/30">
-              <Edit3 className="w-5 h-5 text-orange-500 dark:text-orange-400" />
+            <div className="p-2.5 rounded-xl bg-destructive/10 dark:bg-destructive">
+              <Edit3 className="w-5 h-5 text-destructive dark:text-destructive" />
             </div>
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 font-semibold mt-3 uppercase tracking-wider">Draft</p>
@@ -391,8 +391,8 @@ export default function CategoryDetail() {
                           <div className="flex items-center gap-2 shrink-0">
                             <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
                               isPublished
-                                ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600'
-                                : 'bg-orange-50 dark:bg-orange-950/30 text-orange-500'
+                                ? 'bg-accent-2/10 dark:bg-accent-2 text-accent-2'
+                                : 'bg-destructive/10 dark:bg-destructive text-destructive'
                             }`}>
                               {isPublished ? 'Published' : 'Draft'}
                             </span>
@@ -494,8 +494,8 @@ export default function CategoryDetail() {
                         <div className="flex items-center gap-2 shrink-0">
                           <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
                             isPublished
-                              ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600'
-                              : 'bg-orange-50 dark:bg-orange-950/30 text-orange-500'
+                              ? 'bg-accent-2/10 dark:bg-accent-2 text-accent-2'
+                              : 'bg-destructive/10 dark:bg-destructive text-destructive'
                           }`}>
                             {isPublished ? 'Published' : 'Draft'}
                           </span>

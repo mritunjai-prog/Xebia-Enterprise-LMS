@@ -16,43 +16,43 @@ const INFO_ITEMS = [
     icon: Mail,
     label: "Email Address",
     getValue: () => studentProfile.email,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
+    color: "text-accent-2",
+    bg: "bg-accent-2/10",
   },
   {
     icon: Hash,
     label: "Student ID",
     getValue: () => studentProfile.id,
-    color: "text-purple-500",
-    bg: "bg-purple-500/10",
+    color: "text-primary",
+    bg: "bg-primary/10",
   },
   {
     icon: Phone,
     label: "Phone Number",
     getValue: () => studentProfile.phone,
-    color: "text-green-500",
-    bg: "bg-green-500/10",
+    color: "text-accent-2",
+    bg: "bg-accent-2/10",
   },
   {
     icon: Building,
     label: "University / Organisation",
     getValue: () => studentProfile.university,
-    color: "text-orange-500",
-    bg: "bg-orange-500/10",
+    color: "text-destructive",
+    bg: "bg-destructive/10",
   },
   {
     icon: CalendarDays,
     label: "Batch",
     getValue: () => studentProfile.batch,
-    color: "text-cyan-500",
-    bg: "bg-cyan-500/10",
+    color: "text-accent-2",
+    bg: "bg-accent-2/10",
   },
   {
     icon: CalendarDays,
     label: "Enrollment Date",
     getValue: () => studentProfile.enrollmentDate,
-    color: "text-pink-500",
-    bg: "bg-pink-500/10",
+    color: "text-primary-glow",
+    bg: "bg-primary-glow/10",
   },
   {
     icon: BookOpen,
@@ -127,7 +127,7 @@ export function EnrolledCoursesList() {
             <Badge
               className={
                 course.progress === 100
-                  ? "bg-green-500/10 text-green-600 border-green-500/20"
+                  ? "bg-accent-2/10 text-accent-2 border-accent-2/20"
                   : "bg-primary/10 text-primary border-primary/20"
               }
             >

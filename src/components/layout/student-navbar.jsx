@@ -268,7 +268,7 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
                         onClick={() => handleResultClick('batches', batch.id)}
                         className="px-4 py-2 hover:bg-gray-50 dark:hover:bg-[#1a1a24] cursor-pointer flex items-center gap-3 transition-colors"
                       >
-                        <div className="w-7 h-7 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 rounded-lg bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
                           <Layers className="w-3.5 h-3.5" />
                         </div>
                         <div className="flex flex-col truncate">
@@ -288,7 +288,7 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
                         onClick={() => handleResultClick('assessments', assessment.id)}
                         className="px-4 py-2 hover:bg-gray-50 dark:hover:bg-[#1a1a24] cursor-pointer flex items-center gap-3 transition-colors"
                       >
-                        <div className="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 rounded-lg bg-accent-2/10 text-accent-2 dark:text-accent-2 flex items-center justify-center shrink-0">
                           <ClipboardCheck className="w-3.5 h-3.5" />
                         </div>
                         <div className="flex flex-col truncate">

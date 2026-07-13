@@ -13,5 +13,10 @@ export default defineConfig({
   },
   nitro: {
     preset: process.env.VERCEL ? "vercel" : "cloudflare"
+  },
+  vite: {
+    optimizeDeps: {
+      exclude: ["framer-motion", "@radix-ui/react-progress"]
+    }
   }
 });

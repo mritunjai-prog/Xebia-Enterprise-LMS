@@ -137,7 +137,7 @@ export function CursorTrail() {
         }}
       >
          <div 
-           className="border-[#6C1D5F] dark:border-purple-400 bg-[#6C1D5F]/10 dark:bg-purple-400/10 backdrop-blur-[1px]" 
+           className="border-[#6C1D5F] dark:border-primary bg-[#6C1D5F]/10 dark:bg-primary/10 backdrop-blur-[1px]" 
            style={{ 
              width: "36px", height: "36px", 
              borderWidth: "2px", borderStyle: "solid", borderRadius: "50%", 
@@ -157,7 +157,7 @@ export function CursorTrail() {
         }}
       >
          <div 
-           className="bg-[#6C1D5F] dark:bg-purple-400 shadow-sm" 
+           className="bg-[#6C1D5F] dark:bg-primary shadow-sm" 
            style={{ 
              width: "8px", height: "8px", 
              borderRadius: "50%", 

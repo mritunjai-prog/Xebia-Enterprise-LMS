@@ -197,7 +197,7 @@ export function OrganiserSidebar({ isCollapsed, setIsCollapsed, isMobile }) {
               <TooltipTrigger asChild>
                 <Link
                   to="/"
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 cursor-pointer text-red-500/80 hover:text-red-500 hover:bg-red-500/10 font-semibold"
+                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 cursor-pointer text-destructive/80 hover:text-destructive hover:bg-destructive/10 font-semibold"
                 >
                   <LogOut className="h-4.5 w-4.5 shrink-0" />
                   {!isCollapsed && (
@@ -215,7 +215,7 @@ export function OrganiserSidebar({ isCollapsed, setIsCollapsed, isMobile }) {
               {isCollapsed && (
                 <TooltipContent
                   side="right"
-                  className="bg-card/95 backdrop-blur text-red-500 border border-border/40 shadow-elegant font-bold text-xs rounded-lg p-2.5"
+                  className="bg-card/95 backdrop-blur text-destructive border border-border/40 shadow-elegant font-bold text-xs rounded-lg p-2.5"
                 >
                   Logout
                 </TooltipContent>

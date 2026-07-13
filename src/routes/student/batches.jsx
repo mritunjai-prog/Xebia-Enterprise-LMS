@@ -6,39 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { clsx } from "clsx";
 import { motion } from "framer-motion";
 
+import { useLMS } from "@/context/LMSContext";
+
 export const Route = createFileRoute("/student/batches")({
   component: BatchesPage,
 });
 
 function BatchesPage() {
-  const dummyBatches = [
-    {
-      id: "b1",
-      name: "XEBIA-2026-A1",
-      program: "Frontend Engineering Bootcamp",
-      status: "Active",
-      progress: 65,
-      startDate: "Jan 10, 2026",
-      endDate: "Jun 30, 2026",
-      instructor: "Jane Smith",
-      schedule: "Mon, Wed, Fri (10 AM - 1 PM)",
-      location: "Hybrid (Online & Gurgaon Campus)",
-      studentsCount: 42
-    },
-    {
-      id: "b2",
-      name: "XEBIA-2025-B2",
-      program: "Cloud Native Essentials",
-      status: "Completed",
-      progress: 100,
-      startDate: "Jul 1, 2025",
-      endDate: "Dec 15, 2025",
-      instructor: "Michael Doe",
-      schedule: "Tue, Thu (2 PM - 5 PM)",
-      location: "Online",
-      studentsCount: 38
-    }
-  ];
+  const { batches, currentUser } = useLMS();
+  const dummyBatches = batches.filter(b => (b.students || []).includes(currentUser?.id));
+
 
   return (
     <div className="space-y-8 pb-12 max-w-7xl mx-auto animate-in fade-in duration-500">
@@ -62,11 +39,11 @@ function BatchesPage() {
           >
             {/* Status indicator */}
             <div className="absolute top-0 right-0 p-6">
-              <Badge 
+              <Badge
                 className={clsx(
                   "px-3 py-1 font-bold text-xs rounded-full",
-                  batch.status === "Active" 
-                    ? "bg-[#01AC9F]/10 text-[#01AC9F] border border-[#01AC9F]/20" 
+                  batch.status === "Active"
+                    ? "bg-[#01AC9F]/10 text-[#01AC9F] border border-[#01AC9F]/20"
                     : "bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-gray-300 border border-gray-200 dark:border-white/10"
                 )}
                 variant="outline"

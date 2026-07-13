@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CourseService, EnrollmentService } from "@/services/api";
 import { upcomingAssessments, notifications, chartData } from "@/features/student/mocks/dummy-data";
 import { BookOpen, Calendar, Award, Bell, Play, FileText, BarChart3, Star } from "lucide-react";
-import { motion } from "framer-motion";
+
 import { clsx } from "clsx";
 
 // Feature components
@@ -55,7 +55,7 @@ function DashboardHome() {
 
         <Link to="/student/assessments" className="group">
           <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#15151f] p-6 sm:p-8 flex items-center justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-0">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 dark:bg-purple-500/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none transition-transform group-hover:scale-110" />
+            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 dark:bg-primary/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none transition-transform group-hover:scale-110" />
             <div className="relative z-10">
               <p className="text-muted-foreground text-sm font-bold tracking-wider uppercase mb-1">Action Required</p>
               <h3 className="text-foreground text-2xl font-extrabold group-hover:text-[#6C1D5F] dark:group-hover:text-[#D3CCEC] transition-colors">Take Assessment</h3>
@@ -116,9 +116,8 @@ function DashboardHome() {
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
-          className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 hover:shadow-glow hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] transition-all duration-300 flex flex-col"
+        <div 
+          className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 hover:shadow-glow hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] transition-all duration-300 flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-300"
         >
           <div className="mb-6 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#FF6200]/10 flex items-center justify-center text-[#FF6200] shrink-0">
@@ -132,11 +131,10 @@ function DashboardHome() {
           <div className="flex-1 min-h-[300px]">
             <LearningActivityChart data={learningData} />
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.1 }}
-          className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 hover:shadow-glow hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] transition-all duration-300 flex flex-col"
+        <div 
+          className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 hover:shadow-glow hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] transition-all duration-300 flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500"
         >
           <div className="mb-6 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#01AC9F]/10 flex items-center justify-center text-[#01AC9F] shrink-0">
@@ -150,7 +148,7 @@ function DashboardHome() {
           <div className="flex-1 min-h-[300px]">
             <SubjectPerformanceChart data={assessmentData} />
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Continue Learning */}

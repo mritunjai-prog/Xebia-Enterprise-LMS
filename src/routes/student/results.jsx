@@ -26,7 +26,7 @@ function ResultsPage() {
       case 'B+':
       case 'B': return "bg-[#6C1D5F]/10 text-[#6C1D5F] dark:bg-[#6C1D5F]/20 dark:text-[#D3CCEC] border-[#6C1D5F]/20 dark:border-[#6C1D5F]/30";
       case 'C': return "bg-[#FF6200]/10 text-[#FF6200] dark:bg-[#FF6200]/20 border-[#FF6200]/20 dark:border-[#FF6200]/30";
-      default: return "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 border-red-200 dark:border-red-500/20";
+      default: return "bg-destructive/10 text-destructive dark:bg-destructive/10 dark:text-destructive border-destructive/20 dark:border-destructive/20";
     }
   };
 

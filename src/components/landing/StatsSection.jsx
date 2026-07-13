@@ -16,8 +16,8 @@ const stats = [
     label: "Courses",
     trend: "+12.7%",
     icon: BookOpen,
-    colorClass: "text-blue-600",
-    bgClass: "bg-blue-600/10",
+    colorClass: "text-accent-2",
+    bgClass: "bg-accent-2/10",
   },
   {
     id: "hours",
@@ -34,8 +34,8 @@ const stats = [
     label: "Certifications",
     trend: "+14.2%",
     icon: Award,
-    colorClass: "text-amber-500",
-    bgClass: "bg-amber-500/10",
+    colorClass: "text-destructive",
+    bgClass: "bg-destructive/10",
   },
   {
     id: "ai",
@@ -64,7 +64,7 @@ export function StatsSection() {
               <div>
                 <h4 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">{stat.value}</h4>
                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1">{stat.label}</p>
-                <div className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                <div className="flex items-center gap-1 text-[10px] text-accent-2 dark:text-accent-2 font-semibold">
                   <TrendingUp className="w-3 h-3" />
                   <span>{stat.trend} this month</span>
                 </div>

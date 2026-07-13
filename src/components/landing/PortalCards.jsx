@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { GraduationCap, ShieldCheck, CheckCircle2, ArrowRight } from "lucide-react";
+import { GraduationCap, ShieldCheck, CheckCircle2, ArrowRight, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const portals = [
@@ -42,6 +42,26 @@ const portals = [
     ],
     link: "/admin",
     buttonText: "Admin Portal"
+  },
+  {
+    id: "trainer",
+    title: "Trainer Portal",
+    description: "Manage your batches, create assessments, evaluate submissions, and track student performance.",
+    icon: BookOpen,
+    bgClass: "bg-[#FF6200]",
+    hoverBgClass: "hover:bg-[#FF6200]",
+    textClass: "text-[#FF6200]",
+    buttonTextClass: "text-white",
+    hoverClass: "hover:border-[#FF6200]/50 shadow-[#FF6200]/10",
+    features: [
+      "Batch Management",
+      "Assessment Builder",
+      "Submission Evaluation",
+      "Performance Reports",
+      "Leaderboard"
+    ],
+    link: "/trainer",
+    buttonText: "Trainer Portal"
   }
 ];
 
@@ -56,7 +76,7 @@ export function PortalCards() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {portals.map((portal) => (
             <div 
               key={portal.id}

@@ -152,7 +152,7 @@ export default function CreateCategory({ onBack, editData = null }) {
               </div>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-[#2e2e3e] bg-white dark:bg-[#15151f] rounded-full px-3 py-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-400 inline-block" />
+              <span className="w-1.5 h-1.5 rounded-full bg-destructive inline-block" />
               Draft recovered
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function CreateCategory({ onBack, editData = null }) {
           <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl p-5 space-y-4 transition-colors">
             <div>
               <label className="block text-sm font-semibold text-gray-800 dark:text-white mb-2">
-                Category Name <span className="text-red-500">*</span>
+                Category Name <span className="text-destructive">*</span>
               </label>
               <div className="relative">
                 <input
@@ -274,7 +274,7 @@ export default function CreateCategory({ onBack, editData = null }) {
                     <div className="relative group rounded-full overflow-hidden w-20 h-20 border-2" style={{ borderColor: form.color }}>
                       <img src={form.icon} alt="Preview" className="w-full h-full object-cover z-10 relative pointer-events-none" />
                       <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                        <button onClick={() => setForm({ ...form, icon: '' })} className="text-white bg-red-500 p-1 rounded-full pointer-events-auto"><X className="w-4 h-4" /></button>
+                        <button onClick={() => setForm({ ...form, icon: '' })} className="text-white bg-destructive p-1 rounded-full pointer-events-auto"><X className="w-4 h-4" /></button>
                       </div>
                     </div>
                   ) : (
@@ -323,7 +323,7 @@ export default function CreateCategory({ onBack, editData = null }) {
 
             <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl p-5 space-y-2 transition-colors">
               <div className="flex items-center justify-between">
-                <label className="block text-sm font-semibold text-gray-800 dark:text-white">Description <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-semibold text-gray-800 dark:text-white">Description <span className="text-destructive">*</span></label>
                 <button
                 type="button"
                 onClick={generateAIDescription}
@@ -459,7 +459,7 @@ export default function CreateCategory({ onBack, editData = null }) {
                   <div className="absolute top-4 right-4">
                     <span className={clsx(
                       'text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm',
-                      form.active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                      form.active ? 'bg-accent-2 text-white' : 'bg-destructive text-white'
                     )}>
                       {form.active ? 'Active' : 'Inactive'}
                     </span>
@@ -499,7 +499,7 @@ export default function CreateCategory({ onBack, editData = null }) {
                 <div key={label} className="flex items-center justify-between text-sm">
                   <span className="text-gray-500 dark:text-gray-400">{label}</span>
                   <div className="flex items-center gap-1.5">
-                    <span className={clsx('font-medium', ok ? 'text-gray-900 dark:text-white' : 'text-red-400')}>{value}</span>
+                    <span className={clsx('font-medium', ok ? 'text-gray-900 dark:text-white' : 'text-destructive')}>{value}</span>
                     {ok
                       ? <CheckCircle2 className="w-3.5 h-3.5 text-[#01AC9F]" />
                       : <Circle className="w-3.5 h-3.5 text-gray-300 dark:text-gray-600" />
@@ -510,9 +510,9 @@ export default function CreateCategory({ onBack, editData = null }) {
             </div>
           </div>
 
-          <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-xl p-4">
-            <p className="text-xs font-bold text-amber-700 dark:text-amber-500 mb-2">Quick Tips</p>
-            <ul className="space-y-1.5 text-xs text-amber-600 dark:text-amber-400/80">
+          <div className="bg-destructive/10 dark:bg-destructive border border-destructive/20 dark:border-destructive rounded-xl p-4">
+            <p className="text-xs font-bold text-destructive dark:text-destructive mb-2">Quick Tips</p>
+            <ul className="space-y-1.5 text-xs text-destructive dark:text-destructive/80">
               <li>Use a clear, descriptive name</li>
               <li>Pick a brand-aligned accent color</li>
               <li>Write a short SEO-friendly description</li>
@@ -534,7 +534,7 @@ export default function CreateCategory({ onBack, editData = null }) {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white dark:bg-[#15151f] rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="p-6 text-center">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-destructive/10 dark:bg-destructive text-destructive dark:text-destructive rounded-full flex items-center justify-center mx-auto mb-4">
                 <X className="w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Duplicate Found</h3>
@@ -557,7 +557,7 @@ export default function CreateCategory({ onBack, editData = null }) {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white dark:bg-[#15151f] rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="p-6 text-center">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-destructive/10 dark:bg-destructive text-destructive dark:text-destructive rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Missing Fields</h3>

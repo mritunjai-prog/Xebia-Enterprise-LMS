@@ -139,7 +139,7 @@ function AssessmentsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-orange-500/10 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
+          <div className="w-12 h-12 bg-destructive/10 dark:bg-destructive/10 rounded-xl flex items-center justify-center text-destructive dark:text-destructive shrink-0">
             <FileText className="w-6 h-6" />
           </div>
           <div>

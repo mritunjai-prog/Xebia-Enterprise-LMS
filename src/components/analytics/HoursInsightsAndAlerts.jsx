@@ -6,7 +6,7 @@ export function HoursInsightsAndAlerts() {
     { id: 1, type: 'cert', title: 'New Certification Achieved', desc: 'Sarah Miller completed Cloud Architecture Learning Path.', time: '10 mins ago', icon: Award, color: 'text-[#01AC9F]', bg: 'bg-[#01AC9F]/10' },
     { id: 2, type: 'alert', title: 'Below Target', desc: '125 employees in Sales are below Q2 targets.', time: '1 hour ago', icon: AlertTriangle, color: 'text-[#FF6200]', bg: 'bg-[#FF6200]/10' },
     { id: 3, type: 'launch', title: 'Milestone Reached', desc: 'Data Privacy Project reached 15,000 learning hours.', time: '3 hours ago', icon: PlayCircle, color: 'text-[#6C1D5F]', bg: 'bg-[#6C1D5F]/10' },
-    { id: 4, type: 'feedback', title: 'Target Exceeded', desc: 'Engineering Department crossed Q2 learning target.', time: '5 hours ago', icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    { id: 4, type: 'feedback', title: 'Target Exceeded', desc: 'Engineering Department crossed Q2 learning target.', time: '5 hours ago', icon: CheckCircle2, color: 'text-accent-2', bg: 'bg-accent-2/10' },
   ];
 
   return (
@@ -20,9 +20,9 @@ export function HoursInsightsAndAlerts() {
         </h3>
         
         <div className="space-y-4 flex-1">
-          <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30">
+          <div className="p-4 rounded-xl bg-accent-2/10 dark:bg-accent-2 border border-accent-2/20 dark:border-accent-2">
             <div className="flex items-start gap-3">
-              <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+              <TrendingUp className="w-5 h-5 text-accent-2 dark:text-accent-2 shrink-0 mt-0.5" />
               <div>
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">Learning Investment Increased</h4>
                 <p className="text-xs text-gray-600 dark:text-gray-400">Learning investment increased by 18% this quarter. North America achieved the highest average learning hours globally.</p>

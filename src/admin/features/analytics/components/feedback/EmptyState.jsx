@@ -8,7 +8,7 @@ export function EmptyState({ title = "Backend Support Pending", description = "T
       <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4 relative">
         <Database className="w-8 h-8 opacity-50" />
         <div className="absolute -bottom-1 -right-1 bg-background rounded-full p-0.5">
-          <AlertCircle className="w-5 h-5 text-amber-500" />
+          <AlertCircle className="w-5 h-5 text-destructive" />
         </div>
       </div>
       <h3 className="text-xl font-extrabold text-foreground mb-2">{title}</h3>

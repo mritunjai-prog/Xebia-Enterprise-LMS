@@ -74,9 +74,9 @@ export function AboutUsSection() {
             </ul>
           </div>
 
-          <div className="p-10 rounded-[2rem] bg-white/5 border border-blue-500/20 backdrop-blur-md hover:bg-white/10 hover:border-blue-500/40 transition-all duration-300 group">
-            <h3 className="text-2xl font-bold text-blue-400 mb-6 flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
+          <div className="p-10 rounded-[2rem] bg-white/5 border border-accent-2/20 backdrop-blur-md hover:bg-white/10 hover:border-accent-2/40 transition-all duration-300 group">
+            <h3 className="text-2xl font-bold text-accent-2 mb-6 flex items-center gap-3">
+              <div className="p-3 rounded-xl bg-accent-2/10 group-hover:bg-accent-2/20 transition-colors">
                 <Server className="w-6 h-6" />
               </div>
               Infrastructure & Tech Stack

@@ -110,7 +110,7 @@ const getContentIcon = (type) => {
     case "PDF":
       return <ImageIcon className="w-4 h-4" style={{ color: CONTENT_COLORS.PDF }} />;
     default:
-      return <LinkIcon className="w-4 h-4 text-emerald-500" />;
+      return <LinkIcon className="w-4 h-4 text-accent-2" />;
   }
 };
 
@@ -686,7 +686,7 @@ export default function HierarchyBuilder({ course }) {
                               e.stopPropagation();
                               handleDeleteModule(module.id);
                             }}
-                            className="text-xs font-bold text-orange-500 hover:text-orange-600 flex items-center gap-1"
+                            className="text-xs font-bold text-destructive hover:text-destructive flex items-center gap-1"
                           >
                             <Trash2 className="w-3.5 h-3.5" /> Delete
                           </button>
@@ -941,7 +941,7 @@ export default function HierarchyBuilder({ course }) {
                                 e.stopPropagation();
                                 handleDeleteSubmodule(sm.id);
                               }}
-                              className="text-xs font-bold text-orange-500 hover:text-orange-600 flex items-center gap-1"
+                              className="text-xs font-bold text-destructive hover:text-destructive flex items-center gap-1"
                             >
                               <Trash2 className="w-3.5 h-3.5" /> Delete
                             </button>
