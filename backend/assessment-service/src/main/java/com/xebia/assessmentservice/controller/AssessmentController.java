@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/assessments")
-@CrossOrigin(origins = "*")
 public class AssessmentController {
 
     @Autowired

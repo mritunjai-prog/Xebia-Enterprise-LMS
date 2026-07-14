@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Users, Calendar, Clock, ArrowRight, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +13,15 @@ export const Route = createFileRoute("/student/batches")({
 
 function BatchesPage() {
   const { batches, currentUser } = useLMS();
-  const myBatches = (batches || []).filter((b) => (b.students || []).includes(currentUser?.id));
+  const navigate = useNavigate();
+  const studentBatchIds = Array.from(
+    new Set([
+      ...(currentUser?.batches || []),
+      ...(batches || []).filter((b) => (b.students || []).includes(currentUser?.id)).map((b) => b.id),
+    ])
+  );
+
+  const myBatches = (batches || []).filter((b) => studentBatchIds.includes(b.id));
 
   return (
     <div className="space-y-8 pb-12 max-w-7xl mx-auto animate-in fade-in duration-500">
@@ -79,7 +87,7 @@ function BatchesPage() {
                   <div>
                     <p className="font-bold text-gray-700 dark:text-gray-300">Start Date</p>
                     <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
-                      {batch.startDate || "Not set"}
+                      {batch.createdAt || batch.startDate || "Not set"}
                     </p>
                   </div>
                 </div>
@@ -113,7 +121,7 @@ function BatchesPage() {
               </div>
 
               {/* Footer */}
-              <div className="pt-6 border-t border-gray-100 dark:border-white/5 flex items-center justify-between mt-auto">
+              <div className="pt-6 border-t border-gray-100 dark:border-white/5 flex items-center justify-start mt-auto">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center border border-white dark:border-gray-800 text-xs font-bold text-gray-600 dark:text-gray-300">
                     +{studentCount}
@@ -122,9 +130,6 @@ function BatchesPage() {
                     Classmates
                   </span>
                 </div>
-                <Button className="bg-[#FF6200] hover:bg-[#FF6200]/90 text-white rounded-full px-6 font-bold shadow-lg shadow-[#FF6200]/20 transition-all">
-                  View Details <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
               </div>
             </motion.div>
           );

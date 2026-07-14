@@ -31,7 +31,6 @@ import {
   ChevronRight,
   Settings,
 } from "lucide-react";
-import { studentProfile } from "@/features/student/mocks/dummy-data";
 import { useAppStore } from "@/admin/store/useAppStore";
 import { useLMS } from "../../context/LMSContext";
 import { clsx } from "clsx";
@@ -44,7 +43,7 @@ const navConfig = {
     { name: "Dashboard", href: "/student", icon: LayoutDashboard },
     { name: "My Courses", href: "/student/courses", icon: BookOpen },
     { name: "My Batches", href: "/student/batches", icon: CalendarDays },
-    { name: "Assessments", href: "/student/assessments", icon: ClipboardCheck },
+    { name: "My Assessments", href: "/student/assessments", icon: ClipboardCheck },
     { name: "Results", href: "/student/results", icon: Award },
     { name: "Notifications", href: "/student/notifications", icon: Bell },
     { name: "Feedback", href: "/student/feedback", icon: MessageSquare },

@@ -2,14 +2,18 @@ import { Pencil, Lock, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { studentProfile } from "@/features/student/mocks/dummy-data";
+import { useLMS } from "@/context/LMSContext";
 import { toast } from "sonner";
 
 /**
  * Profile hero card with avatar, name, role badges, and action buttons.
  */
 export function ProfileHeader() {
-  const initials = studentProfile.name
+  const { currentUser } = useLMS();
+  
+  if (!currentUser) return null;
+
+  const initials = (currentUser.name || "Student User")
     .split(" ")
     .map((n) => n[0])
     .join("")
@@ -39,14 +43,14 @@ export function ProfileHeader() {
 
           {/* Name & Role */}
           <div className="flex-1 text-center sm:text-left">
-            <h2 className="text-2xl font-bold tracking-tight">{studentProfile.name}</h2>
-            <p className="text-muted-foreground mt-1">{studentProfile.role}</p>
+            <h2 className="text-2xl font-bold tracking-tight">{currentUser.name || "Student"}</h2>
+            <p className="text-muted-foreground mt-1 capitalize">{currentUser.role || "student"}</p>
             <div className="flex flex-wrap gap-2 mt-3 justify-center sm:justify-start">
               <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
-                {studentProfile.batch}
+                {currentUser.batches?.[0] || "No Batch"}
               </Badge>
               <Badge variant="outline" className="text-muted-foreground">
-                {studentProfile.university}
+                Xebia University
               </Badge>
             </div>
           </div>

@@ -1,7 +1,6 @@
 package com.xebia.assessmentservice.service;
 
 import org.springframework.stereotype.Service;
-import java.util.concurrent.TimeUnit;
 import java.util.Map;
 
 @Service

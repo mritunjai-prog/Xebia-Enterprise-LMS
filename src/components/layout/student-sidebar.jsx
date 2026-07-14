@@ -9,7 +9,7 @@ import {
   MessageSquare,
   LogOut,
 } from "lucide-react";
-import { studentProfile } from "@/features/student/mocks/dummy-data";
+import { useLMS } from "@/context/LMSContext";
 import { clsx } from "clsx";
 import { useAppStore } from "@/admin/store/useAppStore";
 import { useEffect } from "react";
@@ -18,7 +18,7 @@ const navItems = [
   { name: "Dashboard", href: "/student", icon: LayoutDashboard },
   { name: "My Courses", href: "/student/courses", icon: BookOpen },
   { name: "My Batches", href: "/student/batches", icon: CalendarDays },
-  { name: "Assessments", href: "/student/assessments", icon: ClipboardCheck },
+  { name: "My Assessments", href: "/student/assessments", icon: ClipboardCheck },
   { name: "Results", href: "/student/results", icon: Award },
   { name: "Notifications", href: "/student/notifications", icon: Bell },
   { name: "Feedback", href: "/student/feedback", icon: MessageSquare },
@@ -28,8 +28,9 @@ export function StudentSidebar({ isMobileOpen, setIsMobileOpen, isSidebarCollaps
   const location = useLocation();
   const currentPath = location.pathname;
   const { setActiveSidebarItem } = useAppStore();
+  const { currentUser } = useLMS();
 
-  const initials = studentProfile.name
+  const initials = (currentUser?.name || "Student User")
     .split(" ")
     .map((n) => n[0])
     .join("")

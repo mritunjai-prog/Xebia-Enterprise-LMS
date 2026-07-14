@@ -28,7 +28,7 @@ export const TeacherDashboard = () => {
   const { students, batches, assessments, submissions, notifications } = useLMS();
 
   // Metrics Calculations
-  const totalStudents = students.length;
+  const totalStudents = students.filter(s => batches.some(b => b.students?.includes(s.id))).length;
   const totalBatches = batches.length;
   const totalAssessments = assessments.length;
 

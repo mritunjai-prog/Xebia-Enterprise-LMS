@@ -16,12 +16,7 @@ import {
   Layers,
   ClipboardCheck,
 } from "lucide-react";
-import {
-  studentProfile,
-  notifications,
-  batchInfo,
-  upcomingAssessments,
-} from "@/features/student/mocks/dummy-data";
+import { useLMS } from "@/context/LMSContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +31,8 @@ import { CourseService, CategoryService } from "@/services/api";
 
 export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
   const { toggleSidebar, breadcrumbs, addToast } = useAppStore();
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const { currentUser, notifications, batches, assessments } = useLMS();
+  const unreadCount = (notifications || []).filter((n) => !n.read).length;
   const router = useRouter();
 
   const [isDark, setIsDark] = useState(
@@ -88,13 +84,18 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
     { id: "feat-feedback", title: "Feedback", slug: "feedback" },
   ];
 
-  const MOCK_BATCHES = [{ id: "b1", name: batchInfo.batchName, type: batchInfo.trainer }];
+  const studentBatchIds = Array.from(
+    new Set([
+      ...(currentUser?.batches || []),
+      ...(batches || []).filter((b) => (b.students || []).includes(currentUser?.id)).map((b) => b.id),
+    ])
+  );
 
-  const MOCK_ASSESSMENTS = upcomingAssessments.map((a) => ({
-    id: a.id,
-    title: a.name,
-    status: a.status,
-  }));
+  const myBatches = (batches || []).filter((b) => studentBatchIds.includes(b.id)).map(b => ({ id: b.id, name: b.name, type: b.course }));
+
+  const myAssessments = (assessments || [])
+    .filter(a => a.status === "published" && a.batches?.some((bId) => studentBatchIds.includes(bId)))
+    .map(a => ({ id: a.id, title: a.title, status: a.status }));
 
   useEffect(() => {
     if (searchQuery.trim().length >= 1) {
@@ -108,8 +109,8 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
           courses: (courses || [])
             .filter((c) => (c.title || "").toLowerCase().includes(lower))
             .slice(0, 3),
-          batches: MOCK_BATCHES.filter((b) => b.name.toLowerCase().includes(lower)).slice(0, 3),
-          assessments: MOCK_ASSESSMENTS.filter((a) => a.title.toLowerCase().includes(lower)).slice(
+          batches: myBatches.filter((b) => b.name.toLowerCase().includes(lower)).slice(0, 3),
+          assessments: myAssessments.filter((a) => a.title.toLowerCase().includes(lower)).slice(
             0,
             3,
           ),
@@ -175,13 +176,13 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
   useEffect(() => {
     if (isSettingsOpen) {
       setTempProfile({
-        name: studentProfile.name,
-        email: "student@xebia.com",
+        name: currentUser?.name || "Student User",
+        email: currentUser?.email || "student@xebia.com",
         university: "Xebia University",
         image: null,
       });
     }
-  }, [isSettingsOpen]);
+  }, [isSettingsOpen, currentUser]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];

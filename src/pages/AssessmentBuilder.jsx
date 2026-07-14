@@ -204,7 +204,7 @@ export const AssessmentBuilder = () => {
     setStartTime(as.startTime);
     setEndDate(as.endDate);
     setEndTime(as.endTime);
-    setAttemptsAllowed(as.attemptsAllowed);
+    setAttemptsAllowed(as.attemptsAllowed || as.maxAttempts || 1);
     setShuffleQuestions(as.shuffleQuestions);
     setRandomizeOptions(as.randomizeOptions);
     setAsType(as.type);
@@ -359,6 +359,7 @@ export const AssessmentBuilder = () => {
       endDate,
       endTime,
       attemptsAllowed,
+      maxAttempts: Number(attemptsAllowed) || 1,
       shuffleQuestions,
       randomizeOptions,
       autoGrade: asType === "mcq" || asType === "true_false" || asType === "multi_select",
@@ -485,7 +486,7 @@ export const AssessmentBuilder = () => {
             className="space-y-4"
           >
             {/* Toolbar - Redesigned to match BatchManagement */}
-            <div className="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm flex flex-col gap-4">
+            <div className="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-sm flex flex-col gap-4">
               <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
                 {/* Search */}
                 <div className="relative flex-1 min-w-[300px] group">
@@ -510,7 +511,7 @@ export const AssessmentBuilder = () => {
               </div>
 
               {/* Filters Row */}
-              <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800 mt-2">
+              <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-700 mt-2">
                 <div className="flex items-center gap-2 text-sm font-semibold text-neutral-500">
                   <Filter className="w-4 h-4" /> Filters:
                 </div>
@@ -605,7 +606,7 @@ export const AssessmentBuilder = () => {
 
             {/* Content Display based on ViewMode */}
             {filteredAssessments.length === 0 ? (
-              <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-3xl p-16 text-center text-neutral-500 shadow-sm flex flex-col items-center justify-center space-y-4">
+              <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-3xl p-16 text-center text-neutral-500 shadow-sm flex flex-col items-center justify-center space-y-4">
                 <div className="p-4 bg-neutral-50 dark:bg-neutral-800/50 rounded-full">
                   <Search className="w-8 h-8 text-neutral-400" />
                 </div>
@@ -617,10 +618,10 @@ export const AssessmentBuilder = () => {
                 </div>
               </div>
             ) : viewMode === "table" ? (
-              <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden shadow-sm">
+              <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-2xl overflow-hidden shadow-sm">
                 <div className="overflow-x-auto max-h-[60vh]">
                   <table className="w-full text-left border-collapse text-sm whitespace-nowrap">
-                    <thead className="sticky top-0 z-10 bg-neutral-100 dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-sm">
+                    <thead className="sticky top-0 z-10 bg-neutral-100 dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-sm">
                       <tr className="text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider text-[11px]">
                         <th className="py-4 px-6 font-bold">Title & Batches</th>
                         <th className="py-4 px-6 font-bold">Type</th>
@@ -688,7 +689,7 @@ export const AssessmentBuilder = () => {
                               </td>
                               <td className="py-4 px-6 text-right">
                                 <div className="font-mono font-black text-[#6C1D5F] dark:text-primary">
-                                  {as.marks} pts
+                                  {as.marks} marks
                                 </div>
                                 <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 mt-0.5">
                                   {as.duration} min
@@ -777,7 +778,7 @@ export const AssessmentBuilder = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       onClick={() => navigate(`/trainer/assessment-builder/${as.id}`)}
-                      className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden relative cursor-pointer"
+                      className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden relative cursor-pointer"
                     >
                       {/* Decorative Background Element */}
                       <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-gradient-to-br from-[#6C1D5F]/5 to-transparent blur-2xl group-hover:bg-[#6C1D5F]/10 transition-colors pointer-events-none" />
@@ -810,14 +811,14 @@ export const AssessmentBuilder = () => {
                           {as.difficulty}
                         </span>
                         <span className="px-1.5 py-0.5 bg-primary/10 dark:bg-primary text-[#6C1D5F] dark:text-primary rounded text-[10px] font-bold font-mono">
-                          {as.marks} pts
+                          {as.marks} marks
                         </span>
                         <span className="px-1.5 py-0.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-500 rounded text-[10px] font-bold">
                           {as.duration} min
                         </span>
                       </div>
 
-                      <div className="mt-auto pt-4 border-t border-neutral-100 dark:border-neutral-800">
+                      <div className="mt-auto pt-4 border-t border-neutral-100 dark:border-neutral-700">
                         {/* Actions Row */}
                         <div className="flex items-center gap-1.5 w-full">
                           {as.status === "draft" && (

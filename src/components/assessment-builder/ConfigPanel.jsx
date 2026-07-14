@@ -234,12 +234,11 @@ export const ConfigPanel = ({ config, setConfig }) => {
               </label>
               <input
                 type="number"
-                placeholder="Total Pts"
+                placeholder="e.g. 100"
                 value={config.marks}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setConfig((prev) => ({ ...prev, marks: val, passingMarks: 75 }));
-                }}
+                required
+                min={1}
+                onChange={(e) => setConfig((prev) => ({ ...prev, marks: e.target.value }))}
                 className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm focus:outline-none"
               />
             </div>

@@ -8,7 +8,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/assessments/drafts")
-@CrossOrigin(origins = "*")
 public class DraftController {
 
     @Autowired

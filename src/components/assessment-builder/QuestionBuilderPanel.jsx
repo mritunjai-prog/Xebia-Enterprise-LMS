@@ -466,7 +466,7 @@ export const QuestionBuilderPanel = ({
                 </p>
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-xs font-bold text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded">
-                    {q.marks || 1} pts
+                    {q.marks || 1} marks
                   </span>
                   <button
                     onClick={() => handleEdit(idx)}

@@ -121,13 +121,13 @@ export const Results = () => {
               {submission.isEvaluated ? `${submission.percentage}%` : "Pending"}
             </span>
             <span className="text-[9px] text-neutral-500 dark:text-neutral-400 font-mono">
-              {submission.isEvaluated ? `${submission.score} / ${assessment.marks} pts` : "-- / --"}
+              {submission.isEvaluated ? `${submission.score} / ${assessment.marks} marks` : "-- / --"}
             </span>
           </div>
 
           <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold mt-3 uppercase tracking-wider text-center">
             Passing mark: {passingMarks}% ({Math.round(assessment.marks * (passingMarks / 100))}{" "}
-            pts)
+            marks)
           </p>
         </div>
       </div>
@@ -169,7 +169,7 @@ export const Results = () => {
                       <span className="text-[#6C1D5F] dark:text-purple-300">
                         {codingAns?.score || marksAwarded}
                       </span>{" "}
-                      / {q.marks} pts
+                      / {q.marks} marks
                     </span>
                   </div>
 
@@ -202,7 +202,7 @@ export const Results = () => {
                           SIMULATION SCORE
                         </span>
                         <span className="text-neutral-800 dark:text-white font-bold">
-                          {codingAns?.score || marksAwarded} pts
+                          {codingAns?.score || marksAwarded} marks
                         </span>
                       </div>
                       <div className="p-2 bg-neutral-50 dark:bg-neutral-950 rounded-lg border border-neutral-100 dark:border-neutral-800/40">
@@ -253,7 +253,7 @@ export const Results = () => {
                   <span className="font-mono font-bold text-xs text-neutral-600 dark:text-neutral-300">
                     Awarded:{" "}
                     <span className="text-[#6C1D5F] dark:text-purple-300">{marksAwarded}</span> /{" "}
-                    {q.marks} pts
+                    {q.marks} marks
                   </span>
                 </div>
 

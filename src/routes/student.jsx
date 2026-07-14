@@ -1,29 +1,29 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { UnifiedLayout } from "@/components/layout/unified-layout";
 import { useLMS } from "@/context/LMSContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/student")({
   component: StudentLayout,
 });
 
 function StudentLayout() {
-  const { currentUser } = useLMS();
+  const { currentUser, isInitializing } = useLMS();
   const navigate = useNavigate();
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (mounted && (!currentUser || currentUser.role !== "student")) {
+    // Only redirect if we are SURE there is no user (not during initial load)
+    if (!isInitializing && (!currentUser || currentUser.role !== "student")) {
       navigate({ to: "/", replace: true });
     }
-  }, [mounted, currentUser, navigate]);
+  }, [isInitializing, currentUser, navigate]);
 
-  if (!mounted || !currentUser || currentUser.role !== "student") {
-    return null; // Don't render layout while mounting or redirecting
+  if (isInitializing) {
+    return null; // Wait for session to restore from localStorage/backend
+  }
+
+  if (!currentUser || currentUser.role !== "student") {
+    return null;
   }
 
   return <UnifiedLayout portalType="student" />;

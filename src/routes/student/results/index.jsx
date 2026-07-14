@@ -1,10 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  assessmentResults as mockResults,
-  chartData as mockChartData,
-  enrolledCourses as mockCourses,
-} from "@/features/student/mocks/dummy-data";
+import { useQuery } from "@tanstack/react-query";
+import { CourseService, EnrollmentService } from "@/services/api";
+import { useLMS } from "@/context/LMSContext";
 import {
   Award,
   Trophy,
@@ -28,9 +26,54 @@ export const Route = createFileRoute("/student/results/")({
 });
 
 function ResultsPage() {
-  const assessmentResults = mockResults;
-  const enrolledCourses = mockCourses;
-  const chartData = mockChartData;
+  const { assessments, submissions, currentUser } = useLMS();
+
+  const { data: coursesData } = useQuery({
+    queryKey: ["student-enrolled-courses"],
+    queryFn: EnrollmentService.getMyCourses,
+  });
+
+  const enrolledCourses = coursesData || [];
+
+  const assessmentResults = (submissions || [])
+    .filter((s) => s.studentId === currentUser?.id && s.status === "submitted")
+    .map((s) => {
+      const a = assessments.find((as) => as.id === s.assessmentId);
+      return {
+        id: s.id,
+        assessmentName: a?.title || "Unknown Assessment",
+        date: s.submittedAt ? s.submittedAt.split("T")[0] : "Recent",
+        score: s.percentage,
+        maxScore: 100,
+        grade: s.percentage >= 90 ? "A+" : s.percentage >= 80 ? "A" : s.percentage >= 70 ? "B+" : s.percentage >= 60 ? "B" : s.percentage >= 50 ? "C" : "F",
+        status: s.percentage >= 60 ? "Passed" : "Failed",
+        type: a?.type || "mcq",
+      };
+    });
+
+  const chartData = {
+    courseProgress: [
+      { name: "Mon", hours: 2 },
+      { name: "Tue", hours: 4 },
+      { name: "Wed", hours: 3 },
+      { name: "Thu", hours: 5 },
+      { name: "Fri", hours: 2 },
+      { name: "Sat", hours: 6 },
+      { name: "Sun", hours: 4 },
+    ],
+    assessmentPerformance: assessmentResults.slice(0, 5).map(r => ({
+      subject: r.assessmentName.substring(0, 10),
+      score: r.score,
+    }))
+  };
+  
+  if (chartData.assessmentPerformance.length === 0) {
+    chartData.assessmentPerformance = [
+        { subject: "React", score: 85 },
+        { subject: "Architecture", score: 65 },
+        { subject: "UI/UX", score: 95 },
+    ];
+  }
 
   const getGradeStyle = (grade) => {
     switch (grade) {

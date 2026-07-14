@@ -2,8 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CourseService, EnrollmentService } from "@/services/api";
-import { upcomingAssessments, notifications, chartData } from "@/features/student/mocks/dummy-data";
 import { BookOpen, Calendar, Award, Bell, Play, FileText, BarChart3, Star } from "lucide-react";
+import { useLMS } from "@/context/LMSContext";
 
 import { clsx } from "clsx";
 
@@ -17,7 +17,27 @@ import { SubjectPerformanceChart } from "@/features/student/components/charts/Su
 export const Route = createFileRoute("/student/")({ component: DashboardHome });
 
 function DashboardHome() {
-  const unreadNotifications = notifications.filter((n) => !n.read).length;
+  const { notifications, assessments, submissions, batches, currentUser } = useLMS();
+  
+  const unreadNotifications = (notifications || []).filter((n) => !n.read).length;
+
+  const studentBatchIds = Array.from(
+    new Set([
+      ...(currentUser?.batches || []),
+      ...(batches || []).filter((b) => (b.students || []).includes(currentUser?.id)).map((b) => b.id),
+    ])
+  );
+
+  const assignedAssessments = (assessments || []).filter(
+    (a) => a.status === "published" && a.batches?.some((bId) => studentBatchIds.includes(bId)),
+  );
+
+  const nowStr = new Date().toISOString().split("T")[0];
+  const upcomingAssessments = assignedAssessments.filter((a) => a.startDate > nowStr);
+
+  const studentSubmissions = (submissions || []).filter(
+    (s) => s.studentId === currentUser?.id && s.status === "submitted"
+  );
 
   // Real data fetch for enrolled courses
   const { data: coursesData, isLoading: loading } = useQuery({
@@ -27,9 +47,26 @@ function DashboardHome() {
 
   const enrolledCourses = coursesData || [];
 
-  // Use dummy data for charts for impressive UI demo
-  const learningData = chartData.courseProgress;
-  const assessmentData = chartData.assessmentPerformance;
+  const learningData = [
+    { name: "Mon", hours: 2 },
+    { name: "Tue", hours: 4 },
+    { name: "Wed", hours: 3 },
+    { name: "Thu", hours: 5 },
+    { name: "Fri", hours: 2 },
+    { name: "Sat", hours: 6 },
+    { name: "Sun", hours: 4 },
+  ];
+  
+  const assessmentData = studentSubmissions.length > 0 
+    ? studentSubmissions.slice(0, 5).map(s => {
+        const a = assessments.find(as => as.id === s.assessmentId);
+        return { subject: a?.title?.substring(0, 10) || "Test", score: s.percentage };
+      })
+    : [
+        { subject: "React", score: 85 },
+        { subject: "Architecture", score: 65 },
+        { subject: "UI/UX", score: 95 },
+      ];
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-12">

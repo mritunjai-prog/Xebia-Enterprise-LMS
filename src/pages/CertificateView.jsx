@@ -725,9 +725,10 @@ export const CertificateView = () => {
               >
                 <div
                   style={{
-                    border: `1px solid #e0e0e0`,
+                    border: `1px solid #f0f0f0`,
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
                     padding: "5px",
-                    borderRadius: "4px",
+                    borderRadius: "8px",
                     background: "#fff",
                   }}
                 >

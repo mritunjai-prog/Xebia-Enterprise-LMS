@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { notifications as initialNotifications } from "@/features/student/mocks/dummy-data";
+import { useLMS } from "@/context/LMSContext";
 import {
   Bell,
   CheckCircle,
@@ -27,7 +27,8 @@ export const Route = createFileRoute("/student/notifications")({
 });
 
 function NotificationsPage() {
-  const [localNotifications, setLocalNotifications] = useState(initialNotifications);
+  const { notifications: globalNotifications } = useLMS();
+  const [localNotifications, setLocalNotifications] = useState(globalNotifications || []);
 
   const getIconData = (type) => {
     switch (type) {

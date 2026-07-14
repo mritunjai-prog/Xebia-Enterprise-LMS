@@ -37,7 +37,7 @@ public class AIService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
         
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(apiUrl, request, Map.class);
+            ResponseEntity<Map<String, Object>> response = restTemplate.postForEntity(apiUrl, request, (Class<Map<String, Object>>) (Class<?>) Map.class);
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 List<Map<String, Object>> choices = (List<Map<String, Object>>) response.getBody().get("choices");
                 if (choices != null && !choices.isEmpty()) {

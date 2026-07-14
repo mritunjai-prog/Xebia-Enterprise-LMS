@@ -512,7 +512,7 @@ export const BatchManagement = () => {
             return (
               <div
                 key={batch.id || `batch-${index}`}
-                onClick={() => navigate(`/trainer/batches/${encodeURIComponent(batch.name)}`)}
+                onClick={() => navigate({ to: `/trainer/batches/${encodeURIComponent(batch.name)}` })}
                 className="relative group p-4 pt-8 bg-white dark:bg-neutral-900 border transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 rounded-xl border-neutral-200 dark:border-neutral-800 shadow-sm cursor-pointer overflow-hidden"
               >
                 {/* Absolute Status Badge */}
@@ -629,7 +629,7 @@ export const BatchManagement = () => {
                         key={batch.id || `batch-tr-${index}`}
                         className={`group hover:bg-neutral-50 dark:hover:bg-neutral-800/20 transition-colors cursor-pointer`}
                         onClick={() =>
-                          navigate(`/trainer/batches/${encodeURIComponent(batch.name)}`)
+                          navigate({ to: `/trainer/batches/${encodeURIComponent(batch.name)}` })
                         }
                       >
                         <td className="px-6 py-4">

@@ -21,13 +21,18 @@ import {
 } from "recharts";
 
 export const StudentDashboard = () => {
-  const { currentUser, assessments, submissions, getLeaderboard } = useLMS();
+  const { currentUser, assessments, submissions, getLeaderboard, batches } = useLMS();
   const navigate = useNavigate();
 
   if (!currentUser) return null;
 
   // Filter assessments and submissions assigned to student's batches
-  const studentBatchIds = currentUser.batches || [];
+  const studentBatchIds = Array.from(
+    new Set([
+      ...(currentUser.batches || []),
+      ...(batches || []).filter((b) => (b.students || []).includes(currentUser.id)).map((b) => b.id),
+    ])
+  );
 
   // Assessments matching student's batch
   const assignedAssessments = assessments.filter(

@@ -33,6 +33,7 @@ import { CourseService, EnrollmentService, AuthService, CategoryService } from "
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
 import { toast } from "sonner";
+import { useLMS } from "@/context/LMSContext";
 // jsPDF and html2canvas loaded dynamically to avoid SSR issues
 
 export const Route = createFileRoute("/student/courses")({
@@ -343,6 +344,7 @@ function MyCourses() {
   const [filterLevel, setFilterLevel] = useState("All Levels");
   const [filterStatus, setFilterStatus] = useState("All Status");
   const [certCourse, setCertCourse] = useState(null); // course to show certificate for
+  const { currentUser, batches } = useLMS();
   const { data: allCoursesData, isLoading: loadingAll } = useQuery({
     queryKey: ["student-all-courses"],
     queryFn: CourseService.getCourses,
@@ -356,14 +358,26 @@ function MyCourses() {
   const allCourses = allCoursesData || [];
   const enrolledCourses = enrolledCoursesData || [];
 
-  const courses = allCourses.map((course) => {
-    const enrolled = enrolledCourses.find((e) => String(e.id) === String(course.id));
-    return {
-      ...course,
-      progress: enrolled ? enrolled.progress || course.progress || 0 : 0,
-      isEnrolled: !!enrolled,
-    };
-  });
+  const courses = allCourses
+    .map((course) => {
+      // Check if student is assigned to this course via any batch
+      const studentBatches = batches.filter(
+        (b) => b.students?.includes(currentUser?.id) || currentUser?.batches?.includes(b.id)
+      );
+      const isEnrolledViaBatch = studentBatches.some(
+        (b) => String(b.course) === String(course.title) || String(b.course) === String(course.id)
+      );
+
+      const enrolledBackend = enrolledCourses.find((e) => String(e.id) === String(course.id));
+      const isEnrolled = !!enrolledBackend || isEnrolledViaBatch;
+
+      return {
+        ...course,
+        progress: isEnrolled ? (enrolledBackend?.progress || course.progress || 0) : 0,
+        isEnrolled,
+      };
+    })
+    .filter((c) => c.isEnrolled); // Only show courses they are actually enrolled in!
 
   if (loading) {
     return (
@@ -822,7 +836,7 @@ function MyCourses() {
                   <span>{filterFavorites === "All Courses" ? "Course" : filterFavorites}</span>
                 </div>
               </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-[#1a1a24] border border-black dark:border-white rounded-xl shadow-lg">
+              <SelectContent className="bg-white dark:bg-[#1a1a24] border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-lg">
                 {["All Courses", "Favorites"].map((o) => (
                   <SelectItem
                     key={o}
@@ -888,7 +902,7 @@ function MyCourses() {
                     <span>{filter.value === filter.opts[0] ? filter.label : filter.value}</span>
                   </div>
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-[#1a1a24] border border-black dark:border-white rounded-xl shadow-lg">
+                <SelectContent className="bg-white dark:bg-[#1a1a24] border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-lg">
                   {filter.opts.map((o) => (
                     <SelectItem
                       key={o}

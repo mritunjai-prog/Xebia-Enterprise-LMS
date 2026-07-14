@@ -263,32 +263,61 @@ export const Login = () => {
                     <p className="text-[10px] text-neutral-500 dark:text-neutral-500 font-extrabold uppercase tracking-wider ml-1">
                       Trainers
                     </p>
-                    {demoTeachers.map((t, idx) => (
+                    {demoTeachers.length > 0 ? (
+                      demoTeachers.map((t, idx) => (
+                        <motion.button
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.5 + idx * 0.1 }}
+                          key={t.id}
+                          type="button"
+                          onClick={() => handleQuickLogin(t.email, "teacher")}
+                          className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-white/60 dark:border-neutral-700/50 hover:bg-white dark:hover:bg-neutral-800 hover:border-[#6C1D5F] dark:hover:border-primary hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
+                        >
+                          {t.avatar ? (
+                            <img
+                              src={t.avatar}
+                              className="w-8 h-8 rounded-full shadow-sm"
+                              alt=""
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full shadow-sm bg-gradient-to-br from-[#6C1D5F] to-[#4A1E47] flex items-center justify-center text-white font-bold text-[10px]">
+                              {t.name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                          <div className="truncate flex-1">
+                            <p className="font-extrabold text-neutral-800 dark:text-neutral-200 truncate group-hover:text-[#6C1D5F] dark:group-hover:text-primary transition-colors">
+                              {t.name.split(" ")[1]}
+                            </p>
+                            <p className="text-[10px] text-neutral-500 dark:text-neutral-500 truncate font-medium">
+                              {t.department}
+                            </p>
+                          </div>
+                        </motion.button>
+                      ))
+                    ) : (
                       <motion.button
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5 + idx * 0.1 }}
-                        key={t.id}
+                        transition={{ delay: 0.5 }}
                         type="button"
-                        onClick={() => handleQuickLogin(t.email, "teacher")}
+                        onClick={() => handleQuickLogin("evelyn.stone@xebia-academy.com", "teacher")}
                         className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-white/60 dark:border-neutral-700/50 hover:bg-white dark:hover:bg-neutral-800 hover:border-[#6C1D5F] dark:hover:border-primary hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
                       >
-                        <img
-                          src={t.avatar}
-                          className="w-8 h-8 rounded-full shadow-sm"
-                          alt=""
-                          referrerPolicy="no-referrer"
-                        />
+                        <div className="w-8 h-8 rounded-full shadow-sm bg-gradient-to-br from-[#6C1D5F] to-[#4A1E47] flex items-center justify-center text-white font-bold text-[10px]">
+                          T
+                        </div>
                         <div className="truncate flex-1">
                           <p className="font-extrabold text-neutral-800 dark:text-neutral-200 truncate group-hover:text-[#6C1D5F] dark:group-hover:text-primary transition-colors">
-                            {t.name.split(" ")[1]}
+                            Trainer User
                           </p>
                           <p className="text-[10px] text-neutral-500 dark:text-neutral-500 truncate font-medium">
-                            {t.department}
+                            Instructor
                           </p>
                         </div>
                       </motion.button>
-                    ))}
+                    )}
                   </div>
 
                   {/* Students Column */}
@@ -296,32 +325,61 @@ export const Login = () => {
                     <p className="text-[10px] text-neutral-500 dark:text-neutral-500 font-extrabold uppercase tracking-wider ml-1">
                       Students
                     </p>
-                    {demoStudents.map((s, idx) => (
+                    {demoStudents.length > 0 ? (
+                      demoStudents.map((s, idx) => (
+                        <motion.button
+                          initial={{ opacity: 0, x: 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.5 + idx * 0.1 }}
+                          key={s.id}
+                          type="button"
+                          onClick={() => handleQuickLogin(s.email, "student")}
+                          className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-white/60 dark:border-neutral-700/50 hover:bg-white dark:hover:bg-neutral-800 hover:border-[#01AC9F] dark:hover:border-accent-2 hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
+                        >
+                          {s.avatar ? (
+                            <img
+                              src={s.avatar}
+                              className="w-8 h-8 rounded-full shadow-sm"
+                              alt=""
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full shadow-sm bg-gradient-to-br from-[#01AC9F] to-[#01867c] flex items-center justify-center text-white font-bold text-[10px]">
+                              {s.name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                          <div className="truncate flex-1">
+                            <p className="font-extrabold text-neutral-800 dark:text-neutral-200 truncate group-hover:text-[#01AC9F] dark:group-hover:text-accent-2 transition-colors">
+                              {s.name.split(" ")[0]}
+                            </p>
+                            <p className="text-[10px] text-neutral-500 dark:text-neutral-500 truncate font-medium">
+                              Student
+                            </p>
+                          </div>
+                        </motion.button>
+                      ))
+                    ) : (
                       <motion.button
                         initial={{ opacity: 0, x: 10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5 + idx * 0.1 }}
-                        key={s.id}
+                        transition={{ delay: 0.5 }}
                         type="button"
-                        onClick={() => handleQuickLogin(s.email, "student")}
+                        onClick={() => handleQuickLogin("student@xebia.com", "student")}
                         className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-white/60 dark:border-neutral-700/50 hover:bg-white dark:hover:bg-neutral-800 hover:border-[#01AC9F] dark:hover:border-accent-2 hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
                       >
-                        <img
-                          src={s.avatar}
-                          className="w-8 h-8 rounded-full shadow-sm"
-                          alt=""
-                          referrerPolicy="no-referrer"
-                        />
+                        <div className="w-8 h-8 rounded-full shadow-sm bg-gradient-to-br from-[#01AC9F] to-[#01867c] flex items-center justify-center text-white font-bold text-[10px]">
+                          S
+                        </div>
                         <div className="truncate flex-1">
                           <p className="font-extrabold text-neutral-800 dark:text-neutral-200 truncate group-hover:text-[#01AC9F] dark:group-hover:text-accent-2 transition-colors">
-                            {s.name.split(" ")[0]}
+                            Student User
                           </p>
                           <p className="text-[10px] text-neutral-500 dark:text-neutral-500 truncate font-medium">
-                            Batch {(s.batches && s.batches[0]) || "B1"}
+                            Student
                           </p>
                         </div>
                       </motion.button>
-                    ))}
+                    )}
                   </div>
 
                   {/* Admins Column */}

@@ -780,7 +780,7 @@ export const BatchDetail = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-3 flex-1">
-                          <div className="w-8 h-8 rounded-full bg-[#6C1D5F]/10 text-[#6C1D5F] flex items-center justify-center font-bold text-xs">
+                          <div className="w-8 h-8 rounded-full bg-[#01AC9F]/10 text-[#01AC9F] flex items-center justify-center font-bold text-xs">
                             {student.name.substring(0, 2).toUpperCase()}
                           </div>
                           <div>

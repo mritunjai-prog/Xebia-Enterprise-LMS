@@ -44,6 +44,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
     difficulty: initialAssessment?.difficulty || "Easy",
     duration: initialAssessment?.duration ? parseInt(initialAssessment.duration) : "",
     marks: initialAssessment?.marks || "",
+    maxAttempts: initialAssessment?.maxAttempts || initialAssessment?.attemptsAllowed || 1,
     startDate: initialAssessment?.startDate || "",
     startTime: initialAssessment?.startTime || "",
     endDate: initialAssessment?.endDate || "",
@@ -82,7 +83,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
               animate={{ width: "auto", opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="hidden lg:block shrink-0 border-r border-neutral-200 dark:border-neutral-800 h-full overflow-hidden"
+              className="hidden lg:block shrink-0 border-r border-neutral-200 dark:border-neutral-700 h-full overflow-hidden"
             >
               <div className="w-[550px] xl:w-[600px] 2xl:w-[650px] h-full">
                 <ConfigPanel config={config} setConfig={setConfig} />
@@ -111,7 +112,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
                 transition={{ type: "tween", duration: 0.25 }}
                 className="fixed inset-y-0 left-0 w-[85%] max-w-[400px] bg-white dark:bg-neutral-900 z-50 lg:hidden shadow-2xl flex flex-col h-full"
               >
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center shrink-0">
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex justify-between items-center shrink-0">
                   <h3 className="font-bold text-lg text-neutral-900 dark:text-white">
                     Assessment Details
                   </h3>
@@ -141,7 +142,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
         </div>
       </main>
 
-      <footer className="h-16 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between lg:justify-end px-4 lg:px-6 shrink-0 z-20">
+      <footer className="h-16 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700 flex items-center justify-between lg:justify-end px-4 lg:px-6 shrink-0 z-20">
         <button
           onClick={() => setShowConfigMobile(true)}
           className="lg:hidden px-4 py-2 text-sm font-bold text-neutral-700 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 rounded-xl flex items-center gap-2 transition-colors"
@@ -165,8 +166,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
                   return { id: id || `q_${Date.now()}_${Math.random()}`, ...q };
                 }),
                 duration: parseInt(config.duration) || 0,
-                marks:
-                  parseInt(config.marks) || questions.reduce((sum, q) => sum + (q.marks || 1), 0),
+                marks: parseInt(config.marks) || 0,
                 difficulty: config.difficulty || "Easy",
                 startDate: config.startDate || nowStr,
                 startTime: config.startTime || "",
@@ -175,6 +175,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
                 dueDate: config.endDate || "2099-12-31",
                 batches: config.batches || [],
                 maxAttempts: parseInt(config.maxAttempts) || 1,
+                attemptsAllowed: parseInt(config.maxAttempts) || 1,
                 negativeMarking: config.quickSettings?.negativeMarking || false,
                 negativeMarksValue: config.quickSettings?.negativeMarksValue || 25,
                 shuffleQuestions: config.quickSettings?.shuffleQuestions || false,
@@ -202,11 +203,11 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
               const isConfigComplete =
                 config &&
                 config.title &&
-                config.topic &&
-                config.course &&
                 config.difficulty &&
-                config.duration &&
-                config.marks;
+                config.duration !== "" &&
+                config.duration !== null &&
+                config.marks !== "" &&
+                config.marks !== null;
               if (!isConfigComplete) {
                 toast.add(
                   "Please fill all mandatory configuration fields before publishing.",
@@ -240,9 +241,9 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-white dark:bg-neutral-900 rounded-3xl w-[95%] max-w-3xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl border border-neutral-200 dark:border-neutral-800"
+              className="bg-white dark:bg-neutral-900 rounded-3xl w-[95%] max-w-3xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl border border-neutral-200 dark:border-neutral-700"
             >
-              <div className="p-6 border-b border-neutral-200 dark:border-neutral-800 bg-gradient-to-r from-accent-2 to-white dark:from-accent-2 dark:to-neutral-900 flex justify-between items-center shrink-0">
+              <div className="p-6 border-b border-neutral-200 dark:border-neutral-700 bg-gradient-to-r from-accent-2 to-white dark:from-accent-2 dark:to-neutral-900 flex justify-between items-center shrink-0">
                 <h3 className="font-display font-black text-xl text-neutral-900 dark:text-white flex items-center gap-2">
                   <CheckCircle2 className="w-6 h-6 text-accent-2" /> Pre-Publish Review
                 </h3>
@@ -255,7 +256,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
               </div>
 
               <div className="p-6 overflow-y-auto flex-1 space-y-6">
-                <div className="bg-neutral-50 dark:bg-neutral-950/50 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800">
+                <div className="bg-neutral-50 dark:bg-neutral-950/50 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700">
                   <h4 className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mb-3 flex items-center gap-2">
                     <LayoutTemplate className="w-4 h-4 text-[#6C1D5F]" /> Assessment Summary
                   </h4>
@@ -299,7 +300,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
                       {questions.map((q, idx) => (
                         <div
                           key={q.id || idx}
-                          className="p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl flex items-start gap-3"
+                          className="p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl flex items-start gap-3"
                         >
                           <div className="w-6 h-6 shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-full flex items-center justify-center text-xs font-bold text-neutral-500">
                             {idx + 1}
@@ -313,7 +314,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
                             </span>
                           </div>
                           <div className="shrink-0 text-xs font-bold text-[#6C1D5F]">
-                            {q.marks} pts
+                            {q.marks} marks
                           </div>
                         </div>
                       ))}
@@ -322,7 +323,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
                 </div>
               </div>
 
-              <div className="p-6 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 flex justify-end gap-3 shrink-0">
+              <div className="p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-950 flex justify-end gap-3 shrink-0">
                 <button
                   onClick={() => setShowPublishModal(false)}
                   className="px-5 py-2 text-sm font-bold text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800 rounded-xl transition-colors"
@@ -345,9 +346,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
                         return { id: id || `q_${Date.now()}_${Math.random()}`, ...q };
                       }),
                       duration: parseInt(config.duration) || 0,
-                      marks:
-                        parseInt(config.marks) ||
-                        questions.reduce((sum, q) => sum + (q.marks || 1), 0),
+                      marks: parseInt(config.marks) || 0,
                       difficulty: config.difficulty || "Easy",
                       startDate: config.startDate || nowStr,
                       startTime: config.startTime || "",
@@ -356,6 +355,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
                       dueDate: config.endDate || "2099-12-31",
                       batches: config.batches || [],
                       maxAttempts: parseInt(config.maxAttempts) || 1,
+                      attemptsAllowed: parseInt(config.maxAttempts) || 1,
                       negativeMarking: config.quickSettings?.negativeMarking || false,
                       negativeMarksValue: config.quickSettings?.negativeMarksValue || 25,
                       shuffleQuestions: config.quickSettings?.shuffleQuestions || false,

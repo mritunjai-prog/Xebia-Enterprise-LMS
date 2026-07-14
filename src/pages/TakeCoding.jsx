@@ -705,7 +705,7 @@ export const TakeCoding = () => {
               </button>
             </div>
             <div className="text-[10px] text-neutral-500 font-mono">
-              Marks: {currentProblem.marks} pts
+              Marks: {currentProblem.marks}
             </div>
           </div>
 
@@ -881,7 +881,7 @@ export const TakeCoding = () => {
                         <span className="font-bold text-neutral-900 dark:text-white">
                           {att.score}
                         </span>{" "}
-                        / {currentProblem.marks} pts
+                        / {currentProblem.marks} marks
                       </div>
                     </div>
                   ))
@@ -1355,7 +1355,7 @@ export const TakeCoding = () => {
                         <span
                           className={`font-bold ${match ? "text-green-400" : "text-neutral-500"}`}
                         >
-                          {match ? `LOCKED (${match.score} pts)` : "UNSUBMITTED"}
+                          {match ? `LOCKED (${match.score} marks)` : "UNSUBMITTED"}
                         </span>
                       </div>
                     );

@@ -9,14 +9,14 @@ export const Route = createFileRoute("/student/assessment/$assessmentId")({
   component: ExamTakingView,
 });
 
-import { useLMS } from "../../../context/LMSContext";
+import { useLMS } from "@/context/LMSContext";
 
 function ExamTakingView() {
   const { assessmentId } = Route.useParams();
   const navigate = useNavigate();
   const { assessments } = useLMS();
 
-  const assessment = assessments.find((a) => a.id === assessmentId);
+  const assessment = assessments.find(a => a.id === assessmentId);
   const questions = assessment?.questions || [];
 
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -29,7 +29,7 @@ function ExamTakingView() {
     if (isSubmitted || timeLeft <= 0) return;
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
+      setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
           handleSubmit();
@@ -45,15 +45,15 @@ function ExamTakingView() {
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
-    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
   const handleSelectOption = (qId, optionIdx) => {
-    setAnswers((prev) => ({ ...prev, [qId]: optionIdx }));
+    setAnswers(prev => ({ ...prev, [qId]: optionIdx }));
   };
 
   const handleClearSelection = (qId) => {
-    setAnswers((prev) => {
+    setAnswers(prev => {
       const next = { ...prev };
       delete next[qId];
       return next;
@@ -80,15 +80,8 @@ function ExamTakingView() {
   if (!questions || questions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh]">
-        <h2 className="text-2xl font-bold text-neutral-500">
-          No questions found for this assessment.
-        </h2>
-        <button
-          onClick={() => navigate({ to: "/student/assessments" })}
-          className="mt-4 px-4 py-2 bg-[#6C1D5F] text-white rounded-lg"
-        >
-          Back to Assessments
-        </button>
+        <h2 className="text-2xl font-bold text-neutral-500">No questions found for this assessment.</h2>
+        <button onClick={() => navigate({ to: "/student/assessments" })} className="mt-4 px-4 py-2 bg-[#6C1D5F] text-white rounded-lg">Back to Assessments</button>
       </div>
     );
   }
@@ -110,6 +103,7 @@ function ExamTakingView() {
 
   return (
     <div className="max-w-5xl mx-auto py-4 space-y-6 animate-in fade-in duration-500">
+
       {/* ── Top Header Panel ── */}
       <div className="bg-card border border-border rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
         <div>
@@ -119,38 +113,27 @@ function ExamTakingView() {
 
         <div className="flex items-center gap-6">
           <div className="flex flex-col items-end">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
-              Time Remaining
-            </span>
-            <div
-              className={clsx(
-                "flex items-center gap-2 text-3xl font-black font-mono",
-                timeLeft < 300 ? "text-destructive animate-pulse" : "text-foreground",
-              )}
-            >
+            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Time Remaining</span>
+            <div className={clsx("flex items-center gap-2 text-3xl font-black font-mono", timeLeft < 300 ? "text-destructive animate-pulse" : "text-foreground")}>
               <Clock className="w-6 h-6" />
               {formatTime(timeLeft)}
             </div>
           </div>
 
-          <button
-            onClick={handleSubmit}
-            className="px-6 py-3 bg-gradient-to-r from-accent-2 to-[#01AC9F] hover:from-accent-2 hover:to-[#019085] text-white font-bold rounded-xl shadow-[0_2px_12px_-2px_rgba(1,172,159,0.5)] transition-all hover:-translate-y-0.5"
-          >
+          <button onClick={handleSubmit} className="px-6 py-3 bg-gradient-to-r from-accent-2 to-[#01AC9F] hover:from-accent-2 hover:to-[#019085] text-white font-bold rounded-xl shadow-[0_2px_12px_-2px_rgba(1,172,159,0.5)] transition-all hover:-translate-y-0.5">
             Submit Now
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+
         {/* ── Main Question Area ── */}
         <div className="lg:col-span-3 bg-card border border-border rounded-2xl shadow-sm flex flex-col min-h-[500px]">
+
           {/* Progress Bar */}
           <div className="h-1.5 w-full bg-muted rounded-t-2xl overflow-hidden">
-            <div
-              className="h-full bg-primary transition-all duration-500 ease-out"
-              style={{ width: `${progressPercent}%` }}
-            />
+            <div className="h-full bg-primary transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }} />
           </div>
 
           <div className="p-8 flex-1 flex flex-col">
@@ -190,25 +173,19 @@ function ExamTakingView() {
                           "w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-start gap-4 group",
                           isSelected
                             ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-[0_0_0_4px_rgba(108,29,95,0.1)]"
-                            : "border-border hover:border-primary/30 bg-transparent hover:bg-gray-50 dark:hover:bg-[#1a1a24]",
+                            : "border-border hover:border-primary/30 bg-transparent hover:bg-gray-50 dark:hover:bg-[#1a1a24]"
                         )}
                       >
-                        <div
-                          className={clsx(
-                            "w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors",
-                            isSelected
-                              ? "border-primary"
-                              : "border-gray-300 dark:border-gray-600 group-hover:border-primary/50",
-                          )}
-                        >
+                        <div className={clsx(
+                          "w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors",
+                          isSelected ? "border-primary" : "border-gray-300 dark:border-gray-600 group-hover:border-primary/50"
+                        )}>
                           {isSelected && <div className="w-3 h-3 bg-primary rounded-full" />}
                         </div>
-                        <span
-                          className={clsx(
-                            "text-lg font-medium",
-                            isSelected ? "text-primary dark:text-[#b44e9f]" : "text-foreground",
-                          )}
-                        >
+                        <span className={clsx(
+                          "text-lg font-medium",
+                          isSelected ? "text-primary dark:text-[#b44e9f]" : "text-foreground"
+                        )}>
                           {option}
                         </span>
                       </button>
@@ -222,7 +199,7 @@ function ExamTakingView() {
           {/* Navigation Footer */}
           <div className="p-5 border-t border-border flex items-center justify-between bg-gray-50 dark:bg-[#1a1a24] rounded-b-2xl">
             <button
-              onClick={() => setCurrentIdx((prev) => prev - 1)}
+              onClick={() => setCurrentIdx(prev => prev - 1)}
               disabled={isFirstQ}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
@@ -231,7 +208,7 @@ function ExamTakingView() {
 
             {!isLastQ ? (
               <button
-                onClick={() => setCurrentIdx((prev) => prev + 1)}
+                onClick={() => setCurrentIdx(prev => prev + 1)}
                 className="flex items-center gap-2 px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl shadow-sm hover:-translate-y-0.5 transition-all"
               >
                 Next <ChevronRight className="w-5 h-5" />
@@ -266,7 +243,7 @@ function ExamTakingView() {
                       : "hover:bg-gray-100 dark:hover:bg-gray-800",
                     isAttempted
                       ? "bg-primary text-white border-transparent"
-                      : "bg-transparent border-2 border-border text-muted-foreground",
+                      : "bg-transparent border-2 border-border text-muted-foreground"
                   )}
                 >
                   {idx + 1}
@@ -284,13 +261,13 @@ function ExamTakingView() {
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2 text-muted-foreground font-medium">
-                <div className="w-3 h-3 border-2 border-gray-300 dark:border-[#2e2e3e] rounded-full" />{" "}
-                Unattempted
+                <div className="w-3 h-3 border-2 border-gray-300 dark:border-[#2e2e3e] rounded-full" /> Unattempted
               </span>
               <span className="font-bold text-foreground">{questions.length - attemptedCount}</span>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );

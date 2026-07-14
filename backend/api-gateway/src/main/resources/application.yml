@@ -12,6 +12,8 @@ spring:
     gateway:
       default-filters:
         - AddResponseHeader=X-Gateway, enterprise-lms
+        - DedupeResponseHeader=Access-Control-Allow-Origin, RETAIN_UNIQUE
+        - DedupeResponseHeader=Access-Control-Allow-Credentials, RETAIN_UNIQUE
       globalcors:
         add-to-simple-url-handler-mapping: true
         corsConfigurations:

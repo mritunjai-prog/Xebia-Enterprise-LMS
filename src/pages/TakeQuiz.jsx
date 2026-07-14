@@ -308,7 +308,7 @@ export const TakeQuiz = () => {
       className={`min-h-screen bg-brand-bg-light dark:bg-[#0a0a0a] p-4 md:p-8 flex flex-col justify-between transition-colors duration-300 w-full ${isFullscreen ? "fixed inset-0 z-50 overflow-y-auto" : ""}`}
     >
       {/* Quiz Top Action Bar */}
-      <div className="flex justify-between items-center bg-white dark:bg-neutral-900 px-6 py-4 border border-brand-border dark:border-neutral-800 rounded-3xl shadow-sm mb-6">
+      <div className="flex justify-between items-center bg-white dark:bg-neutral-900 px-6 py-4 border border-neutral-200 dark:border-neutral-700 rounded-3xl shadow-sm mb-6">
         <div>
           <span className="text-xs text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wide">
             Ongoing Assessment Exam
@@ -391,12 +391,12 @@ export const TakeQuiz = () => {
       {/* Main question canvas + Sidebar palette row */}
       <div className="flex flex-col lg:flex-row gap-6 flex-1 items-start w-full">
         {/* Active Question Canvas (Left) */}
-        <div className="flex-1 w-full bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-800 rounded-3xl p-4 md:p-6 space-y-4 shadow-sm min-h-[450px] flex flex-col justify-between">
+        <div className="flex-1 w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-3xl p-4 md:p-6 space-y-4 shadow-sm min-h-[450px] flex flex-col justify-between">
           <div>
             {/* Question ID indicator */}
-            <div className="flex justify-between items-center border-b border-brand-border/20 dark:border-neutral-800 pb-4">
+            <div className="flex justify-between items-center border-b border-neutral-200/20 dark:border-neutral-700 pb-4">
               <span className="px-3 py-1.5 bg-[#6C1D5F]/10 dark:bg-purple-900/30 text-[#6C1D5F] dark:text-purple-300 font-bold rounded-lg text-sm font-mono">
-                QUESTION #{currentQIndex + 1} • {currentQ.marks} PTS
+                QUESTION #{currentQIndex + 1} • {currentQ.marks} MARKS
               </span>
               {currentQ.required && (
                 <span className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold px-3 py-1 rounded-md uppercase font-mono">
@@ -424,7 +424,7 @@ export const TakeQuiz = () => {
                       <div
                         key={oIdx}
                         onClick={() => handleSelectAnswer(currentQ.id, oIdx.toString())}
-                        className={`p-3 border rounded-2xl cursor-pointer flex items-center justify-between text-sm font-semibold transition-all ${isChecked ? "bg-purple-50/80 border-[#6C1D5F] text-[#6C1D5F] dark:bg-purple-900/20 dark:border-purple-500 dark:text-purple-300 shadow-sm" : "border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"}`}
+                        className={`p-3 border rounded-2xl cursor-pointer flex items-center justify-between text-sm font-semibold transition-all ${isChecked ? "bg-purple-50/80 border-[#6C1D5F] text-[#6C1D5F] dark:bg-purple-900/20 dark:border-purple-500 dark:text-purple-300 shadow-sm" : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"}`}
                       >
                         <span>{opt}</span>
                         <div
@@ -457,7 +457,7 @@ export const TakeQuiz = () => {
                       <div
                         key={oIdx}
                         onClick={handleToggleMulti}
-                        className={`p-3 border rounded-2xl cursor-pointer flex items-center justify-between text-sm font-semibold transition-all ${isChecked ? "bg-emerald-50/80 border-[#01AC9F] text-[#01AC9F] dark:bg-emerald-900/20 dark:border-emerald-500 dark:text-emerald-300 shadow-sm" : "border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"}`}
+                        className={`p-3 border rounded-2xl cursor-pointer flex items-center justify-between text-sm font-semibold transition-all ${isChecked ? "bg-emerald-50/80 border-[#01AC9F] text-[#01AC9F] dark:bg-emerald-900/20 dark:border-emerald-500 dark:text-emerald-300 shadow-sm" : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"}`}
                       >
                         <span>{opt}</span>
                         <div
@@ -475,14 +475,14 @@ export const TakeQuiz = () => {
                   value={answers[currentQ.id] || ""}
                   onChange={(e) => handleSelectAnswer(currentQ.id, e.target.value)}
                   placeholder="Type your brief answers response here..."
-                  className="w-full px-5 py-4 bg-neutral-50 dark:bg-neutral-950 border border-brand-border dark:border-neutral-800 rounded-2xl text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6C1D5F]"
+                  className="w-full px-5 py-4 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-700 rounded-2xl text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6C1D5F]"
                 />
               ) : currentQ.type === "paragraph" ? (
                 <textarea
                   value={answers[currentQ.id] || ""}
                   onChange={(e) => handleSelectAnswer(currentQ.id, e.target.value)}
                   placeholder="Compose detailed explanatory response..."
-                  className="w-full px-5 py-4 bg-neutral-50 dark:bg-neutral-950 border border-brand-border dark:border-neutral-800 rounded-2xl text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6C1D5F]"
+                  className="w-full px-5 py-4 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-700 rounded-2xl text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6C1D5F]"
                   rows={5}
                 />
               ) : currentQ.type === "file_upload" ? (
@@ -500,7 +500,7 @@ export const TakeQuiz = () => {
                       const file = e.dataTransfer.files?.[0];
                       if (file) simulateFileUpload(currentQ.id, file.name, file.size);
                     }}
-                    className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all flex flex-col items-center justify-center ${isDragOver ? "border-[#01AC9F] bg-[#01AC9F]/5" : "border-brand-border/80 dark:border-neutral-800 hover:border-brand-velvet"}`}
+                    className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all flex flex-col items-center justify-center ${isDragOver ? "border-[#01AC9F] bg-[#01AC9F]/5" : "border-neutral-200/80 dark:border-neutral-700 hover:border-brand-velvet"}`}
                   >
                     <Upload className="w-8 h-8 text-neutral-500 dark:text-neutral-400 mb-2.5 animate-bounce" />
                     <p className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
@@ -556,7 +556,7 @@ export const TakeQuiz = () => {
           </div>
 
           {/* Navigation Controls toolbar */}
-          <div className="flex items-center justify-between pt-6 border-t border-brand-border/20 dark:border-neutral-800 mt-8">
+          <div className="flex items-center justify-between pt-6 border-t border-neutral-200/20 dark:border-neutral-700 mt-8">
             <div className="flex gap-3">
               <button
                 onClick={() => toggleFlagReview(currentQ.id)}
@@ -598,7 +598,7 @@ export const TakeQuiz = () => {
         </div>
 
         {/* Question Navigation Palette (Right) */}
-        <div className="lg:w-80 shrink-0 bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-800 rounded-3xl p-6 shadow-sm min-h-[450px]">
+        <div className="lg:w-80 shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-3xl p-6 shadow-sm min-h-[450px]">
           <div className="mb-6">
             <h4 className="font-display font-black text-neutral-800 dark:text-white text-base">
               Question Palette
@@ -619,7 +619,7 @@ export const TakeQuiz = () => {
               const isFlagged = flaggedQIds.includes(q.id);
 
               let bgStyle =
-                "bg-neutral-50 text-neutral-500 border-neutral-200 dark:bg-neutral-800/40 dark:border-neutral-800";
+                "bg-neutral-50 text-neutral-500 border-neutral-200 dark:bg-neutral-800/40 dark:border-neutral-700";
               if (isCurrent) {
                 bgStyle =
                   "bg-[#6C1D5F] text-white border-transparent shadow ring-2 ring-brand-velvet/20";
@@ -642,7 +642,7 @@ export const TakeQuiz = () => {
           </div>
 
           {/* Legend helper */}
-          <div className="border-t border-brand-border/80 dark:border-neutral-700/80 pt-3.5 space-y-2 text-[10px] font-semibold text-neutral-500">
+          <div className="border-t border-neutral-200/80 dark:border-neutral-700/80 pt-3.5 space-y-2 text-[10px] font-semibold text-neutral-500">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-md bg-[#6C1D5F] shrink-0"></span>
               <span>Active Current Position</span>
@@ -678,7 +678,7 @@ export const TakeQuiz = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-800 rounded-3xl w-full max-w-md p-6 relative z-10 shadow-2xl text-center space-y-4"
+              className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-3xl w-full max-w-md p-6 relative z-10 shadow-2xl text-center space-y-4"
             >
               <AlertTriangle className="w-12 h-12 text-brand-orange mx-auto animate-pulse" />
 

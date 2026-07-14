@@ -1,4 +1,4 @@
-const API_GATEWAY = "/api/v1";
+const API_GATEWAY = "http://localhost:8080/api/v1";
 
 export const apiClient = {
   // Users
@@ -75,6 +75,7 @@ export const apiClient = {
       `${API_GATEWAY}/submissions${studentId ? "?studentId=" + studentId : ""}`,
     );
     const data = await res.json();
+    if (!Array.isArray(data)) return [];
     return data.map((sub) => ({
       ...sub,
       answers: sub.answers?.map((a) => {

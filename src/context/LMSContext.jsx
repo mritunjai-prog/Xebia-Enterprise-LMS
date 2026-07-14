@@ -11,6 +11,7 @@ export const LMSProvider = ({ children }) => {
   const [students, setStudents] = useState([]);
   const [assessments, setAssessments] = useState([]);
   const [submissions, setSubmissions] = useState([]);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   // Local coding states
   const [codingSubmissions, setCodingSubmissions] = useState(() => {
@@ -53,6 +54,10 @@ export const LMSProvider = ({ children }) => {
 
         setCurrentUser((prev) => {
           if (!prev) return prev;
+          // Keep fallback mock users logged in
+          if (prev.id === "T-FALLBACK" || prev.id === "S-FALLBACK") {
+            return prev;
+          }
           const updated = enrichedUsers.find((u) => u.id === prev.id);
           // If the cached user is not in the DB (e.g., after a DB wipe), clear the session
           return updated || null;
@@ -75,7 +80,7 @@ export const LMSProvider = ({ children }) => {
         console.error("Backend connection failed.", err);
       }
     };
-    fetchBackendData();
+    fetchBackendData().finally(() => setIsInitializing(false));
   }, []);
 
   const [currentUser, setCurrentUser] = useState(() => {
@@ -239,10 +244,18 @@ export const LMSProvider = ({ children }) => {
         setCurrentUser(match);
         return true;
       }
+      if (cleanEmail === "evelyn.stone@xebia-academy.com") {
+        setCurrentUser({ id: "T-FALLBACK", name: "Trainer User", email: cleanEmail, role: "teacher", avatar: "" });
+        return true;
+      }
     } else {
       const match = students.find((s) => s.email.toLowerCase() === cleanEmail);
       if (match) {
         setCurrentUser(match);
+        return true;
+      }
+      if (cleanEmail === "student.name@xebia-student.com") {
+        setCurrentUser({ id: "S-FALLBACK", name: "Student User", email: cleanEmail, role: "student", avatar: "", batches: ["B1"] });
         return true;
       }
     }
@@ -406,14 +419,14 @@ export const LMSProvider = ({ children }) => {
       if (!targetAs) return;
 
       const merged = { ...targetAs, ...updated };
-      const res = await apiClient.updateAssessment(id, merged);
 
+      // Optimistically update local state immediately so student portal reflects changes
       setAssessments((prev) =>
         prev.map((a) => {
           if (a.id === id) {
-            // If changing status from draft to published, send notification
+            // Notify batches when publishing or updating a published assessment
             if (a.status !== "published" && updated.status === "published") {
-              merged.batches.forEach((bId) => {
+              merged.batches?.forEach((bId) => {
                 addNotification(
                   "Assessment Published",
                   `New assessment "${merged.title}" is now available. Complete it soon!`,
@@ -421,8 +434,8 @@ export const LMSProvider = ({ children }) => {
                   bId,
                 );
               });
-            } else if (updated.status === "published") {
-              merged.batches.forEach((bId) => {
+            } else if (a.status === "published" && updated.status === "published") {
+              merged.batches?.forEach((bId) => {
                 addNotification(
                   "Assessment Updated",
                   `Assessment "${merged.title}" has been updated by the trainer.`,
@@ -431,11 +444,20 @@ export const LMSProvider = ({ children }) => {
                 );
               });
             }
-            return res;
+            return merged; // Always use locally merged object immediately
           }
           return a;
         }),
       );
+
+      // Then persist to backend in background
+      const res = await apiClient.updateAssessment(id, merged);
+      // If backend returns a valid updated object, sync it
+      if (res && res.id) {
+        setAssessments((prev) =>
+          prev.map((a) => (a.id === id ? { ...merged, ...res } : a)),
+        );
+      }
       return res;
     } catch (err) {
       console.error(err);
@@ -849,6 +871,7 @@ export const LMSProvider = ({ children }) => {
         submissions,
         notifications,
         currentUser,
+        isInitializing,
         theme,
         login,
         logout,
