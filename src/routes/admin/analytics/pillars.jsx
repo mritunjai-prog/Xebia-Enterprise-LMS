@@ -176,7 +176,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-function PillarsDashboard() {
+export default function PillarsDashboard() {
   const [lastUpdated, setLastUpdated] = useState(new Date().toLocaleTimeString());
 
   const handleRefresh = () => {

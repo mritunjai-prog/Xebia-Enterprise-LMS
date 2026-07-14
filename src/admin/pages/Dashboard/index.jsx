@@ -16,11 +16,11 @@ import { clsx } from "clsx";
 
 const LEVEL_COLORS = {
   Beginner:
-    "bg-accent-2/10 dark:bg-accent-2/10 text-accent-2 dark:text-accent-2 border-accent-2/20 dark:border-accent-2/20",
+    "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-600/20 dark:border-emerald-500/20",
   Intermediate:
-    "bg-primary/10 dark:bg-primary/10 text-primary dark:text-primary border-primary/20 dark:border-primary/20",
+    "bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-600/20 dark:border-purple-500/20",
   Advanced:
-    "bg-destructive/10 dark:bg-destructive/10 text-destructive dark:text-destructive border-destructive/20 dark:border-destructive/20",
+    "bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-600/20 dark:border-orange-500/20",
   Expert:
     "bg-gray-100 dark:bg-gray-500/10 text-gray-800 dark:text-gray-300 border-gray-600/20 dark:border-gray-500/20",
 };
@@ -126,7 +126,7 @@ export default function Dashboard() {
             label: "Published",
             value: stats.publishedCourses,
             icon: CheckCircle,
-            color: "text-accent-2 bg-accent-2/10",
+            color: "text-emerald-500 bg-emerald-500/10",
             description: "Live & available to learners",
           },
           {
@@ -234,7 +234,7 @@ export default function Dashboard() {
                       <span
                         className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
                           isPublished
-                            ? "bg-accent-2/10 dark:bg-accent-2 text-accent-2"
+                            ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600"
                             : "bg-gray-100 dark:bg-gray-800 text-gray-500"
                         }`}
                       >
@@ -286,7 +286,7 @@ export default function Dashboard() {
 
             <Link
               to="/admin/curriculum"
-              className="flex items-center gap-3.5 p-4 rounded-xl border border-destructive/10 bg-destructive/5 hover:bg-destructive/10 hover:shadow-sm hover:-translate-y-0.5 text-gray-900 dark:text-white hover:text-destructive transition-all duration-200"
+              className="flex items-center gap-3.5 p-4 rounded-xl border border-orange-500/10 bg-orange-500/5 hover:bg-orange-500/10 hover:shadow-sm hover:-translate-y-0.5 text-gray-900 dark:text-white hover:text-orange-500 transition-all duration-200"
             >
               <div className="w-10 h-10 rounded-xl bg-[#FF6200] text-white flex items-center justify-center shrink-0 shadow-sm">
                 <GraduationCap className="w-5 h-5" />

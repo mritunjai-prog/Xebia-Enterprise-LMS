@@ -173,62 +173,66 @@ export default function Categories() {
       </div>
 
       {/* Premium KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           {
-            label: "Total Categories",
+            label: "TOTAL CATEGORIES",
             value: totalCategories,
+            desc: "All structured domains",
             icon: Tag,
-            color: "text-primary-glow dark:text-primary-glow",
-            bg: "bg-primary-glow/10 dark:bg-primary-glow/10",
-            ring: "ring-primary-glow/20 dark:ring-primary-glow/20",
+            color: "text-pink-600 dark:text-pink-400",
+            bg: "bg-pink-50 dark:bg-pink-500/10",
           },
           {
-            label: "Active",
+            label: "ACTIVE",
             value: activeCount,
+            desc: "Currently in use",
             icon: CheckCircle,
-            color: "text-accent-2 dark:text-accent-2",
-            bg: "bg-accent-2/10 dark:bg-accent-2/10",
-            ring: "ring-accent-2/20 dark:ring-accent-2/20",
+            color: "text-emerald-600 dark:text-emerald-400",
+            bg: "bg-emerald-50 dark:bg-emerald-500/10",
           },
           {
-            label: "Inactive",
+            label: "INACTIVE",
             value: inactiveCount,
+            desc: "Hidden or archived",
             icon: XCircle,
-            color: "text-destructive dark:text-destructive",
-            bg: "bg-destructive/10 dark:bg-destructive/10",
-            ring: "ring-destructive/20 dark:ring-destructive/20",
+            color: "text-orange-500 dark:text-orange-400",
+            bg: "bg-orange-50 dark:bg-orange-500/10",
           },
           {
-            label: "Total Courses",
+            label: "TOTAL COURSES",
             value: totalCourses,
+            desc: "Across all categories",
             icon: BookOpen,
-            color: "text-[#6C1D5F] dark:text-primary",
-            bg: "bg-[#6C1D5F]/10 dark:bg-primary/10",
-            ring: "ring-[#6C1D5F]/10 dark:ring-primary/20",
+            color: "text-purple-600 dark:text-purple-400",
+            bg: "bg-purple-50 dark:bg-purple-500/10",
           },
-        ].map(({ label, value, icon: Icon, color, bg, ring }) => (
+        ].map((stat, i) => (
           <div
-            key={label}
-            className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-6 flex items-center gap-5 hover:shadow-md transition-shadow"
+            key={i}
+            className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow"
           >
             <div
               className={clsx(
-                "w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ring-8",
-                bg,
-                color,
-                ring,
+                "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0",
+                stat.bg,
+                stat.color,
               )}
             >
-              <Icon className="w-6 h-6" />
+              <stat.icon className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                {label}
+              <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">
+                {stat.label}
               </p>
-              <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mt-1 tracking-tight">
-                {value}
-              </h3>
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-black text-gray-900 dark:text-white leading-none">
+                  {stat.value}
+                </span>
+              </div>
+              <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-1">
+                {stat.desc}
+              </p>
             </div>
           </div>
         ))}
@@ -341,7 +345,7 @@ export default function Categories() {
 
       {/* Grid View */}
       {viewMode === "grid" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <AnimatePresence>
             {paginatedCategories.map((cat, index) => {
               const color = cat.color || "#6C1D5F";
@@ -356,11 +360,19 @@ export default function Categories() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2, delay: index * 0.03 }}
-                  className="group bg-white dark:bg-[#15151f] rounded-2xl shadow-sm overflow-hidden flex flex-col h-full hover:shadow-2xl hover:shadow-[#6C1D5F]/10 hover:-translate-y-1.5 transition-all duration-200 relative cursor-pointer"
-                  style={{ border: `3px solid ${color}` }}
+                  className="group bg-white dark:bg-[#15151f] rounded-xl overflow-hidden flex flex-col h-full transition-all duration-300 relative cursor-pointer border-[3px]"
+                  style={{
+                    borderColor: `${color}50`,
+                    boxShadow: `0 4px 20px -5px ${color}40`,
+                  }}
+                  whileHover={{
+                    y: -5,
+                    borderColor: color,
+                    boxShadow: `0 15px 45px -5px ${color}99, 0 0 20px 0 ${color}60`,
+                  }}
                 >
                   <div
-                    className="w-full aspect-video shrink-0 overflow-hidden cursor-pointer relative flex items-center justify-center"
+                    className="w-full h-32 shrink-0 overflow-hidden cursor-pointer relative flex items-center justify-center"
                     style={{
                       backgroundColor:
                         cat.icon &&
@@ -388,7 +400,7 @@ export default function Categories() {
                         }}
                       />
                     ) : cat.icon ? (
-                      <span className="text-[400px] leading-none absolute flex items-center justify-center w-full h-full group-hover:scale-105 transition-transform duration-200">
+                      <span className="text-7xl leading-none absolute flex items-center justify-center w-full h-full group-hover:scale-105 transition-transform duration-200">
                         {cat.icon}
                       </span>
                     ) : null}
@@ -396,7 +408,7 @@ export default function Categories() {
                       <span
                         className={clsx(
                           "text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm",
-                          cat.active ? "bg-accent-2 text-white" : "bg-destructive text-white",
+                          cat.active ? "bg-green-500 text-white" : "bg-red-500 text-white",
                         )}
                       >
                         {cat.active ? "Active" : "Inactive"}
@@ -416,11 +428,14 @@ export default function Categories() {
                     }}
                   >
                     <div className="mb-auto">
-                      <span className="text-xl font-extrabold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors leading-tight block mb-3">
+                      <span className="text-base font-bold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors leading-tight block mb-2">
                         {cat.name}
                       </span>
                       {cat.description && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed mb-4">
+                        <p
+                          className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 line-clamp-3 mb-3"
+                          title={cat.description}
+                        >
                           {cat.description}
                         </p>
                       )}
@@ -451,7 +466,7 @@ export default function Categories() {
                         </button>
                         <button
                           onClick={() => handleDelete(cat.id)}
-                          className="p-1.5 rounded-lg hover:bg-destructive/10 dark:hover:bg-destructive text-gray-500 hover:text-destructive dark:text-gray-400 dark:hover:text-destructive transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -548,7 +563,7 @@ export default function Categories() {
                         <span
                           className={clsx(
                             "text-xs font-bold px-3 py-1 rounded-md shadow-sm",
-                            cat.active ? "bg-accent-2 text-white" : "bg-destructive text-white",
+                            cat.active ? "bg-green-500 text-white" : "bg-red-500 text-white",
                           )}
                         >
                           {cat.active ? "Active" : "Inactive"}
@@ -564,7 +579,7 @@ export default function Categories() {
                           </button>
                           <button
                             onClick={() => handleDelete(cat.id)}
-                            className="p-2 rounded-lg hover:bg-destructive/10 dark:hover:bg-destructive text-gray-500 dark:text-gray-400 hover:text-destructive dark:hover:text-destructive transition-colors"
+                            className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>

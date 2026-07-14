@@ -405,9 +405,9 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                         </button>
                         <button
                           onClick={() => handleDelete(block.id)}
-                          className="w-8 h-8 flex items-center justify-center rounded-lg border border-destructive/20 bg-destructive/10 hover:bg-destructive/10"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg border border-red-100 bg-red-50 hover:bg-red-100"
                         >
-                          <Trash2 className="w-4 h-4 text-destructive" />
+                          <Trash2 className="w-4 h-4 text-red-500" />
                         </button>
                       </div>
                     </div>
@@ -469,8 +469,8 @@ export default function ContentManager({ submoduleId, courseId, moduleId }) {
                 </div>
 
                 {isUploadingFile && (
-                  <div className="p-4 rounded-xl bg-accent-2/10 border border-accent-2/20 text-accent-2 text-sm font-bold flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-accent-2 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-sm font-bold flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                     Uploading file to Cloudinary, please wait...
                   </div>
                 )}

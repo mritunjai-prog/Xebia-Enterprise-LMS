@@ -110,9 +110,38 @@ const getContentIcon = (type) => {
     case "PDF":
       return <ImageIcon className="w-4 h-4" style={{ color: CONTENT_COLORS.PDF }} />;
     default:
-      return <LinkIcon className="w-4 h-4 text-accent-2" />;
+      return <LinkIcon className="w-4 h-4 text-emerald-500" />;
   }
 };
+
+
+function AIGenerateButton({ isGenerating, onClick, disabled }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-[#845EC2] to-[#D65DB1] text-white shadow-[0_4px_12px_-4px_rgba(214,93,177,0.4)] hover:shadow-[0_8px_20px_-6px_rgba(214,93,177,0.6)] hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group shrink-0"
+      title="Generate with AI"
+    >
+      <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+      <div className={clsx("relative z-10 transition-transform duration-500", !disabled && !isGenerating && "group-hover:rotate-12 group-hover:scale-110")}>
+        {isGenerating ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Wand2 className="w-4 h-4" />
+        )}
+      </div>
+      {!disabled && !isGenerating && (
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <span className="absolute top-1 left-1.5 w-1 h-1 bg-white/80 rounded-full animate-ping" style={{ animationDuration: '1s' }} />
+          <span className="absolute bottom-1 right-1.5 w-1 h-1 bg-white/80 rounded-full animate-ping" style={{ animationDuration: '1.2s', animationDelay: '0.2s' }} />
+          <span className="absolute top-1.5 right-1 w-0.5 h-0.5 bg-white/80 rounded-full animate-ping" style={{ animationDuration: '0.8s', animationDelay: '0.4s' }} />
+        </div>
+      )}
+    </button>
+  );
+}
 
 export default function HierarchyBuilder({ course }) {
   const router = useRouter();
@@ -686,7 +715,7 @@ export default function HierarchyBuilder({ course }) {
                               e.stopPropagation();
                               handleDeleteModule(module.id);
                             }}
-                            className="text-xs font-bold text-destructive hover:text-destructive flex items-center gap-1"
+                            className="text-xs font-bold text-orange-500 hover:text-orange-600 flex items-center gap-1"
                           >
                             <Trash2 className="w-3.5 h-3.5" /> Delete
                           </button>
@@ -941,7 +970,7 @@ export default function HierarchyBuilder({ course }) {
                                 e.stopPropagation();
                                 handleDeleteSubmodule(sm.id);
                               }}
-                              className="text-xs font-bold text-destructive hover:text-destructive flex items-center gap-1"
+                              className="text-xs font-bold text-orange-500 hover:text-orange-600 flex items-center gap-1"
                             >
                               <Trash2 className="w-3.5 h-3.5" /> Delete
                             </button>
