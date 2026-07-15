@@ -129,7 +129,7 @@ export const StudentDashboard = () => {
       </motion.div>
 
       {/* KPI Cards */}
-      <motion.div variants={container} initial="hidden" animate="visible" className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <motion.div variants={container} initial="hidden" animate="visible" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map((kpi) => (
           <motion.div
             key={kpi.label}
@@ -138,14 +138,14 @@ export const StudentDashboard = () => {
           >
             <div className="flex items-center justify-between mb-3">
               <div>
-                <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{kpi.label}</p>
+                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{kpi.label}</p>
                 <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-1">{kpi.value}</h3>
               </div>
               <div className={`p-2.5 rounded-xl ${kpi.bg}`}>
                 <kpi.icon className={`w-5 h-5 ${kpi.color}`} />
               </div>
             </div>
-            <p className="text-[10px] font-medium text-gray-400 dark:text-gray-500">{kpi.suffix}</p>
+            <p className="text-xs font-medium text-gray-400 dark:text-gray-500">{kpi.suffix}</p>
           </motion.div>
         ))}
       </motion.div>
@@ -157,7 +157,7 @@ export const StudentDashboard = () => {
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-sm font-bold text-gray-900 dark:text-white">Available Assessments</h3>
             {activeAssessments.length > 0 && (
-              <span className="text-[10px] bg-[#FF6200]/10 text-[#FF6200] font-bold px-2 py-0.5 rounded-full">
+              <span className="text-xs bg-[#FF6200]/10 text-[#FF6200] font-bold px-2 py-0.5 rounded-full">
                 {activeAssessments.length} Pending
               </span>
             )}
@@ -177,24 +177,24 @@ export const StudentDashboard = () => {
                   >
                     <div>
                       <div className="flex justify-between items-start gap-1 mb-2">
-                        <span className="px-2 py-0.5 bg-[#01AC9F]/10 text-[#01AC9F] font-bold rounded text-[10px] uppercase">
+                        <span className="px-2 py-0.5 bg-[#01AC9F]/10 text-[#01AC9F] font-bold rounded text-xs uppercase">
                           {as.type?.replace("_", " ")}
                         </span>
-                        <span className={`text-[10px] font-bold ${as.difficulty === "Easy" ? "text-green-500" : as.difficulty === "Medium" ? "text-amber-500" : "text-rose-500"}`}>
+                        <span className={`text-xs font-bold ${as.difficulty === "Easy" ? "text-green-500" : as.difficulty === "Medium" ? "text-amber-500" : "text-rose-500"}`}>
                           {as.difficulty}
                         </span>
                       </div>
                       <h4 className="text-xs font-bold text-gray-900 dark:text-white leading-tight">{as.title}</h4>
-                      <p className="text-[10px] text-gray-400 mt-1 line-clamp-2">{as.description}</p>
+                      <p className="text-xs text-gray-400 mt-1 line-clamp-2">{as.description}</p>
                     </div>
                     <div className="pt-2 border-t border-gray-100 dark:border-[#2e2e3e] space-y-2">
-                      <div className="flex items-center gap-3 text-[10px] text-gray-400">
+                      <div className="flex items-center gap-3 text-xs text-gray-400">
                         <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {as.duration}m</span>
                         <span className="flex items-center gap-1"><HelpCircle className="w-3 h-3" /> {as.questions?.length || 0} Qs</span>
                       </div>
                       <button
                         onClick={() => handleStartAttempt(as.id)}
-                        className="w-full py-2 rounded-xl text-[10px] font-bold bg-[#6C1D5F] hover:bg-[#84117C] text-white transition-all flex items-center justify-center gap-1"
+                        className="w-full py-2.5 rounded-xl text-xs font-bold bg-[#6C1D5F] hover:bg-[#84117C] text-white transition-all flex items-center justify-center gap-1 min-h-[44px]"
                       >
                         {isDraftSub ? "Resume" : "Start"} <ArrowRight className="w-3 h-3" />
                       </button>
@@ -221,11 +221,11 @@ export const StudentDashboard = () => {
                 >
                   <div className="min-w-0">
                     <p className="text-[11px] font-bold text-gray-900 dark:text-white truncate">{score.title}</p>
-                    <p className="text-[9px] text-gray-400 mt-0.5">
+                    <p className="text-xs text-gray-400 mt-0.5">
                       {score.isEvaluated ? `${score.score}/${score.marks}` : "Pending"}
                     </p>
                   </div>
-                  <span className={`px-2 py-1 rounded-lg font-mono font-bold text-[10px] shrink-0 ${score.isEvaluated ? "bg-[#01AC9F]/10 text-[#01AC9F]" : "bg-amber-50 text-amber-500"}`}>
+                  <span className={`px-2 py-1 rounded-lg font-mono font-bold text-xs shrink-0 ${score.isEvaluated ? "bg-[#01AC9F]/10 text-[#01AC9F]" : "bg-amber-50 text-amber-500"}`}>
                     {score.isEvaluated ? `${score.percentage}%` : "—"}
                   </span>
                 </div>
@@ -251,9 +251,9 @@ export const StudentDashboard = () => {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-gray-900 dark:text-white truncate">{b.name}</p>
-                  <p className="text-[10px] text-gray-400">{(b.students || []).length} students</p>
+                  <p className="text-xs text-gray-400">{(b.students || []).length} students</p>
                 </div>
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${b.status === "active" ? "bg-[#01AC9F]/10 text-[#01AC9F]" : "bg-gray-100 text-gray-500"}`}>
+                <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${b.status === "active" ? "bg-[#01AC9F]/10 text-[#01AC9F]" : "bg-gray-100 text-gray-500"}`}>
                   {b.status}
                 </span>
               </div>

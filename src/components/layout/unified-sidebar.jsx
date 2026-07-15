@@ -197,7 +197,7 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
     .toUpperCase();
 
   return (
-    <div className={clsx("sidebar sidebar-student", isSidebarCollapsed && "collapsed")}>
+    <div className={clsx("sidebar sidebar-student", isMobileOpen && "mobile-open", isSidebarCollapsed && !isMobileOpen && "collapsed")}>
       {/* Brand */}
       <div className="sidebar-brand">
         <Link
@@ -248,7 +248,7 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
               return (
                 <div
                   key={`divider-batch`}
-                  className="nav-section mt-6 mb-2 text-[11px] uppercase tracking-wider font-bold text-gray-900 dark:text-white opacity-90 cursor-pointer flex items-center justify-between hover:opacity-100 transition-opacity"
+                  className="nav-section mt-6 mb-2 text-[11px] uppercase tracking-wider font-bold text-gray-900 dark:text-white opacity-90 cursor-pointer flex items-center justify-between hover:opacity-100 transition-opacity min-h-[44px] py-2"
                   onClick={() => setIsBatchMgmtOpen(!isBatchMgmtOpen)}
                 >
                   <span className="flex items-center gap-2">
@@ -269,7 +269,7 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
               return (
                 <div
                   key={`divider-assessment`}
-                  className="nav-section mt-6 mb-2 text-[11px] uppercase tracking-wider font-bold text-gray-900 dark:text-white opacity-90 cursor-pointer flex items-center justify-between hover:opacity-100 transition-opacity"
+                  className="nav-section mt-6 mb-2 text-[11px] uppercase tracking-wider font-bold text-gray-900 dark:text-white opacity-90 cursor-pointer flex items-center justify-between hover:opacity-100 transition-opacity min-h-[44px] py-2"
                   onClick={() => setIsAssessmentMgmtOpen(!isAssessmentMgmtOpen)}
                 >
                   <span className="flex items-center gap-2">
@@ -290,7 +290,7 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
               return (
                 <div
                   key={`divider-analytics`}
-                  className="nav-section mt-6 mb-2 text-[11px] uppercase tracking-wider font-bold text-gray-900 dark:text-white opacity-90 cursor-pointer flex items-center justify-between hover:opacity-100 transition-opacity"
+                  className="nav-section mt-6 mb-2 text-[11px] uppercase tracking-wider font-bold text-gray-900 dark:text-white opacity-90 cursor-pointer flex items-center justify-between hover:opacity-100 transition-opacity min-h-[44px] py-2"
                   onClick={() => setIsAnalyticsOpen(!isAnalyticsOpen)}
                 >
                   <span className="flex items-center gap-2">

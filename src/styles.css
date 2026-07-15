@@ -191,6 +191,12 @@ html.dark select[class*="bg-card"] {
     font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
   }
+
+  @media (max-width: 640px) {
+    body {
+      font-size: 14px;
+    }
+  }
   h1,
   h2,
   h3,

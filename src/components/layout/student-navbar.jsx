@@ -214,7 +214,7 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
     <>
       <header className="header relative z-40">
         <div className="header-left">
-          <button onClick={toggleSidebar} className="header-btn" aria-label="Toggle Sidebar">
+          <button onClick={() => setIsMobileOpen(true)} className="header-btn" aria-label="Toggle Sidebar">
             <Menu className="h-5 w-5" />
           </button>
 
@@ -385,7 +385,7 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="w-[34px] h-[34px] flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#252535] hover:text-[#6C1D5F] dark:hover:text-[#D3CCEC] transition-colors border border-gray-200 dark:border-[#2e2e3e] relative cursor-pointer"
+                className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#252535] hover:text-[#6C1D5F] dark:hover:text-[#D3CCEC] transition-colors border border-gray-200 dark:border-[#2e2e3e] relative cursor-pointer"
                 aria-label="Notifications"
               >
                 <Bell className="w-[18px] h-[18px]" />
@@ -396,7 +396,7 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-80 bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] shadow-xl rounded-xl p-0 overflow-hidden"
+              className="w-full max-w-80 bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] shadow-xl rounded-xl p-0 overflow-hidden"
             >
               <div className="px-4 py-3 font-bold text-sm text-gray-900 dark:text-white border-b border-gray-100 dark:border-[#2e2e3e]">
                 Notifications
@@ -439,7 +439,7 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
 
           <button
             onClick={toggleDark}
-            className="w-[34px] h-[34px] flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#252535] hover:text-[#6C1D5F] dark:hover:text-[#D3CCEC] transition-colors border border-gray-200 dark:border-[#2e2e3e]"
+            className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#252535] hover:text-[#6C1D5F] dark:hover:text-[#D3CCEC] transition-colors border border-gray-200 dark:border-[#2e2e3e]"
             title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
             {isDark ? (
@@ -452,7 +452,7 @@ export function StudentNavbar({ isMobileOpen, setIsMobileOpen }) {
           <div className="relative">
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="w-[34px] h-[34px] flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#252535] hover:text-[#6C1D5F] dark:hover:text-[#D3CCEC] transition-colors border border-gray-200 dark:border-[#2e2e3e]"
+              className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#1a1a24] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#252535] hover:text-[#6C1D5F] dark:hover:text-[#D3CCEC] transition-colors border border-gray-200 dark:border-[#2e2e3e]"
               title="Settings"
             >
               <Settings className="w-[16px] h-[16px]" />

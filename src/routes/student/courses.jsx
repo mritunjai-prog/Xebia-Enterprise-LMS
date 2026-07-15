@@ -462,7 +462,7 @@ function MyCourses() {
                 return next;
               });
             }}
-            className="absolute bottom-4 right-4 w-8 h-8 bg-white dark:bg-[#15151f] rounded-lg flex items-center justify-center hover:scale-105 transition-transform shadow-sm z-20"
+            className="absolute bottom-4 right-4 w-10 h-10 bg-white dark:bg-[#15151f] rounded-lg flex items-center justify-center hover:scale-105 transition-transform shadow-sm z-20"
           >
             <Star
               className={clsx(
@@ -488,7 +488,7 @@ function MyCourses() {
           <div className="mb-2.5 flex items-center justify-between">
             <span
               className={clsx(
-                "inline-flex items-center text-[10px] font-bold px-2.5 py-0.5 rounded-md text-white",
+                "inline-flex items-center text-xs font-bold px-2.5 py-0.5 rounded-md text-white",
                 level === "Beginner"
                   ? "bg-[#01AC9F]"
                   : level === "Intermediate"
@@ -500,7 +500,7 @@ function MyCourses() {
             </span>
             <span
               className={clsx(
-                "text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1",
+                "text-xs font-bold px-2 py-0.5 rounded-md flex items-center gap-1",
                 badge.className,
               )}
             >
@@ -519,7 +519,7 @@ function MyCourses() {
           {/* Progress (Student Only) */}
           {course.isEnrolled && (
             <div className="mb-2.5">
-              <div className="flex justify-between text-[10px] font-bold mb-1">
+              <div className="flex justify-between text-xs font-bold mb-1">
                 <span className="text-gray-500">Progress</span>
                 <span
                   className={clsx(
@@ -541,7 +541,7 @@ function MyCourses() {
           )}
 
           {/* Meta Stats */}
-          <div className="mt-auto flex items-center gap-3 text-[10px] font-bold text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-[#2e2e3e] pt-2.5 mb-2.5">
+          <div className="mt-auto flex items-center gap-3 text-xs font-bold text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-[#2e2e3e] pt-2.5 mb-2.5">
             {course.modules?.length || course.modulesCount || course.totalModules ? (
               <span className="flex items-center gap-1 whitespace-nowrap">
                 <BookOpen className="w-3 h-3" />
@@ -567,7 +567,7 @@ function MyCourses() {
             </button>
           ) : (
             <Link to={`/student/course/${course.id}`} className="block w-full">
-              <button className="w-full py-2 rounded-xl font-bold text-[11px] transition-all shadow-sm flex items-center justify-center gap-1.5 bg-[#6C1D5F] hover:bg-[#84117C] text-white hover:-translate-y-0.5">
+              <button className="w-full py-2.5 min-h-[44px] rounded-xl font-bold text-[11px] transition-all shadow-sm flex items-center justify-center gap-1.5 bg-[#6C1D5F] hover:bg-[#84117C] text-white hover:-translate-y-0.5">
                 {course.progress === 0 ? "Start Course" : "Resume Course"}
               </button>
             </Link>
@@ -592,8 +592,8 @@ function MyCourses() {
     if (viewMode === "list") {
       return (
         <div className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm whitespace-nowrap">
+          <div className="overflow-x-auto table-scroll-hint">
+            <table className="w-full text-left text-sm whitespace-nowrap min-w-[600px]">
               <thead className="bg-[#6C1D5F] text-white uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="px-6 py-4 font-bold rounded-tl-2xl">Course</th>
@@ -746,7 +746,7 @@ function MyCourses() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {[
           { label: "Enrolled Courses", value: courses.length, sub: "Total enrollments", icon: BookOpen, bg: "bg-[#6C1D5F]/10", color: "text-[#6C1D5F]" },
           { label: "In Progress", value: inProgress.length, sub: "Ongoing courses", icon: PlayCircle, bg: "bg-[#FF6200]/10", color: "text-[#FF6200]" },
@@ -754,14 +754,14 @@ function MyCourses() {
         ].map((kpi, i) => (
           <div key={i} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{kpi.label}</p>
+              <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{kpi.label}</p>
               <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${kpi.bg}`}>
                 <kpi.icon className={`w-4 h-4 ${kpi.color}`} />
               </div>
             </div>
             <div className="mt-2">
               <div className="text-2xl font-extrabold text-gray-900 dark:text-white">{kpi.value}</div>
-              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 mt-0.5">{kpi.sub}</p>
+              <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-0.5">{kpi.sub}</p>
             </div>
           </div>
         ))}
@@ -811,7 +811,7 @@ function MyCourses() {
             <button
               onClick={() => setViewMode("grid")}
               className={clsx(
-                "p-2 rounded-lg transition-all",
+                "p-2.5 min-w-[40px] min-h-[40px] rounded-lg transition-all",
                 viewMode === "grid"
                   ? "bg-white dark:bg-[#252535] text-[#6C1D5F] dark:text-white shadow-sm"
                   : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300",
@@ -822,7 +822,7 @@ function MyCourses() {
             <button
               onClick={() => setViewMode("list")}
               className={clsx(
-                "p-2 rounded-lg transition-all",
+                "p-2.5 min-w-[40px] min-h-[40px] rounded-lg transition-all",
                 viewMode === "list"
                   ? "bg-white dark:bg-[#252535] text-[#6C1D5F] dark:text-white shadow-sm"
                   : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300",

@@ -36,7 +36,7 @@ const KpiCard = ({ title, value, icon: Icon, color, bg, trend, trendValue, delay
           <div className="flex items-center gap-1 mt-2">
             <TrendingUp className={clsx("w-3 h-3", trend === "down" ? "text-red-500" : "text-[#01AC9F]")} />
             <span className={clsx("text-xs font-bold", trend === "down" ? "text-red-500" : "text-[#01AC9F]")}>{trendValue}</span>
-            <span className="text-[10px] text-gray-400">vs last month</span>
+            <span className="text-xs text-gray-400">vs last month</span>
           </div>
         )}
       </div>
@@ -182,7 +182,7 @@ export default function AssessmentsOverview() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {kpis.map((kpi, idx) => (
           <KpiCard
             key={kpi.title}
@@ -221,7 +221,7 @@ export default function AssessmentsOverview() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="appearance-none pl-4 pr-9 py-2 bg-gray-50 dark:bg-[#1a1a24] hover:bg-gray-100 dark:hover:bg-[#252535] border border-transparent dark:border-[#2e2e3e] rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all cursor-pointer min-w-[130px]"
+              className="appearance-none pl-4 pr-9 py-2 bg-gray-50 dark:bg-[#1a1a24] hover:bg-gray-100 dark:hover:bg-[#252535] border border-transparent dark:border-[#2e2e3e] rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all cursor-pointer min-w-0 w-full sm:w-auto sm:min-w-[130px]"
             >
               {statusFilters.map((f) => (
                 <option key={f} value={f}>Status: {f}</option>
@@ -239,7 +239,7 @@ export default function AssessmentsOverview() {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="appearance-none pl-4 pr-9 py-2 bg-gray-50 dark:bg-[#1a1a24] hover:bg-gray-100 dark:hover:bg-[#252535] border border-transparent dark:border-[#2e2e3e] rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all cursor-pointer min-w-[130px]"
+              className="appearance-none pl-4 pr-9 py-2 bg-gray-50 dark:bg-[#1a1a24] hover:bg-gray-100 dark:hover:bg-[#252535] border border-transparent dark:border-[#2e2e3e] rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all cursor-pointer min-w-0 w-full sm:w-auto sm:min-w-[130px]"
             >
               {typeFilters.map((f) => (
                 <option key={f} value={f}>Type: {f}</option>
@@ -257,7 +257,7 @@ export default function AssessmentsOverview() {
             <select
               value={trainerFilter}
               onChange={(e) => setTrainerFilter(e.target.value)}
-              className="appearance-none pl-4 pr-9 py-2 bg-gray-50 dark:bg-[#1a1a24] hover:bg-gray-100 dark:hover:bg-[#252535] border border-transparent dark:border-[#2e2e3e] rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all cursor-pointer min-w-[150px]"
+              className="appearance-none pl-4 pr-9 py-2 bg-gray-50 dark:bg-[#1a1a24] hover:bg-gray-100 dark:hover:bg-[#252535] border border-transparent dark:border-[#2e2e3e] rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all cursor-pointer min-w-0 w-full sm:w-auto sm:min-w-[150px]"
             >
               <option value="All">All Trainers</option>
               {trainers.map((t) => (

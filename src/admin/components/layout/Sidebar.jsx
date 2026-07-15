@@ -48,7 +48,7 @@ const SubNavItem = ({ label, isActive, onClick }) => (
   <div
     onClick={onClick}
     className={clsx(
-      "px-10 py-2 text-sm font-medium cursor-pointer rounded-lg transition-colors duration-200",
+      "px-10 py-2.5 text-sm font-medium cursor-pointer rounded-lg transition-colors duration-200 min-h-[40px] flex items-center",
       isActive
         ? "text-primary bg-primary/10 font-bold dark:bg-white dark:text-[#4A1E47]"
         : "text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-white/65 dark:hover:text-white dark:hover:bg-white/15",
@@ -86,7 +86,7 @@ export function Sidebar() {
 
   const handleNavClick = (path) => {
     router.navigate({ to: path });
-    if (window.innerWidth <= 768 && !isSidebarCollapsed) {
+    if (window.matchMedia("(max-width: 768px)").matches && !isSidebarCollapsed) {
       toggleSidebar();
     }
   };
@@ -273,7 +273,7 @@ export function Sidebar() {
         </div>
       </aside>
       {/* Mobile Overlay */}
-      {!isSidebarCollapsed && <div className="sidebar-overlay lg:hidden" onClick={toggleSidebar} />}
+      {!isSidebarCollapsed && <div className="sidebar-overlay md:hidden" onClick={toggleSidebar} />}
     </>
   );
 }

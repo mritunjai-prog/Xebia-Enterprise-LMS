@@ -17,7 +17,7 @@ import { CourseService, CategoryService } from "@/services/api";
 import { useRouter, Link } from "@tanstack/react-router";
 import { clsx } from "clsx";
 
-export function Header() {
+export function Header({ setIsMobileOpen }) {
   const { breadcrumbs, addToast, toggleSidebar, isSidebarCollapsed } = useAppStore();
   const router = useRouter();
 
@@ -188,8 +188,14 @@ export function Header() {
     <header className="header relative z-40">
       {/* Left: Menu + Breadcrumb */}
       <div className="header-left">
-        <button onClick={toggleSidebar} className="header-btn" aria-label="Toggle Sidebar">
-          <Menu className="h-4 w-4" />
+        <button onClick={() => {
+          if (setIsMobileOpen) {
+            setIsMobileOpen(true);
+          } else {
+            toggleSidebar();
+          }
+        }} className="header-btn" aria-label="Toggle Sidebar">
+          <Menu className="h-5 w-5" />
         </button>
         <div className="breadcrumb">
           {breadcrumbs?.map((crumb, index) => (

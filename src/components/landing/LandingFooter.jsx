@@ -12,7 +12,7 @@ export function LandingFooter() {
     <footer className="bg-white dark:bg-[#110515] pt-12 border-t border-gray-100 dark:border-gray-900">
       {/* CTA Banner */}
       <div className="container mx-auto px-6 max-w-7xl mb-20">
-        <div className="relative bg-[#2C0B27] dark:bg-[#1A0517] rounded-3xl p-10 md:p-14 overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
+        <div className="relative bg-[#2C0B27] dark:bg-[#1A0517] rounded-3xl p-6 sm:p-10 md:p-14 overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
           {/* Decorative Waves */}
           <div className="absolute inset-0 opacity-20 pointer-events-none">
             <svg

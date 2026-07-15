@@ -39,7 +39,7 @@ const KpiCard = ({ title, value, icon: Icon, color, bg, trend, trendValue, delay
             <span className={clsx("text-xs font-bold", trendValue?.startsWith("-") ? "text-red-500" : "text-[#01AC9F]")}>
               {trendValue}
             </span>
-            <span className="text-[10px] text-gray-400">vs last month</span>
+            <span className="text-xs text-gray-400">vs last month</span>
           </div>
         )}
       </div>
@@ -158,7 +158,7 @@ export default function BatchesOverview() {
             Overview of all batches, trainer allocations, and course assignments.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <button
             onClick={fetchData}
             className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-[#1a1a24] hover:bg-gray-200 dark:hover:bg-[#252535] text-sm font-medium text-gray-700 dark:text-gray-300 rounded-xl transition-colors"
@@ -177,7 +177,7 @@ export default function BatchesOverview() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <KpiCard
           title="Total Trainers"
           value={stats.totalTrainers}
@@ -273,7 +273,7 @@ export default function BatchesOverview() {
                   {/* Status Badge */}
                   <div className="absolute top-3 right-3 z-10">
                     <span className={clsx(
-                      "inline-block px-2 py-0.5 font-bold rounded-md text-[9px] uppercase font-mono shadow-sm",
+                      "inline-block px-2 py-0.5 font-bold rounded-md text-xs uppercase font-mono shadow-sm",
                       batch.status === "active"
                         ? "bg-[#01AC9F]/10 text-[#01AC9F] dark:bg-[#01AC9F] dark:text-white border border-[#01AC9F]/20 dark:border-[#01AC9F]"
                         : "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
@@ -292,7 +292,7 @@ export default function BatchesOverview() {
                       </p>
                     )}
 
-                    <div className="mt-3 flex items-center justify-between text-[10px] text-gray-500 dark:text-gray-400">
+                    <div className="mt-3 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                       <span className="flex items-center gap-1 font-bold">
                         <Users className="w-3.5 h-3.5 text-[#01AC9F]" /> {batch.students?.length || batch.studentCount || 0} Enrolled
                       </span>
@@ -358,7 +358,7 @@ export default function BatchesOverview() {
           </h3>
           <button
             onClick={() => router.navigate({ to: "/admin/batches/allocations" })}
-            className="text-xs font-bold text-[#6C1D5F] dark:text-[#84117C] hover:underline"
+            className="text-xs font-bold text-[#6C1D5F] dark:text-[#84117C] hover:underline py-2 px-2"
           >
             View All
           </button>
@@ -391,7 +391,7 @@ export default function BatchesOverview() {
                 </div>
                 <span
                   className={clsx(
-                    "text-[10px] font-bold px-2.5 py-1 rounded-md shrink-0",
+                    "text-xs font-bold px-2.5 py-1 rounded-md shrink-0",
                     alloc.status === "active"
                       ? "bg-[#01AC9F]/10 text-[#01AC9F]"
                       : alloc.status === "completed"

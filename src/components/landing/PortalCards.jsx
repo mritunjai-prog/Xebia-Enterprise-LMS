@@ -85,7 +85,7 @@ export function PortalCards() {
           {portals.map((portal) => (
             <div
               key={portal.id}
-              className={`flex flex-col bg-white dark:bg-[#111111] rounded-[2rem] border border-gray-100 dark:border-white/5 p-10 shadow-2xl transition-all duration-500 hover:-translate-y-2 ${portal.hoverClass}`}
+              className={`flex flex-col bg-white dark:bg-[#111111] rounded-[2rem] border border-gray-100 dark:border-white/5 p-6 sm:p-10 shadow-2xl transition-all duration-500 hover:-translate-y-2 ${portal.hoverClass}`}
             >
               <div className="mb-8">
                 <div
@@ -93,7 +93,7 @@ export function PortalCards() {
                 >
                   <portal.icon className="w-8 h-8" />
                 </div>
-                <h3 className="text-3xl font-black mb-4 text-gray-900 dark:text-white tracking-tight">
+                <h3 className="text-2xl sm:text-3xl font-black mb-4 text-gray-900 dark:text-white tracking-tight">
                   {portal.title}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed min-h-[60px] font-medium">

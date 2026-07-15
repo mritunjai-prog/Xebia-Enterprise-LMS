@@ -168,7 +168,7 @@ export default function AllocationMatrix() {
             className="w-full pl-10 pr-4 py-2.5 bg-transparent border-none text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none" />
         </div>
         <div className="w-px h-8 bg-gray-200 dark:bg-[#2e2e3e] hidden lg:block mx-2"></div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {["All", "Active", "Completed", "Cancelled"].map((s) => (
             <button key={s} onClick={() => { setFilterStatus(s); setCurrentPage(1); }}
               className={clsx("px-3 py-1.5 text-xs font-bold rounded-xl whitespace-nowrap transition-all",
@@ -181,8 +181,8 @@ export default function AllocationMatrix() {
 
       {/* Table */}
       <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto table-scroll-hint">
+          <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="bg-gray-50/80 dark:bg-[#1e1e2d] border-b border-gray-200 dark:border-[#2e2e3e]">
                 <th className="px-4 py-3 w-10">
@@ -190,14 +190,14 @@ export default function AllocationMatrix() {
                     onChange={() => setSelectedRows(selectedRows.size === paginated.length ? new Set() : new Set(paginated.map((a) => a.id)))}
                     className="rounded" />
                 </th>
-                <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Trainer</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Batch</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Course</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Session</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Start</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">End</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Trainer</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Batch</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Course</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Session</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Start</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">End</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-[#2e2e3e]">
@@ -226,7 +226,7 @@ export default function AllocationMatrix() {
                           )}
                           <div className="min-w-0">
                             <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{trainer?.name || alloc.trainerId?.substring(0, 8) + "..."}</p>
-                            <p className="text-[10px] text-gray-500 truncate">{trainer?.department || ""}</p>
+                            <p className="text-xs text-gray-500 truncate">{trainer?.department || ""}</p>
                           </div>
                         </div>
                       </td>
@@ -258,7 +258,7 @@ export default function AllocationMatrix() {
                       </td>
                       {/* Status */}
                       <td className="px-4 py-3">
-                        <span className={clsx("text-[10px] font-bold px-2.5 py-1 rounded-md capitalize", statusColors[alloc.status] || statusColors.active)}>
+                        <span className={clsx("text-xs font-bold px-2.5 py-1 rounded-md capitalize", statusColors[alloc.status] || statusColors.active)}>
                           {alloc.status}
                         </span>
                       </td>
@@ -276,7 +276,7 @@ export default function AllocationMatrix() {
                       <td className="px-4 py-3">
                         <div className="relative">
                           <button onClick={() => setOpenMenu(openMenu === alloc.id ? null : alloc.id)}
-                            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#252535] text-gray-500 transition-colors">
+                            className="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#252535] text-gray-500 transition-colors">
                             <MoreVertical className="w-4 h-4" />
                           </button>
                           {openMenu === alloc.id && (
@@ -320,20 +320,20 @@ export default function AllocationMatrix() {
           </span>
           <div className="flex items-center gap-1.5 bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl p-1 shadow-sm">
             <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}
-              className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-[#252535] disabled:opacity-40">
+              className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-[#252535] disabled:opacity-40">
               <ChevronLeft className="w-5 h-5" />
             </button>
             <div className="flex items-center px-2">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                 <button key={p} onClick={() => setCurrentPage(p)}
-                  className={clsx("w-8 h-8 rounded-lg text-sm font-bold mx-0.5 transition-colors",
+                  className={clsx("w-10 h-10 rounded-lg text-sm font-bold mx-0.5 transition-colors",
                     p === currentPage ? "bg-[#6C1D5F] text-white" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100")}>
                   {p}
                 </button>
               ))}
             </div>
             <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}
-              className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-[#252535] disabled:opacity-40">
+              className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-[#252535] disabled:opacity-40">
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>

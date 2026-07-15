@@ -122,7 +122,7 @@ export const Login = () => {
           className="w-full max-w-5xl flex flex-col md:flex-row bg-white/60 dark:bg-neutral-900/60 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl dark:shadow-purple-900/10 border border-white/60 dark:border-white/10 overflow-hidden transform-gpu relative z-10"
         >
           {/* Branding Column with 3D Depth */}
-          <div className="md:w-5/12 bg-gradient-to-br from-[#4A1E47] via-[#6C1D5F] to-[#84117C] text-white p-10 md:p-14 relative overflow-hidden flex flex-col justify-between shadow-[inset_-20px_0_40px_rgba(0,0,0,0.1)] gap-16 md:gap-0">
+          <div className="md:w-5/12 bg-gradient-to-br from-[#4A1E47] via-[#6C1D5F] to-[#84117C] text-white p-6 sm:p-10 md:p-14 relative overflow-hidden flex flex-col justify-between shadow-[inset_-20px_0_40px_rgba(0,0,0,0.1)] gap-16 md:gap-0">
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#01AC9F]/30 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none" />
 
@@ -153,7 +153,7 @@ export const Login = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
               >
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black leading-[1.1] tracking-tight drop-shadow-xl mt-8">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black leading-[1.1] tracking-tight drop-shadow-xl mt-8">
                   Evaluate. Learn. <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-2 to-accent-2">
                     Excel.

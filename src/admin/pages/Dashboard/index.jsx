@@ -223,7 +223,7 @@ export default function Dashboard() {
                       </h4>
                       <span
                         className={clsx(
-                          "text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0",
+                          "text-xs font-bold px-2 py-0.5 rounded-full border shrink-0",
                           levelColor,
                         )}
                       >

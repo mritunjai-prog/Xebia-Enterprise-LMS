@@ -313,7 +313,7 @@ export default function Courses() {
                 <stat.icon className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">
+                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">
                   {stat.label}
                 </p>
                 <div className="flex items-baseline gap-2">
@@ -545,7 +545,7 @@ export default function Courses() {
                         e.stopPropagation();
                         handleToggleFeatured(course.id);
                       }}
-                      className="absolute bottom-4 right-4 w-8 h-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg flex items-center justify-center hover:scale-105 transition-transform shadow-sm z-20"
+                      className="absolute bottom-4 right-4 w-10 h-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg flex items-center justify-center hover:scale-105 transition-transform shadow-sm z-20"
                     >
                       <Bookmark
                         className={clsx(
@@ -571,7 +571,7 @@ export default function Courses() {
                     <div className="mb-2">
                       <span
                         className={clsx(
-                          "inline-flex items-center text-[10px] font-bold px-2 py-1 rounded-md text-white shadow-sm tracking-wide",
+                          "inline-flex items-center text-xs font-bold px-2 py-1 rounded-md text-white shadow-sm tracking-wide",
                           level === "Beginner"
                             ? "bg-[#01AC9F]"
                             : level === "Intermediate"
@@ -591,7 +591,7 @@ export default function Courses() {
                     </p>
 
                     {/* Meta Stats */}
-                    <div className="mt-auto pt-3 border-t border-gray-100 dark:border-[#2e2e3e] flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-gray-500 dark:text-gray-400">
+                    <div className="mt-auto pt-3 border-t border-gray-100 dark:border-[#2e2e3e] flex items-center justify-between text-xs sm:text-[11px] font-bold text-gray-500 dark:text-gray-400">
                       <div className="flex items-center gap-2 sm:gap-3">
                         <span className="flex items-center gap-1 whitespace-nowrap">
                           <BookOpen className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
@@ -610,7 +610,7 @@ export default function Courses() {
                       <div className="relative group/menu">
                         <button
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#252535] transition-colors text-gray-500"
+                          className="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#252535] transition-colors text-gray-500"
                         >
                           <MoreVertical className="w-4 h-4" />
                         </button>
@@ -677,7 +677,8 @@ export default function Courses() {
       {/* ── List / Table View ── */}
       {viewMode === "list" && (
         <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl shadow-sm overflow-hidden">
-          <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto table-scroll-hint">
+          <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
               <tr className="bg-gray-50/80 dark:bg-[#1e1e2d] border-b border-gray-200 dark:border-[#2e2e3e]">
                 {["Course", "Category", "Level", "Duration", "Status", "Actions"].map((h) => (
@@ -876,6 +877,7 @@ export default function Courses() {
               </AnimatePresence>
             </tbody>
           </table>
+          </div>
           {paginated.length === 0 && (
             <div className="px-6 py-16 text-center text-gray-400 text-sm">
               No courses found. Try adjusting your search or filters.

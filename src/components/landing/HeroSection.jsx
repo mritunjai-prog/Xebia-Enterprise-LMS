@@ -50,7 +50,7 @@ export function HeroSection() {
   return (
     <section
       id="home"
-      className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-transparent flex items-center min-h-[70vh]"
+      className="relative pt-20 pb-12 sm:pt-32 sm:pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-transparent flex items-center min-h-[70vh]"
     >
       <div className="container mx-auto px-4 max-w-full relative z-10 w-full overflow-hidden">
         <div className="flex flex-col items-center text-center">
@@ -74,7 +74,7 @@ export function HeroSection() {
 
           <div className="flex flex-wrap justify-center items-center gap-6 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-[1100ms] fill-mode-both">
             <Button
-              className="bg-[#6C1D5F] hover:bg-[#84117C] text-white rounded-full px-10 py-7 h-auto text-lg font-bold flex items-center gap-3 transition-colors shadow-lg hover:-translate-y-1"
+              className="bg-[#6C1D5F] hover:bg-[#84117C] text-white rounded-full px-8 py-5 sm:px-10 sm:py-7 h-auto text-base sm:text-lg font-bold flex items-center gap-3 transition-colors shadow-lg hover:-translate-y-1"
               onClick={handleScroll}
             >
               Get Started <ArrowRight className="w-5 h-5 ml-1" />

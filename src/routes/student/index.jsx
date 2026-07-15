@@ -70,7 +70,7 @@ function DashboardHome() {
         <Link to="/student/courses" className="group">
           <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#15151f] p-5 flex items-center justify-between transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 border border-gray-200 dark:border-[#2e2e3e]">
             <div className="relative z-10">
-              <p className="text-gray-400 text-[10px] font-bold tracking-wider uppercase mb-1">Jump Back In</p>
+              <p className="text-gray-400 text-xs font-bold tracking-wider uppercase mb-1">Jump Back In</p>
               <h3 className="text-gray-900 dark:text-white text-sm font-extrabold group-hover:text-[#6C1D5F] transition-colors">Resume Last Course</h3>
             </div>
             <div className="relative z-10 w-10 h-10 rounded-xl bg-[#6C1D5F]/10 flex items-center justify-center text-[#6C1D5F] shrink-0">
@@ -81,7 +81,7 @@ function DashboardHome() {
         <Link to="/student/assessments" className="group">
           <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#15151f] p-5 flex items-center justify-between transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 border border-gray-200 dark:border-[#2e2e3e]">
             <div className="relative z-10">
-              <p className="text-gray-400 text-[10px] font-bold tracking-wider uppercase mb-1">Action Required</p>
+              <p className="text-gray-400 text-xs font-bold tracking-wider uppercase mb-1">Action Required</p>
               <h3 className="text-gray-900 dark:text-white text-sm font-extrabold group-hover:text-[#6C1D5F] transition-colors">Take Assessment</h3>
             </div>
             <div className="relative z-10 w-10 h-10 rounded-xl bg-[#FF6200]/10 flex items-center justify-center text-[#FF6200] shrink-0">
@@ -92,7 +92,7 @@ function DashboardHome() {
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard index={0} title="Enrolled Courses" value={enrolledBatches.length} icon={BookOpen} trend="Total active" trendUp={false} colorClass="text-[#6C1D5F]" bgClass="bg-[#6C1D5F]/10" />
         <StatCard index={1} title="Pending" value={pendingCount} icon={Calendar} trend="Action required" trendUp={false} colorClass="text-[#FF6200]" bgClass="bg-[#FF6200]/10" />
         <StatCard index={2} title="Completed" value={completedCount} icon={Award} trend="Finished" trendUp={false} colorClass="text-[#01AC9F]" bgClass="bg-[#01AC9F]/10" />
@@ -108,7 +108,7 @@ function DashboardHome() {
             </div>
             <div>
               <h2 className="text-xs font-bold text-gray-900 dark:text-white">Course Progress</h2>
-              <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Completion by batch</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Completion by batch</p>
             </div>
           </div>
           <div className="flex-1 min-h-[200px]">
@@ -123,7 +123,7 @@ function DashboardHome() {
             </div>
             <div>
               <h2 className="text-xs font-bold text-gray-900 dark:text-white">Subject Performance</h2>
-              <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Assessment scores</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Assessment scores</p>
             </div>
           </div>
           <div className="flex-1 min-h-[200px]">

@@ -187,7 +187,7 @@ export const TeacherDashboard = () => {
               <kpi.icon className="w-6 h-6" style={{ color: kpi.color }} />
             </div>
             <div>
-              <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider mb-1">
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider mb-1">
                 {kpi.label}
               </p>
               <h4 className="text-2xl md:text-3xl font-display font-black text-neutral-900 dark:text-white leading-none tracking-tight">
@@ -201,7 +201,7 @@ export const TeacherDashboard = () => {
       {/* Charts Bento Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart 1: Submission Trend */}
-        <div className="bg-white dark:bg-neutral-900/80 backdrop-blur-xl p-6 rounded-[1.5rem] border border-neutral-200 dark:border-neutral-800 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 lg:col-span-2 flex flex-col h-[400px]">
+        <div className="bg-white dark:bg-neutral-900/80 backdrop-blur-xl p-4 sm:p-6 rounded-[1.5rem] border border-neutral-200 dark:border-neutral-800 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 lg:col-span-2 flex flex-col h-[280px] sm:h-[350px] lg:h-[400px]">
           <div className="flex items-start justify-between mb-8">
             <div>
               <h3 className="font-display font-extrabold text-base text-neutral-900 dark:text-white uppercase tracking-wider">
@@ -273,7 +273,7 @@ export const TeacherDashboard = () => {
         </div>
 
         {/* Chart 2: Average Scores per Assessment */}
-        <div className="bg-white dark:bg-neutral-900/80 backdrop-blur-xl p-6 rounded-[1.5rem] border border-neutral-200 dark:border-neutral-800 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-[400px]">
+        <div className="bg-white dark:bg-neutral-900/80 backdrop-blur-xl p-4 sm:p-6 rounded-[1.5rem] border border-neutral-200 dark:border-neutral-800 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-[280px] sm:h-[350px] lg:h-[400px]">
           <div className="mb-8">
             <h3 className="font-display font-extrabold text-base text-neutral-900 dark:text-white uppercase tracking-wider">
               Assessment Averages
@@ -385,7 +385,7 @@ export const TeacherDashboard = () => {
             </div>
             <Link
               to="/trainer/evaluation"
-              className="text-sm text-[#6C1D5F] dark:text-primary font-black hover:bg-primary/10 dark:hover:bg-primary px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5 border border-transparent hover:border-primary/20 dark:hover:border-primary"
+              className="text-sm text-[#6C1D5F] dark:text-primary font-black hover:bg-primary/10 dark:hover:bg-primary px-4 py-2.5 rounded-xl transition-colors flex items-center gap-1.5 border border-transparent hover:border-primary/20 dark:hover:border-primary"
             >
               <span>View Queue</span> <ArrowUpRight className="w-4 h-4" />
             </Link>

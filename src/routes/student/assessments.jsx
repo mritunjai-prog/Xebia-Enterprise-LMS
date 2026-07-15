@@ -160,7 +160,7 @@ function AssessmentsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[120px]"
+            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-0 w-full sm:w-auto sm:min-w-[120px]"
           >
             <option value="All">Status: All</option>
             <option value="Active">Active</option>
@@ -171,7 +171,7 @@ function AssessmentsPage() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[150px]"
+            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-0 w-full sm:w-auto sm:min-w-[150px]"
           >
             <option value="All">Type: All</option>
             <option value="mcq">MCQ</option>
@@ -185,7 +185,7 @@ function AssessmentsPage() {
           <select
             value={difficultyFilter}
             onChange={(e) => setDifficultyFilter(e.target.value)}
-            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[150px]"
+            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-0 w-full sm:w-auto sm:min-w-[150px]"
           >
             <option value="All">Difficulty: All</option>
             <option value="Easy">Easy</option>
@@ -196,7 +196,7 @@ function AssessmentsPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[160px]"
+            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-0 w-full sm:w-auto sm:min-w-[160px]"
           >
             <option value="Newest">Sort: Newest First</option>
             <option value="Oldest">Sort: Oldest First</option>
@@ -220,14 +220,14 @@ function AssessmentsPage() {
           <div className="ml-auto flex items-center bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl">
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === "grid" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
+              className={`p-2.5 min-w-[40px] min-h-[40px] rounded-lg flex items-center justify-center transition-all ${viewMode === "grid" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
               title="Grid View"
             >
               <LayoutGrid className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode("table")}
-              className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === "table" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
+              className={`p-2.5 min-w-[40px] min-h-[40px] rounded-lg flex items-center justify-center transition-all ${viewMode === "table" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
               title="Table View"
             >
               <List className="w-4 h-4" />
@@ -255,8 +255,8 @@ function AssessmentsPage() {
         </div>
       ) : viewMode === "table" ? (
         <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-sm whitespace-nowrap">
+          <div className="overflow-x-auto table-scroll-hint">
+            <table className="w-full text-left border-collapse text-sm whitespace-nowrap min-w-[600px]">
               <thead className="sticky top-0 z-10 bg-neutral-100 dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-sm">
                 <tr className="text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider text-[11px]">
                   <th className="py-4 px-6 font-bold">Assessment Title</th>
@@ -302,14 +302,14 @@ function AssessmentsPage() {
                       </td>
                       <td className="py-4 px-6">
                         <span
-                          className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold border ${as.difficulty === "Easy" ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800" : as.difficulty === "Medium" ? "bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800" : "bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800"}`}
+                          className={`inline-flex px-2 py-0.5 rounded text-xs font-bold border ${as.difficulty === "Easy" ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800" : as.difficulty === "Medium" ? "bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800" : "bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800"}`}
                         >
                           {as.difficulty}
                         </span>
                       </td>
                       <td className="py-4 px-6 text-center">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold border uppercase tracking-wider ${statusColor}`}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold border uppercase tracking-wider ${statusColor}`}
                         >
                           {StatusIcon && <StatusIcon className="w-3 h-3" />}
                           {as.computedStatus}
@@ -322,7 +322,7 @@ function AssessmentsPage() {
                         <div className="text-[11px] text-neutral-500 mt-0.5">
                           {as.duration} mins
                         </div>
-                        <div className="text-[10px] text-[#01AC9F] mt-1 font-bold">
+                        <div className="text-xs text-[#01AC9F] mt-1 font-bold">
                           Attempts: {as.attemptsMade}/{as.maxAttempts}
                         </div>
                       </td>
@@ -330,7 +330,7 @@ function AssessmentsPage() {
                         {as.computedStatus === "Active" ? (
                           <button
                             onClick={() => handleStartAttempt(as.id)}
-                            className="bg-[#01AC9F] hover:bg-[#019388] text-white px-4 py-1.5 rounded-lg text-[11px] font-bold shadow-sm transition-colors cursor-pointer"
+                            className="bg-[#01AC9F] hover:bg-[#019388] text-white px-4 py-2.5 rounded-lg text-[11px] font-bold shadow-sm transition-colors cursor-pointer"
                           >
                             {as.attemptsMade >= as.maxAttempts ? "Assessment Locked" : "Start"}
                           </button>
@@ -340,7 +340,7 @@ function AssessmentsPage() {
                               as.studentSubmission && handleViewResult(as.studentSubmission.id)
                             }
                             disabled={!as.studentSubmission}
-                            className={`bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700 px-4 py-1.5 rounded-lg text-[11px] font-bold shadow-sm transition-colors ${!as.studentSubmission ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                            className={`bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700 px-4 py-2.5 rounded-lg text-[11px] font-bold shadow-sm transition-colors ${!as.studentSubmission ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                           >
                             {as.studentSubmission
                               ? "View Result"
@@ -410,18 +410,18 @@ function AssessmentsPage() {
                 )}
 
                 <div className="flex flex-wrap items-center gap-1.5 mb-4">
-                  <span className="px-1.5 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 rounded text-[10px] font-bold capitalize">
+                  <span className="px-1.5 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 rounded text-xs font-bold capitalize">
                     {(as.type || "").replace("_", " ")}
                   </span>
                   <span
-                    className={`px-1.5 py-0.5 rounded text-[10px] font-bold border ${difficultyColor}`}
+                    className={`px-1.5 py-0.5 rounded text-xs font-bold border ${difficultyColor}`}
                   >
                     {as.difficulty}
                   </span>
-                  <span className="px-1.5 py-0.5 bg-purple-50 dark:bg-purple-950/30 text-[#6C1D5F] dark:text-purple-400 rounded text-[10px] font-bold font-mono">
+                  <span className="px-1.5 py-0.5 bg-purple-50 dark:bg-purple-950/30 text-[#6C1D5F] dark:text-purple-400 rounded text-xs font-bold font-mono">
                     {as.marks} pts
                   </span>
-                  <span className="px-1.5 py-0.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-500 rounded text-[10px] font-bold">
+                  <span className="px-1.5 py-0.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-500 rounded text-xs font-bold">
                     {String(as.duration || "").replace(" mins", "")} min
                   </span>
                 </div>
@@ -431,7 +431,7 @@ function AssessmentsPage() {
                     <button
                       onClick={() => handleStartAttempt(as.id)}
                       disabled={as.attemptsMade >= as.maxAttempts}
-                      className={`w-full py-2 rounded-lg text-xs font-black uppercase shadow-sm tracking-wider cursor-pointer flex items-center justify-center gap-1 transition-all ${as.attemptsMade >= as.maxAttempts ? "bg-neutral-400 text-white cursor-not-allowed" : "bg-[#6C1D5F] hover:bg-[#84117C] text-white"}`}
+                      className={`w-full py-2.5 min-h-[44px] rounded-lg text-xs font-black uppercase shadow-sm tracking-wider cursor-pointer flex items-center justify-center gap-1 transition-all ${as.attemptsMade >= as.maxAttempts ? "bg-neutral-400 text-white cursor-not-allowed" : "bg-[#6C1D5F] hover:bg-[#84117C] text-white"}`}
                     >
                       <span>
                         {as.attemptsMade >= as.maxAttempts

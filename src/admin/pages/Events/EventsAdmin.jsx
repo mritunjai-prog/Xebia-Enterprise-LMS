@@ -54,7 +54,7 @@ const KpiCard = ({ title, value, icon: Icon, color, bg, subtitle, delay = 0 }) =
     className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] shadow-sm p-5 hover:shadow-md transition-all group">
     <div className="flex items-start justify-between">
       <div className="flex-1">
-        <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">{title}</p>
+        <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">{title}</p>
         <p className="text-3xl font-black text-gray-900 dark:text-white leading-none">{value}</p>
         {subtitle && <p className="text-[11px] text-gray-400 mt-1">{subtitle}</p>}
       </div>
@@ -109,7 +109,7 @@ export default function EventsAdmin() {
   if (loading) {
     return (
       <div className="space-y-4 animate-in fade-in duration-500 pb-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => <div key={i} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-100 dark:border-[#2e2e3e] p-5 h-[100px] animate-pulse" />)}
         </div>
       </div>
@@ -142,7 +142,7 @@ export default function EventsAdmin() {
       </motion.div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard title="Total Events" value={events.length} icon={CalendarDays} color="text-[#6C1D5F]" bg="bg-[#6C1D5F]/10" delay={0} />
         <KpiCard title="Upcoming" value={upcomingCount} icon={Zap} color="text-blue-600" bg="bg-blue-50" delay={0.05} />
         <KpiCard title="Live Now" value={ongoingCount} icon={TrendingUp} color="text-[#01AC9F]" bg="bg-[#01AC9F]/10" delay={0.1} />
@@ -191,7 +191,7 @@ export default function EventsAdmin() {
                     )}
                     {/* Status Badge */}
                     <div className="absolute top-3 left-3">
-                      <span className={clsx("text-[10px] font-bold px-3 py-1.5 rounded-lg text-white shadow-lg uppercase tracking-wider", st.bg)}>
+                      <span className={clsx("text-xs font-bold px-3 py-1.5 rounded-lg text-white shadow-lg uppercase tracking-wider", st.bg)}>
                         {event.status === "ongoing" && <span className="inline-block w-1.5 h-1.5 bg-white rounded-full mr-1.5 animate-pulse"></span>}
                         {st.text}
                       </span>
@@ -199,7 +199,7 @@ export default function EventsAdmin() {
                     {/* Deadline countdown */}
                     {event.status === "upcoming" && event.registrationDeadline && (
                       <div className="absolute top-3 right-3">
-                        <div className="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg">
+                        <div className="bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1.5 rounded-lg">
                           <EventCountdown deadline={event.registrationDeadline} status={event.status} />
                         </div>
                       </div>
@@ -208,8 +208,8 @@ export default function EventsAdmin() {
                     {event.maxCapacity && (
                       <div className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm px-3 py-2">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-bold text-white/80">{event.registrationCount || 0}/{event.maxCapacity} spots</span>
-                          <span className="text-[10px] font-bold text-white/60">{Math.round(((event.registrationCount || 0) / event.maxCapacity) * 100)}%</span>
+                          <span className="text-xs font-bold text-white/80">{event.registrationCount || 0}/{event.maxCapacity} spots</span>
+                          <span className="text-xs font-bold text-white/60">{Math.round(((event.registrationCount || 0) / event.maxCapacity) * 100)}%</span>
                         </div>
                         <div className="w-full bg-white/20 rounded-full h-1.5">
                           <div className="bg-gradient-to-r from-[#01AC9F] to-emerald-400 h-1.5 rounded-full transition-all duration-500"
@@ -247,15 +247,15 @@ export default function EventsAdmin() {
                     {/* Actions */}
                     <div className="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-[#2e2e3e] mt-auto">
                       <button onClick={() => router.navigate({ to: `/admin/events/${event.id}/registrations` })}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-bold text-[#6C1D5F] bg-[#6C1D5F]/5 rounded-xl hover:bg-[#6C1D5F]/10 transition-colors">
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 min-h-[40px] text-xs font-bold text-[#6C1D5F] bg-[#6C1D5F]/5 rounded-xl hover:bg-[#6C1D5F]/10 transition-colors">
                         <Eye className="w-3.5 h-3.5" /> Registrants
                       </button>
                       <button onClick={() => handleEdit(event)}
-                        className="p-2 rounded-xl bg-gray-100 dark:bg-[#1a1a24] hover:bg-gray-200 dark:hover:bg-[#252535] text-gray-600 dark:text-gray-400 transition-colors">
+                        className="p-2 min-h-[40px] rounded-xl bg-gray-100 dark:bg-[#1a1a24] hover:bg-gray-200 dark:hover:bg-[#252535] text-gray-600 dark:text-gray-400 transition-colors">
                         <Edit3 className="w-4 h-4" />
                       </button>
                       <button onClick={() => setDeleteConfirm(event)}
-                        className="p-2 rounded-xl bg-gray-100 dark:bg-[#1a1a24] hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-600 dark:text-gray-400 hover:text-red-600 transition-colors">
+                        className="p-2 min-h-[40px] rounded-xl bg-gray-100 dark:bg-[#1a1a24] hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-600 dark:text-gray-400 hover:text-red-600 transition-colors">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
