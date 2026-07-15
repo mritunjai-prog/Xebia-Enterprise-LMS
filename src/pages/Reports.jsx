@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
 import { useLMS } from "../context/LMSContext";
 import {
   ResponsiveContainer,
@@ -7,7 +8,6 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
   Legend,
   PieChart,
   Pie,
@@ -19,388 +19,401 @@ import {
   AlertTriangle,
   CheckCircle2,
   TrendingUp,
+  TrendingDown,
   ArrowUp,
   ArrowDown,
   Search,
+  BarChart3,
+  Users,
+  ClipboardCheck,
+  Loader2,
+  BookOpen,
 } from "lucide-react";
+
+const CHART_COLORS = {
+  velvet: "#6C1D5F",
+  teal: "#01AC9F",
+  orange: "#FF6200",
+  rose: "#E11D48",
+  purple: "#84117C",
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload) return null;
+  return (
+    <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl shadow-lg px-3 py-2">
+      <p className="text-xs font-bold text-gray-900 dark:text-white mb-1">{label}</p>
+      {payload.map((entry, i) => (
+        <p key={i} className="text-[11px] text-gray-500 dark:text-gray-400">
+          <span className="inline-block w-2 h-2 rounded-full mr-1.5" style={{ backgroundColor: entry.color }} />
+          {entry.name}: <span className="font-bold text-gray-700 dark:text-gray-200">{entry.value}%</span>
+        </p>
+      ))}
+    </div>
+  );
+};
 
 export const Reports = () => {
   const { students, batches, assessments, submissions } = useLMS();
   const [selectedBatchId, setSelectedBatchId] = useState("all");
   const [studentSearch, setStudentSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // 1. Overall Evaluated Submissions Metrics
-  const evaluatedSubs = submissions.filter((s) => s.status === "submitted" && s.isEvaluated);
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // ── Computed Metrics (all from real data, zero hardcoded fallbacks) ──
+
+  const evaluatedSubs = useMemo(
+    () => submissions.filter((s) => s.status === "submitted" && s.isEvaluated),
+    [submissions]
+  );
+
   const totalEvaluatedCount = evaluatedSubs.length;
 
-  const averageScore =
-    totalEvaluatedCount > 0
-      ? Math.round(evaluatedSubs.reduce((sum, s) => sum + s.percentage, 0) / totalEvaluatedCount)
-      : 78;
+  const averageScore = useMemo(
+    () => totalEvaluatedCount > 0 ? Math.round(evaluatedSubs.reduce((sum, s) => sum + (s.percentage || 0), 0) / totalEvaluatedCount) : 0,
+    [evaluatedSubs, totalEvaluatedCount]
+  );
 
-  const highestScore =
-    totalEvaluatedCount > 0 ? Math.max(...evaluatedSubs.map((s) => s.percentage)) : 100;
+  const highestScore = useMemo(
+    () => totalEvaluatedCount > 0 ? Math.max(...evaluatedSubs.map((s) => s.percentage || 0)) : 0,
+    [evaluatedSubs, totalEvaluatedCount]
+  );
 
-  const lowestScore =
-    totalEvaluatedCount > 0 ? Math.min(...evaluatedSubs.map((s) => s.percentage)) : 35;
+  const lowestScore = useMemo(
+    () => totalEvaluatedCount > 0 ? Math.min(...evaluatedSubs.map((s) => s.percentage || 0)) : 0,
+    [evaluatedSubs, totalEvaluatedCount]
+  );
 
-  const passingScoreThreshold = 60; // 60%
-  const passingSubs = evaluatedSubs.filter((s) => s.percentage >= passingScoreThreshold);
-  const passPercent =
-    totalEvaluatedCount > 0 ? Math.round((passingSubs.length / totalEvaluatedCount) * 100) : 82;
+  const passPercent = useMemo(
+    () => totalEvaluatedCount > 0 ? Math.round((evaluatedSubs.filter((s) => (s.percentage || 0) >= 60).length / totalEvaluatedCount) * 100) : 0,
+    [evaluatedSubs, totalEvaluatedCount]
+  );
 
   const failPercent = 100 - passPercent;
 
-  // 2. Batch Comparison Data
-  const batchComparisonData = batches.map((b) => {
-    // Find students enrolled
-    const bStudents = students.filter((s) => (s.batches || []).includes(b.id));
+  const batchComparisonData = useMemo(() => {
+    if (batches.length === 0) return [];
+    return batches.map((b) => {
+      const bStudents = students.filter((s) => (s.batches || []).includes(b.id));
+      const bAssessments = assessments.filter((a) => (a.batches || []).includes(b.id));
+      const bAsIds = bAssessments.map((a) => a.id);
+      const bSubs = submissions.filter((s) => bAsIds.includes(s.assessmentId) && s.status === "submitted");
 
-    // Average score of batch students
-    const bAvg =
-      bStudents.length > 0
-        ? Math.round(
-            bStudents.reduce((sum, s) => sum + (s.averageScore || 0), 0) / bStudents.length,
-          )
-        : 75;
+      const bAvg = bStudents.length > 0
+        ? Math.round(bStudents.reduce((sum, s) => sum + (s.averageScore || 0), 0) / bStudents.length)
+        : 0;
+      const expected = bAssessments.length * bStudents.length;
+      const subRate = expected > 0 ? Math.round((bSubs.length / expected) * 100) : 0;
 
-    // Submissions completed for assessments assigned to this batch
-    const bAssessments = assessments.filter((a) => (a.batches || []).includes(b.id));
-    const bAsIds = bAssessments.map((a) => a.id);
-    const bSubs = submissions.filter(
-      (s) => bAsIds.includes(s.assessmentId) && s.status === "submitted",
-    );
+      return { name: b.name, averageScore: bAvg, submissionRate: subRate };
+    });
+  }, [batches, students, assessments, submissions]);
 
-    // Expected submissions
-    const expectedSubmissionsCount = bAssessments.length * bStudents.length;
-    const subRate =
-      expectedSubmissionsCount > 0
-        ? Math.round((bSubs.length / expectedSubmissionsCount) * 100)
-        : 70; // fallback
+  const scoreDistribution = useMemo(() => {
+    const dist = [
+      { name: "Excellent (90-100)", value: evaluatedSubs.filter((s) => (s.percentage || 0) >= 90).length, color: CHART_COLORS.velvet },
+      { name: "Above Avg (75-89)", value: evaluatedSubs.filter((s) => (s.percentage || 0) >= 75 && (s.percentage || 0) < 90).length, color: CHART_COLORS.teal },
+      { name: "Satisfactory (60-74)", value: evaluatedSubs.filter((s) => (s.percentage || 0) >= 60 && (s.percentage || 0) < 75).length, color: CHART_COLORS.orange },
+      { name: "Failing (<60)", value: evaluatedSubs.filter((s) => (s.percentage || 0) < 60).length, color: CHART_COLORS.rose },
+    ];
+    return dist;
+  }, [evaluatedSubs]);
 
-    return {
-      name: b.name,
-      averageScore: bAvg,
-      submissionRate: subRate,
-      passingRate: Math.round(bAvg * 0.95), // approximation
-    };
-  });
+  const hasScoreData = scoreDistribution.some((d) => d.value > 0);
 
-  // 3. Score distribution data for Pie Chart
-  const scoreDistribution = [
+  const filteredStudents = useMemo(() => {
+    return students.filter((s) => {
+      const matchesSearch = s.name?.toLowerCase().includes(studentSearch.toLowerCase()) || s.email?.toLowerCase().includes(studentSearch.toLowerCase());
+      const matchesBatch = selectedBatchId === "all" || (s.batches || []).includes(selectedBatchId);
+      return matchesSearch && matchesBatch;
+    });
+  }, [students, studentSearch, selectedBatchId]);
+
+  // ── Animation Variants ──
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.06 } },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+  };
+
+  // ── KPI Cards Config ──
+  const kpis = [
     {
-      name: "Excellent (90-100)",
-      value: evaluatedSubs.filter((s) => s.percentage >= 90).length || 18,
-      color: "#6C1D5F",
+      label: "Average Score",
+      value: totalEvaluatedCount > 0 ? `${averageScore}%` : "—",
+      icon: Award,
+      bg: "bg-[#6C1D5F]/10",
+      color: "text-[#6C1D5F]",
+      desc: totalEvaluatedCount > 0 ? `Based on ${totalEvaluatedCount} evaluated` : "No submissions yet",
     },
     {
-      name: "Above Avg (75-89)",
-      value: evaluatedSubs.filter((s) => s.percentage >= 75 && s.percentage < 90).length || 45,
-      color: "#01AC9F",
+      label: "Pass Rate",
+      value: totalEvaluatedCount > 0 ? `${passPercent}%` : "—",
+      icon: CheckCircle2,
+      bg: "bg-[#01AC9F]/10",
+      color: "text-[#01AC9F]",
+      desc: "Threshold: >= 60%",
     },
     {
-      name: "Satisfactory (60-74)",
-      value: evaluatedSubs.filter((s) => s.percentage >= 60 && s.percentage < 74).length || 32,
-      color: "#FF6200",
+      label: "Fail Rate",
+      value: totalEvaluatedCount > 0 ? `${failPercent}%` : "—",
+      icon: AlertTriangle,
+      bg: "bg-rose-500/10",
+      color: "text-rose-500",
+      desc: failPercent > 30 ? "Needs attention" : "Within acceptable range",
     },
     {
-      name: "Failing (<60)",
-      value: evaluatedSubs.filter((s) => s.percentage < 60).length || 12,
-      color: "#E11D48",
+      label: "Score Range",
+      value: totalEvaluatedCount > 0 ? `${highestScore}% / ${lowestScore}%` : "—",
+      icon: Activity,
+      bg: "bg-[#FF6200]/10",
+      color: "text-[#FF6200]",
+      desc: "Highest / Lowest",
     },
   ];
 
-  // 4. Student performance table filters
-  const filteredStudents = students.filter((s) => {
-    const matchesSearch =
-      s.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
-      s.email.toLowerCase().includes(studentSearch.toLowerCase());
-    const matchesBatch = selectedBatchId === "all" || (s.batches || []).includes(selectedBatchId);
-    return matchesSearch && matchesBatch;
-  });
-
-  const velvetColor = "#6C1D5F";
-  const emeraldColor = "#01AC9F";
-  const orangeColor = "#FF6200";
+  // ── Loading Skeleton ──
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="h-32 bg-gray-200 dark:bg-[#1a1a2e] rounded-2xl" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-28 bg-gray-200 dark:bg-[#1a1a2e] rounded-2xl" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="h-64 bg-gray-200 dark:bg-[#1a1a2e] rounded-2xl lg:col-span-2" />
+          <div className="h-64 bg-gray-200 dark:bg-[#1a1a2e] rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {/* Metrics Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Metric 1 */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-800 p-5 rounded-2xl flex items-center justify-between shadow-md">
-          <div>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider">
-              LMS Average Score
-            </p>
-            <h4 className="text-2xl font-display font-black text-[#6C1D5F] dark:text-primary mt-1">
-              {averageScore}%
-            </h4>
-            <span className="text-[10px] text-accent-2 font-bold flex items-center gap-0.5 mt-1">
-              <TrendingUp className="w-3 h-3" /> +2.4% over last term
-            </span>
-          </div>
-          <div className="p-3 bg-primary/10 text-[#6C1D5F] rounded-2xl">
-            <Award className="w-6 h-6" />
-          </div>
+    <div className="space-y-6 animate-in fade-in duration-500 pb-6">
+      {/* Gradient Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#6C1D5F] via-[#84117C] to-[#01AC9F] p-6 sm:p-8 text-white shadow-lg"
+      >
+        <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-black/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="relative z-10">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Performance Reports</h1>
+          <p className="mt-2 text-white/80 text-sm font-medium">
+            {totalEvaluatedCount > 0
+              ? `Analytics from ${totalEvaluatedCount} evaluated submission${totalEvaluatedCount !== 1 ? "s" : ""} across ${batches.length} batch${batches.length !== 1 ? "es" : ""}`
+              : "No evaluated submissions yet. Data will appear once students complete assessments."}
+          </p>
         </div>
+      </motion.div>
 
-        {/* Metric 2 */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-800 p-5 rounded-2xl flex items-center justify-between shadow-md">
-          <div>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider">
-              Pass rate
-            </p>
-            <h4 className="text-2xl font-display font-black text-[#01AC9F] dark:text-accent-2 mt-1">
-              {passPercent}%
-            </h4>
-            <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium flex items-center gap-0.5 mt-1">
-              Threshold: &gt;= 60% marks
-            </span>
-          </div>
-          <div className="p-3 bg-accent-2/10 text-[#01AC9F] rounded-2xl">
-            <CheckCircle2 className="w-6 h-6" />
-          </div>
-        </div>
-
-        {/* Metric 3 */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-800 p-5 rounded-2xl flex items-center justify-between shadow-md">
-          <div>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider">
-              Fail rate
-            </p>
-            <h4 className="text-2xl font-display font-black text-rose-600 mt-1">{failPercent}%</h4>
-            <span className="text-[10px] text-rose-500 font-medium flex items-center gap-0.5 mt-1">
-              Requires support
-            </span>
-          </div>
-          <div className="p-3 bg-rose-500/10 text-rose-500 rounded-2xl">
-            <AlertTriangle className="w-6 h-6" />
-          </div>
-        </div>
-
-        {/* Metric 4 */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-800 p-5 rounded-2xl flex items-center justify-between shadow-md">
-          <div>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider">
-              Peak & Low Scores
-            </p>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-xl font-display font-black text-neutral-800 dark:text-white flex items-center">
-                <ArrowUp className="w-4 h-4 text-accent-2 shrink-0" />
-                {highestScore}%
-              </span>
-              <span className="text-neutral-300">/</span>
-              <span className="text-sm font-display font-bold text-neutral-500 dark:text-neutral-400 flex items-center">
-                <ArrowDown className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                {lowestScore}%
-              </span>
-            </div>
-            <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium block mt-1">
-              From evaluated submissions
-            </span>
-          </div>
-          <div className="p-3 bg-destructive/10 text-destructive rounded-2xl">
-            <Activity className="w-6 h-6" />
-          </div>
-        </div>
-      </div>
-
-      {/* Charts section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Batch Performance comparison chart */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-800 p-5 rounded-2xl lg:col-span-2">
-          <div>
-            <h3 className="font-display font-bold text-sm text-neutral-800 dark:text-white uppercase tracking-wider">
-              Batch-wise Performance comparison
-            </h3>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
-              Average scores vs submission rates across active courses
-            </p>
-          </div>
-          <div className="h-72 mt-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={batchComparisonData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBEBEB" />
-                <XAxis dataKey="name" stroke="#A3A3A3" fontSize={10} tickLine={false} />
-                <YAxis stroke="#A3A3A3" fontSize={10} tickLine={false} axisLine={false} />
-                <Tooltip />
-                <Legend verticalAlign="top" height={36} iconType="circle" />
-                <Bar
-                  dataKey="averageScore"
-                  name="Avg Score (%)"
-                  fill={velvetColor}
-                  barSize={12}
-                  radius={[4, 4, 0, 0]}
-                />
-                <Bar
-                  dataKey="submissionRate"
-                  name="Submission Rate (%)"
-                  fill={emeraldColor}
-                  barSize={12}
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Score distribution pie chart */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-800 p-5 rounded-2xl">
-          <div>
-            <h3 className="font-display font-bold text-sm text-neutral-800 dark:text-white uppercase tracking-wider">
-              Score Distribution
-            </h3>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
-              Percentage breakdown of all active evaluations
-            </p>
-          </div>
-          <div className="h-60 mt-4 relative">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={scoreDistribution}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {scoreDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Custom legend */}
-          <div className="grid grid-cols-2 gap-2 text-[10px] font-semibold mt-2">
-            {scoreDistribution.map((entry, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-1.5 text-neutral-500 dark:text-neutral-500 dark:text-neutral-400"
-              >
-                <span
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
-                  style={{ backgroundColor: entry.color }}
-                ></span>
-                <span className="truncate">{entry.name}</span>
+      {/* KPI Cards */}
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {kpis.map((kpi, i) => (
+          <motion.div
+            key={kpi.label}
+            variants={itemVariants}
+            className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{kpi.label}</p>
+                <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-1">{kpi.value}</h3>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Student comparison diagnostics table */}
-      <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-800 p-5 rounded-2xl space-y-4 shadow-md">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h3 className="font-display font-bold text-sm text-neutral-800 dark:text-white uppercase tracking-wider">
-              Student Diagnostics
-            </h3>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
-              Filter by batch and search student performance metrics
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            {/* Search */}
-            <div className="relative flex-1 sm:flex-none">
-              <Search className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400 absolute left-2.5 top-2.5" />
-              <input
-                type="text"
-                placeholder="Search students..."
-                value={studentSearch}
-                onChange={(e) => setStudentSearch(e.target.value)}
-                className="w-full sm:w-48 pl-8 pr-3 py-1.5 bg-neutral-50 dark:bg-neutral-950 border border-brand-border dark:border-neutral-800 rounded-2xl text-xs focus:outline-none focus:ring-1 focus:ring-brand-velvet dark:text-white"
-              />
+              <div className={`p-2.5 rounded-xl ${kpi.bg}`}>
+                <kpi.icon className={`w-5 h-5 ${kpi.color}`} />
+              </div>
             </div>
+            <p className="text-[10px] font-medium text-gray-400 dark:text-gray-500">{kpi.desc}</p>
+          </motion.div>
+        ))}
+      </motion.div>
 
-            {/* Batch Select */}
-            <select
-              value={selectedBatchId}
-              onChange={(e) => setSelectedBatchId(e.target.value)}
-              className="py-1.5 px-3 bg-neutral-50 dark:bg-neutral-950 border border-brand-border dark:border-neutral-800 rounded-2xl text-xs focus:outline-none dark:text-white"
-            >
-              <option value="all">All Batches</option>
-              {batches.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.name}
-                </option>
-              ))}
-            </select>
+      {/* Charts */}
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Batch Performance Bar Chart */}
+        <motion.div variants={itemVariants} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] p-5 shadow-sm lg:col-span-2 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white">Batch Performance</h3>
+              <p className="text-[10px] text-gray-400 mt-0.5">Average scores vs submission rates</p>
+            </div>
+            <div className="p-2 rounded-lg bg-[#6C1D5F]/10">
+              <BarChart3 className="w-4 h-4 text-[#6C1D5F]" />
+            </div>
+          </div>
+          {batchComparisonData.length > 0 ? (
+            <div className="h-[220px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={batchComparisonData} barGap={4}>
+                  <XAxis dataKey="name" stroke="#A3A3A3" fontSize={10} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#A3A3A3" fontSize={10} tickLine={false} axisLine={false} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend verticalAlign="top" height={28} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
+                  <Bar dataKey="averageScore" name="Avg Score (%)" fill={CHART_COLORS.velvet} barSize={14} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="submissionRate" name="Submission Rate (%)" fill={CHART_COLORS.teal} barSize={14} radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-[220px] flex items-center justify-center text-gray-400 dark:text-gray-600 text-xs">
+              <div className="text-center">
+                <BarChart3 className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                <p>No batch data available</p>
+              </div>
+            </div>
+          )}
+        </motion.div>
+
+        {/* Score Distribution Pie Chart */}
+        <motion.div variants={itemVariants} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] p-5 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white">Score Distribution</h3>
+              <p className="text-[10px] text-gray-400 mt-0.5">Breakdown of all evaluations</p>
+            </div>
+          </div>
+          {hasScoreData ? (
+            <>
+              <div className="h-[180px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={scoreDistribution} cx="50%" cy="50%" innerRadius={50} outerRadius={70} paddingAngle={3} dataKey="value">
+                      {scoreDistribution.map((entry, i) => (
+                        <Cell key={i} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="grid grid-cols-2 gap-1.5 mt-3">
+                {scoreDistribution.map((entry, i) => (
+                  <div key={i} className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-500 dark:text-gray-400">
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
+                    <span className="truncate">{entry.name}</span>
+                    <span className="font-bold text-gray-700 dark:text-gray-300 ml-auto">{entry.value}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="h-[180px] flex items-center justify-center text-gray-400 dark:text-gray-600 text-xs">
+              <div className="text-center">
+                <PieChart className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                <p>No score data yet</p>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </motion.div>
+
+      {/* Student Diagnostics Table */}
+      <motion.div variants={itemVariants} initial="hidden" animate="visible" className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+        <div className="p-5 border-b border-gray-100 dark:border-[#2e2e3e]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-[#6C1D5F]/10">
+                <Users className="w-4 h-4 text-[#6C1D5F]" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">Student Performance</h3>
+                <p className="text-[10px] text-gray-400 mt-0.5">
+                  {filteredStudents.length} student{filteredStudents.length !== 1 ? "s" : ""} found
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:flex-none">
+                <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Search students..."
+                  value={studentSearch}
+                  onChange={(e) => setStudentSearch(e.target.value)}
+                  className="w-full sm:w-48 pl-8 pr-3 py-1.5 bg-gray-50 dark:bg-[#1a1a2e] border border-gray-200 dark:border-[#2e2e3e] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#6C1D5F]/30 dark:text-white"
+                />
+              </div>
+              <select
+                value={selectedBatchId}
+                onChange={(e) => setSelectedBatchId(e.target.value)}
+                className="py-1.5 px-3 bg-gray-50 dark:bg-[#1a1a2e] border border-gray-200 dark:border-[#2e2e3e] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#6C1D5F]/30 dark:text-white cursor-pointer"
+              >
+                <option value="all">All Batches</option>
+                {batches.map((b) => (
+                  <option key={b.id} value={b.id}>{b.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <div className="overflow-x-auto w-full">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-brand-border dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wide">
-                  <th className="pb-3 pl-2">Rank</th>
-                  <th className="pb-3">Student Name</th>
-                  <th className="pb-3">Enrolled Batch</th>
-                  <th className="pb-3">Assessments Complete</th>
-                  <th className="pb-3 text-right pr-2">Avg Grade</th>
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="bg-gray-50/50 dark:bg-[#1a1a2e]/50 text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider text-[10px]">
+                <th className="px-5 py-3">#</th>
+                <th className="px-5 py-3">Student</th>
+                <th className="px-5 py-3">Batch</th>
+                <th className="px-5 py-3">Assessments</th>
+                <th className="px-5 py-3 text-right">Avg Score</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-[#2e2e3e]/50">
+              {filteredStudents.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-12 text-center">
+                    <Users className="w-8 h-8 mx-auto text-gray-300 dark:text-gray-600 mb-2" />
+                    <p className="text-xs font-semibold text-gray-400">No students found</p>
+                    <p className="text-[10px] text-gray-400 mt-0.5">Try adjusting your filters</p>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/40">
-                {filteredStudents.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={5}
-                      className="py-8 text-center text-neutral-500 dark:text-neutral-400"
-                    >
-                      No students matching specified filters.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredStudents.slice(0, 15).map((stud, idx) => {
-                    const bName =
-                      batches.find((b) => (stud.batches || []).includes(b.id))?.name ||
-                      (stud.batches || []).join(", ") ||
-                      "Unassigned";
-                    const score = stud.averageScore || 80;
-
-                    return (
-                      <tr
-                        key={stud.id}
-                        className="hover:bg-neutral-50 dark:hover:bg-neutral-800/20 transition-colors"
-                      >
-                        <td className="py-3 pl-2 font-mono text-neutral-500 dark:text-neutral-400">
-                          #{idx + 1}
-                        </td>
-                        <td className="py-3 flex items-center gap-2">
-                          <img src={stud.avatar} className="w-6 h-6 rounded-full" alt="" />
-                          <span className="font-semibold text-neutral-800 dark:text-neutral-200">
-                            {stud.name}
-                          </span>
-                        </td>
-                        <td className="py-3 font-medium text-neutral-500 dark:text-neutral-500 dark:text-neutral-400">
-                          {bName}
-                        </td>
-                        <td className="py-3 text-neutral-500 dark:text-neutral-500 dark:text-neutral-400 font-mono">
-                          {stud.assessmentsCompleted || 0} exams
-                        </td>
-                        <td className="py-3 text-right font-mono font-bold text-neutral-800 dark:text-white pr-2">
-                          <span
-                            className={`px-2 py-0.5 rounded ${score >= 85 ? "bg-accent-2/10 text-accent-2 dark:bg-accent-2 dark:text-accent-2" : score >= 70 ? "bg-primary/10 text-primary dark:bg-primary dark:text-primary" : "bg-rose-50 text-rose-800 dark:bg-rose-950/20 dark:text-rose-300"}`}
-                          >
-                            {score}%
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
+              ) : (
+                filteredStudents.slice(0, 15).map((stud, idx) => {
+                  const bName = batches.find((b) => (stud.batches || []).includes(b.id))?.name || "—";
+                  const score = stud.averageScore || 0;
+                  return (
+                    <tr key={stud.id} className="hover:bg-gray-50/50 dark:hover:bg-[#1a1a2e]/30 transition-colors">
+                      <td className="px-5 py-3 font-mono text-gray-400">#{idx + 1}</td>
+                      <td className="px-5 py-3">
+                        <div className="flex items-center gap-2.5">
+                          <img src={stud.avatar} className="w-7 h-7 rounded-full border border-gray-200 dark:border-[#2e2e3e]" alt="" />
+                          <div>
+                            <p className="font-semibold text-gray-900 dark:text-white text-[13px]">{stud.name}</p>
+                            <p className="text-[10px] text-gray-400">{stud.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-5 py-3 text-gray-500 dark:text-gray-400 font-medium">{bName}</td>
+                      <td className="px-5 py-3 text-gray-500 dark:text-gray-400 font-mono">{stud.assessmentsCompleted || 0}</td>
+                      <td className="px-5 py-3 text-right">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-[11px] font-bold ${
+                          score >= 85 ? "bg-[#01AC9F]/10 text-[#01AC9F]"
+                            : score >= 60 ? "bg-[#6C1D5F]/10 text-[#6C1D5F]"
+                              : score > 0 ? "bg-rose-500/10 text-rose-500"
+                                : "bg-gray-100 text-gray-400 dark:bg-[#1a1a2e] dark:text-gray-500"
+                        }`}>
+                          {score > 0 ? `${score}%` : "—"}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

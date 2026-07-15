@@ -14,7 +14,7 @@ import {
   Clock,
   AlertCircle,
 } from "lucide-react";
-import { AdminAssessmentService, AssessmentService } from "@/services/api";
+import { AdminAssessmentService, AssessmentService, UserService } from "@/services/api";
 import AssessmentCard from "@/components/assessment-admin/AssessmentCard";
 import { clsx } from "clsx";
 
@@ -51,9 +51,11 @@ export default function AssessmentsOverview() {
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(null);
   const [assessments, setAssessments] = useState([]);
+  const [trainers, setTrainers] = useState([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
+  const [trainerFilter, setTrainerFilter] = useState("All");
 
   useEffect(() => {
     fetchData();
@@ -62,12 +64,14 @@ export default function AssessmentsOverview() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [dashData, assessData] = await Promise.all([
+      const [dashData, assessData, trainerData] = await Promise.all([
         AdminAssessmentService.getDashboard().catch(() => null),
         AssessmentService.getAssessments().catch(() => []),
+        UserService.getUsers("teacher").catch(() => []),
       ]);
       setDashboard(dashData);
       setAssessments(Array.isArray(assessData) ? assessData : []);
+      setTrainers(Array.isArray(trainerData) ? trainerData : []);
     } catch (err) {
       console.error("Failed to load assessment data:", err);
     } finally {
@@ -75,10 +79,14 @@ export default function AssessmentsOverview() {
     }
   };
 
+  const trainerMap = {};
+  trainers.forEach((t) => { trainerMap[t.id] = t; });
+
   const filteredAssessments = assessments.filter((a) => {
     if (search && !(a.title || "").toLowerCase().includes(search.toLowerCase())) return false;
     if (statusFilter !== "All" && a.status !== statusFilter.toLowerCase()) return false;
     if (typeFilter !== "All" && a.type !== typeFilter.toLowerCase()) return false;
+    if (trainerFilter !== "All" && a.createdBy !== trainerFilter) return false;
     return true;
   });
 
@@ -235,6 +243,25 @@ export default function AssessmentsOverview() {
             >
               {typeFilters.map((f) => (
                 <option key={f} value={f}>Type: {f}</option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Trainer Filter */}
+          <div className="relative shrink-0">
+            <select
+              value={trainerFilter}
+              onChange={(e) => setTrainerFilter(e.target.value)}
+              className="appearance-none pl-4 pr-9 py-2 bg-gray-50 dark:bg-[#1a1a24] hover:bg-gray-100 dark:hover:bg-[#252535] border border-transparent dark:border-[#2e2e3e] rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] transition-all cursor-pointer min-w-[150px]"
+            >
+              <option value="All">All Trainers</option>
+              {trainers.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
               ))}
             </select>
             <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">

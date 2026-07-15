@@ -1,9 +1,12 @@
 package com.xebia.batchservice.service;
 
+import com.xebia.batchservice.model.Batch;
 import com.xebia.batchservice.model.TrainerAllocation;
 import com.xebia.batchservice.repository.TrainerAllocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -37,13 +40,13 @@ public class TrainerAllocationService {
     }
 
     public TrainerAllocation createAllocation(TrainerAllocation allocation) {
+        validateTrainerIsBatchCreator(allocation);
         allocation.setStatus(allocation.getStatus() != null ? allocation.getStatus() : "active");
         allocation.setAssignedAt(Instant.now().toString());
         TrainerAllocation saved = allocationRepository.save(allocation);
 
-        // Update batch with trainer and course info
         try {
-            batchService.updateBatchFields(allocation.getBatchId(), 
+            batchService.updateBatchFields(allocation.getBatchId(),
                 allocation.getTrainerId(), allocation.getCourseId(),
                 allocation.getAcademicSession(),
                 allocation.getStartDate(), allocation.getEndDate());
@@ -75,12 +78,37 @@ public class TrainerAllocationService {
         allocationRepository.deleteById(id);
     }
 
+    @org.springframework.transaction.annotation.Transactional
+    public int deleteAllocationsByTrainerId(String trainerId) {
+        List<TrainerAllocation> allocs = allocationRepository.findByTrainerId(trainerId);
+        int count = allocs.size();
+        allocationRepository.deleteByTrainerId(trainerId);
+        return count;
+    }
+
     public List<TrainerAllocation> createBulkAllocations(List<TrainerAllocation> allocations) {
         for (TrainerAllocation allocation : allocations) {
+            validateTrainerIsBatchCreator(allocation);
             allocation.setStatus(allocation.getStatus() != null ? allocation.getStatus() : "active");
             allocation.setAssignedAt(Instant.now().toString());
         }
         return allocationRepository.saveAll(allocations);
+    }
+
+    private void validateTrainerIsBatchCreator(TrainerAllocation allocation) {
+        if (allocation.getBatchId() == null || allocation.getTrainerId() == null) {
+            return;
+        }
+        Optional<Batch> batchOpt = batchService.getBatchById(allocation.getBatchId());
+        if (batchOpt.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Batch not found: " + allocation.getBatchId());
+        }
+        Batch batch = batchOpt.get();
+        if (batch.getCreatedBy() != null && !batch.getCreatedBy().equals(allocation.getTrainerId())) {
+            String batchCreatorName = batch.getCreatedByName() != null ? batch.getCreatedByName() : "unknown";
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                "Trainer " + allocation.getTrainerId() + " is not the creator of batch '" + batch.getName() + "'. Only batch creator (" + batchCreatorName + ") can be allocated.");
+        }
     }
 
     public Map<String, Object> getDashboardSummary() {

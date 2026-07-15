@@ -36,4 +36,10 @@ public class BatchController {
         batchService.deleteBatch(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/created-by/{createdBy}")
+    public ResponseEntity<java.util.Map<String, Object>> deleteBatchesByCreator(@PathVariable String createdBy) {
+        int deleted = batchService.deleteBatchesByCreatedBy(createdBy);
+        return ResponseEntity.ok(java.util.Map.of("deleted", deleted));
+    }
 }

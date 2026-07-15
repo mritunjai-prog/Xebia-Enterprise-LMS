@@ -17,39 +17,16 @@ export function WelcomeBanner() {
     .toUpperCase();
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#84117C] to-[#5B1E53] border-0 transition-colors p-8 shadow-lg">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-      <div className="absolute bottom-0 left-10 w-40 h-40 bg-[#84117C]/30 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-            Welcome Back, <span className="text-[#D3CCEC]">{name}!</span>
-          </h1>
-          <p className="mt-2 text-[#D3CCEC]/80 text-lg font-medium">
-            Continue your learning journey and track your progress.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Badge
-              variant="secondary"
-              className="bg-white/10 text-white hover:bg-white/20 border-0 px-3 py-1 text-xs font-bold backdrop-blur-sm"
-            >
-              {currentUser?.batches?.[0] ? `Batch ${currentUser.batches[0]}` : "Enrolled Student"}
-            </Badge>
-            <Badge
-              variant="outline"
-              className="text-[#D3CCEC] border-white/20 px-3 py-1 text-xs font-bold backdrop-blur-sm"
-            >
-              {currentUser?.tenant || "Xebia Enterprise LMS"}
-            </Badge>
-          </div>
-        </div>
-        {/* Avatar initials */}
-        <div className="hidden md:block">
-          <div className="h-24 w-24 rounded-2xl border border-white/20 shadow-xl flex items-center justify-center text-3xl font-extrabold text-white bg-white/10 backdrop-blur-sm">
-            {initials.substring(0, 2)}
-          </div>
-        </div>
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#4A1E47] via-[#6C1D5F] to-[#84117C] p-5 sm:p-6 text-white shadow-lg">
+      <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+      <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-black/10 rounded-full blur-2xl pointer-events-none" />
+      <div className="relative z-10 max-w-2xl">
+        <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
+          Welcome back, <span className="text-[#D3CCEC]">{name}</span>
+        </h1>
+        <p className="mt-1.5 text-white/80 text-xs sm:text-sm font-medium">
+          Continue your learning journey and track your progress.
+        </p>
       </div>
     </div>
   );

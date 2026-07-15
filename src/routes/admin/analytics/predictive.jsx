@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { GlobalFilters } from "@/components/analytics/GlobalFilters";
+import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 
 export const Route = createFileRoute("/admin/analytics/predictive")({
   component: PredictiveAnalyticsDashboard,
@@ -18,6 +19,17 @@ export const Route = createFileRoute("/admin/analytics/predictive")({
 
 function PredictiveAnalyticsDashboard() {
   const [lastUpdated] = useState(new Date().toLocaleTimeString());
+  const data = useAnalyticsData();
+
+  const topBatchesByScore = [...data.batchStats]
+    .sort((a, b) => b.avgScore - a.avgScore)
+    .slice(0, 3);
+
+  const noDataEmptyState = () => (
+    <div className="p-4 text-center">
+      <p className="text-sm text-gray-400 italic">No data available for prediction</p>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background text-gray-900 dark:text-gray-100 p-6 md:p-8 font-sans transition-colors duration-300 space-y-6 pb-12">
@@ -49,13 +61,13 @@ function PredictiveAnalyticsDashboard() {
 
       {/* Analytics Layout Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Certification Completion Prediction */}
+        {/* Score Prediction - based on batch data */}
         <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm p-6 flex flex-col transition-all duration-300 hover:border-[#6C1D5F] dark:hover:border-[#FFACE8]">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <LineChart className="w-5 h-5 text-[#6C1D5F] dark:text-[#FFACE8]" />
               <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                Certification Forecast (Q3/Q4)
+                Batch Performance Forecast
               </h3>
             </div>
           </div>
@@ -63,48 +75,34 @@ function PredictiveAnalyticsDashboard() {
           <div className="flex-1 flex flex-col justify-center space-y-6">
             <div className="text-center pb-4 border-b border-gray-100 dark:border-white/10">
               <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
-                Predicted Completions
+                Current Avg Score
               </p>
-              <h4 className="text-4xl font-black text-gray-900 dark:text-white">1,450</h4>
+              <h4 className="text-4xl font-black text-gray-900 dark:text-white">{data.avgScore}%</h4>
               <span className="inline-flex items-center gap-1 text-[#01AC9F] text-xs font-bold mt-2">
-                <ArrowUpRight className="w-4 h-4" /> +15% over historical average
+                <ArrowUpRight className="w-4 h-4" /> Across {data.totalBatches} batches
               </span>
             </div>
 
             <div className="space-y-4">
-              <div className="flex justify-between items-center group">
-                <span className="text-sm font-bold text-gray-900 dark:text-white">AWS Cloud</span>
-                <span className="px-2 py-1 bg-[#01AC9F]/10 text-[#01AC9F] rounded text-xs font-bold">
-                  ~420 Expected
-                </span>
-              </div>
-              <div className="flex justify-between items-center group">
-                <span className="text-sm font-bold text-gray-900 dark:text-white">
-                  Databricks Data Engineer
-                </span>
-                <span className="px-2 py-1 bg-[#6C1D5F]/10 text-[#6C1D5F] dark:text-[#FFACE8] rounded text-xs font-bold">
-                  ~380 Expected
-                </span>
-              </div>
-              <div className="flex justify-between items-center group">
-                <span className="text-sm font-bold text-gray-900 dark:text-white">
-                  Azure Solutions
-                </span>
-                <span className="px-2 py-1 bg-[#FF6200]/10 text-[#FF6200] rounded text-xs font-bold">
-                  ~310 Expected
-                </span>
-              </div>
+              {topBatchesByScore.length > 0 ? topBatchesByScore.map((b) => (
+                <div key={b.id} className="flex justify-between items-center group">
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">{b.name || "Unnamed Batch"}</span>
+                  <span className="px-2 py-1 bg-[#01AC9F]/10 text-[#01AC9F] rounded text-xs font-bold">
+                    {b.avgScore}% Avg
+                  </span>
+                </div>
+              )) : noDataEmptyState()}
             </div>
           </div>
         </div>
 
-        {/* AI Readiness Forecast */}
+        {/* AI Readiness Forecast - based on pass rate */}
         <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm p-6 flex flex-col transition-all duration-300 hover:border-[#01AC9F] dark:hover:border-[#01AC9F]">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <BrainCircuit className="w-5 h-5 text-[#01AC9F]" />
               <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                AI Readiness Forecast
+                Performance Forecast
               </h3>
             </div>
           </div>
@@ -112,42 +110,42 @@ function PredictiveAnalyticsDashboard() {
           <div className="flex-1 flex flex-col justify-center space-y-6">
             <div className="text-center pb-4 border-b border-gray-100 dark:border-white/10">
               <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
-                Projected Readiness by Q4
+                Pass Rate
               </p>
-              <h4 className="text-4xl font-black text-gray-900 dark:text-white">82%</h4>
+              <h4 className="text-4xl font-black text-gray-900 dark:text-white">{data.passRate}%</h4>
               <span className="inline-flex items-center gap-1 text-[#FF6200] text-xs font-bold mt-2">
-                Requires +14% growth to hit target
+                {data.evaluatedSubs.length} evaluated submissions
               </span>
             </div>
 
             <div className="space-y-4">
               <div className="space-y-1">
                 <div className="flex justify-between text-xs font-bold text-gray-500">
-                  <span>Current (Q2)</span>
-                  <span>54%</span>
+                  <span>MCQ Assessments</span>
+                  <span>{data.mcqAssessments}</span>
                 </div>
                 <div className="w-full bg-gray-100 dark:bg-white/10 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-gray-400 h-full rounded-full" style={{ width: "54%" }}></div>
+                  <div className="bg-gray-400 h-full rounded-full" style={{ width: `${data.totalAssessments ? Math.round(data.mcqAssessments / data.totalAssessments * 100) : 0}%` }}></div>
                 </div>
               </div>
 
               <div className="space-y-1">
                 <div className="flex justify-between text-xs font-bold text-gray-900 dark:text-white">
-                  <span>Forecast (Q3)</span>
-                  <span>68%</span>
+                  <span>Coding Assessments</span>
+                  <span>{data.codingAssessments}</span>
                 </div>
                 <div className="w-full bg-gray-100 dark:bg-white/10 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-[#6C1D5F] h-full rounded-full" style={{ width: "68%" }}></div>
+                  <div className="bg-[#6C1D5F] h-full rounded-full" style={{ width: `${data.totalAssessments ? Math.round(data.codingAssessments / data.totalAssessments * 100) : 0}%` }}></div>
                 </div>
               </div>
 
               <div className="space-y-1">
                 <div className="flex justify-between text-xs font-bold text-[#01AC9F]">
-                  <span>Forecast (Q4 Target)</span>
-                  <span>82%</span>
+                  <span>Mixed Assessments</span>
+                  <span>{data.mixedAssessments}</span>
                 </div>
                 <div className="w-full bg-gray-100 dark:bg-white/10 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-[#01AC9F] h-full rounded-full" style={{ width: "82%" }}></div>
+                  <div className="bg-[#01AC9F] h-full rounded-full" style={{ width: `${data.totalAssessments ? Math.round(data.mixedAssessments / data.totalAssessments * 100) : 0}%` }}></div>
                 </div>
               </div>
             </div>
@@ -169,42 +167,44 @@ function PredictiveAnalyticsDashboard() {
             <div className="p-4 border-l-4 border-l-[#FF6200] bg-[#FF6200]/5 dark:bg-[#FF6200]/10 rounded-r-xl group">
               <div className="flex justify-between items-start mb-1">
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                  High Dropout Risk Cohort
+                  Low Pass Rate Batches
                 </h4>
                 <span className="text-[10px] font-black uppercase text-[#FF6200]">
-                  92% Probability
+                  {data.batchStats.filter(b => b.avgScore < 60).length} at Risk
                 </span>
               </div>
               <p className="text-xs text-gray-500">
-                "Data Science Fundamentals" cohort showing steep engagement drop at module 4.
-                Intervention recommended.
+                {data.batchStats.filter(b => b.avgScore < 60).length > 0
+                  ? `${data.batchStats.filter(b => b.avgScore < 60).map(b => b.name || "Unnamed").join(", ")} showing below 60% average score. Intervention recommended.`
+                  : "All batches performing above 60% threshold."}
               </p>
             </div>
 
             <div className="p-4 border-l-4 border-l-[#6C1D5F] bg-[#6C1D5F]/5 dark:bg-[#FFACE8]/10 rounded-r-xl group">
               <div className="flex justify-between items-start mb-1">
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                  Certification Expiry Cliff
+                  Difficulty Distribution
                 </h4>
                 <span className="text-[10px] font-black uppercase text-[#6C1D5F] dark:text-[#FFACE8]">
-                  Upcoming
+                  {data.difficultyDist.hard} Hard
                 </span>
               </div>
               <p className="text-xs text-gray-500">
-                140 AWS Architect certifications expiring in the next 45 days. Recertification
-                campaign required.
+                {data.difficultyDist.hard} hard, {data.difficultyDist.medium} medium, {data.difficultyDist.easy} easy assessments. Consider balancing difficulty levels.
               </p>
             </div>
 
-            <div className="p-4 border-l-4 border-l-gray-400 bg-gray-50 dark:bg-white/5 rounded-r-xl group">
+            <div className="p-4 border-l-4 border-l-[#01AC9F] bg-[#01AC9F]/5 dark:bg-[#01AC9F]/10 rounded-r-xl group">
               <div className="flex justify-between items-start mb-1">
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                  Underutilized Licenses
+                  Avg Time to Complete
                 </h4>
-                <span className="text-[10px] font-black uppercase text-gray-500">Low Risk</span>
+                <span className="text-[10px] font-black uppercase text-[#01AC9F]">
+                  {data.avgTimeTaken} min
+                </span>
               </div>
               <p className="text-xs text-gray-500">
-                Udemy Business licenses running 15% below optimal utilization in the Consulting BU.
+                Average time taken across {data.evaluatedSubs.length} evaluated submissions.
               </p>
             </div>
           </div>

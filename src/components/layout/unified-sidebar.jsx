@@ -58,6 +58,7 @@ const navConfig = Object.freeze({
     { name: "Evaluation", href: "/trainer/evaluation", icon: ClipboardCheck },
     { name: "Leaderboard", href: "/trainer/leaderboard", icon: Award },
     { name: "Reports", href: "/trainer/reports", icon: PieChart },
+    { name: "Notifications", href: "/trainer/notifications", icon: Bell },
     { name: "Settings", href: "/trainer/settings", icon: Settings },
   ]),
   admin: Object.freeze([
@@ -66,6 +67,7 @@ const navConfig = Object.freeze({
     Object.freeze({ name: "Courses", href: "/admin/courses", icon: BookOpen }),
     Object.freeze({ name: "Curriculum", href: "/admin/curriculum", icon: Layers }),
     Object.freeze({ name: "Events", href: "/admin/events", icon: CalendarDays }),
+    Object.freeze({ name: "Users", href: "/admin/users", icon: Users }),
     Object.freeze({ isDivider: true, name: "Batch Management" }),
     Object.freeze({ name: "Overview", href: "/admin/batches", icon: LayoutDashboard, section: "batch" }),
     Object.freeze({ name: "Analytics", href: "/admin/batches/analytics", icon: PieChart, section: "batch" }),

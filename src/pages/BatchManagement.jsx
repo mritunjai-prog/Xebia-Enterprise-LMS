@@ -102,6 +102,7 @@ export const BatchManagement = () => {
 
   const [batchStatus, setBatchStatus] = useState("active");
   const [enrolledStudentIds, setEnrolledStudentIds] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -109,6 +110,11 @@ export const BatchManagement = () => {
   // Derived / Filtered Data
   const filteredBatches = useMemo(() => {
     let result = batches;
+
+    // Only show batches created by the current trainer
+    if (currentUser?.id) {
+      result = result.filter((b) => b.createdBy === currentUser.id);
+    }
 
     // Search
     if (searchQuery) {
@@ -146,9 +152,9 @@ export const BatchManagement = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Strict 100KB limit for local storage
-    if (file.size > 100 * 1024) {
-      toast.add("Image must be less than 100KB to save in local storage.", "error");
+    // 10MB limit
+    if (file.size > 10 * 1024 * 1024) {
+      toast.add("Image must be less than 10MB.", "error");
       return;
     }
 
@@ -192,22 +198,28 @@ export const BatchManagement = () => {
     setBatchIconUpload("");
     setIconTab("emoji");
     setBatchStatus("active");
+    setEnrolledStudentIds([]);
     setIsCreateModalOpen(true);
   };
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
-    if (!batchName.trim() || !course.trim()) {
-      toast.add("Please enter all required fields", "warning");
+    if (!batchName.trim()) {
+      toast.add("Please enter a batch name", "warning");
       return;
     }
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       const finalIcon = getFinalIcon();
-      const created = await createBatch(batchName.trim(), course.trim(), finalIcon, batchStatus, selectedCourseId);
+      const created = await createBatch(batchName.trim(), "", finalIcon, batchStatus, selectedCourseId, enrolledStudentIds);
       toast.add(`Batch "${created.name}" created successfully!`, "success");
       setIsCreateModalOpen(false);
+      setBatchName("");
     } catch (error) {
       toast.add(error.message, "error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -225,8 +237,8 @@ export const BatchManagement = () => {
   const handleEditSubmit = (e) => {
     e.preventDefault();
     if (!selectedBatch) return;
-    if (!batchName.trim() || !course.trim()) {
-      toast.add("Please enter all required fields", "warning");
+    if (!batchName.trim()) {
+      toast.add("Please enter a batch name", "warning");
       return;
     }
 
@@ -234,7 +246,7 @@ export const BatchManagement = () => {
     editBatch(
       selectedBatch.id,
       batchName.trim(),
-      course.trim(),
+      "",
       enrolledStudentIds,
       finalIcon,
       batchStatus,
@@ -342,7 +354,7 @@ export const BatchManagement = () => {
               <img
                 src={batchIconUrl}
                 alt="Preview"
-                className="w-16 h-16 object-cover rounded-2xl mx-auto shadow-md"
+                className="w-24 h-24 object-cover rounded-2xl mx-auto shadow-md"
                 onError={(e) => (e.target.style.display = "none")}
               />
             )}
@@ -362,13 +374,13 @@ export const BatchManagement = () => {
               onClick={() => fileInputRef.current?.click()}
               className="px-5 py-2.5 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-xl text-sm font-bold shadow-sm hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors flex items-center gap-2"
             >
-              <UploadCloud className="w-4 h-4" /> Browse File (Max 100KB)
+              <UploadCloud className="w-4 h-4" /> Browse File (Max 10MB)
             </button>
             {batchIconUpload && (
               <img
                 src={batchIconUpload}
                 alt="Preview"
-                className="w-16 h-16 object-cover rounded-2xl shadow-md"
+                className="w-24 h-24 object-cover rounded-2xl shadow-md"
               />
             )}
           </div>
@@ -532,8 +544,27 @@ export const BatchManagement = () => {
               <div
                 key={batch.id || `batch-${index}`}
                 onClick={() => navigate(`/trainer/batches/${encodeURIComponent(batch.name)}`)}
-                className="relative group p-4 pt-8 bg-white dark:bg-neutral-900 border border-transparent transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 rounded-xl hover:border-[#6C1D5F]/30 shadow-sm cursor-pointer overflow-hidden"
+                className="relative group bg-white dark:bg-neutral-900 border border-transparent transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 rounded-xl hover:border-[#6C1D5F]/30 shadow-sm cursor-pointer overflow-hidden"
               >
+                {/* Cover Image or Gradient Header */}
+                {batch.icon && (batch.icon.startsWith("data:image") || batch.icon.startsWith("http")) ? (
+                  <div className="relative h-32 w-full overflow-hidden">
+                    <img
+                      src={batch.icon}
+                      alt={batch.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }}
+                    />
+                    <div className="w-full h-full bg-gradient-to-br from-[#6C1D5F] to-[#01AC9F] items-center justify-center hidden">
+                      <span className="text-4xl">{renderIcon(batch.icon)}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-32 w-full bg-gradient-to-br from-[#6C1D5F]/10 via-[#84117C]/5 to-[#01AC9F]/10 flex items-center justify-center">
+                    <span className="text-4xl">{renderIcon(batch.icon)}</span>
+                  </div>
+                )}
+
                 {/* Absolute Status Badge */}
                 <div className="absolute top-3 right-3 z-10">
                   <span
@@ -547,22 +578,17 @@ export const BatchManagement = () => {
                   </span>
                 </div>
 
-                <div>
-                  <div className="flex items-start gap-3 mt-2 pr-16">
-                    <div className="w-10 h-10 shrink-0 bg-primary/10 dark:bg-primary rounded-xl flex items-center justify-center text-primary dark:text-primary border border-primary/20 dark:border-primary shadow-sm text-sm">
-                      {renderIcon(batch.icon)}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-display font-black text-sm md:text-base text-neutral-900 dark:text-white leading-tight truncate">
-                        {batch.name}
-                      </h3>
-                      <div className="mt-1 text-xs font-semibold text-neutral-600 dark:text-neutral-400 truncate">
-                        {batch.course}
-                      </div>
+                <div className="p-4">
+                  <div className="min-w-0">
+                    <h3 className="font-display font-black text-sm md:text-base text-neutral-900 dark:text-white leading-tight truncate">
+                      {batch.name}
+                    </h3>
+                    <div className="mt-1 text-xs font-semibold text-neutral-600 dark:text-neutral-400 truncate">
+                      {batch.course}
                     </div>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between text-[10px] text-neutral-600 dark:text-neutral-400">
+                  <div className="mt-3 flex items-center justify-between text-[10px] text-neutral-600 dark:text-neutral-400">
                     <span className="flex items-center gap-1 font-bold">
                       <Users className="w-3.5 h-3.5 text-[#01AC9F]" /> {batch.studentCount} Enrolled
                     </span>
@@ -570,12 +596,9 @@ export const BatchManagement = () => {
                       <Calendar className="w-3.5 h-3.5 text-neutral-500" /> {batch.createdAt}
                     </span>
                   </div>
-                </div>
 
-                {/* Footer Actions & Progress */}
-                <div className="mt-5 pt-4 border-t border-neutral-100 dark:border-neutral-800/60">
-                  {/* Real Progress */}
-                  <div>
+                  {/* Footer: Progress */}
+                  <div className="mt-4 pt-3 border-t border-neutral-100 dark:border-neutral-800/60">
                     <div className="flex justify-between items-center text-xs mb-2">
                       <span className="font-bold text-neutral-700 dark:text-neutral-300">
                         Course Progress
@@ -741,7 +764,7 @@ export const BatchManagement = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-3xl w-full max-w-lg p-8 relative z-10 shadow-2xl space-y-6"
+              className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-3xl w-full max-w-2xl p-8 relative z-10 shadow-2xl space-y-6 max-h-[95vh] overflow-y-auto custom-scrollbar"
             >
               <div className="flex justify-between items-center pb-2 border-b border-neutral-100 dark:border-neutral-800">
                 <h3 className="font-display font-extrabold text-2xl text-neutral-800 dark:text-white">
@@ -756,68 +779,99 @@ export const BatchManagement = () => {
               </div>
 
               <form onSubmit={handleCreateSubmit} className="space-y-5 text-sm">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="block font-bold text-neutral-600 dark:text-neutral-300">
-                      Title <span className="text-destructive">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={batchName}
-                      onChange={(e) => setBatchName(e.target.value)}
-                      placeholder="e.g. Batch-2026K"
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-semibold"
-                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Left Column */}
+                  <div className="space-y-5">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="block font-bold text-neutral-600 dark:text-neutral-300">
+                          Title <span className="text-destructive">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={batchName}
+                          onChange={(e) => setBatchName(e.target.value)}
+                          placeholder="e.g. Batch-2026K"
+                          className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-semibold"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="block font-bold text-neutral-600 dark:text-neutral-300">
+                          Status
+                        </label>
+                        <select
+                          value={batchStatus}
+                          onChange={(e) => setBatchStatus(e.target.value)}
+                          className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-bold cursor-pointer"
+                        >
+                          <option value="active">🟢 Active</option>
+                          <option value="inactive">🔴 Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {renderIconSelector()}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="block font-bold text-neutral-600 dark:text-neutral-300">
-                      Status
+                  {/* Right Column (Students) */}
+                  <div className="space-y-2 flex flex-col h-full">
+                    <label className="block font-bold text-neutral-600 dark:text-neutral-300 flex justify-between items-end pb-1 border-b border-neutral-200 dark:border-neutral-700">
+                      <span>Enroll Students</span>
+                      <span className="text-xs bg-[#01AC9F]/10 text-[#01AC9F] px-2.5 py-1 rounded-lg font-black">
+                        {enrolledStudentIds.length} Selected
+                      </span>
                     </label>
-                    <select
-                      value={batchStatus}
-                      onChange={(e) => setBatchStatus(e.target.value)}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-bold cursor-pointer"
-                    >
-                      <option value="active">🟢 Active</option>
-                      <option value="inactive">🔴 Inactive</option>
-                    </select>
+
+                    <div className="flex-1 overflow-y-auto border border-neutral-200 dark:border-neutral-700 rounded-2xl divide-y divide-neutral-100 dark:divide-neutral-800 bg-neutral-50 dark:bg-neutral-950/50 p-2 space-y-1 custom-scrollbar shadow-inner min-h-[300px]">
+                      {students.map((student) => {
+                        const isChecked = enrolledStudentIds.includes(student.id);
+                        return (
+                          <div
+                            key={student.id}
+                            onClick={() => {
+                              setEnrolledStudentIds((prev) =>
+                                isChecked ? prev.filter((id) => id !== student.id) : [...prev, student.id]
+                              );
+                            }}
+                            className={`p-2.5 flex items-center justify-between rounded-xl cursor-pointer transition-all ${isChecked ? "bg-white dark:bg-neutral-800 shadow-md border border-neutral-200 dark:border-neutral-700" : "hover:bg-neutral-100 dark:hover:bg-neutral-900 border border-transparent"}`}
+                          >
+                            <div className="flex items-center gap-3 max-w-[80%]">
+                              <img
+                                src={student.avatar}
+                                alt=""
+                                className="w-9 h-9 rounded-full border border-neutral-200 dark:border-neutral-700 shadow-sm"
+                              />
+                              <div className="truncate">
+                                <p className="font-bold text-neutral-800 dark:text-neutral-200 truncate">
+                                  {student.name}
+                                </p>
+                                <p className="text-[10px] text-neutral-400 truncate font-semibold">
+                                  {student.email}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div
+                              className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors shadow-sm ${isChecked ? "bg-[#01AC9F] border-[#01AC9F] text-white" : "border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800"}`}
+                            >
+                              {isChecked && <Check className="w-4 h-4 font-black" />}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-
-                <div className="space-y-2">
-                  <label className="block font-bold text-neutral-600 dark:text-neutral-300">
-                    Course <span className="text-destructive">*</span>
-                  </label>
-                  <select
-                    required
-                    value={selectedCourseId}
-                    onChange={(e) => {
-                      setSelectedCourseId(e.target.value);
-                      const selected = adminCourses.find((c) => c.id === e.target.value);
-                      setCourse(selected ? selected.title : "");
-                    }}
-                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-semibold cursor-pointer"
-                  >
-                    <option value="">Select a course</option>
-                    {adminCourses.map((c) => (
-                      <option key={c.id} value={c.id}>{c.title}</option>
-                    ))}
-                  </select>
-                  {adminCourses.length === 0 && (
-                    <p className="text-xs text-gray-400">No courses available. Ask admin to create courses first.</p>
-                  )}
-                </div>
-
-                {renderIconSelector()}
 
                 <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800">
                   <button
                     type="submit"
-                    className="w-full py-4 bg-gradient-to-r from-[#6C1D5F] to-[#84117C] hover:from-[#84117C] hover:to-[#4A1E47] text-white font-extrabold rounded-xl shadow-lg cursor-pointer transition-all hover:-translate-y-1 text-base flex items-center justify-center gap-2"
+                    disabled={isSubmitting}
+                    className="w-full py-4 bg-gradient-to-r from-[#6C1D5F] to-[#84117C] hover:from-[#84117C] hover:to-[#4A1E47] text-white font-extrabold rounded-xl shadow-lg cursor-pointer transition-all hover:-translate-y-1 text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                   >
-                    <Plus className="w-5 h-5" /> Establish Batch
+                    <Plus className="w-5 h-5" /> {isSubmitting ? "Creating..." : "Establish Batch"}
                   </button>
                 </div>
               </form>
@@ -882,19 +936,6 @@ export const BatchManagement = () => {
                           <option value="inactive">🔴 Inactive</option>
                         </select>
                       </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="block font-bold text-neutral-600 dark:text-neutral-300">
-                        Course / Core Focus <span className="text-destructive">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={course}
-                        onChange={(e) => setCourse(e.target.value)}
-                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#01AC9F] dark:text-white transition-all shadow-inner font-semibold"
-                      />
                     </div>
 
                     {renderIconSelector()}

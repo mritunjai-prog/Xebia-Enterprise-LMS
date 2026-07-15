@@ -20,7 +20,6 @@ const generateWithFallback = async (prompt) => {
       "Groq API key is not configured. Please add VITE_GROQ_API_KEY to your .env file.",
     );
   }
-
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -34,11 +33,9 @@ const generateWithFallback = async (prompt) => {
         temperature: 0.7,
       }),
     });
-
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
-
     const data = await response.json();
     return data.choices[0].message.content;
   } catch (e) {
@@ -94,20 +91,11 @@ export const AIService = {
 
   generateLearningOutcomes: async (title, categoryName = "General", level = "Beginner") => {
     try {
-      const prompt = `List 3 to 5 clear, actionable learning outcomes for a ${level}-level course titled "${title}" in the "${categoryName}" category. 
-      Return the result strictly as a valid JSON array of strings, with no markdown formatting or extra text.
-      Example format: ["Understand the basics", "Build a project"]`;
-
+      const prompt = `List 3 to 5 clear, actionable learning outcomes for a ${level}-level course titled "${title}" in the "${categoryName}" category. Return the result strictly as a valid JSON array of strings, with no markdown formatting or extra text. Example format: ["Understand the basics", "Build a project"]`;
       let text = await generateWithFallback(prompt);
       text = text.trim();
-
-      if (text.startsWith("\`\`\`json"))
-        text = text
-          .replace(/\`\`\`json/g, "")
-          .replace(/\`\`\`/g, "")
-          .trim();
-      if (text.startsWith("\`\`\`")) text = text.replace(/\`\`\`/g, "").trim();
-
+      if (text.startsWith("```json")) text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+      if (text.startsWith("```")) text = text.replace(/```/g, "").trim();
       const parsed = JSON.parse(text);
       if (!Array.isArray(parsed)) throw new Error("AI did not return an array");
       return parsed;
@@ -119,21 +107,11 @@ export const AIService = {
 
   generatePrerequisites: async (title, categoryName = "General", level = "Beginner") => {
     try {
-      const prompt = `List 2 to 4 prerequisites for taking a ${level}-level course titled "${title}" in the "${categoryName}" category. 
-      If it's a beginner course with no prerequisites, just return an array like ["No prior experience required"].
-      Return the result strictly as a valid JSON array of strings, with no markdown formatting or extra text.
-      Example format: ["Basic HTML knowledge", "A computer"]`;
-
+      const prompt = `List 2 to 4 prerequisites for taking a ${level}-level course titled "${title}" in the "${categoryName}" category. If it's a beginner course with no prerequisites, just return an array like ["No prior experience required"]. Return the result strictly as a valid JSON array of strings, with no markdown formatting or extra text.`;
       let text = await generateWithFallback(prompt);
       text = text.trim();
-
-      if (text.startsWith("\`\`\`json"))
-        text = text
-          .replace(/\`\`\`json/g, "")
-          .replace(/\`\`\`/g, "")
-          .trim();
-      if (text.startsWith("\`\`\`")) text = text.replace(/\`\`\`/g, "").trim();
-
+      if (text.startsWith("```json")) text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+      if (text.startsWith("```")) text = text.replace(/```/g, "").trim();
       const parsed = JSON.parse(text);
       if (!Array.isArray(parsed)) throw new Error("AI did not return an array");
       return parsed;
@@ -145,20 +123,11 @@ export const AIService = {
 
   generateTargetAudience: async (title, categoryName = "General", level = "Beginner") => {
     try {
-      const prompt = `List 2 to 4 types of people or professionals who would benefit from a ${level}-level course titled "${title}" in the "${categoryName}" category. 
-      Return the result strictly as a valid JSON array of strings, with no markdown formatting or extra text.
-      Example format: ["Beginner developers", "Career changers"]`;
-
+      const prompt = `List 2 to 4 types of people or professionals who would benefit from a ${level}-level course titled "${title}" in the "${categoryName}" category. Return the result strictly as a valid JSON array of strings, with no markdown formatting or extra text.`;
       let text = await generateWithFallback(prompt);
       text = text.trim();
-
-      if (text.startsWith("\`\`\`json"))
-        text = text
-          .replace(/\`\`\`json/g, "")
-          .replace(/\`\`\`/g, "")
-          .trim();
-      if (text.startsWith("\`\`\`")) text = text.replace(/\`\`\`/g, "").trim();
-
+      if (text.startsWith("```json")) text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+      if (text.startsWith("```")) text = text.replace(/```/g, "").trim();
       const parsed = JSON.parse(text);
       if (!Array.isArray(parsed)) throw new Error("AI did not return an array");
       return parsed;
@@ -170,20 +139,11 @@ export const AIService = {
 
   generateCourseHighlights: async (title, categoryName = "General", level = "Beginner") => {
     try {
-      const prompt = `List 3 to 5 key course highlights (e.g., number of projects, certifications, unique value props) for a ${level}-level course titled "${title}" in the "${categoryName}" category. 
-      Return the result strictly as a valid JSON array of strings, with no markdown formatting or extra text.
-      Example format: ["3 Real-world projects", "Certificate of completion"]`;
-
+      const prompt = `List 3 to 5 key course highlights for a ${level}-level course titled "${title}" in the "${categoryName}" category. Return the result strictly as a valid JSON array of strings.`;
       let text = await generateWithFallback(prompt);
       text = text.trim();
-
-      if (text.startsWith("\`\`\`json"))
-        text = text
-          .replace(/\`\`\`json/g, "")
-          .replace(/\`\`\`/g, "")
-          .trim();
-      if (text.startsWith("\`\`\`")) text = text.replace(/\`\`\`/g, "").trim();
-
+      if (text.startsWith("```json")) text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+      if (text.startsWith("```")) text = text.replace(/```/g, "").trim();
       const parsed = JSON.parse(text);
       if (!Array.isArray(parsed)) throw new Error("AI did not return an array");
       return parsed;
@@ -195,20 +155,11 @@ export const AIService = {
 
   generateCareerOpportunities: async (title, categoryName = "General", level = "Beginner") => {
     try {
-      const prompt = `List 2 to 4 potential career opportunities or job titles unlocked by completing a ${level}-level course titled "${title}" in the "${categoryName}" category. 
-      Return the result strictly as a valid JSON array of strings, with no markdown formatting or extra text.
-      Example format: ["Junior Web Developer", "Frontend Engineer"]`;
-
+      const prompt = `List 2 to 4 potential career opportunities for a ${level}-level course titled "${title}" in the "${categoryName}" category. Return the result strictly as a valid JSON array of strings.`;
       let text = await generateWithFallback(prompt);
       text = text.trim();
-
-      if (text.startsWith("\`\`\`json"))
-        text = text
-          .replace(/\`\`\`json/g, "")
-          .replace(/\`\`\`/g, "")
-          .trim();
-      if (text.startsWith("\`\`\`")) text = text.replace(/\`\`\`/g, "").trim();
-
+      if (text.startsWith("```json")) text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+      if (text.startsWith("```")) text = text.replace(/```/g, "").trim();
       const parsed = JSON.parse(text);
       if (!Array.isArray(parsed)) throw new Error("AI did not return an array");
       return parsed;
@@ -225,6 +176,18 @@ export const AIService = {
       return result.trim();
     } catch (e) {
       console.error("AI generateCategoryDescription error:", e);
+      throw new Error(e.message);
+    }
+  },
+
+  generateEventDescription: async (title, location, isOnline) => {
+    try {
+      const venue = isOnline ? "an online/virtual" : "an in-person";
+      const prompt = "Write a professional, engaging 2-3 sentence event description for a " + venue + " event titled \"" + title + "\"" + (location ? " at \"" + location + "\"" : "") + ". Make it sound inviting and informative. Respond with ONLY the text, no extra characters or quotes.";
+      const result = await generateWithFallback(prompt);
+      return result.trim();
+    } catch (e) {
+      console.error("AI generateEventDescription error:", e);
       throw new Error(e.message);
     }
   },

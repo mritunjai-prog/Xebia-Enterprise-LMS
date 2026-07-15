@@ -28,13 +28,13 @@ export function UnifiedLayout({ portalType = "student" }) {
 
       {/* Main content */}
       <div className="main">
-        {portalType === "student" ? (
+        {portalType === "student" || portalType === "trainer" ? (
           <StudentNavbar isMobileOpen={isMobileOpen} setIsMobileOpen={setIsMobileOpen} />
         ) : (
           <AdminHeader />
         )}
         <div className="content">
-          {portalType === "student" ? (
+          {portalType === "student" || portalType === "trainer" ? (
             <div className="md:p-8">
               <Outlet />
             </div>

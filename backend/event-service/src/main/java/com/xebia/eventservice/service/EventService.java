@@ -81,6 +81,21 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    @org.springframework.transaction.annotation.Transactional
+    public java.util.Map<String, Integer> deleteEventsByCreatedBy(String createdBy) {
+        java.util.List<Event> events = eventRepository.findByCreatedBy(createdBy);
+        int eventCount = events.size();
+        int regCount = 0;
+        for (Event e : events) {
+            java.util.List<com.xebia.eventservice.entity.EventRegistration> regs = registrationRepository.findByEventId(e.getId());
+            regCount += regs.size();
+            registrationRepository.deleteAll(regs);
+            e.setActive(false);
+            eventRepository.save(e);
+        }
+        return java.util.Map.of("events", eventCount, "registrations", regCount);
+    }
+
     private EventResponse toResponse(Event event) {
         EventResponse resp = EventResponse.fromEvent(event);
         resp.setRegistrationCount(registrationRepository.countByEventId(event.getId()));

@@ -118,7 +118,7 @@ export const Login = () => {
         <motion.div
           initial={{ opacity: 0, y: 40, rotateX: 10 }}
           animate={{ opacity: 1, y: 0, rotateX: 0 }}
-          transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+          transition={{ duration: 0.35, type: "spring", bounce: 0.3 }}
           className="w-full max-w-5xl flex flex-col md:flex-row bg-white/60 dark:bg-neutral-900/60 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl dark:shadow-purple-900/10 border border-white/60 dark:border-white/10 overflow-hidden transform-gpu relative z-10"
         >
           {/* Branding Column with 3D Depth */}
@@ -127,9 +127,9 @@ export const Login = () => {
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#01AC9F]/30 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none" />
 
             <motion.div
-              initial={{ x: -20, opacity: 0 }}
+              initial={{ x: -10, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.05, duration: 0.25 }}
               className="flex items-center gap-3 relative z-10"
             >
               <img
@@ -149,9 +149,9 @@ export const Login = () => {
 
             <div className="relative z-10 flex flex-col justify-center flex-grow">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.4 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
               >
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black leading-[1.1] tracking-tight drop-shadow-xl mt-8">
                   Evaluate. Learn. <br />
@@ -267,7 +267,7 @@ export const Login = () => {
                       <motion.button
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5 + idx * 0.1 }}
+                        transition={{ delay: 0.15 + idx * 0.05 }}
                         key={t.id}
                         type="button"
                         onClick={() => handleQuickLogin(t.email, "teacher")}
@@ -300,7 +300,7 @@ export const Login = () => {
                       <motion.button
                         initial={{ opacity: 0, x: 10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5 + idx * 0.1 }}
+                        transition={{ delay: 0.15 + idx * 0.05 }}
                         key={s.id}
                         type="button"
                         onClick={() => handleQuickLogin(s.email, "student")}
@@ -332,7 +332,7 @@ export const Login = () => {
                     <motion.button
                       initial={{ opacity: 0, x: 10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.7 }}
+                      transition={{ delay: 0.25 }}
                       type="button"
                       onClick={() => handleQuickLogin("admin@xebia.com", "admin")}
                       className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-white/60 dark:border-neutral-700/50 hover:bg-white dark:hover:bg-neutral-800 hover:border-[#84117C] dark:hover:border-[#FFACE8] hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"

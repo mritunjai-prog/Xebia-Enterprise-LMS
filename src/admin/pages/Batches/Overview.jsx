@@ -246,7 +246,7 @@ export default function BatchesOverview() {
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Batches</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {batches.map((batch, index) => {
-              const batchColor = batch.status === "active" ? "#01AC9F" : "#6B7280";
+              const hasImage = batch.icon && (batch.icon.startsWith("data:image") || batch.icon.startsWith("http"));
               return (
                 <motion.div
                   key={batch.id || index}
@@ -254,64 +254,54 @@ export default function BatchesOverview() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: index * 0.03 }}
                   onClick={() => router.navigate({ to: `/admin/batches/${batch.id}` })}
-                  className="group bg-white dark:bg-[#15151f] rounded-xl overflow-hidden flex flex-col h-full transition-all duration-300 relative cursor-pointer border-[3px]"
-                  style={{
-                    borderColor: `${batchColor}50`,
-                    boxShadow: `0 4px 20px -5px ${batchColor}40`,
-                  }}
-                  whileHover={{
-                    y: -5,
-                    borderColor: batchColor,
-                    boxShadow: `0 15px 45px -5px ${batchColor}99, 0 0 20px 0 ${batchColor}60`,
-                  }}
+                  className="group relative bg-white dark:bg-[#15151f] rounded-xl overflow-hidden flex flex-col h-full transition-all duration-300 cursor-pointer shadow-sm border border-transparent hover:shadow-xl hover:-translate-y-1 hover:border-[#6C1D5F]/30"
                 >
-                  <div
-                    className="w-full h-32 shrink-0 overflow-hidden relative flex items-center justify-center"
-                    style={{ backgroundColor: `${batchColor}15` }}
-                  >
-                    <div className="absolute inset-0 opacity-10">
-                      <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ backgroundColor: batchColor }}></div>
-                      <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full" style={{ backgroundColor: batchColor }}></div>
+                  {/* Cover Image or Gradient Header */}
+                  {hasImage ? (
+                    <div className="relative h-32 w-full overflow-hidden">
+                      <img src={batch.icon} alt="" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />
+                      <div className="w-full h-full bg-gradient-to-br from-[#6C1D5F] to-[#01AC9F] items-center justify-center hidden">
+                        <span className="text-4xl">📚</span>
+                      </div>
                     </div>
-                    <div className="relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg" style={{ backgroundColor: batchColor }}>
-                      <GraduationCap className="w-7 h-7" />
+                  ) : (
+                    <div className="h-32 w-full bg-gradient-to-br from-[#6C1D5F]/10 via-[#84117C]/5 to-[#01AC9F]/10 flex items-center justify-center">
+                      <span className="text-4xl">{batch.icon || "📚"}</span>
                     </div>
-                    <div className="absolute top-4 right-4 z-20">
-                      <span className={clsx(
-                        "text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm",
-                        batch.status === "active" ? "bg-[#01AC9F] text-white" : "bg-gray-500 text-white"
-                      )}>
-                        {batch.status === "active" ? "Active" : batch.status || "Draft"}
-                      </span>
-                    </div>
+                  )}
+
+                  {/* Status Badge */}
+                  <div className="absolute top-3 right-3 z-10">
+                    <span className={clsx(
+                      "inline-block px-2 py-0.5 font-bold rounded-md text-[9px] uppercase font-mono shadow-sm",
+                      batch.status === "active"
+                        ? "bg-[#01AC9F]/10 text-[#01AC9F] dark:bg-[#01AC9F] dark:text-white border border-[#01AC9F]/20 dark:border-[#01AC9F]"
+                        : "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
+                    )}>
+                      {batch.status === "active" ? "Active" : batch.status || "Draft"}
+                    </span>
                   </div>
 
-                  <div className="flex-1 flex flex-col cursor-pointer p-6 pt-5 bg-white dark:bg-[#15151f]">
-                    <div className="mb-auto">
-                      <span className="text-base font-bold text-gray-900 dark:text-white group-hover:text-[#6C1D5F] dark:group-hover:text-[#84117C] transition-colors leading-tight block mb-2 line-clamp-2">
-                        {batch.name || batch.batchName || "Untitled Batch"}
+                  <div className="p-4">
+                    <span className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-[#6C1D5F] dark:group-hover:text-[#84117C] transition-colors leading-tight block truncate">
+                      {batch.name || batch.batchName || "Untitled Batch"}
+                    </span>
+                    {batch.course && (
+                      <p className="mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400 truncate">
+                        {batch.course}
+                      </p>
+                    )}
+
+                    <div className="mt-3 flex items-center justify-between text-[10px] text-gray-500 dark:text-gray-400">
+                      <span className="flex items-center gap-1 font-bold">
+                        <Users className="w-3.5 h-3.5 text-[#01AC9F]" /> {batch.students?.length || batch.studentCount || 0} Enrolled
                       </span>
-                      {batch.course && (
-                        <p className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 line-clamp-2 mb-3">
-                          {batch.course}
-                        </p>
+                      {batch.createdByName && (
+                        <span className="flex items-center gap-1 font-semibold">
+                          <BookOpen className="w-3 h-3 text-gray-400" />
+                          {batch.createdByName}
+                        </span>
                       )}
-                    </div>
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-[#2e2e3e] mt-2">
-                      <div className="flex items-center gap-4 text-xs font-semibold text-gray-700 dark:text-gray-300">
-                        <div className="flex items-center gap-1.5">
-                          <Users className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                          <span>{batch.students?.length || batch.studentCount || 0}</span>
-                        </div>
-                        {batch.createdByName && (
-                          <div className="flex items-center gap-1.5">
-                            <BookOpen className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                            <span className="whitespace-nowrap">
-                              {batch.createdByName.length > 10 ? batch.createdByName.substring(0, 10) + "..." : batch.createdByName}
-                            </span>
-                          </div>
-                        )}
-                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -374,8 +364,13 @@ export default function BatchesOverview() {
           </button>
         </div>
         <div className="divide-y divide-gray-100 dark:divide-[#2e2e3e]">
-          {recentAllocations.length > 0 ? (
-            recentAllocations.map((alloc, idx) => (
+          {recentAllocations.length > 0 ? (() => {
+            const trainerMap = {};
+            trainers.forEach((t) => { trainerMap[t.id] = t.name; });
+            const courseMap = {};
+            courses.forEach((c) => { courseMap[c.id] = c.title || c.name; });
+
+            return recentAllocations.map((alloc, idx) => (
               <motion.div
                 key={alloc.id}
                 initial={{ opacity: 0, x: -10 }}
@@ -391,12 +386,12 @@ export default function BatchesOverview() {
                     {alloc.academicSession || "No Session"}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    Trainer ID: {alloc.trainerId?.substring(0, 8)}... | Course ID: {alloc.courseId?.substring(0, 8)}...
+                    {trainerMap[alloc.trainerId] || "Unknown Trainer"} • {courseMap[alloc.courseId] || "Unknown Course"}
                   </p>
                 </div>
                 <span
                   className={clsx(
-                    "text-[10px] font-bold px-2.5 py-1 rounded-md",
+                    "text-[10px] font-bold px-2.5 py-1 rounded-md shrink-0",
                     alloc.status === "active"
                       ? "bg-[#01AC9F]/10 text-[#01AC9F]"
                       : alloc.status === "completed"
@@ -407,8 +402,8 @@ export default function BatchesOverview() {
                   {alloc.status}
                 </span>
               </motion.div>
-            ))
-          ) : (
+            ));
+          })() : (
             <div className="px-6 py-12 text-center">
               <AlertCircle className="w-8 h-8 text-gray-400 mx-auto mb-3" />
               <p className="text-sm text-gray-500 dark:text-gray-400">No allocations yet</p>

@@ -14,6 +14,7 @@ public class Event extends TenantScopedEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
     @Column(nullable = false)

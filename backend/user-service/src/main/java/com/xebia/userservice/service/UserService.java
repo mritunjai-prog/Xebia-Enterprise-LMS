@@ -25,6 +25,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
+    }
+
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
+    }
+
     public BulkResult createUsersBulk(List<User> users) {
         BulkResult result = new BulkResult();
         result.total = users.size();

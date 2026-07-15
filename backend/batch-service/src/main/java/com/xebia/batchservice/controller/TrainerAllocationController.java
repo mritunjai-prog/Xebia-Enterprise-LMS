@@ -50,6 +50,12 @@ public class TrainerAllocationController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/trainer/{trainerId}")
+    public ResponseEntity<Map<String, Object>> deleteAllocationsByTrainer(@PathVariable String trainerId) {
+        int deleted = allocationService.deleteAllocationsByTrainerId(trainerId);
+        return ResponseEntity.ok(Map.of("deleted", deleted));
+    }
+
     @PostMapping("/bulk")
     public List<TrainerAllocation> createBulkAllocations(@RequestBody List<TrainerAllocation> allocations) {
         return allocationService.createBulkAllocations(allocations);

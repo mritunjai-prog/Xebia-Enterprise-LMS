@@ -37,4 +37,16 @@ public class UserController {
         UserService.BulkResult result = userService.createUsersBulk(users);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<?> deleteAllUsers() {
+        userService.deleteAllUsers();
+        return ResponseEntity.ok().body("All users deleted");
+    }
 }

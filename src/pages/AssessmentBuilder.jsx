@@ -27,6 +27,7 @@ export const AssessmentBuilder = () => {
   const {
     assessments,
     batches,
+    currentUser,
     createAssessment,
     editAssessment,
     deleteAssessment,
@@ -376,7 +377,7 @@ export const AssessmentBuilder = () => {
         if (id && (id.startsWith("Q-") || id.startsWith("q_"))) return q;
         return { id, ...q };
       }),
-      createdBy: "T1", // fallback trainer
+      createdBy: currentUser?.id || "T1",
     };
 
     if (activeTab === "create") {

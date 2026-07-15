@@ -17,6 +17,10 @@ public class BatchService {
         return batchRepository.findAll();
     }
 
+    public Optional<Batch> getBatchById(String id) {
+        return batchRepository.findById(id);
+    }
+
     public Batch createBatch(Batch batch) {
         return batchRepository.save(batch);
     }
@@ -28,25 +32,16 @@ public class BatchService {
             if (updated.getName() != null) batch.setName(updated.getName());
             if (updated.getCourse() != null) batch.setCourse(updated.getCourse());
             if (updated.getStatus() != null) batch.setStatus(updated.getStatus());
-            if (updated.getStudents() != null) batch.setStudents(updated.getStudents());
             if (updated.getStudentCount() != null) batch.setStudentCount(updated.getStudentCount());
             if (updated.getIcon() != null) batch.setIcon(updated.getIcon());
-            if (updated.getTrainerId() != null) batch.setTrainerId(updated.getTrainerId());
-            if (updated.getCourseId() != null) batch.setCourseId(updated.getCourseId());
-            if (updated.getAcademicSession() != null) batch.setAcademicSession(updated.getAcademicSession());
-            if (updated.getStartDate() != null) batch.setStartDate(updated.getStartDate());
-            if (updated.getEndDate() != null) batch.setEndDate(updated.getEndDate());
-            if (updated.getMaxStudents() != null) batch.setMaxStudents(updated.getMaxStudents());
-            if (updated.getCreatedBy() != null) batch.setCreatedBy(updated.getCreatedBy());
-            if (updated.getCreatedByName() != null) batch.setCreatedByName(updated.getCreatedByName());
+            if (updated.getStudents() != null) batch.setStudents(updated.getStudents());
             return batchRepository.save(batch);
         }
         return batchRepository.save(updated);
     }
 
     public void updateBatchFields(String batchId, String trainerId, String courseId,
-                                   String academicSession,
-                                   String startDate, String endDate) {
+                                   String academicSession, String startDate, String endDate) {
         Optional<Batch> existing = batchRepository.findById(batchId);
         if (existing.isPresent()) {
             Batch batch = existing.get();
@@ -61,5 +56,42 @@ public class BatchService {
 
     public void deleteBatch(String id) {
         batchRepository.deleteById(id);
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public int deleteBatchesByCreatedBy(String createdBy) {
+        java.util.List<Batch> batches = batchRepository.findByCreatedBy(createdBy);
+        int count = batches.size();
+        batchRepository.deleteByCreatedBy(createdBy);
+        return count;
+    }
+
+    public Batch addStudentToBatch(String batchId, String studentId) {
+        Optional<Batch> existing = batchRepository.findById(batchId);
+        if (existing.isPresent()) {
+            Batch batch = existing.get();
+            if (batch.getStudents() == null) {
+                batch.setStudents(new java.util.ArrayList<>());
+            }
+            if (!batch.getStudents().contains(studentId)) {
+                batch.getStudents().add(studentId);
+                batch.setStudentCount(batch.getStudents().size());
+                return batchRepository.save(batch);
+            }
+        }
+        return existing.orElse(null);
+    }
+
+    public Batch removeStudentFromBatch(String batchId, String studentId) {
+        Optional<Batch> existing = batchRepository.findById(batchId);
+        if (existing.isPresent()) {
+            Batch batch = existing.get();
+            if (batch.getStudents() != null && batch.getStudents().contains(studentId)) {
+                batch.getStudents().remove(studentId);
+                batch.setStudentCount(batch.getStudents().size());
+                return batchRepository.save(batch);
+            }
+        }
+        return existing.orElse(null);
     }
 }

@@ -12,6 +12,9 @@ public class AssessmentService {
     @Autowired
     private AssessmentRepository assessmentRepository;
 
+    @Autowired
+    private com.xebia.assessmentservice.repository.SubmissionRepository submissionRepository;
+
     public List<Assessment> getAllAssessments() {
         return assessmentRepository.findAll();
     }
@@ -86,5 +89,19 @@ public class AssessmentService {
 
     public void deleteAssessment(String id) {
         assessmentRepository.deleteById(id);
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public java.util.Map<String, Integer> deleteAssessmentsByCreatedBy(String createdBy) {
+        java.util.List<Assessment> assessments = assessmentRepository.findByCreatedBy(createdBy);
+        int assessmentCount = assessments.size();
+        int submissionCount = 0;
+        for (Assessment a : assessments) {
+            java.util.List<com.xebia.assessmentservice.model.Submission> subs = submissionRepository.findByAssessmentId(a.getId());
+            submissionCount += subs.size();
+            submissionRepository.deleteAll(subs);
+        }
+        assessmentRepository.deleteAll(assessments);
+        return java.util.Map.of("assessments", assessmentCount, "submissions", submissionCount);
     }
 }

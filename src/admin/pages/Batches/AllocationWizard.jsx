@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Users, BookOpen, GraduationCap, CheckCircle, ArrowRight, ArrowLeft,
-  Search, Sparkles, User,
+  Search, Sparkles, User, Bookmark, Clock, MapPin,
 } from "lucide-react";
 import { AllocationService, UserService, BatchService, CourseService } from "@/services/api";
+import { DateTimePicker } from "@/components/ui/DateTimePicker";
 import { useRouter } from "@tanstack/react-router";
 import { clsx } from "clsx";
 
@@ -61,6 +62,9 @@ export default function AllocationWizard() {
   };
 
   const filteredBatches = batches.filter((b) => {
+    // Only show batches that have a valid creator still in the system
+    if (!b.createdBy || b.createdBy.trim() === "") return false;
+    if (!trainers.find((t) => t.id === b.createdBy)) return false;
     if (search) return (b.name || "").toLowerCase().includes(search.toLowerCase());
     return true;
   });
@@ -80,6 +84,13 @@ export default function AllocationWizard() {
     ? trainers.find((t) => t.id === selectedBatch.createdBy) || null
     : null;
 
+  // Auto-select batch creator when entering Step 2
+  useEffect(() => {
+    if (currentStep === 2 && batchCreatorTrainer && !selectedTrainer) {
+      setSelectedTrainer(batchCreatorTrainer);
+    }
+  }, [currentStep, batchCreatorTrainer]);
+
   const toggleCourseSelection = (course) => {
     setSelectedCourses((prev) => {
       const exists = prev.find((c) => c.id === course.id);
@@ -91,7 +102,7 @@ export default function AllocationWizard() {
   const canProceed = () => {
     switch (currentStep) {
       case 1: return !!selectedBatch;
-      case 2: return !!selectedTrainer;
+      case 2: return !!selectedTrainer && !!batchCreatorTrainer;
       case 3: return selectedCourses.length > 0;
       case 4: return !!academicSession;
       default: return false;
@@ -114,6 +125,23 @@ export default function AllocationWizard() {
       }));
 
       await AllocationService.createBulkAllocations(allocations);
+
+      // Send notification to the trainer
+      try {
+        const courseNames = selectedCourses.map((c) => c.title).join(", ");
+        const notifications = JSON.parse(localStorage.getItem("notifications") || "[]");
+        notifications.unshift({
+          id: `NOTIF-${Date.now()}`,
+          title: "Course Allocated",
+          message: `Admin has allocated course${selectedCourses.length > 1 ? "s" : ""} "${courseNames}" to batch "${selectedBatch.name}". You can now create assessments for this batch.`,
+          type: "allocation",
+          createdAt: new Date().toISOString(),
+          isRead: false,
+          recipientId: selectedTrainer.id,
+        });
+        localStorage.setItem("notifications", JSON.stringify(notifications));
+      } catch (e) { /* notification is best-effort */ }
+
       router.navigate({ to: "/admin/batches/allocations" });
     } catch (err) {
       console.error("Failed to create allocations:", err);
@@ -215,35 +243,64 @@ export default function AllocationWizard() {
                 Select a batch created by a trainer in the trainer portal.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredBatches.length > 0 ? filteredBatches.map((batch) => (
+                {filteredBatches.length > 0 ? filteredBatches.map((batch) => {
+                  const isSelected = selectedBatch?.id === batch.id;
+                  const hasImage = batch.icon && (batch.icon.startsWith("data:image") || batch.icon.startsWith("http"));
+                  return (
                   <button
                     key={batch.id}
                     onClick={() => setSelectedBatch(batch)}
                     className={clsx(
-                      "p-5 rounded-xl border-2 text-left transition-all hover:shadow-md",
-                      selectedBatch?.id === batch.id
-                        ? "border-[#6C1D5F] bg-[#6C1D5F]/5 shadow-[0_0_20px_rgba(108,29,95,0.15)]"
-                        : "border-gray-200 dark:border-[#2e2e3e] hover:border-[#6C1D5F]/50"
+                      "relative rounded-xl overflow-hidden flex flex-col text-left transition-all duration-300",
+                      isSelected
+                        ? "ring-2 ring-[#6C1D5F] shadow-[0_0_20px_rgba(108,29,95,0.15)]"
+                        : "shadow-sm hover:shadow-xl hover:-translate-y-1"
                     )}
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="text-2xl mt-1">{batch.icon || "📚"}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{batch.name}</p>
-                        <p className="text-xs text-gray-500 truncate">{batch.course || "No course focus"}</p>
-                        <div className="flex items-center gap-2 mt-2">
-                          {batch.createdByName && (
-                            <span className="inline-flex items-center gap-1 text-xs text-[#6C1D5F] bg-[#6C1D5F]/10 px-2 py-0.5 rounded-full">
-                              <User className="w-3 h-3" />
-                              {batch.createdByName}
-                            </span>
-                          )}
-                          <span className="text-xs text-gray-400">{batch.studentCount || 0} students</span>
+                    {/* Cover Image or Gradient Header */}
+                    {hasImage ? (
+                      <div className="relative h-32 w-full overflow-hidden">
+                        <img src={batch.icon} alt="" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />
+                        <div className="w-full h-full bg-gradient-to-br from-[#6C1D5F] to-[#01AC9F] items-center justify-center hidden">
+                          <span className="text-4xl">📚</span>
                         </div>
                       </div>
+                    ) : (
+                      <div className="h-32 w-full bg-gradient-to-br from-[#6C1D5F]/10 via-[#84117C]/5 to-[#01AC9F]/10 flex items-center justify-center">
+                        <span className="text-4xl">{batch.icon || "📚"}</span>
+                      </div>
+                    )}
+
+                    {/* Status Badge */}
+                    <div className="absolute top-3 right-3 z-10">
+                      <span className="inline-block px-2 py-0.5 font-bold rounded-md text-[9px] uppercase font-mono shadow-sm bg-[#01AC9F]/10 text-[#01AC9F] dark:bg-[#01AC9F] dark:text-white border border-[#01AC9F]/20 dark:border-[#01AC9F]">
+                        {batch.status}
+                      </span>
                     </div>
+
+                    <div className="p-4 bg-white dark:bg-[#15151f]">
+                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{batch.name}</p>
+                      <p className="mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400 truncate">{batch.course || "No course focus"}</p>
+
+                      <div className="mt-3 flex items-center justify-between text-[10px] text-gray-500 dark:text-gray-400">
+                        <span className="flex items-center gap-1 font-bold">
+                          <Users className="w-3.5 h-3.5 text-[#01AC9F]" /> {batch.studentCount || 0} Enrolled
+                        </span>
+                        {batch.createdByName && (
+                          <span className="flex items-center gap-1 font-semibold text-[#6C1D5F]">
+                            <User className="w-3 h-3" />
+                            {batch.createdByName}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {isSelected && (
+                      <div className="absolute inset-0 border-2 border-[#6C1D5F] rounded-xl pointer-events-none" />
+                    )}
                   </button>
-                )) : (
+                  );
+                }) : (
                   <div className="col-span-full text-center py-12 text-gray-400">
                     <BookOpen className="w-8 h-8 mx-auto mb-3" />
                     <p>No batches found</p>
@@ -253,107 +310,131 @@ export default function AllocationWizard() {
             </div>
           )}
 
-          {/* Step 2: Select Trainer */}
+          {/* Step 2: Select Trainer — Only batch creator allowed */}
           {currentStep === 2 && (
             <div className="space-y-4">
               {batchCreatorTrainer ? (
-                <div className="bg-[#01AC9F]/5 border border-[#01AC9F]/20 rounded-xl p-4">
-                  <p className="text-sm font-bold text-[#01AC9F] mb-1">Batch Creator</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    This batch was created by <span className="font-bold text-gray-900 dark:text-white">{batchCreatorTrainer.name}</span>.
-                    You can confirm this selection or choose a different trainer below.
+                <>
+                  <div className="bg-[#01AC9F]/5 border border-[#01AC9F]/20 rounded-xl p-4">
+                    <p className="text-sm font-bold text-[#01AC9F] mb-1">Batch Creator</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Only the batch creator can be allocated to this batch. This batch was created by{" "}
+                      <span className="font-bold text-gray-900 dark:text-white">{batchCreatorTrainer.name}</span>.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button
+                      key={batchCreatorTrainer.id}
+                      onClick={() => setSelectedTrainer(batchCreatorTrainer)}
+                      className={clsx(
+                        "p-5 rounded-xl border-2 text-left transition-all hover:shadow-md",
+                        selectedTrainer?.id === batchCreatorTrainer.id
+                          ? "border-[#01AC9F] bg-[#01AC9F]/5 shadow-[0_0_20px_rgba(1,172,159,0.15)]"
+                          : "border-[#01AC9F]/30 hover:border-[#01AC9F]/50"
+                      )}
+                    >
+                      <div className="flex items-center gap-3">
+                        {batchCreatorTrainer.avatar ? (
+                          <img src={batchCreatorTrainer.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-[#01AC9F]/20 flex items-center justify-center text-[#01AC9F] font-bold text-sm">
+                            {batchCreatorTrainer.name?.charAt(0) || "?"}
+                          </div>
+                        )}
+                        <div>
+                          <p className="text-sm font-bold text-gray-900 dark:text-white">{batchCreatorTrainer.name}</p>
+                          <p className="text-xs text-gray-500">{batchCreatorTrainer.email}</p>
+                          <p className="text-xs text-[#01AC9F] font-bold mt-0.5">Batch Creator</p>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-12">
+                  <Users className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                  <p className="text-sm font-bold text-gray-500 dark:text-gray-400">No batch creator found</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    This batch has no registered creator. Please go back and recreate the batch from the trainer portal.
                   </p>
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Select a trainer to assign to this batch.
-                </p>
               )}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Auto-detected batch creator first */}
-                {batchCreatorTrainer && (
-                  <button
-                    key={batchCreatorTrainer.id}
-                    onClick={() => setSelectedTrainer(batchCreatorTrainer)}
-                    className={clsx(
-                      "p-5 rounded-xl border-2 text-left transition-all hover:shadow-md",
-                      selectedTrainer?.id === batchCreatorTrainer.id
-                        ? "border-[#01AC9F] bg-[#01AC9F]/5 shadow-[0_0_20px_rgba(1,172,159,0.15)]"
-                        : "border-[#01AC9F]/30 hover:border-[#01AC9F]/50"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#01AC9F]/20 flex items-center justify-center text-[#01AC9F] font-bold text-sm">
-                        {batchCreatorTrainer.name?.charAt(0) || "?"}
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-gray-900 dark:text-white">{batchCreatorTrainer.name}</p>
-                        <p className="text-xs text-gray-500">{batchCreatorTrainer.email}</p>
-                        <p className="text-xs text-[#01AC9F] font-bold mt-0.5">Batch Creator</p>
-                      </div>
-                    </div>
-                  </button>
-                )}
-                {/* Other trainers */}
-                {filteredTrainers.filter((t) => !batchCreatorTrainer || t.id !== batchCreatorTrainer.id).map((trainer) => (
-                  <button
-                    key={trainer.id}
-                    onClick={() => setSelectedTrainer(trainer)}
-                    className={clsx(
-                      "p-5 rounded-xl border-2 text-left transition-all hover:shadow-md",
-                      selectedTrainer?.id === trainer.id
-                        ? "border-[#6C1D5F] bg-[#6C1D5F]/5 shadow-[0_0_20px_rgba(108,29,95,0.15)]"
-                        : "border-gray-200 dark:border-[#2e2e3e] hover:border-[#6C1D5F]/50"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#6C1D5F]/10 flex items-center justify-center text-[#6C1D5F] font-bold text-sm">
-                        {trainer.name?.charAt(0) || "?"}
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-gray-900 dark:text-white">{trainer.name}</p>
-                        <p className="text-xs text-gray-500">{trainer.email}</p>
-                        <p className="text-xs text-gray-400">{trainer.department || "No department"}</p>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-                {filteredTrainers.length === 0 && (
-                  <div className="col-span-full text-center py-12 text-gray-400">
-                    <Users className="w-8 h-8 mx-auto mb-3" />
-                    <p>No trainers found</p>
-                  </div>
-                )}
-              </div>
             </div>
           )}
 
           {/* Step 3: Select Course */}
           {currentStep === 3 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredCourses.length > 0 ? filteredCourses.map((course) => {
+              {filteredCourses.length > 0 ? filteredCourses.map((course, idx) => {
                 const isSelected = selectedCourses.find((c) => c.id === course.id);
+                const thumb = course.thumbnailImageUrl || course.thumbnail || course.icon;
+                const level = course.difficultyLevel || "Beginner";
+                const levelColor = level === "Beginner" ? "#01AC9F" : level === "Intermediate" ? "#84117C" : "#FF6200";
                 return (
-                  <button
+                  <motion.div
                     key={course.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: idx * 0.03 }}
+                    whileHover={{ y: -4, boxShadow: "0 12px 30px -8px rgba(0,0,0,0.15)" }}
                     onClick={() => toggleCourseSelection(course)}
                     className={clsx(
-                      "p-5 rounded-xl border-2 text-left transition-all hover:shadow-md",
+                      "group rounded-2xl flex flex-col h-full overflow-hidden cursor-pointer transition-all duration-300 border-[3px]",
                       isSelected
-                        ? "border-[#01AC9F] bg-[#01AC9F]/5 shadow-[0_0_20px_rgba(1,172,159,0.15)]"
-                        : "border-gray-200 dark:border-[#2e2e3e] hover:border-[#01AC9F]/50"
+                        ? "border-[#01AC9F] bg-white dark:bg-[#15151f] shadow-[0_0_20px_rgba(1,172,159,0.2)]"
+                        : "border-gray-100 dark:border-[#2e2e3e] bg-white dark:bg-[#15151f] hover:border-[#01AC9F]/40"
                     )}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className={clsx("w-6 h-6 rounded-md border-2 flex items-center justify-center shrink-0 mt-0.5", isSelected ? "border-[#01AC9F] bg-[#01AC9F] text-white" : "border-gray-300 dark:border-gray-600")}>
-                        {isSelected && <CheckCircle className="w-4 h-4" />}
+                    {/* Thumbnail */}
+                    <div className="relative h-32 bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0">
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-500 z-0">
+                        <span className="text-4xl font-bold opacity-20 uppercase tracking-wider">
+                          {course.title ? course.title.substring(0, 2) : "CO"}
+                        </span>
                       </div>
-                      <div>
-                        <p className="text-sm font-bold text-gray-900 dark:text-white">{course.title}</p>
-                        <p className="text-xs text-gray-500">{course.difficultyLevel || "Beginner"} · {course.language || "English"}</p>
+                      {thumb && (
+                        <img
+                          src={thumb}
+                          alt={course.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10"
+                          onError={(e) => { e.target.style.display = "none"; }}
+                        />
+                      )}
+                      {/* Selected checkmark */}
+                      {isSelected && (
+                        <div className="absolute top-3 right-3 z-20">
+                          <div className="w-7 h-7 rounded-full bg-[#01AC9F] flex items-center justify-center shadow-lg">
+                            <CheckCircle className="w-4 h-4 text-white" />
+                          </div>
+                        </div>
+                      )}
+                      {/* Level badge */}
+                      <div className="absolute top-3 left-3 z-20">
+                        <span className="text-[10px] font-bold px-2 py-1 rounded-md shadow-sm text-white" style={{ background: levelColor }}>
+                          {level}
+                        </span>
                       </div>
                     </div>
-                  </button>
+                    {/* Body */}
+                    <div className="p-4 flex-1 flex flex-col">
+                      <p className="text-sm font-bold text-gray-900 dark:text-white leading-tight line-clamp-2 mb-1 group-hover:text-[#6C1D5F] dark:group-hover:text-[#84117C] transition-colors">
+                        {course.title}
+                      </p>
+                      <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2 mb-2">
+                        {course.description || course.subtitle || "No description"}
+                      </p>
+                      <div className="mt-auto flex items-center justify-between pt-2 border-t border-gray-100 dark:border-[#2e2e3e]">
+                        <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400">
+                          {course.language || "English"}
+                        </span>
+                        {course.durationHours && (
+                          <span className="text-[10px] font-bold text-gray-500 flex items-center gap-1">
+                            <Clock className="w-3 h-3" /> {course.durationHours}h
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
                 );
               }) : (
                 <div className="col-span-full text-center py-12 text-gray-400">
@@ -366,69 +447,77 @@ export default function AllocationWizard() {
 
           {/* Step 4: Review */}
           {currentStep === 4 && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Allocation Summary + Schedule side by side */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Left: Allocation Summary */}
-                <div>
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Allocation Summary</h3>
-                  <div className="bg-gray-50 dark:bg-[#1a1a24] rounded-xl p-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-gray-500 w-20 shrink-0">Batch</span>
-                        <span className="text-sm font-bold text-gray-900 dark:text-white">{selectedBatch?.name}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-gray-500 w-20 shrink-0">Trainer</span>
-                        <span className="text-sm font-bold text-gray-900 dark:text-white">{selectedTrainer?.name}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-gray-500 w-20 shrink-0">Courses</span>
-                        <span className="text-sm font-bold text-[#01AC9F]">{selectedCourses.length} selected</span>
-                      </div>
+                <div className="bg-gray-50 dark:bg-[#1a1a24] rounded-xl p-4">
+                  <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Allocation Summary</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-gray-500 w-16 shrink-0">Batch</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">{selectedBatch?.name}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-gray-500 w-16 shrink-0">Trainer</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">{selectedTrainer?.name}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-gray-500 w-16 shrink-0">Courses</span>
+                      <span className="text-sm font-bold text-[#01AC9F]">{selectedCourses.length} selected</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Right: Schedule */}
-                <div>
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Schedule</h3>
-                  <div className="space-y-3">
+                <div className="bg-gray-50 dark:bg-[#1a1a24] rounded-xl p-4">
+                  <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Schedule</h3>
+                  <div className="space-y-2.5">
                     <div>
-                      <label className="text-xs font-bold text-gray-500 mb-1 block">Academic Session *</label>
-                      <input type="text" value={academicSession} onChange={(e) => setAcademicSession(e.target.value)} placeholder="e.g., 2023-2027" className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2e2e3e] rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F]" />
+                      <label className="text-[10px] font-bold text-gray-500 mb-1 block">Academic Session *</label>
+                      <input type="text" value={academicSession} onChange={(e) => setAcademicSession(e.target.value)} placeholder="e.g., 2023-2027" className="w-full px-3 py-2 bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F]" />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="text-xs font-bold text-gray-500 mb-1 block">Start Date</label>
-                        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2e2e3e] rounded-xl text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F]" />
+                        <label className="text-[10px] font-bold text-gray-500 mb-1 block">Start Date</label>
+                        <DateTimePicker type="date" value={startDate} onChange={setStartDate} />
                       </div>
                       <div>
-                        <label className="text-xs font-bold text-gray-500 mb-1 block">End Date</label>
-                        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2e2e3e] rounded-xl text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F]" />
+                        <label className="text-[10px] font-bold text-gray-500 mb-1 block">End Date</label>
+                        <DateTimePicker type="date" value={endDate} onChange={setEndDate} />
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-gray-500 mb-1 block">Notes</label>
-                      <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional notes..." rows={2} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2e2e3e] rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] resize-none" />
+                      <label className="text-[10px] font-bold text-gray-500 mb-1 block">Notes</label>
+                      <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional notes..." rows={2} className="w-full px-3 py-2 bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#6C1D5F]/20 focus:border-[#6C1D5F] resize-none" />
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Selected Courses List */}
-              <div>
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Selected Courses</h3>
+              <div className="bg-gray-50 dark:bg-[#1a1a24] rounded-xl p-4">
+                <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Selected Courses</h3>
                 <div className="space-y-2">
-                  {selectedCourses.map((course) => (
-                    <div key={course.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-[#1a1a24] rounded-xl">
-                      <div className="flex items-center gap-3">
-                        <GraduationCap className="w-4 h-4 text-[#01AC9F]" />
-                        <span className="text-sm font-bold text-gray-900 dark:text-white">{course.title}</span>
+                  {selectedCourses.map((course) => {
+                    const thumb = course.thumbnailImageUrl || course.thumbnail || course.icon;
+                    return (
+                      <div key={course.id} className="flex items-center gap-3 p-3 bg-white dark:bg-[#15151f] rounded-xl border border-gray-100 dark:border-[#2e2e3e]">
+                        {thumb ? (
+                          <img src={thumb} alt={course.title} className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-[#6C1D5F]/10 flex items-center justify-center shrink-0">
+                            <GraduationCap className="w-5 h-5 text-[#6C1D5F]" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{course.title}</p>
+                          <p className="text-[10px] text-gray-500">{course.difficultyLevel || "Beginner"} · {course.language || "English"}</p>
+                        </div>
+                        <button onClick={() => toggleCourseSelection(course)} className="text-xs font-bold text-red-500 hover:text-red-700 px-2 py-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Remove</button>
                       </div>
-                      <button onClick={() => toggleCourseSelection(course)} className="text-xs text-red-500 hover:underline">Remove</button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>

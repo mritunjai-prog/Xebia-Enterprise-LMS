@@ -10,12 +10,42 @@ import {
 const LMSContext = createContext(undefined);
 
 export const LMSProvider = ({ children }) => {
-  // Initialize States from Backend API
-  const [teachers, setTeachers] = useState([]);
-  const [batches, setBatches] = useState([]);
-  const [students, setStudents] = useState([]);
-  const [assessments, setAssessments] = useState([]);
-  const [submissions, setSubmissions] = useState([]);
+  // Initialize States from Backend API (with localStorage cache for instant login page)
+  const [teachers, setTeachers] = useState(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem("lms_teachers");
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  });
+  const [batches, setBatches] = useState(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem("lms_batches");
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  });
+  const [students, setStudents] = useState(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem("lms_students");
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  });
+  const [assessments, setAssessments] = useState(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem("lms_assessments");
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  });
+  const [submissions, setSubmissions] = useState(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem("lms_submissions");
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  });
 
   // Local coding states
   const [codingSubmissions, setCodingSubmissions] = useState(() => {
@@ -52,9 +82,18 @@ export const LMSProvider = ({ children }) => {
           return u;
         });
 
-        setTeachers(enrichedUsers.filter((u) => u.role === "teacher"));
-        setStudents(enrichedUsers.filter((u) => u.role === "student"));
+        const teacherList = enrichedUsers.filter((u) => u.role === "teacher");
+        const studentList = enrichedUsers.filter((u) => u.role === "student");
+        setTeachers(teacherList);
+        setStudents(studentList);
         setBatches(b);
+
+        // Cache to localStorage for instant login page load
+        try {
+          localStorage.setItem("lms_teachers", JSON.stringify(teacherList));
+          localStorage.setItem("lms_students", JSON.stringify(studentList));
+          localStorage.setItem("lms_batches", JSON.stringify(b));
+        } catch (e) { /* quota exceeded is fine */ }
 
         setCurrentUser((prev) => {
           if (!prev) return prev;
@@ -70,11 +109,15 @@ export const LMSProvider = ({ children }) => {
         let s = await SubmissionService.getSubmissions();
         if (!Array.isArray(s)) s = [];
         setSubmissions((current) => {
-          // Preserve any in_progress submissions created locally before fetch completed
           const localInProgress = current.filter(
             (sub) => sub.status === "in_progress" && !s.some((fetched) => fetched.id === sub.id),
           );
-          return [...s, ...localInProgress];
+          const merged = [...s, ...localInProgress];
+          try {
+            localStorage.setItem("lms_assessments", JSON.stringify(a));
+            localStorage.setItem("lms_submissions", JSON.stringify(merged));
+          } catch (e) { /* quota exceeded is fine */ }
+          return merged;
         });
       } catch (err) {
         console.error("Backend connection failed.", err);
@@ -263,7 +306,7 @@ export const LMSProvider = ({ children }) => {
   };
 
   // Batch Operations
-  const createBatch = async (name, course, icon = "📦", status = "active", courseId = null) => {
+  const createBatch = async (name, course, icon = "📦", status = "active", courseId = null, studentIds = []) => {
     // Check for duplicates
     if (batches.some((b) => b.name.toLowerCase() === name.toLowerCase())) {
       throw new Error(`A batch with the name "${name}" already exists.`);
@@ -273,8 +316,8 @@ export const LMSProvider = ({ children }) => {
       name,
       course,
       icon,
-      studentCount: 0,
-      students: [],
+      studentCount: studentIds.length,
+      students: studentIds,
       status,
       createdAt: new Date().toISOString().split("T")[0],
       createdBy: currentUser?.id || null,
@@ -856,6 +899,7 @@ export const LMSProvider = ({ children }) => {
         assessments,
         submissions,
         notifications,
+        setNotifications,
         currentUser,
         theme,
         login,

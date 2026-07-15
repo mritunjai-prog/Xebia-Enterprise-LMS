@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  CalendarDays, MapPin, Clock, Users, Search, Eye, X, Globe, Building2, Sparkles, Timer,
+  CalendarDays, MapPin, Clock, Users, Search, Eye, X, Globe, Building2, Sparkles, Timer, ArrowRight,
 } from "lucide-react";
 import { EventService } from "@/services/api";
 import { clsx } from "clsx";

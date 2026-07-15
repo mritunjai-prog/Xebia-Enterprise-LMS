@@ -17,38 +17,31 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
 } from "recharts";
+import { motion } from "framer-motion";
 
 export const StudentDashboard = () => {
-  const { currentUser, assessments, submissions, getLeaderboard } = useLMS();
+  const { currentUser, assessments, submissions, batches, getLeaderboard } = useLMS();
   const navigate = useNavigate();
 
   if (!currentUser) return null;
 
-  // Filter assessments and submissions assigned to student's batches
   const studentBatchIds = currentUser.batches || [];
 
-  // Assessments matching student's batch
   const assignedAssessments = assessments.filter(
-    (a) => a.status === "published" && a.batches.some((bId) => studentBatchIds.includes(bId)),
+    (a) => a.status === "published" && (a.batches || []).some((bId) => studentBatchIds.includes(bId)),
   );
 
-  // Completed / Submitted submissions by student
   const studentSubmissions = submissions.filter((s) => s.studentId === currentUser.id);
 
-  // Leaderboard ranking of this student
   const leaderboard = getLeaderboard();
   const rankObj = leaderboard.find((entry) => entry.studentId === currentUser.id);
   const currentRank = rankObj ? rankObj.rank : leaderboard.length;
 
-  // Split assessments into lists
   const nowStr = new Date().toISOString().split("T")[0];
 
   const activeAssessments = assignedAssessments.filter((a) => {
-    const isCompleted = studentSubmissions.some(
-      (s) => s.assessmentId === a.id && s.status === "submitted",
-    );
+    const isCompleted = studentSubmissions.some((s) => s.assessmentId === a.id && s.status === "submitted");
     return a.startDate <= nowStr && a.endDate >= nowStr && !isCompleted;
   });
 
@@ -58,7 +51,6 @@ export const StudentDashboard = () => {
     studentSubmissions.some((s) => s.assessmentId === a.id && s.status === "submitted"),
   );
 
-  // Recharts score path
   const completedSubsWithAssessments = studentSubmissions
     .filter((s) => s.status === "submitted" && s.isEvaluated)
     .map((s) => {
@@ -70,7 +62,6 @@ export const StudentDashboard = () => {
       };
     });
 
-  // Recent scores
   const recentScores = studentSubmissions
     .filter((s) => s.status === "submitted")
     .slice(0, 3)
@@ -90,11 +81,8 @@ export const StudentDashboard = () => {
     const as = assessments.find((x) => x.id === aId);
     if (!as) return;
     const slug = as.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "assessment";
-    if (as.type === "coding") {
-      navigate({ to: `/student/take-coding/${slug}` });
-    } else {
-      navigate({ to: `/student/take/${slug}` });
-    }
+    if (as.type === "coding") navigate({ to: `/student/take-coding/${slug}` });
+    else navigate({ to: `/student/take/${slug}` });
   };
 
   const handleViewResult = (sId) => {
@@ -105,157 +93,110 @@ export const StudentDashboard = () => {
     navigate({ to: `/student/results/${slug}/${sId}` });
   };
 
-  return (
-    <div className="space-y-6">
-      {/* Student Welcome Card */}
-      <div className="bg-gradient-to-r from-[#4A1E47] via-[#6C1D5F] to-[#84117C] text-white p-6 md:p-8 rounded-3xl shadow-xl dark:shadow-purple-900/20 border border-white/10 dark:border-white/5 relative overflow-hidden flex flex-col justify-center min-h-[160px]">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-emerald-400/20 rounded-full blur-3xl -mb-20 pointer-events-none" />
+  // Animation variants
+  const container = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.06 } } };
+  const item = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
 
-        <div className="relative z-10 space-y-1.5 max-w-3xl">
-          <h2 className="font-display font-black text-2xl md:text-4xl tracking-tight text-white flex items-center gap-3 drop-shadow-md">
+  const kpis = [
+    { label: "Active Exams", value: activeAssessments.length, suffix: "Available", icon: ClipboardList, bg: "bg-[#01AC9F]/10", color: "text-[#01AC9F]" },
+    { label: "Upcoming", value: upcomingAssessments.length, suffix: "scheduled", icon: CalendarIcon, bg: "bg-blue-500/10", color: "text-blue-500" },
+    { label: "Leaderboard Rank", value: currentRank || "—", suffix: "Overall", icon: Trophy, bg: "bg-[#6C1D5F]/10", color: "text-[#6C1D5F]" },
+    { label: "Graded", value: completedAssessments.length, suffix: "submitted", icon: TrendingUp, bg: "bg-emerald-500/10", color: "text-emerald-500" },
+  ];
+
+  const myBatches = batches.filter((b) => studentBatchIds.includes(b.id));
+
+  return (
+    <div className="space-y-6 pb-6">
+      {/* Welcome Card */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#4A1E47] via-[#6C1D5F] to-[#84117C] p-6 sm:p-8 text-white shadow-lg"
+      >
+        <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-black/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="relative z-10 max-w-2xl">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Hi, {currentUser.name}!
           </h2>
-          <p className="text-purple-100/90 text-xs md:text-sm leading-relaxed font-medium mt-2">
-            Ready for your exams? Below is a list of your assigned modules. Review the countdown
-            timers, complete MCQs, upload required code archives, and review your performance
-            instantly.
+          <p className="mt-2 text-white/80 text-sm font-medium leading-relaxed">
+            {activeAssessments.length > 0
+              ? `You have ${activeAssessments.length} active assessment${activeAssessments.length !== 1 ? "s" : ""} waiting for you.`
+              : "No active assessments right now. Check back later!"}
           </p>
         </div>
-      </div>
+      </motion.div>
 
-      {/* KPI Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* KPI 1 */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-700/60 shadow-sm p-4 md:p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div className="p-3 bg-[#01AC9F]/10 dark:bg-emerald-950/20 text-[#01AC9F] rounded-2xl shrink-0">
-            <ClipboardList className="w-5 h-5" />
-          </div>
-          <div>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-300 font-bold uppercase tracking-wider">
-              Active Exams
-            </p>
-            <h4 className="text-2xl font-display font-extrabold text-neutral-800 dark:text-white mt-0.5 flex items-baseline gap-1.5">
-              {activeAssessments.length}{" "}
-              <span className="text-xs font-semibold text-neutral-400">Available</span>
-            </h4>
-          </div>
-        </div>
+      {/* KPI Cards */}
+      <motion.div variants={container} initial="hidden" animate="visible" className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {kpis.map((kpi) => (
+          <motion.div
+            key={kpi.label}
+            variants={item}
+            className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{kpi.label}</p>
+                <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-1">{kpi.value}</h3>
+              </div>
+              <div className={`p-2.5 rounded-xl ${kpi.bg}`}>
+                <kpi.icon className={`w-5 h-5 ${kpi.color}`} />
+              </div>
+            </div>
+            <p className="text-[10px] font-medium text-gray-400 dark:text-gray-500">{kpi.suffix}</p>
+          </motion.div>
+        ))}
+      </motion.div>
 
-        {/* KPI 2 */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-700/60 shadow-sm p-4 md:p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl shrink-0">
-            <CalendarIcon className="w-5 h-5" />
+      {/* Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        {/* Assessments */}
+        <div className="lg:col-span-3">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-sm font-bold text-gray-900 dark:text-white">Available Assessments</h3>
+            {activeAssessments.length > 0 && (
+              <span className="text-[10px] bg-[#FF6200]/10 text-[#FF6200] font-bold px-2 py-0.5 rounded-full">
+                {activeAssessments.length} Pending
+              </span>
+            )}
           </div>
-          <div>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-300 font-bold uppercase tracking-wider">
-              Upcoming
-            </p>
-            <h4 className="text-2xl font-display font-extrabold text-neutral-800 dark:text-white mt-0.5 flex items-baseline gap-1.5">
-              {upcomingAssessments.length}{" "}
-              <span className="text-xs font-semibold text-neutral-400">scheduled</span>
-            </h4>
-          </div>
-        </div>
-
-        {/* KPI 3 */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-700/60 shadow-sm p-4 md:p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div className="p-3 bg-purple-500/10 text-brand-velvet rounded-2xl shrink-0">
-            <Trophy className="w-5 h-5" />
-          </div>
-          <div>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-300 font-bold uppercase tracking-wider">
-              Leaderboard Rank
-            </p>
-            <h4 className="text-2xl font-display font-extrabold text-neutral-800 dark:text-white mt-0.5 flex items-baseline gap-1.5">
-              {currentRank} <span className="text-xs font-semibold text-neutral-400">Overall</span>
-            </h4>
-          </div>
-        </div>
-
-        {/* KPI 4 */}
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-700/60 shadow-sm p-4 md:p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div className="p-3 bg-emerald-500/10 text-emerald-600 rounded-2xl shrink-0">
-            <TrendingUp className="w-5 h-5" />
-          </div>
-          <div>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-300 font-bold uppercase tracking-wider">
-              Assessments Graded
-            </p>
-            <h4 className="text-2xl font-display font-extrabold text-neutral-800 dark:text-white mt-0.5 flex items-baseline gap-1.5">
-              {completedAssessments.length}{" "}
-              <span className="text-xs font-semibold text-neutral-400">submitted</span>
-            </h4>
-          </div>
-        </div>
-      </div>
-
-      {/* Grid of assessments & scores graph */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Core Assessments available List */}
-        <div className="lg:col-span-3 space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="font-display font-black text-sm text-neutral-800 dark:text-white tracking-wider">
-              Available Assessments
-            </h3>
-            <span className="text-xs bg-red-50 text-rose-700 font-bold px-2.5 py-1 rounded-full animate-pulse">
-              {activeAssessments.length} Pending Assessment
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {activeAssessments.length === 0 ? (
-              <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-800 rounded-2xl p-10 text-center text-neutral-500 dark:text-neutral-400 md:col-span-2">
-                Awesome! You have no pending exams. All completed or expired.
+              <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl p-8 text-center text-xs text-gray-400 md:col-span-2">
+                No pending assessments. All caught up!
               </div>
             ) : (
               activeAssessments.map((as) => {
-                const isDraftSub = studentSubmissions.find(
-                  (s) => s.assessmentId === as.id && s.status === "in_progress",
-                );
+                const isDraftSub = studentSubmissions.find((s) => s.assessmentId === as.id && s.status === "in_progress");
                 return (
                   <div
                     key={as.id}
-                    className="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-brand-border dark:border-neutral-700 dark:border-neutral-700/60 shadow-sm space-y-4 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                    className="bg-white dark:bg-[#15151f] p-4 rounded-2xl border border-gray-200 dark:border-[#2e2e3e] shadow-sm space-y-3 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between"
                   >
                     <div>
-                      <div className="flex justify-between items-start gap-1">
-                        <span className="px-2 py-0.5 bg-emerald-50 text-[#01AC9F] font-bold rounded text-[10px] uppercase font-mono">
-                          {as.type.replace("_", " ")}
+                      <div className="flex justify-between items-start gap-1 mb-2">
+                        <span className="px-2 py-0.5 bg-[#01AC9F]/10 text-[#01AC9F] font-bold rounded text-[10px] uppercase">
+                          {as.type?.replace("_", " ")}
                         </span>
-                        <span
-                          className={`text-[10px] font-bold ${as.difficulty === "Easy" ? "text-green-500" : as.difficulty === "Medium" ? "text-amber-500" : "text-rose-500"}`}
-                        >
+                        <span className={`text-[10px] font-bold ${as.difficulty === "Easy" ? "text-green-500" : as.difficulty === "Medium" ? "text-amber-500" : "text-rose-500"}`}>
                           {as.difficulty}
                         </span>
                       </div>
-
-                      <h4 className="font-display font-bold text-sm text-neutral-800 dark:text-white mt-2 leading-tight truncate">
-                        {as.title}
-                      </h4>
-                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-2">
-                        {as.description}
-                      </p>
+                      <h4 className="text-xs font-bold text-gray-900 dark:text-white leading-tight">{as.title}</h4>
+                      <p className="text-[10px] text-gray-400 mt-1 line-clamp-2">{as.description}</p>
                     </div>
-
-                    <div className="pt-3 border-t border-brand-border/80 dark:border-neutral-700/80 dark:border-neutral-800/50 space-y-3.5 mt-auto">
-                      <div className="grid grid-cols-2 gap-2 text-[10px] text-neutral-500 dark:text-neutral-500 dark:text-neutral-400">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5 shrink-0 text-[#6C1D5F]" />{" "}
-                          {String(as.duration).replace(" mins", "")} mins
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <HelpCircle className="w-3.5 h-3.5 shrink-0 text-[#01AC9F]" />{" "}
-                          {as.questions.length} Questions
-                        </span>
+                    <div className="pt-2 border-t border-gray-100 dark:border-[#2e2e3e] space-y-2">
+                      <div className="flex items-center gap-3 text-[10px] text-gray-400">
+                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {as.duration}m</span>
+                        <span className="flex items-center gap-1"><HelpCircle className="w-3 h-3" /> {as.questions?.length || 0} Qs</span>
                       </div>
-
                       <button
                         onClick={() => handleStartAttempt(as.id)}
-                        className={`w-full py-2 rounded-2xl text-[10px] font-black uppercase shadow tracking-wider cursor-pointer flex items-center justify-center gap-1 transition-all bg-[#6C1D5F] hover:bg-[#84117C] text-white shadow-purple-950/10`}
+                        className="w-full py-2 rounded-xl text-[10px] font-bold bg-[#6C1D5F] hover:bg-[#84117C] text-white transition-all flex items-center justify-center gap-1"
                       >
-                        <span>{isDraftSub ? "Resume Draft Attempt" : "Initialize Assessment"}</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        {isDraftSub ? "Resume" : "Start"} <ArrowRight className="w-3 h-3" />
                       </button>
                     </div>
                   </div>
@@ -265,40 +206,27 @@ export const StudentDashboard = () => {
           </div>
         </div>
 
-        {/* Scoring list sidebar */}
-        <div className="space-y-4">
-          <h3 className="font-display font-black text-sm text-neutral-800 dark:text-white uppercase tracking-wider">
-            Recent Graded Exams
-          </h3>
-
-          <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-700/60 shadow-sm rounded-2xl p-4 md:p-5 space-y-3">
+        {/* Recent Scores Sidebar */}
+        <div>
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3">Recent Scores</h3>
+          <div className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl p-3 space-y-2">
             {recentScores.length === 0 ? (
-              <div className="py-8 text-center text-xs text-neutral-500 dark:text-neutral-400">
-                No assessments graded yet.
-              </div>
+              <div className="py-6 text-center text-[11px] text-gray-400">No graded exams yet</div>
             ) : (
               recentScores.map((score) => (
                 <div
                   key={score.id}
                   onClick={() => handleViewResult(score.id)}
-                  className="p-3 bg-neutral-50 dark:bg-neutral-950 rounded-2xl border border-brand-border/20 hover:border-brand-velvet dark:hover:border-purple-600 transition-all cursor-pointer flex items-center justify-between gap-3"
+                  className="p-2.5 bg-gray-50 dark:bg-[#1a1a2e] rounded-xl hover:bg-gray-100 dark:hover:bg-[#2e2e3e] transition-colors cursor-pointer flex items-center justify-between gap-2"
                 >
-                  <div className="truncate">
-                    <h4 className="text-xs font-bold text-neutral-800 dark:text-neutral-200 truncate">
-                      {score.title}
-                    </h4>
-                    <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1">
-                      Raw points:{" "}
-                      {score.isEvaluated
-                        ? `${score.score}/${score.marks}`
-                        : "Evaluating descriptive replies..."}
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-bold text-gray-900 dark:text-white truncate">{score.title}</p>
+                    <p className="text-[9px] text-gray-400 mt-0.5">
+                      {score.isEvaluated ? `${score.score}/${score.marks}` : "Pending"}
                     </p>
                   </div>
-
-                  <span
-                    className={`px-2.5 py-1.5 rounded-2xl font-mono font-black text-xs shrink-0 text-center ${score.isEvaluated ? "bg-emerald-50 text-[#01AC9F] dark:bg-emerald-950/20 dark:text-emerald-300" : "bg-amber-50 text-amber-600 dark:bg-amber-950/20"}`}
-                  >
-                    {score.isEvaluated ? `${score.percentage}%` : "Pending"}
+                  <span className={`px-2 py-1 rounded-lg font-mono font-bold text-[10px] shrink-0 ${score.isEvaluated ? "bg-[#01AC9F]/10 text-[#01AC9F]" : "bg-amber-50 text-amber-500"}`}>
+                    {score.isEvaluated ? `${score.percentage}%` : "—"}
                   </span>
                 </div>
               ))
@@ -307,36 +235,50 @@ export const StudentDashboard = () => {
         </div>
       </div>
 
-      {/* Recharts Student progress tracking chart */}
-      {completedSubsWithAssessments.length > 0 && (
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border dark:border-neutral-700 dark:border-neutral-700/60 shadow-sm p-6 rounded-3xl space-y-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div>
-            <h3 className="font-display font-bold text-sm text-neutral-800 dark:text-white uppercase tracking-wider">
-              My Academic Progress Pathway
-            </h3>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
-              Chronological average score trends over your submissions
-            </p>
+      {/* My Batches Quick View */}
+      {myBatches.length > 0 && (
+        <div>
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3">My Batches</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {myBatches.slice(0, 3).map((b) => (
+              <div key={b.id} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] p-3 flex items-center gap-3 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                <div className="w-10 h-10 shrink-0 rounded-xl bg-[#6C1D5F]/10 flex items-center justify-center text-[#6C1D5F] text-lg overflow-hidden">
+                  {b.icon && (b.icon.startsWith("data:image") || b.icon.startsWith("http")) ? (
+                    <img src={b.icon} alt="" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = "none"; e.target.parentElement.innerHTML = "📚"; }} />
+                  ) : (
+                    <span>{b.icon || "📚"}</span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold text-gray-900 dark:text-white truncate">{b.name}</p>
+                  <p className="text-[10px] text-gray-400">{(b.students || []).length} students</p>
+                </div>
+                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${b.status === "active" ? "bg-[#01AC9F]/10 text-[#01AC9F]" : "bg-gray-100 text-gray-500"}`}>
+                  {b.status}
+                </span>
+              </div>
+            ))}
           </div>
+        </div>
+      )}
 
-          <div className="h-64">
+      {/* Progress Chart */}
+      {completedSubsWithAssessments.length > 0 && (
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-[#15151f] border border-gray-200 dark:border-[#2e2e3e] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-bold text-gray-900 dark:text-white">Score Progress</h3>
+          </div>
+          <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={completedSubsWithAssessments}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBEBEB" />
-                <XAxis dataKey="name" stroke="#A3A3A3" fontSize={10} tickLine={false} />
+                <XAxis dataKey="name" stroke="#A3A3A3" fontSize={10} tickLine={false} axisLine={false} />
                 <YAxis stroke="#A3A3A3" fontSize={10} tickLine={false} axisLine={false} />
                 <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="score"
-                  stroke="#01AC9F"
-                  strokeWidth={3}
-                  activeDot={{ r: 6 }}
-                />
+                <Line type="monotone" dataKey="score" stroke="#01AC9F" strokeWidth={2.5} dot={{ r: 4 }} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

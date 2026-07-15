@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft, CalendarDays, MapPin, Clock, Upload, Globe, Building2, Users, Image, Sparkles, FileEdit, Save, Camera, X, Link as LinkIcon,
+  ArrowLeft, CalendarDays, MapPin, Clock, Upload, Globe, Building2, Users, Image, Sparkles, FileEdit, Save, Camera, X, Link as LinkIcon, Wand2, Loader2,
 } from "lucide-react";
 import { DateTimePicker } from "@/components/ui/DateTimePicker";
 import { EventService } from "@/services/api";
+import { AIService } from "@/services/aiService";
 import { useRouter } from "@tanstack/react-router";
 import { clsx } from "clsx";
 
@@ -37,6 +38,7 @@ function formatDisplay(date, time) {
 export default function CreateEvent({ editData, onBack }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const [generatingDesc, setGeneratingDesc] = useState(false);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -84,6 +86,16 @@ export default function CreateEvent({ editData, onBack }) {
     reader.readAsDataURL(file);
   };
 
+  const handleGenerateDescription = async () => {
+    if (!title.trim()) { return; }
+    setGeneratingDesc(true);
+    try {
+      const result = await AIService.generateEventDescription(title, location, isOnline);
+      setDescription(result);
+    } catch (err) {
+      console.error("AI generation failed:", err);
+    } finally { setGeneratingDesc(false); }
+  };
   const handleSubmit = async (statusOverride) => {
     setSaving(true);
     try {
@@ -96,7 +108,23 @@ export default function CreateEvent({ editData, onBack }) {
         maxCapacity: maxCapacity ? parseInt(maxCapacity) : null,
       };
       if (editData) await EventService.updateEvent(editData.id, payload);
-      else await EventService.createEvent(payload);
+      else {
+        await EventService.createEvent(payload);
+        // Notify all trainers about the new event
+        try {
+          const notifications = JSON.parse(localStorage.getItem("notifications") || "[]");
+          notifications.unshift({
+            id: `NOTIF-${Date.now()}`,
+            title: "New Event Created",
+            message: `Admin has created a new event "${title}". ${isOnline ? "Online" : ""} event starts ${startDate || "soon"}. Check Events page for details.`,
+            type: "event",
+            createdAt: new Date().toISOString(),
+            isRead: false,
+            recipientId: null,
+          });
+          localStorage.setItem("notifications", JSON.stringify(notifications));
+        } catch (e) { /* best-effort */ }
+      }
       if (onBack) onBack(); else router.navigate({ to: "/admin/events" });
     } catch (err) { console.error(err); } finally { setSaving(false); }
   };
@@ -137,7 +165,15 @@ export default function CreateEvent({ editData, onBack }) {
                   <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. React Advanced Workshop" className={inputCls} />
                 </div>
                 <div>
-                  <label className={lbl}>Description</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className={lbl}>Description</label>
+                    <button type="button" onClick={handleGenerateDescription} disabled={generatingDesc || !title.trim()}
+                      className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold text-[#84117C] bg-[#84117C]/10 rounded-lg hover:bg-[#84117C]/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      title="Generate description with AI">
+                      {generatingDesc ? <Loader2 className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
+                      {generatingDesc ? "Generating..." : "Generate with AI"}
+                    </button>
+                  </div>
                   <textarea rows={2} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe what this event is about..." className={clsx(inputCls, "resize-none")} />
                 </div>
               </div>

@@ -31,4 +31,12 @@ public class SubmissionService {
         submission.setId(id);
         return submissionRepository.save(submission);
     }
+
+    public void deleteSubmission(String id) {
+        submissionRepository.deleteById(id);
+    }
+
+    public void deleteAllSubmissions() {
+        submissionRepository.deleteAll();
+    }
 }

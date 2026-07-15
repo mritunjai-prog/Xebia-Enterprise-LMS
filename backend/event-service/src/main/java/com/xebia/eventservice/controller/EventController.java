@@ -47,4 +47,9 @@ public class EventController {
         eventService.deleteEvent(eventId);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/created-by/{createdBy}")
+    public ResponseEntity<java.util.Map<String, Integer>> deleteByCreator(@PathVariable String createdBy) {
+        return ResponseEntity.ok(eventService.deleteEventsByCreatedBy(createdBy));
+    }
 }

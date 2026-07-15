@@ -35,8 +35,10 @@ import { Route as AdminOrganiserRouteImport } from './routes/admin/organiser'
 import { Route as AdminCurriculumRouteImport } from './routes/admin/curriculum'
 import { Route as AdminBatchesRouteImport } from './routes/admin/batches'
 import { Route as AdminAssessmentsRouteImport } from './routes/admin/assessments'
+import { Route as TrainerNotificationsIndexRouteImport } from './routes/trainer/notifications/index'
 import { Route as TrainerBatchesIndexRouteImport } from './routes/trainer/batches/index'
 import { Route as StudentResultsIndexRouteImport } from './routes/student/results/index'
+import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as AdminEventsIndexRouteImport } from './routes/admin/events/index'
 import { Route as AdminCurriculumIndexRouteImport } from './routes/admin/curriculum/index'
 import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
@@ -211,6 +213,12 @@ const AdminAssessmentsRoute = AdminAssessmentsRouteImport.update({
   path: '/assessments',
   getParentRoute: () => AdminRoute,
 } as any)
+const TrainerNotificationsIndexRoute =
+  TrainerNotificationsIndexRouteImport.update({
+    id: '/notifications/',
+    path: '/notifications/',
+    getParentRoute: () => TrainerRoute,
+  } as any)
 const TrainerBatchesIndexRoute = TrainerBatchesIndexRouteImport.update({
   id: '/batches/',
   path: '/batches/',
@@ -220,6 +228,11 @@ const StudentResultsIndexRoute = StudentResultsIndexRouteImport.update({
   id: '/results/',
   path: '/results/',
   getParentRoute: () => StudentRoute,
+} as any)
+const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminEventsIndexRoute = AdminEventsIndexRouteImport.update({
   id: '/events/',
@@ -511,8 +524,10 @@ export interface FileRoutesByFullPath {
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
   '/admin/events/': typeof AdminEventsIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
   '/student/results/': typeof StudentResultsIndexRoute
   '/trainer/batches/': typeof TrainerBatchesIndexRoute
+  '/trainer/notifications/': typeof TrainerNotificationsIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
   '/student/results/$slug/$id': typeof StudentResultsSlugIdRoute
   '/admin/analytics/analytics/': typeof AdminAnalyticsAnalyticsIndexRoute
@@ -577,8 +592,10 @@ export interface FileRoutesByTo {
   '/admin/courses': typeof AdminCoursesIndexRoute
   '/admin/curriculum': typeof AdminCurriculumIndexRoute
   '/admin/events': typeof AdminEventsIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/student/results': typeof StudentResultsIndexRoute
   '/trainer/batches': typeof TrainerBatchesIndexRoute
+  '/trainer/notifications': typeof TrainerNotificationsIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
   '/student/results/$slug/$id': typeof StudentResultsSlugIdRoute
   '/admin/analytics/analytics': typeof AdminAnalyticsAnalyticsIndexRoute
@@ -650,8 +667,10 @@ export interface FileRoutesById {
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
   '/admin/events/': typeof AdminEventsIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
   '/student/results/': typeof StudentResultsIndexRoute
   '/trainer/batches/': typeof TrainerBatchesIndexRoute
+  '/trainer/notifications/': typeof TrainerNotificationsIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
   '/student/results/$slug/$id': typeof StudentResultsSlugIdRoute
   '/admin/analytics/analytics/': typeof AdminAnalyticsAnalyticsIndexRoute
@@ -724,8 +743,10 @@ export interface FileRouteTypes {
     | '/admin/courses/'
     | '/admin/curriculum/'
     | '/admin/events/'
+    | '/admin/users/'
     | '/student/results/'
     | '/trainer/batches/'
+    | '/trainer/notifications/'
     | '/admin/submodules/$submoduleId/content'
     | '/student/results/$slug/$id'
     | '/admin/analytics/analytics/'
@@ -790,8 +811,10 @@ export interface FileRouteTypes {
     | '/admin/courses'
     | '/admin/curriculum'
     | '/admin/events'
+    | '/admin/users'
     | '/student/results'
     | '/trainer/batches'
+    | '/trainer/notifications'
     | '/admin/submodules/$submoduleId/content'
     | '/student/results/$slug/$id'
     | '/admin/analytics/analytics'
@@ -862,8 +885,10 @@ export interface FileRouteTypes {
     | '/admin/courses/'
     | '/admin/curriculum/'
     | '/admin/events/'
+    | '/admin/users/'
     | '/student/results/'
     | '/trainer/batches/'
+    | '/trainer/notifications/'
     | '/admin/submodules/$submoduleId/content'
     | '/student/results/$slug/$id'
     | '/admin/analytics/analytics/'
@@ -1061,6 +1086,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAssessmentsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/trainer/notifications/': {
+      id: '/trainer/notifications/'
+      path: '/notifications'
+      fullPath: '/trainer/notifications/'
+      preLoaderRoute: typeof TrainerNotificationsIndexRouteImport
+      parentRoute: typeof TrainerRoute
+    }
     '/trainer/batches/': {
       id: '/trainer/batches/'
       path: '/batches'
@@ -1074,6 +1106,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/results/'
       preLoaderRoute: typeof StudentResultsIndexRouteImport
       parentRoute: typeof StudentRoute
+    }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users/'
+      preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/events/': {
       id: '/admin/events/'
@@ -1452,6 +1491,7 @@ interface AdminRouteChildren {
   AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
   AdminCoursesIndexRoute: typeof AdminCoursesIndexRoute
   AdminEventsIndexRoute: typeof AdminEventsIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
   AdminSubmodulesSubmoduleIdContentRoute: typeof AdminSubmodulesSubmoduleIdContentRoute
   AdminAnalyticsAnalyticsIndexRoute: typeof AdminAnalyticsAnalyticsIndexRoute
 }
@@ -1485,6 +1525,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
   AdminCoursesIndexRoute: AdminCoursesIndexRoute,
   AdminEventsIndexRoute: AdminEventsIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
   AdminSubmodulesSubmoduleIdContentRoute:
     AdminSubmodulesSubmoduleIdContentRoute,
   AdminAnalyticsAnalyticsIndexRoute: AdminAnalyticsAnalyticsIndexRoute,
@@ -1541,6 +1582,7 @@ interface TrainerRouteChildren {
   TrainerIndexRoute: typeof TrainerIndexRoute
   TrainerBatchesIdRoute: typeof TrainerBatchesIdRoute
   TrainerBatchesIndexRoute: typeof TrainerBatchesIndexRoute
+  TrainerNotificationsIndexRoute: typeof TrainerNotificationsIndexRoute
 }
 
 const TrainerRouteChildren: TrainerRouteChildren = {
@@ -1553,6 +1595,7 @@ const TrainerRouteChildren: TrainerRouteChildren = {
   TrainerIndexRoute: TrainerIndexRoute,
   TrainerBatchesIdRoute: TrainerBatchesIdRoute,
   TrainerBatchesIndexRoute: TrainerBatchesIndexRoute,
+  TrainerNotificationsIndexRoute: TrainerNotificationsIndexRoute,
 }
 
 const TrainerRouteWithChildren =

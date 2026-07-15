@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface EventRepository extends JpaRepository<Event, UUID> {
     List<Event> findByIsActiveTrue();
     List<Event> findByStatusAndIsActiveTrue(String status);
+    List<Event> findByCreatedBy(String createdBy);
 }

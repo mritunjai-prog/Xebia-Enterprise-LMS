@@ -122,6 +122,18 @@ export const CourseService = {
 export const UserService = {
   getUsers: (role) => fetchApi(`/v1/users${role ? "?role=" + role : ""}`),
   createUser: (data) => fetchApi("/v1/users", { method: "POST", body: JSON.stringify(data) }),
+  deleteUser: (id) => fetchApi(`/v1/users/${id}`, { method: "DELETE" }),
+};
+
+export const TrainerCascadeService = {
+  deleteBatchesByCreator: (createdBy) =>
+    fetchApi(`/v1/batches/created-by/${createdBy}`, { method: "DELETE" }),
+  deleteAllocationsByTrainer: (trainerId) =>
+    fetchApi(`/v1/allocations/trainer/${trainerId}`, { method: "DELETE" }),
+  deleteAssessmentsByCreator: (createdBy) =>
+    fetchApi(`/v1/assessments/created-by/${createdBy}`, { method: "DELETE" }),
+  deleteEventsByCreator: (createdBy) =>
+    fetchApi(`/v1/events/created-by/${createdBy}`, { method: "DELETE" }),
 };
 
 export const BatchService = {

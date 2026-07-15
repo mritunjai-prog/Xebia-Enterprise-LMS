@@ -15,23 +15,19 @@ export function StatCard({
   bgClass = "bg-[#6C1D5F]/10",
 }) {
   return (
-    <Card className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:shadow-glow hover:border-[#6C1D5F] dark:hover:border-[#D3CCEC] hover:-translate-y-1.5 transition-all duration-500 overflow-hidden">
-      <CardContent className="p-6 relative z-10">
-        <div className="flex items-center justify-between space-y-0 pb-2">
-          <p className="text-sm font-bold text-gray-500 dark:text-gray-400">{title}</p>
-          <div className={clsx("h-12 w-12 rounded-xl flex items-center justify-center", bgClass)}>
-            <Icon className={clsx("h-6 w-6", colorClass)} />
-          </div>
+    <div className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      <div className="flex items-center justify-between">
+        <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{title}</p>
+        <div className={clsx("w-9 h-9 rounded-xl flex items-center justify-center", bgClass)}>
+          <Icon className={clsx("w-4 h-4", colorClass)} />
         </div>
-        <div className="flex flex-col gap-1 mt-2">
-          <div className="text-3xl font-extrabold text-gray-900 dark:text-white">{value}</div>
-          <p
-            className={`text-xs font-semibold ${trendUp ? "text-accent-2" : "text-gray-500 dark:text-gray-400"}`}
-          >
-            {trend}
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+      <div className="mt-2">
+        <div className="text-2xl font-extrabold text-gray-900 dark:text-white">{value}</div>
+        <p className={`text-[10px] font-semibold mt-0.5 ${trendUp ? "text-[#01AC9F]" : "text-gray-400 dark:text-gray-500"}`}>
+          {trend}
+        </p>
+      </div>
+    </div>
   );
 }

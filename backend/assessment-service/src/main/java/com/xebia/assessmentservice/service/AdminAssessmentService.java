@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -111,7 +109,6 @@ public class AdminAssessmentService {
         List<Assessment> allAssessments = assessmentRepository.findAll();
         List<Submission> allSubmissions = submissionRepository.findAll();
 
-        // Creation trend by month
         Map<String, Long> creationMap = new LinkedHashMap<>();
         for (Assessment a : allAssessments) {
             String month = a.getCreatedAt() != null ? a.getCreatedAt().substring(0, 7) : "Unknown";
@@ -121,7 +118,6 @@ public class AdminAssessmentService {
             .map(e -> Map.<String, Object>of("month", e.getKey(), "count", e.getValue()))
             .collect(Collectors.toList()));
 
-        // Type distribution
         Map<String, Long> typeMap = new LinkedHashMap<>();
         for (Assessment a : allAssessments) {
             String type = a.getType() != null ? a.getType() : "unknown";
@@ -131,7 +127,6 @@ public class AdminAssessmentService {
             .map(e -> Map.<String, Object>of("type", e.getKey(), "count", e.getValue()))
             .collect(Collectors.toList()));
 
-        // Pass vs Fail
         long passed = allSubmissions.stream()
             .filter(s -> "submitted".equals(s.getStatus()) && s.getIsEvaluated() != null && s.getIsEvaluated())
             .filter(s -> s.getPercentage() != null && s.getPercentage() >= 60)
@@ -142,7 +137,6 @@ public class AdminAssessmentService {
             .count();
         dto.setPassVsFail(Map.of("passed", passed, "failed", failed));
 
-        // Score distribution
         List<Map<String, Object>> scoreDist = new ArrayList<>();
         long s1 = allSubmissions.stream().filter(s -> s.getPercentage() != null && s.getPercentage() < 20).count();
         long s2 = allSubmissions.stream().filter(s -> s.getPercentage() != null && s.getPercentage() >= 20 && s.getPercentage() < 40).count();
@@ -156,7 +150,6 @@ public class AdminAssessmentService {
         scoreDist.add(Map.of("range", "80-100", "count", s5));
         dto.setScoreDistribution(scoreDist);
 
-        // Difficulty distribution
         Map<String, Long> diffMap = new LinkedHashMap<>();
         for (Assessment a : allAssessments) {
             String diff = a.getDifficulty() != null ? a.getDifficulty() : "Unknown";
@@ -166,7 +159,6 @@ public class AdminAssessmentService {
             .map(e -> Map.<String, Object>of("level", e.getKey(), "count", e.getValue()))
             .collect(Collectors.toList()));
 
-        // Status distribution
         Map<String, Long> statusMap = new LinkedHashMap<>();
         for (Assessment a : allAssessments) {
             String status = a.getStatus() != null ? a.getStatus() : "unknown";
@@ -189,7 +181,6 @@ public class AdminAssessmentService {
         AssessmentReportDto dto = new AssessmentReportDto();
         dto.setAssessment(assessment);
 
-        List<AssessmentReportDto.ReportSummary> summaries = new ArrayList<>();
         AssessmentReportDto.ReportSummary summary = new AssessmentReportDto.ReportSummary();
 
         List<Submission> evaluated = submissions.stream()
@@ -197,7 +188,13 @@ public class AdminAssessmentService {
             .collect(Collectors.toList());
 
         summary.setAttempted(evaluated.size());
-        summary.setTotalAssigned(assessment.getBatches() != null ? assessment.getBatches().size() * 30 : 0);
+
+        // Compute actual total assigned from all submissions (unique students)
+        Set<String> allStudentIds = new HashSet<>();
+        for (Submission s : submissions) {
+            if (s.getStudentId() != null) allStudentIds.add(s.getStudentId());
+        }
+        summary.setTotalAssigned(Math.max(allStudentIds.size(), evaluated.size()));
 
         if (!evaluated.isEmpty()) {
             int[] scores = evaluated.stream()
@@ -214,7 +211,26 @@ public class AdminAssessmentService {
         }
 
         dto.setSummary(summary);
+
+        // Populate student report rows from submissions
+        List<StudentReportRowDto> studentRows = new ArrayList<>();
+        for (Submission s : submissions) {
+            StudentReportRowDto row = new StudentReportRowDto();
+            row.setStudentId(s.getStudentId());
+            row.setStudentName(s.getStudentId()); // Will be resolved by frontend
+            row.setScore(s.getScore());
+            row.setPercentage(s.getPercentage());
+            row.setPassFail(s.getPercentage() != null && s.getPercentage() >= 60 ? "Pass" : "Fail");
+            row.setAttemptStatus("submitted".equals(s.getStatus()) ? "Attempted" : "In Progress");
+            row.setStartTime(s.getStartedAt());
+            row.setEndTime(s.getSubmittedAt());
+            row.setTimeTaken(s.getTimeTaken());
+            row.setSubmissionStatus(s.getStatus());
+            row.setRemarks(s.getRemarks());
+            studentRows.add(row);
+        }
+        dto.setStudents(studentRows);
+
         return dto;
     }
 }
-

@@ -3,6 +3,7 @@ package com.xebia.assessmentservice.controller;
 import com.xebia.assessmentservice.model.Assessment;
 import com.xebia.assessmentservice.service.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,5 +33,10 @@ public class AssessmentController {
     @DeleteMapping("/{id}")
     public void deleteAssessment(@PathVariable String id) {
         assessmentService.deleteAssessment(id);
+    }
+
+    @DeleteMapping("/created-by/{createdBy}")
+    public ResponseEntity<java.util.Map<String, Integer>> deleteByCreator(@PathVariable String createdBy) {
+        return ResponseEntity.ok(assessmentService.deleteAssessmentsByCreatedBy(createdBy));
     }
 }

@@ -20,6 +20,7 @@ public class Batch {
     private Integer studentCount;
     private String status; // active, completed
     private String createdAt;
+    @Column(columnDefinition = "TEXT")
     private String icon;
     
     @ElementCollection

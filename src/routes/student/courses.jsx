@@ -432,7 +432,7 @@ function MyCourses() {
         <div
           className={clsx(
             "relative bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0",
-            viewMode === "list" ? "w-full sm:w-64 h-48 sm:h-auto" : "w-full h-44",
+            viewMode === "list" ? "w-full sm:w-48 h-36 sm:h-auto" : "w-full h-32",
           )}
         >
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 z-0">
@@ -476,50 +476,50 @@ function MyCourses() {
         </div>
 
         {/* Body */}
-        <div className="p-5 flex-1 flex flex-col relative">
+        <div className="p-4 flex-1 flex flex-col relative">
           {/* Title */}
-          <div className="mb-2">
-            <span className="text-xl font-extrabold text-gray-900 dark:text-white transition-colors leading-tight block mb-2 line-clamp-2">
+          <div className="mb-1.5">
+            <span className="text-sm font-extrabold text-gray-900 dark:text-white transition-colors leading-tight block line-clamp-2">
               {course.title}
             </span>
           </div>
 
-          {/* Meta Top (Level) */}
-          <div className="mb-4 flex items-center justify-between">
+          {/* Meta Top (Level + Status) */}
+          <div className="mb-2.5 flex items-center justify-between">
             <span
               className={clsx(
-                "inline-flex items-center text-sm font-bold px-4 py-1.5 rounded-lg text-white shadow-md tracking-wide",
+                "inline-flex items-center text-[10px] font-bold px-2.5 py-0.5 rounded-md text-white",
                 level === "Beginner"
-                  ? "bg-[#01AC9F] shadow-[0_0_15px_rgba(1,172,159,0.4)]"
+                  ? "bg-[#01AC9F]"
                   : level === "Intermediate"
-                    ? "bg-[#84117C] shadow-[0_0_15px_rgba(132,17,124,0.4)]"
-                    : "bg-[#FF6200] shadow-[0_0_15px_rgba(255,98,0,0.4)]",
+                    ? "bg-[#84117C]"
+                    : "bg-[#FF6200]",
               )}
             >
               {level}
             </span>
             <span
               className={clsx(
-                "text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm flex items-center gap-1.5",
+                "text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1",
                 badge.className,
               )}
             >
-              {course.progress === 100 && <CheckCircle className="w-3.5 h-3.5" />}
+              {course.progress === 100 && <CheckCircle className="w-3 h-3" />}
               {badge.label}
             </span>
           </div>
 
           {/* Description */}
-          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed mb-4 font-medium">
+          <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed mb-2.5 font-medium">
             {course.description ||
               course.shortDescription ||
-              "No description available for this course. Click to learn more."}
+              "No description available."}
           </p>
 
           {/* Progress (Student Only) */}
           {course.isEnrolled && (
-            <div className="mb-4">
-              <div className="flex justify-between text-[11px] font-bold mb-1.5">
+            <div className="mb-2.5">
+              <div className="flex justify-between text-[10px] font-bold mb-1">
                 <span className="text-gray-500">Progress</span>
                 <span
                   className={clsx(
@@ -533,7 +533,7 @@ function MyCourses() {
               <Progress
                 value={course.progress}
                 className={clsx(
-                  "h-1.5",
+                  "h-1",
                   course.progress === 100 ? "[&>div]:bg-[#01AC9F]" : "[&>div]:bg-[#6C1D5F]",
                 )}
               />
@@ -541,15 +541,15 @@ function MyCourses() {
           )}
 
           {/* Meta Stats */}
-          <div className="mt-auto flex items-center gap-4 text-[11px] font-bold text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-[#2e2e3e] pt-4 mb-4">
+          <div className="mt-auto flex items-center gap-3 text-[10px] font-bold text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-[#2e2e3e] pt-2.5 mb-2.5">
             {course.modules?.length || course.modulesCount || course.totalModules ? (
               <span className="flex items-center gap-1 whitespace-nowrap">
-                <BookOpen className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+                <BookOpen className="w-3 h-3" />
                 {course.modules?.length || course.modulesCount || course.totalModules} Modules
               </span>
             ) : null}
             <span className="flex items-center gap-1 whitespace-nowrap">
-              <Clock className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+              <Clock className="w-3 h-3" />
               {duration}
             </span>
           </div>
@@ -561,13 +561,13 @@ function MyCourses() {
                 e.stopPropagation();
                 setCertCourse(course);
               }}
-              className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-accent-2 to-[#01AC9F] text-white shadow-[0_2px_10px_-2px_rgba(1,172,159,0.4)] hover:shadow-[0_4px_14px_-2px_rgba(1,172,159,0.5)] hover:-translate-y-0.5"
+              className="w-full py-2 rounded-xl font-bold text-[11px] transition-all flex items-center justify-center gap-1.5 bg-[#01AC9F] text-white shadow-sm hover:-translate-y-0.5"
             >
-              <Award className="w-4 h-4" /> View Certificate
+              <Award className="w-3.5 h-3.5" /> View Certificate
             </button>
           ) : (
             <Link to={`/student/course/${course.id}`} className="block w-full">
-              <button className="w-full py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2 bg-[#6C1D5F] hover:bg-[#5a184f] text-white shadow-[0_2px_10px_-2px_rgba(108,29,95,0.4)] hover:shadow-[0_4px_14px_-2px_rgba(108,29,95,0.5)] hover:-translate-y-0.5">
+              <button className="w-full py-2 rounded-xl font-bold text-[11px] transition-all shadow-sm flex items-center justify-center gap-1.5 bg-[#6C1D5F] hover:bg-[#84117C] text-white hover:-translate-y-0.5">
                 {course.progress === 0 ? "Start Course" : "Resume Course"}
               </button>
             </Link>
@@ -719,7 +719,7 @@ function MyCourses() {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 transition-all">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 transition-all">
         <AnimatePresence>
           {items.map((course, idx) => (
             <CourseCard key={course.id} course={course} idx={idx} />
@@ -746,55 +746,25 @@ function MyCourses() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-[#6C1D5F] dark:hover:border-[#6C1D5F] hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 rounded-2xl p-5 flex flex-col shadow-sm">
-          <div className="flex items-start justify-between mb-4">
-            <h3 className="text-[13px] font-bold text-gray-500 dark:text-gray-400">
-              Enrolled Courses
-            </h3>
-            <div className="w-10 h-10 rounded-xl bg-[#f8f5f8] dark:bg-[#1a1a24] flex items-center justify-center text-[#6C1D5F]">
-              <BookOpen className="w-5 h-5" />
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+        {[
+          { label: "Enrolled Courses", value: courses.length, sub: "Total enrollments", icon: BookOpen, bg: "bg-[#6C1D5F]/10", color: "text-[#6C1D5F]" },
+          { label: "In Progress", value: inProgress.length, sub: "Ongoing courses", icon: PlayCircle, bg: "bg-[#FF6200]/10", color: "text-[#FF6200]" },
+          { label: "Completed", value: completed.length, sub: "Finished courses", icon: Award, bg: "bg-[#01AC9F]/10", color: "text-[#01AC9F]" },
+        ].map((kpi, i) => (
+          <div key={i} className="bg-white dark:bg-[#15151f] rounded-2xl border border-gray-200 dark:border-[#2e2e3e] p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{kpi.label}</p>
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${kpi.bg}`}>
+                <kpi.icon className={`w-4 h-4 ${kpi.color}`} />
+              </div>
+            </div>
+            <div className="mt-2">
+              <div className="text-2xl font-extrabold text-gray-900 dark:text-white">{kpi.value}</div>
+              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 mt-0.5">{kpi.sub}</p>
             </div>
           </div>
-          <div>
-            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-1">
-              {courses.length}
-            </h2>
-            <p className="text-xs font-bold text-gray-500 dark:text-gray-400">Total enrollments</p>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-[#FF6200] dark:hover:border-[#FF6200] hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 rounded-2xl p-5 flex flex-col shadow-sm">
-          <div className="flex items-start justify-between mb-4">
-            <h3 className="text-[13px] font-bold text-gray-500 dark:text-gray-400">In Progress</h3>
-            <div className="w-10 h-10 rounded-xl bg-[#fff6f0] dark:bg-[#1a1a24] flex items-center justify-center text-[#FF6200]">
-              <PlayCircle className="w-5 h-5" />
-            </div>
-          </div>
-          <div>
-            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-1">
-              {inProgress.length}
-            </h2>
-            <p className="text-xs font-bold text-gray-500 dark:text-gray-400">Ongoing courses</p>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-[#01AC9F] dark:hover:border-[#01AC9F] hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 rounded-2xl p-5 flex flex-col shadow-sm">
-          <div className="flex items-start justify-between mb-4">
-            <h3 className="text-[13px] font-bold text-gray-500 dark:text-gray-400">
-              Completed Courses
-            </h3>
-            <div className="w-10 h-10 rounded-xl bg-[#effaf9] dark:bg-[#1a1a24] flex items-center justify-center text-[#01AC9F]">
-              <Award className="w-5 h-5" />
-            </div>
-          </div>
-          <div>
-            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-1">
-              {completed.length}
-            </h2>
-            <p className="text-xs font-bold text-gray-500 dark:text-gray-400">Finished courses</p>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Filters & Search Toolbar */}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Settings,
   Calendar,
@@ -17,14 +17,56 @@ import { toast } from "../Toast";
 import { generateAssessmentDescription } from "../../utils/aiService";
 import { DateTimePicker } from "../ui/DateTimePicker";
 import { useLMS } from "../../context/LMSContext";
+import { AllocationService, CourseService } from "../../services/api";
 
 export const ConfigPanel = ({ config, setConfig }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isBatchDropdownOpen, setIsBatchDropdownOpen] = useState(false);
+  const [allocatedBatches, setAllocatedBatches] = useState([]);
+  const [courseMap, setCourseMap] = useState({});
+  const [loadingAllocations, setLoadingAllocations] = useState(true);
 
-  const { batches } = useLMS();
-  const uniqueCourses = Array.from(new Set(batches.map((b) => b.course).filter(Boolean)));
+  const { batches, currentUser } = useLMS();
+
+  useEffect(() => {
+    const fetchAllocations = async () => {
+      if (!currentUser?.id) { setLoadingAllocations(false); return; }
+      try {
+        const [allocs, courses] = await Promise.all([
+          AllocationService.getTrainerAllocations(currentUser.id).catch(() => []),
+          CourseService.getCourses().catch(() => []),
+        ]);
+        const courseLookup = {};
+        (courses || []).forEach((c) => { courseLookup[c.id] = c.title; });
+        setCourseMap(courseLookup);
+
+        // Get unique batchIds from allocations
+        const allocatedBatchIds = [...new Set((allocs || []).map((a) => a.batchId))];
+        // Build a map of batchId -> allocated course names
+        const batchCourseMap = {};
+        (allocs || []).forEach((a) => {
+          if (!batchCourseMap[a.batchId]) batchCourseMap[a.batchId] = [];
+          const courseName = courseLookup[a.courseId] || a.courseId;
+          if (!batchCourseMap[a.batchId].includes(courseName)) {
+            batchCourseMap[a.batchId].push(courseName);
+          }
+        });
+
+        // Filter batches to only allocated ones and attach course info
+        const myBatches = (batches || [])
+          .filter((b) => allocatedBatchIds.includes(b.id))
+          .map((b) => ({ ...b, allocatedCourses: batchCourseMap[b.id] || [] }));
+
+        setAllocatedBatches(myBatches);
+      } catch (e) {
+        console.error("Failed to fetch allocations:", e);
+      } finally {
+        setLoadingAllocations(false);
+      }
+    };
+    fetchAllocations();
+  }, [currentUser?.id, batches]);
 
   const handleGenerateAI = async () => {
     setIsGenerating(true);
@@ -42,6 +84,8 @@ export const ConfigPanel = ({ config, setConfig }) => {
       setIsGenerating(false);
     }
   };
+
+  const displayBatches = allocatedBatches.length > 0 ? allocatedBatches : batches;
 
   return (
     <div className="flex flex-col h-full w-full bg-white dark:bg-neutral-900 overflow-y-auto shrink-0 z-10">
@@ -96,16 +140,21 @@ export const ConfigPanel = ({ config, setConfig }) => {
                 className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] text-neutral-900 dark:text-neutral-100"
               >
                 <option value="">Select Course...</option>
-                {uniqueCourses.map((c, i) => (
-                  <option key={i} value={c}>
-                    {c}
-                  </option>
-                ))}
+                {allocatedBatches.length > 0 ? (
+                  [...new Set(allocatedBatches.flatMap((b) => b.allocatedCourses || []))].map((c, i) => (
+                    <option key={i} value={c}>{c}</option>
+                  ))
+                ) : (
+                  [...new Set(batches.map((b) => b.course).filter(Boolean))].map((c, i) => (
+                    <option key={i} value={c}>{c}</option>
+                  ))
+                )}
               </select>
             </div>
             <div className="relative">
               <label className="block text-xs font-bold text-neutral-800 dark:text-neutral-200 uppercase tracking-wider mb-2">
-                Batches <span className="text-neutral-400 font-normal ml-1">(Optional)</span>
+                Batches {allocatedBatches.length > 0 && <span className="text-[#01AC9F] font-normal ml-1">(Allocated)</span>}
+                {allocatedBatches.length === 0 && <span className="text-neutral-400 font-normal ml-1">(All)</span>}
               </label>
 
               <div
@@ -126,53 +175,72 @@ export const ConfigPanel = ({ config, setConfig }) => {
 
               {isBatchDropdownOpen && (
                 <div className="absolute z-20 top-full left-0 mt-1 w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-lg max-h-48 overflow-y-auto p-2">
-                  {batches.length > 0 && (
-                    <label className="flex items-center gap-2 px-2 py-1.5 mb-1 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg cursor-pointer border-b border-neutral-100 dark:border-neutral-800">
-                      <input
-                        type="checkbox"
-                        checked={config.batches?.length === batches.length && batches.length > 0}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setConfig((prev) => ({ ...prev, batches: batches.map((b) => b.id) }));
-                          } else {
-                            setConfig((prev) => ({ ...prev, batches: [] }));
-                          }
-                        }}
-                        className="w-4 h-4 text-[#6C1D5F] rounded"
-                      />
-                      <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200">
-                        Select All
-                      </span>
-                    </label>
-                  )}
-                  {batches.map((b, i) => (
-                    <label
-                      key={i}
-                      className="flex items-center gap-2 px-2 py-1.5 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={config.batches?.includes(b.id) || false}
-                        onChange={(e) => {
-                          const current = config.batches || [];
-                          if (e.target.checked) {
-                            setConfig((prev) => ({ ...prev, batches: [...current, b.id] }));
-                          } else {
-                            setConfig((prev) => ({
-                              ...prev,
-                              batches: current.filter((id) => id !== b.id),
-                            }));
-                          }
-                        }}
-                        className="w-4 h-4 text-[#6C1D5F] rounded"
-                      />
-                      <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                        {b.name} <span className="text-neutral-400 text-xs">({b.course})</span>
-                      </span>
-                    </label>
-                  ))}
-                  {batches.length === 0 && (
-                    <p className="text-xs text-neutral-500 text-center py-2">No batches found.</p>
+                  {loadingAllocations ? (
+                    <div className="flex items-center justify-center py-3">
+                      <Loader2 className="w-4 h-4 animate-spin text-[#6C1D5F]" />
+                      <span className="ml-2 text-xs text-neutral-500">Loading allocations...</span>
+                    </div>
+                  ) : (
+                    <>
+                      {displayBatches.length > 0 && (
+                        <label className="flex items-center gap-2 px-2 py-1.5 mb-1 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg cursor-pointer border-b border-neutral-100 dark:border-neutral-800">
+                          <input
+                            type="checkbox"
+                            checked={config.batches?.length === displayBatches.length && displayBatches.length > 0}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setConfig((prev) => ({ ...prev, batches: displayBatches.map((b) => b.id) }));
+                              } else {
+                                setConfig((prev) => ({ ...prev, batches: [] }));
+                              }
+                            }}
+                            className="w-4 h-4 text-[#6C1D5F] rounded"
+                          />
+                          <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200">
+                            Select All
+                          </span>
+                        </label>
+                      )}
+                      {displayBatches.map((b, i) => (
+                        <label
+                          key={i}
+                          className="flex items-center gap-2 px-2 py-1.5 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={config.batches?.includes(b.id) || false}
+                            onChange={(e) => {
+                              const current = config.batches || [];
+                              if (e.target.checked) {
+                                setConfig((prev) => ({ ...prev, batches: [...current, b.id] }));
+                              } else {
+                                setConfig((prev) => ({
+                                  ...prev,
+                                  batches: current.filter((id) => id !== b.id),
+                                }));
+                              }
+                            }}
+                            className="w-4 h-4 text-[#6C1D5F] rounded"
+                          />
+                          <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                            {b.name}
+                            {b.allocatedCourses && b.allocatedCourses.length > 0 && (
+                              <span className="text-[#01AC9F] text-xs ml-1">({b.allocatedCourses.join(", ")})</span>
+                            )}
+                            {!b.allocatedCourses && b.course && (
+                              <span className="text-neutral-400 text-xs ml-1">({b.course})</span>
+                            )}
+                          </span>
+                        </label>
+                      ))}
+                      {displayBatches.length === 0 && (
+                        <p className="text-xs text-neutral-500 text-center py-2">
+                          {currentUser?.role === "teacher"
+                            ? "No batches allocated to you. Ask admin to allocate courses."
+                            : "No batches found."}
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               )}
