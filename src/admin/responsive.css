@@ -32,8 +32,8 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  /* When NOT collapsed, it means it's OPEN on mobile */
-  .sidebar:not(.collapsed) {
+  /* Show sidebar ONLY when mobile-open class is present */
+  .sidebar.mobile-open {
     transform: translateX(0);
     width: 260px !important;
     box-shadow: 0 0 20px rgba(0,0,0,0.15);
@@ -43,13 +43,6 @@
   .sidebar.collapsed {
     transform: translateX(-100%);
     width: 260px !important;
-  }
-
-  /* Also show sidebar when mobile-open class is present (independent of collapsed) */
-  .sidebar.mobile-open {
-    transform: translateX(0);
-    width: 260px !important;
-    box-shadow: 0 0 20px rgba(0,0,0,0.15);
   }
 
   /* The main shell overlay when sidebar is open */

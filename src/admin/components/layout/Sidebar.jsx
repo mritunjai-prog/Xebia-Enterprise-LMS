@@ -19,6 +19,7 @@ import {
   BarChart,
 } from "lucide-react";
 import { useAppStore } from "../../store/useAppStore";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import logoPurple from "../../../assets/logo-purple.png";
 import logoWhite from "../../../assets/logo-white.png";
 
@@ -58,11 +59,12 @@ const SubNavItem = ({ label, isActive, onClick }) => (
   </div>
 );
 
-export function Sidebar() {
+export function Sidebar({ isMobileOpen, setIsMobileOpen }) {
   const router = useRouter();
   const location = useLocation();
   const currentPath = location.pathname;
   const { setActiveSidebarItem, adminProfile, isSidebarCollapsed, toggleSidebar } = useAppStore();
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [isAnalyticsExpanded, setIsAnalyticsExpanded] = useState(
     currentPath.startsWith("/admin/analytics"),
   );
@@ -84,19 +86,27 @@ export function Sidebar() {
     }
   }, [currentPath, setActiveSidebarItem, isSidebarCollapsed]);
 
+  // Auto-close sidebar on mobile when navigating
   const handleNavClick = (path) => {
     router.navigate({ to: path });
-    if (window.matchMedia("(max-width: 768px)").matches && !isSidebarCollapsed) {
-      toggleSidebar();
+    if (isMobile && setIsMobileOpen) {
+      setIsMobileOpen(false);
     }
   };
+
+  // On mobile, use isMobileOpen to control visibility
+  // On desktop, use isSidebarCollapsed for width toggle
+  const shouldShowOnMobile = isMobile ? isMobileOpen : true;
+  const isCollapsed = isMobile ? !isMobileOpen : isSidebarCollapsed;
 
   return (
     <>
       <aside
         className={clsx(
           "sidebar sidebar-admin bg-white dark:bg-[#15151f]",
-          isSidebarCollapsed && "collapsed",
+          isMobile && !isMobileOpen && "collapsed",
+          isMobile && isMobileOpen && "mobile-open",
+          !isMobile && isSidebarCollapsed && "collapsed",
         )}
       >
         {/* Brand */}
@@ -273,7 +283,12 @@ export function Sidebar() {
         </div>
       </aside>
       {/* Mobile Overlay */}
-      {!isSidebarCollapsed && <div className="sidebar-overlay md:hidden" onClick={toggleSidebar} />}
+      {isMobile && isMobileOpen && (
+        <div className="sidebar-overlay" onClick={() => setIsMobileOpen && setIsMobileOpen(false)} />
+      )}
+      {!isMobile && !isSidebarCollapsed && (
+        <div className="sidebar-overlay md:hidden" onClick={toggleSidebar} />
+      )}
     </>
   );
 }
