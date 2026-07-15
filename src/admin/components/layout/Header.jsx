@@ -21,9 +21,11 @@ export function Header() {
   const { breadcrumbs, addToast, toggleSidebar, isSidebarCollapsed } = useAppStore();
   const router = useRouter();
 
-  const [isDark, setIsDark] = useState(
-    () => typeof window !== "undefined" && document.documentElement.classList.contains("dark"),
-  );
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
 
   const toggleDark = () => {
     const html = document.documentElement;

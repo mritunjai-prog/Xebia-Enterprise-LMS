@@ -26,8 +26,13 @@ An enterprise LMS featuring three portal roles (Admin, Trainer, Student), a micr
 | Service | URL |
 |---------|-----|
 | Frontend (Vercel) | [xebia-enterprise-lms.vercel.app](https://xebia-enterprise-lms.vercel.app) |
-| API Gateway (Render) | [xebia-api-gateway-mritunjai.onrender.com](https://xebia-api-gateway-mritunjai.onrender.com) |
-| Course Service (Render) | [xebia-course-service-mritunjai.onrender.com](https://xebia-course-service-mritunjai.onrender.com) |
+| API Gateway | [xebia-api-gateway-mritunjai.onrender.com](https://xebia-api-gateway-mritunjai.onrender.com) |
+| Course Service | [xebia-course-service-mritunjai.onrender.com](https://xebia-course-service-mritunjai.onrender.com) |
+| User Service | [xebia-user-service-mritunjai.onrender.com](https://xebia-user-service-mritunjai.onrender.com) |
+| Batch Service | [xebia-batch-service-mritunjai.onrender.com](https://xebia-batch-service-mritunjai.onrender.com) |
+| Assessment Service | [xebia-assessment-service-mritunjai.onrender.com](https://xebia-assessment-service-mritunjai.onrender.com) |
+| Event Service | [xebia-event-service-mritunjai.onrender.com](https://xebia-event-service-mritunjai.onrender.com) |
+| PostgreSQL | `xebia-postgres-mritunjai` (Render managed) |
 
 ---
 
@@ -91,7 +96,6 @@ An enterprise LMS featuring three portal roles (Admin, Trainer, Student), a micr
 ### 🚧 In Progress / Planned
 
 - 🚧 JWT authentication (currently using fake-auth pattern)
-- 🚧 Render.com deployment configuration (render.yaml incomplete)
 - 🚧 WebSocket real-time notifications
 - 🚧 Course video streaming
 - 🚧 Mobile responsive optimization
@@ -496,6 +500,19 @@ npm run build        # Production build
 npm run preview      # Preview production build locally
 ```
 
+### Render.com Deployment
+
+All backend services are deployed on Render using `render.yaml`:
+
+```bash
+# Render auto-deploys from render.yaml on push to connected branch
+# Services: API Gateway, User, Course, Batch, Assessment, Event, PostgreSQL
+```
+
+- Frontend is deployed on Vercel
+- Backend services are deployed on Render (Docker-based)
+- PostgreSQL is managed by Render
+
 ### Environment Variables
 
 <details>
@@ -563,14 +580,9 @@ npm run preview      # Preview production build locally
 - [x] Sidebar navigation fixes (dedup, section-based filtering)
 - [x] CORS consolidation (single authority at gateway)
 
-### Phase 6 — Planned 🚧
-- [ ] JWT authentication and role-based access control
-- [ ] Real-time notifications via WebSocket
-- [ ] Course video streaming support
-- [ ] Comprehensive test suites
-- [ ] CI/CD pipeline
-- [ ] Render/Vercel deployment configuration
-- [ ] Mobile responsive optimization
+### Phase 6 — Infrastructure ✅
+- [x] Render.com deployment (6 microservices + PostgreSQL)
+- [x] Docker Compose orchestration (8 services)
 
 ---
 

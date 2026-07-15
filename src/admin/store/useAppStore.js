@@ -14,20 +14,12 @@ export const useAppStore = create((set, get) => ({
     addUser: false,
   },
 
-  adminProfile: (() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("lms_admin_profile");
-        if (saved) return JSON.parse(saved);
-      } catch (e) {}
-    }
-    return {
-      name: "Admin User",
-      email: "admin@xebia.com",
-      role: "System Administrator",
-      image: null,
-    };
-  })(),
+  adminProfile: {
+    name: "Admin User",
+    email: "admin@xebia.com",
+    role: "System Administrator",
+    image: null,
+  },
 
   updateAdminProfile: (updates) =>
     set((state) => {
@@ -41,6 +33,14 @@ export const useAppStore = create((set, get) => ({
       }
       return { adminProfile: newProfile };
     }),
+
+  hydrateProfile: () => {
+    if (typeof window === "undefined") return;
+    try {
+      const saved = localStorage.getItem("lms_admin_profile");
+      if (saved) set({ adminProfile: JSON.parse(saved) });
+    } catch (e) {}
+  },
 
   dashboardData: null,
   organizations: [],

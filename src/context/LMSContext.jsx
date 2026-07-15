@@ -10,58 +10,34 @@ import {
 const LMSContext = createContext(undefined);
 
 export const LMSProvider = ({ children }) => {
-  // Initialize States from Backend API (with localStorage cache for instant login page)
-  const [teachers, setTeachers] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem("lms_teachers");
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  });
-  const [batches, setBatches] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem("lms_batches");
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  });
-  const [students, setStudents] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem("lms_students");
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  });
-  const [assessments, setAssessments] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem("lms_assessments");
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  });
-  const [submissions, setSubmissions] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem("lms_submissions");
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  });
+  // Initialize states as [] to match SSR output (no localStorage on server).
+  // Hydrate from localStorage in useEffect after first paint.
+  const [teachers, setTeachers] = useState([]);
+  const [batches, setBatches] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [assessments, setAssessments] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
+  const [codingSubmissions, setCodingSubmissions] = useState([]);
+  const [codingLeaderboard, setCodingLeaderboard] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
-  // Local coding states
-  const [codingSubmissions, setCodingSubmissions] = useState(() => {
-    const data = typeof window !== "undefined" ? localStorage.getItem("codingSubmissions") : null;
-    return data ? JSON.parse(data) : [];
-  });
-
-  const [codingLeaderboard, setCodingLeaderboard] = useState(() => {
-    const data = typeof window !== "undefined" ? localStorage.getItem("codingLeaderboard") : null;
-    return data ? JSON.parse(data) : [];
-  });
-
-  const [notifications, setNotifications] = useState(() => {
-    const data = typeof window !== "undefined" ? localStorage.getItem("notifications") : null;
-    return data ? JSON.parse(data) : [];
-  });
+  // Hydrate from localStorage after mount to avoid SSR hydration mismatch
+  useEffect(() => {
+    const load = (key) => {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : [];
+      } catch { return []; }
+    };
+    setTeachers(load("lms_teachers"));
+    setBatches(load("lms_batches"));
+    setStudents(load("lms_students"));
+    setAssessments(load("lms_assessments"));
+    setSubmissions(load("lms_submissions"));
+    setCodingSubmissions(load("codingSubmissions"));
+    setCodingLeaderboard(load("codingLeaderboard"));
+    setNotifications(load("notifications"));
+  }, []);
 
   useEffect(() => {
     const fetchBackendData = async () => {

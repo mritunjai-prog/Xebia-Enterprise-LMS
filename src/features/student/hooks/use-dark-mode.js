@@ -5,11 +5,9 @@ import { useEffect, useState } from "react";
  * Reactively returns true when the `dark` class is present on <html>.
  */
 export function useDarkMode() {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return document.documentElement.classList.contains("dark");
-  });
+  const [isDark, setIsDark] = useState(false);
   useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
     const observer = new MutationObserver(() => {
       setIsDark(document.documentElement.classList.contains("dark"));
     });
