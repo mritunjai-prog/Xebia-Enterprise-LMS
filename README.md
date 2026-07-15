@@ -21,6 +21,16 @@ An enterprise LMS featuring three portal roles (Admin, Trainer, Student), a micr
 
 ---
 
+### Live Links
+
+| Service | URL |
+|---------|-----|
+| Frontend (Vercel) | [xebia-enterprise-lms.vercel.app](https://xebia-enterprise-lms.vercel.app) |
+| API Gateway (Render) | [xebia-api-gateway-mritunjai.onrender.com](https://xebia-api-gateway-mritunjai.onrender.com) |
+| Course Service (Render) | [xebia-course-service-mritunjai.onrender.com](https://xebia-course-service-mritunjai.onrender.com) |
+
+---
+
 ## 📑 Table of Contents
 
 - [Features](#-features)
@@ -598,7 +608,11 @@ refactor: Replace MetricCard with KpiCard for consistent styling
 
 | Name | Role | GitHub |
 |------|------|--------|
-| Mritunjai | Full-Stack Developer | [@mritunjai-prog](https://github.com/mritunjai-prog) |
+| Mritunjai Singh | Full-Stack Developer / Project Lead | [@mritunjai-prog](https://github.com/mritunjai-prog) |
+| Manish Kumawat | Full-Stack Developer | [@ManishKumawat450](https://github.com/ManishKumawat450) |
+| Vijay Menaria | Full-Stack Developer | [@vijaymenaria04](https://github.com/vijaymenaria04) |
+| Vinit Menaria | Full-Stack Developer | [@Vinit1120](https://github.com/Vinit1120) |
+| Abhijeet Tiwari | Full-Stack Developer | [@Abhijeet0Tiwari](https://github.com/Abhijeet0Tiwari) |
 
 ---
 
