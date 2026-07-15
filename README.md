@@ -1,348 +1,620 @@
-<h1 align="center">
-  <img src="https://img.icons8.com/clouds/100/000000/learning.png" alt="LMS Logo" width="100"/>
-  <br/>
-  <b>Xebia Enterprise LMS</b>
-</h1>
+<div align="center">
 
-<p align="center">
-  <strong>A production-grade, full-stack Learning Management System</strong><br/>
-  Built with React 19, Spring Boot 3.3, and PostgreSQL — deployed on Vercel + Render.
-</p>
+# 🎓 Xebia Enterprise LMS
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-19-00D8FF?style=for-the-badge&logo=react&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Spring_Boot-3.3.6-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"/>
-  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Groq_AI-FF6B35?style=for-the-badge&logo=ai&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white"/>
-</p>
+**A full-stack, enterprise-grade Learning Management System for managing courses, assessments, batches, events, and trainer allocations at scale.**
 
-<p align="center">
-  <a href="https://xebia-enterprise-lms.vercel.app" target="_blank"><strong>🌐 Live Demo</strong></a> •
-  <a href="setup.md"><strong>📖 Setup Guide</strong></a> •
-  <a href="ARCHITECTURE.md"><strong>🏗️ Architecture Docs</strong></a> •
-  <a href="API.md"><strong>⚙️ API Reference</strong></a>
-</p>
+![License](https://img.shields.io/badge/license-MIT-blue)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.6-6DB33F?logo=springboot)
+![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-4.2-06B6D4?logo=tailwindcss)
+![Last Commit](https://img.shields.io/github/last-commit/mritunjai-prog/Xebia-Enterprise-LMS)
+
+An enterprise LMS featuring three portal roles (Admin, Trainer, Student), a microservices backend with 6 Spring Boot services, a React 19 frontend with TanStack Router, and a Docker-based development environment. Built for Xebia to deliver structured learning with assessments, course management, batch allocation, event hosting, and rich analytics dashboards.
+
+[**Live Demo**](#) · [**Report Bug**](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues) · [**Request Feature**](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues)
+
+</div>
 
 ---
 
-## 📋 Table of Contents
+## 📑 Table of Contents
 
-- [About the Project](#-about-the-project)
-- [Live Links](#-live-links)
-- [Key Features](#-key-features)
+- [Features](#-features)
 - [Tech Stack](#-tech-stack)
-- [Microservices Architecture](#-microservices-architecture)
-- [Project Structure](#-project-structure)
-- [Portal Walkthroughs](#-portal-walkthroughs)
-  - [Admin Portal](#admin-portal)
-  - [Student Portal](#student-portal)
-  - [Analytics Suite](#analytics-suite)
-- [Quick Start](#-quick-start)
-- [Meet the Team](#-meet-the-team)
+- [Architecture](#-architecture)
+- [Getting Started](#-getting-started)
+- [API Documentation](#-api-documentation)
+- [Database Schema](#-database-schema)
+- [Folder Structure](#-folder-structure)
+- [Deployment](#-deployment)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
-## 🌟 About the Project
+## 🚀 Features
 
-**Xebia Enterprise LMS** is a full-stack, production-deployed Learning Management System built for enterprise training at scale. It powers **two distinct user portals** — a feature-rich **Admin Portal** for course architects and platform administrators, and a beautifully designed **Student Portal** for learners — all running on a scalable Java microservices backend.
+### ✅ Implemented
 
-The platform was built over several weeks of intensive development and covers the full LMS lifecycle: from AI-assisted content creation and deep curriculum hierarchy building, all the way to student enrolment, course playback, assessments, and a 15-page enterprise analytics suite.
+**Admin Portal**
+- ✅ Dashboard with KPI metrics and charts
+- ✅ Category management (CRUD)
+- ✅ Course management with module/submodule/content builder
+- ✅ Curriculum builder with hierarchical content structure
+- ✅ Batch Management — Overview, Analytics, Allocation Matrix, Trainer Allocation Wizard, Trainer Workload
+- ✅ Assessment Management — Dashboard, Analytics, Student Reports
+- ✅ Event Management — Create, edit, delete events with DateTimePicker, image upload, draft/publish
+- ✅ Analytics Hub — 12+ analytics pages (Executive, Coverage, Hours, Pillars, AI, Certifications, Programs, Trends, Effectiveness, Champions, Investment, Apprentice Journey)
+- ✅ Organiser page
 
----
+**Trainer Portal**
+- ✅ Trainer Dashboard
+- ✅ Batch management
+- ✅ Assessment Builder with question types (MCQ, Coding, Mixed, True/False, Multi-Select)
+- ✅ Student evaluation and grading
+- ✅ Leaderboard and reports
+- ✅ Event viewing (read-only)
+- ✅ Settings
 
-## 🔗 Live Links
+**Student Portal**
+- ✅ Student Dashboard with progress tracking
+- ✅ Course browsing and enrollment
+- ✅ Batch viewing
+- ✅ Assessment taking (MCQ, Coding, Mixed)
+- ✅ Results with certificates
+- ✅ Notifications and feedback
+- ✅ Event discovery and registration
+- ✅ Profile management
 
-| Service | URL |
-|---|---|
-| 🎓 Frontend (Vercel) | https://xebia-enterprise-lms.vercel.app |
-| ⚙️ API Gateway (Render) | https://xebia-api-gateway-mritunjai.onrender.com |
-| 📦 Course Service (Render) | https://xebia-course-service-mritunjai.onrender.com |
+**Backend**
+- ✅ 6 microservices (API Gateway, User, Course, Batch, Assessment, Event)
+- ✅ Bulk User creation API (`POST /api/v1/users/bulk`)
+- ✅ Multi-tenant architecture with `TenantScopedEntity`
+- ✅ Docker Compose orchestration
+- ✅ API Gateway routing with service discovery
 
----
+### 🚧 In Progress / Planned
 
-## 🔥 Key Features
-
-### 🛡️ Admin Portal
-- **AI-Powered Course Creation** — Uses Groq API to auto-generate course descriptions, learning outcomes, prerequisites, and complete curriculum outlines.
-- **Advanced Curriculum Builder** — A fully drag-and-drop hierarchy with 4 levels: Courses → Modules → Submodules → Content Blocks. Supports reordering, renaming, editing, and deletion.
-- **Category Management** — Create, edit, and browse categories with image uploads (Cloudinary), subcategories, and linked course previews.
-- **Content Manager** — Rich text content blocks per submodule, supporting video, text, and interactive item types.
-- **Profile Settings** — Admins can update their avatar, name, and email directly from the platform header.
-
-### 🎓 Student Portal
-- **Personalized Learning Dashboard** — Welcome banner, quick-action cards, stat tiles, and interactive charts for learning activity and subject performance.
-- **Course Catalogue** — Browse, search, and filter all available courses with card-style previews.
-- **Course Playback** — Full curriculum sidebar with module/submodule navigation and content rendering per section.
-- **Assessments** — View and take assessments linked to enrolled courses.
-- **Results & Feedback** — Review assessment results and submit course feedback.
-- **Notifications Centre** — Receive and manage platform notifications.
-- **Profile Page** — Student profile overview.
-
-### 📊 Analytics Suite (7 Pages)
-- **Executive Dashboard** — High-level KPI overview with engagement trends and completion metrics.
-- **AI Transformation Report** — Tracks AI-generated vs. manually created courses and content adoption.
-- **Certifications Overview** — Certification issuance trends across cohorts.
-- **Coverage Map** — Course coverage across departments and disciplines.
-- **Flagship Programs** — Key programme summaries with cohort data.
-- **Learning Hours** — Time-in-learning metrics by team, role, and date range.
-- **Learning Pillars** — Visualizes content structured around company learning pillars.
-
-### 🏗️ Infrastructure
-- **API Gateway (Spring Cloud)** — Routes frontend traffic to the correct microservice.
-- **Flyway Database Migrations** — Fully versioned and automated schema management.
-- **Dockerized PostgreSQL** — Reproducible local database via `docker-compose`.
-- **Mobile Responsive UI** — CSS breakpoints for tablets and phones, with a sliding mobile sidebar.
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-| Category | Technology |
-|---|---|
-| Framework | React 19 + Vite |
-| Routing | TanStack Router (type-safe file-based routing) |
-| Server State | TanStack Query (data fetching & caching) |
-| Global State | Zustand |
-| Styling | Tailwind CSS + Custom Design Tokens (Purple/Teal theme) |
-| Animations | Framer Motion |
-| AI | Groq SDK (`llama-3.3-70b-versatile` model) |
-| Media | Cloudinary Upload API |
-| Charts | Recharts |
-| Icons | Lucide React |
-
-### Backend
-| Category | Technology |
-|---|---|
-| Language | Java 21 |
-| Framework | Spring Boot 3.3.6 |
-| API Layer | Spring Web MVC (REST) |
-| Database ORM | Spring Data JPA + Hibernate |
-| Migrations | Flyway |
-| Database | PostgreSQL 15 |
-| Gateway | Spring Cloud Gateway |
-| Build Tool | Apache Maven |
-
-### DevOps / Deployment
-| Category | Technology |
-|---|---|
-| Frontend Hosting | Vercel |
-| Backend Hosting | Render (Web Services) |
-| Database Hosting | Render PostgreSQL (Free Tier) |
-| Local DB | Docker Compose |
-| CI/CD | GitHub → Vercel Auto Deploy, GitHub → Render Deploy Hooks |
+- 🚧 JWT authentication (currently using fake-auth pattern)
+- 🚧 Render.com deployment configuration (render.yaml incomplete)
+- 🚧 WebSocket real-time notifications
+- 🚧 Course video streaming
+- 🚧 Mobile responsive optimization
+- 🚧 Unit and integration test suites
 
 ---
 
-## 🏗️ Microservices Architecture
+## 🛠 Tech Stack
 
-```
-Browser (Vercel Frontend)
-         │
-         ▼
-  ┌─────────────────────────────┐
-  │   API Gateway (Port 8080)   │  ← Routes all /api/* requests
-  └─────────────┬───────────────┘
-                │
-                ▼
-  ┌─────────────────────────────┐
-  │  Course Service (Port 8084) │  ← Core business logic
-  │                             │    Courses, Categories,
-  │                             │    Modules, Submodules,
-  │                             │    Content, Enrollments
-  └─────────────┬───────────────┘
-                │
-                ▼
-  ┌─────────────────────────────┐
-  │  PostgreSQL Database        │  ← Schema: course.*
-  │  (Docker / Render)          │    Managed by Flyway
-  └─────────────────────────────┘
+| Layer | Technology | Version | Purpose |
+|-------|-----------|---------|---------|
+| **Frontend** | React | 19.2 | UI library |
+| **Routing** | TanStack Router | 1.168 | File-based routing with type safety |
+| **Build Tool** | Vite | 8.0 | Fast dev server and bundler |
+| **Styling** | Tailwind CSS | 4.2 | Utility-first CSS framework |
+| **UI Components** | shadcn/ui | — | 46 accessible Radix UI components |
+| **State (UI)** | Zustand | 5.0 | Lightweight UI state management |
+| **State (Data)** | React Context | — | Domain data (LMSContext) |
+| **Charts** | Recharts | 2.15 | Interactive data visualizations |
+| **Animations** | Framer Motion | 12.4 | Declarative animations |
+| **Forms** | React Hook Form + Zod | 7.71 / 3.24 | Form handling and validation |
+| **Backend Framework** | Spring Boot | 3.3.6 | Java microservices |
+| **API Gateway** | Spring Cloud Gateway | 2023.0.4 | Request routing and CORS |
+| **Language** | Java | 17 | Backend runtime |
+| **Database** | PostgreSQL | 16 | Primary data store |
+| **Cache** | Redis | 7 | Session and data caching |
+| **Containerization** | Docker Compose | — | Multi-service orchestration |
+| **Build Tool** | Maven | 3.9.6 | Java dependency management |
+
+---
+
+## 🏗 Architecture
+
+### System Overview
+
+The application follows a **microservices architecture** with a single API Gateway acting as the entry point. The React frontend communicates exclusively through the gateway, which routes requests to the appropriate backend service.
+
+```mermaid
+flowchart LR
+    subgraph Client["🖥️ Frontend (React 19)"]
+        A[Admin Portal] --> GW
+        B[Trainer Portal] --> GW
+        C[Student Portal] --> GW
+    end
+
+    subgraph Gateway["🔀 API Gateway :8080"]
+        GW[Spring Cloud Gateway]
+    end
+
+    subgraph Services["⚙️ Microservices"]
+        US[User Service :8081]
+        CS[Course Service :8084]
+        BS[Batch Service :8085]
+        AS[Assessment Service :8086]
+        ES[Event Service :8087]
+    end
+
+    subgraph Data["💾 Data Layer"]
+        PG[(PostgreSQL 16)]
+        RD[(Redis 7)]
+    end
+
+    GW --> US & CS & BS & AS & ES
+    US & CS & BS & AS & ES --> PG
+    CS & AS --> RD
 ```
 
-### API Gateway Routes
-| Incoming Request | Forwards To |
-|---|---|
-| `GET /api/courses/**` | Course Service |
-| `GET /api/categories/**` | Course Service |
-| `GET /api/modules/**` | Course Service |
-| `GET /api/enrollments/**` | Course Service |
-| `GET /api/health` | API Gateway Health |
+### Request Flow
 
----
+```mermaid
+sequenceDiagram
+    participant C as React Client
+    participant G as API Gateway
+    participant S as Microservice
+    participant D as PostgreSQL
 
-## 📁 Project Structure
-
-```
-Xebia-Enterprise-LMS/
-├── 📁 src/                          # React Frontend Source
-│   ├── 📁 routes/                   # TanStack file-based routing
-│   │   ├── __root.jsx               # Root layout (Sidebar + Header)
-│   │   ├── index.jsx                # Admin Dashboard (/)
-│   │   ├── 📁 admin/                # Admin-only routes
-│   │   │   ├── 📁 analytics/        # 7 analytics sub-pages
-│   │   │   ├── 📁 categories/       # Category management pages
-│   │   │   ├── 📁 courses/          # Course detail pages
-│   │   │   └── 📁 curriculum/       # Curriculum builder pages
-│   │   ├── 📁 student/              # Student portal routes
-│   │   │   ├── index.jsx            # Student dashboard
-│   │   │   ├── courses.jsx          # Course catalogue
-│   │   │   ├── assessments.jsx      # Assessments listing
-│   │   │   ├── results.jsx          # Assessment results
-│   │   │   ├── feedback.jsx         # Course feedback
-│   │   │   ├── notifications.jsx    # Notifications centre
-│   │   │   └── 📁 course/           # Course playback
-│   │   └── organiser.jsx            # Organiser/Trainer portal
-│   ├── 📁 admin/                    # Admin page components
-│   │   ├── 📁 pages/                # Dashboard, Courses, Categories, Curriculum
-│   │   ├── 📁 components/           # Shared UI, layout (Sidebar, Header)
-│   │   ├── index.css                # Admin design tokens & layout CSS
-│   │   └── responsive.css           # Mobile responsiveness breakpoints
-│   ├── 📁 components/               # Global components
-│   │   ├── 📁 layout/               # Student sidebar & navbar
-│   │   └── cursor-trail.jsx         # Premium cursor trail effect
-│   ├── 📁 features/                 # Feature-scoped modules
-│   │   └── 📁 student/              # Student dashboard widgets & charts
-│   ├── 📁 services/                 # API service layer
-│   │   └── api.js                   # Axios calls to API Gateway
-│   └── 📁 lib/                      # Utilities (Groq AI, store, helpers)
-│
-├── 📁 backend/                      # Java Backend Monorepo
-│   ├── 📁 api-gateway/              # Spring Cloud Gateway (Port 8080)
-│   ├── 📁 course-service/           # Core service (Port 8084)
-│   │   └── 📁 db/migration/         # Flyway SQL migrations (V1–V10.2)
-│   ├── 📁 common-lib/               # Shared DTOs and utilities
-│   ├── docker-compose.yml           # Local PostgreSQL setup
-│   └── pom.xml                      # Parent Maven build file
-│
-├── README.md                        # This file
-├── setup.md                         # Complete local setup guide
-├── API.md                           # API endpoints reference
-└── ARCHITECTURE.md                  # Deep architecture documentation
+    C->>G: GET /api/v1/events
+    G->>G: Route matching + stripPrefix
+    G->>S: Forward to event-service:8087
+    S->>D: JPA query
+    D-->>S: ResultSet
+    S-->>G: JSON response
+    G-->>C: 200 OK + JSON
 ```
 
 ---
 
-## 🚀 Quick Start
-
-> **👉 For a full, beginner-friendly step-by-step setup guide (with Java installation, Docker setup, and environment variables), please read the [Complete SETUP.md Guide](setup.md).**
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ and npm
-- Java 21 (JDK)
-- Apache Maven 3.9+
-- Docker Desktop (running)
 
-### 1. Clone
+| Tool | Version | Download |
+|------|---------|----------|
+| Node.js | 18+ | [nodejs.org](https://nodejs.org/) |
+| Java JDK | 17+ | [adoptium.net](https://adoptium.net/) |
+| Docker | 24+ | [docker.com](https://www.docker.com/) |
+| Docker Compose | 2.20+ | Included with Docker Desktop |
+| Git | 2.40+ | [git-scm.com](https://git-scm.com/) |
+
+### Installation
+
+**1. Clone the repository**
 ```bash
 git clone https://github.com/mritunjai-prog/Xebia-Enterprise-LMS.git
 cd Xebia-Enterprise-LMS
 ```
 
-### 2. Start the Backend (Database + Microservices)
+**2. Start the backend services (Docker)**
 ```bash
 cd backend
 docker compose up --build -d
 ```
 
-### 3. Start Frontend
+This starts 8 containers: API Gateway, User Service, Course Service, Batch Service, Assessment Service, Event Service, PostgreSQL, and Redis.
+
+**3. Install frontend dependencies**
 ```bash
-# In project root (Terminal 3)
+cd ..
 npm install
+```
+
+**4. Start the frontend dev server**
+```bash
 npm run dev
 ```
 
-### 4. Create your `.env` file in the root
-```env
-VITE_API_BASE_URL=http://localhost:8080
-VITE_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
-VITE_GROQ_API_KEY=your_groq_api_key
+The app will be available at **http://localhost:3000**.
+
+### Verifying the Setup
+
+1. **Frontend**: Open `http://localhost:3000` — you should see the login page
+2. **Backend Gateway**: Visit `http://localhost:8080/api/v1/users` — should return `[]` (empty array)
+3. **Docker Status**: Run `docker ps` — all 8 containers should show `Up` status
+
+---
+
+## 📡 API Documentation
+
+### User Service (`/api/v1/users`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/users` | List all users (optional `?role=` filter) |
+| POST | `/api/v1/users` | Create a single user |
+| POST | `/api/v1/users/bulk` | Bulk create users (JSON array, any size) |
+
+### Course Service (`/api/courses`, `/api/categories`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/courses` | List all courses |
+| POST | `/api/courses` | Create a course |
+| PUT | `/api/courses/{id}` | Update a course |
+| DELETE | `/api/courses/{id}` | Delete a course |
+| GET | `/api/categories` | List all categories |
+| POST | `/api/categories` | Create a category |
+| GET | `/api/enrollments` | List enrollments |
+| POST | `/api/enrollments` | Enroll in a course |
+| GET | `/api/progress` | Get progress data |
+
+### Batch Service (`/api/v1/batches`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/batches` | List all batches |
+| POST | `/api/v1/batches` | Create a batch |
+| GET | `/api/v1/batches/{id}` | Get batch details |
+| PUT | `/api/v1/batches/{id}` | Update a batch |
+| DELETE | `/api/v1/batches/{id}` | Delete a batch |
+| POST | `/api/v1/batches/{id}/students` | Enroll student in batch |
+
+### Trainer Allocation Service (`/api/v1/allocations`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/allocations` | List all allocations |
+| POST | `/api/v1/allocations` | Create allocation |
+| DELETE | `/api/v1/allocations/{id}` | Delete allocation |
+| GET | `/api/v1/allocations/dashboard` | Allocation dashboard KPIs |
+| GET | `/api/v1/allocations/analytics` | Allocation analytics |
+
+### Assessment Service (`/api/v1/assessments`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/assessments` | List all assessments |
+| POST | `/api/v1/assessments` | Create assessment |
+| PUT | `/api/v1/assessments/{id}` | Update assessment |
+| DELETE | `/api/v1/assessments/{id}` | Delete assessment |
+| GET | `/api/v1/assessments/dashboard` | Admin dashboard data |
+| GET | `/api/v1/assessments/analytics` | Admin analytics data |
+| POST | `/api/v1/submissions` | Submit assessment attempt |
+| GET | `/api/v1/submissions` | List submissions |
+
+### Event Service (`/api/v1/events`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/events` | List all events |
+| POST | `/api/v1/events` | Create event |
+| GET | `/api/v1/events/{id}` | Get event details |
+| PUT | `/api/v1/events/{id}` | Update event |
+| DELETE | `/api/v1/events/{id}` | Soft-delete event |
+| POST | `/api/v1/events/{id}/register` | Register for event |
+| DELETE | `/api/v1/events/{id}/register` | Cancel registration |
+| GET | `/api/v1/events/{id}/registration-status` | Check registration |
+| GET | `/api/v1/events/{id}/registrations` | List event registrants |
+| GET | `/api/v1/events/registrations/my` | My registrations |
+
+---
+
+## 🗄 Database Schema
+
+### Entity Relationship Diagram
+
+```mermaid
+erDiagram
+    USERS {
+        uuid id PK
+        string name
+        string email
+        string role
+        string department
+        string avatar
+        float averageScore
+        int assessmentsCompleted
+    }
+
+    COURSES {
+        uuid id PK
+        string title
+        string description
+        string categoryId FK
+        string imageUrl
+        boolean active
+    }
+
+    CATEGORIES {
+        uuid id PK
+        string name
+        string slug
+        string description
+        string color
+        boolean active
+    }
+
+    BATCHES {
+        uuid id PK
+        string name
+        string course
+        string university
+        string academicSession
+        string status
+        string createdBy
+        string createdByName
+    }
+
+    ASSESSMENTS {
+        uuid id PK
+        string title
+        string type
+        string difficulty
+        int marks
+        int duration
+        string status
+        string[] batches
+    }
+
+    SUBMISSIONS {
+        uuid id PK
+        uuid assessmentId
+        uuid studentId
+        uuid batchId
+        int score
+        int totalMarks
+        string status
+    }
+
+    EVENTS {
+        uuid id PK
+        uuid tenantId
+        string title
+        string description
+        timestamp startDateTime
+        timestamp endDateTime
+        timestamp registrationDeadline
+        string location
+        boolean isOnline
+        string status
+        int maxCapacity
+        boolean isActive
+    }
+
+    EVENT_REGISTRATIONS {
+        uuid id PK
+        uuid eventId FK
+        string studentId
+        string studentName
+        string studentEmail
+        string status
+    }
+
+    TRAINER_ALLOCATIONS {
+        uuid id PK
+        string trainerId
+        string batchId
+        string courseId
+        string status
+        string academicSession
+    }
+
+    COURSES ||--o{ COURSE_MODULE : contains
+    COURSE_MODULE ||--o{ SUB_MODULE : contains
+    SUB_MODULE ||--o{ CONTENT_ITEM : contains
+    CATEGORIES ||--o{ COURSES : belongs_to
+    COURSES ||--o{ ENROLLMENTS : has
+    USERS ||--o{ ENROLLMENTS : enrolled_in
+    ASSESSMENTS ||--o{ SUBMISSIONS : has
+    USERS ||--o{ SUBMISSIONS : submitted
+    EVENTS ||--o{ EVENT_REGISTRATIONS : has
 ```
 
-Open `http://localhost:5173` — you're in! 🎉
+---
+
+## 📁 Folder Structure
+
+```
+Xebia-Enterprise-LMS/
+├── src/                              # React frontend source
+│   ├── routes/                       # TanStack Router file-based routes
+│   │   ├── admin/                    # Admin portal routes (28 files)
+│   │   │   ├── analytics/            # 12+ analytics pages
+│   │   │   ├── batches/              # Batch management routes
+│   │   │   ├── assessments/          # Assessment management routes
+│   │   │   ├── courses/              # Course management routes
+│   │   │   ├── categories/           # Category management routes
+│   │   │   ├── curriculum/           # Curriculum builder routes
+│   │   │   └── events/               # Event management routes
+│   │   ├── student/                  # Student portal routes (16 files)
+│   │   └── trainer/                  # Trainer portal routes (9 files)
+│   ├── admin/                        # Admin portal pages & components
+│   │   ├── pages/                    # Page components
+│   │   │   ├── Batches/              # Batch overview, analytics, allocation
+│   │   │   ├── Assessments/          # Assessment overview, analytics, detail
+│   │   │   ├── Events/               # Event list, create/edit
+│   │   │   ├── Categories/           # Category CRUD
+│   │   │   ├── Courses/              # Course CRUD + content manager
+│   │   │   ├── Dashboard/            # Admin dashboard
+│   │   │   ├── Analytics/            # Analytics hub
+│   │   │   └── Curriculum/           # Curriculum builder
+│   │   ├── components/               # Admin-specific components
+│   │   ├── features/                 # Analytics feature components
+│   │   ├── services/                 # Admin API service
+│   │   └── store/                    # Zustand store
+│   ├── components/                   # Shared components
+│   │   ├── ui/                       # 46 shadcn/ui components
+│   │   ├── layout/                   # Unified sidebar, header
+│   │   ├── assessment-admin/         # Assessment cards, report table
+│   │   ├── assessment-builder/       # Question builder panels
+│   │   ├── analytics/                # 16 analytics sub-components
+│   │   └── lms-sections.js           # LMS section definitions
+│   ├── pages/                        # Student/trainer portal pages
+│   │   └── Events/                   # Student & trainer event pages
+│   ├── context/                      # React Context (LMSContext)
+│   ├── hooks/                        # Custom hooks (useAnalyticsData)
+│   ├── services/                     # Unified API service (api.js)
+│   ├── utils/                        # Utility functions
+│   └── assets/                       # Images, logos
+│
+├── backend/                          # Spring Boot microservices
+│   ├── docker-compose.yml            # Orchestrates all 8 containers
+│   ├── pom.xml                       # Parent Maven POM
+│   ├── common-lib/                   # Shared library (BaseEntity, TenantScopedEntity, security)
+│   ├── api-gateway/                  # Spring Cloud Gateway (:8080)
+│   ├── user-service/                 # User management (:8081)
+│   ├── course-service/               # Courses, categories, enrollments (:8084)
+│   ├── batch-service/                # Batches, trainer allocations (:8085)
+│   ├── assessment-service/           # Assessments, submissions, AI (:8086)
+│   └── event-service/                # Events, registrations (:8087)
+│
+├── .mimocode/                        # AI planning documents
+│   └── plans/                        # Module implementation plans
+├── docs/                             # Documentation
+└── package.json                      # Frontend dependencies
+```
 
 ---
 
-## 🖥️ Portal Walkthroughs
+## 🚢 Deployment
 
-### Admin Portal
-The admin portal (`/`) is the control centre for platform administrators. It features:
-- A collapsible **Sidebar** with dark mode support.
-- **Dashboard** with live KPI metrics and course/category overviews.
-- **Courses** module — Create, list, edit courses; build a full 4-level curriculum hierarchy.
-- **Categories** module — Organise courses by category with image uploads and AI-generated descriptions.
-- **Analytics** menu — 7 sub-pages providing enterprise learning analytics with charts and data tables.
+### Docker (Recommended for Backend)
 
-### Student Portal
-The student portal (`/student`) is a dedicated, fully separate experience:
-- A **dark purple sidebar** with independent navigation, profile, and settings.
-- **Dashboard** with personalized metrics, activity charts, and quick action cards.
-- **Course Catalogue** — Browse enrolled and available courses with search and filter.
-- **Course Playback** — Full video/content viewer with curriculum sidebar navigation.
-- **Assessments** — Take quizzes and assessments tied to courses.
-- **Results, Feedback, and Notifications** — Post-course activities.
+```bash
+cd backend
+docker compose up --build -d
+```
 
-### Analytics Suite
-Accessible from the Admin sidebar under "Analytics", this 7-page suite provides:
-- **Executive**: Top-level KPI cards — completions, certifications, NPS, hours.
-- **Coverage**: Heatmap-style view of content coverage across the organization.
-- **Hours**: Learning hours tracked by team, role, and time range.
-- **AI Transformation**: Metrics on AI-generated vs. manual content.
-- **Flagship Programs**: Key program enrolment and performance summaries.
-- **Certifications**: Certification completion trends over time.
-- **Pillars**: Learning content organised by enterprise learning pillars.
+### Frontend Build
 
----
+```bash
+npm run build        # Production build
+npm run preview      # Preview production build locally
+```
 
-## 👥 Meet the Team
+### Environment Variables
 
-<table align="center">
-  <tr>
-    <td align="center">
-      <a href="https://github.com/mritunjai-prog">
-        <img src="https://github.com/mritunjai-prog.png" width="90px;" alt="Mritunjai Singh"/><br/>
-        <b>Mritunjai Singh</b>
-      </a><br/>
-      <sub>Full Stack Lead</sub>
-    </td>
-    <td align="center">
-      <a href="https://github.com/Abhijeet0Tiwari">
-        <img src="https://github.com/Abhijeet0Tiwari.png" width="90px;" alt="Abhijeet Tiwari"/><br/>
-        <b>Abhijeet Tiwari</b>
-      </a><br/>
-      <sub>Backend Developer</sub>
-    </td>
-    <td align="center">
-      <a href="https://github.com/ManishKumawat450">
-        <img src="https://github.com/ManishKumawat450.png" width="90px;" alt="Manish Kumawat"/><br/>
-        <b>Manish Kumawat</b>
-      </a><br/>
-      <sub>Frontend Developer</sub>
-    </td>
-    <td align="center">
-      <a href="https://github.com/Vijay-Menaria">
-        <img src="https://github.com/github.png" width="90px;" alt="Vijay Menaria"/><br/>
-        <b>Vijay Menaria</b>
-      </a><br/>
-      <sub>UI/UX Developer</sub>
-    </td>
-    <td align="center">
-      <a href="https://github.com/Vinit1120">
-        <img src="https://github.com/github.png" width="90px;" alt="Vinit Menaria"/><br/>
-        <b>Vinit Menaria</b>
-      </a><br/>
-      <sub>Backend Developer</sub>
-    </td>
-  </tr>
-</table>
+<details>
+<summary><strong>Backend Environment Variables</strong></summary>
+
+| Variable | Service | Description | Default |
+|----------|---------|-------------|---------|
+| `SERVER_PORT` | All | Service port | Varies per service |
+| `DB_HOST` | All | PostgreSQL host | `localhost` |
+| `DB_NAME` | All | Database name | `postgres` |
+| `DB_USERNAME` | All | Database user | `postgres` |
+| `DB_PASSWORD` | All | Database password | — |
+| `REDIS_HOST` | Gateway, Course, Assessment | Redis host | `localhost` |
+| `JWT_SECRET` | All | JWT signing secret | — |
+| `SERVICES_COURSE` | Gateway | Course service URL | `http://course-service:8084` |
+| `SERVICES_USER` | Gateway | User service URL | `http://user-service:8081` |
+| `SERVICES_BATCH` | Gateway | Batch service URL | `http://batch-service:8085` |
+| `SERVICES_ASSESSMENT` | Gateway | Assessment service URL | `http://assessment-service:8086` |
+| `SERVICES_EVENT` | Gateway | Event service URL | `http://event-service:8087` |
+
+</details>
+
+<details>
+<summary><strong>Frontend Environment Variables</strong></summary>
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `VITE_API_BASE_URL` | Backend API base URL | `http://localhost:8080/api` |
+| `VITE_CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name | `your-cloud-name` |
+| `VITE_CLOUDINARY_UPLOAD_PRESET` | Cloudinary upload preset | `your-preset` |
+
+</details>
 
 ---
 
-<div align="center">
-  <p>⭐ Star this repository if you found it useful!</p>
-  <p>Built with ❤️ by the Xebia LMS Team</p>
-</div>
+## 📋 Roadmap
+
+### Phase 1 — Core Platform ✅
+- [x] Admin portal with dashboard, categories, courses, curriculum
+- [x] Student portal with course browsing, assessment taking, results
+- [x] Trainer portal with assessment builder, evaluation, leaderboard
+- [x] Microservices backend with API Gateway routing
+
+### Phase 2 — Batch & Allocation Management ✅
+- [x] Batch Management module (overview, analytics, allocation matrix)
+- [x] Trainer Allocation Wizard (4-step flow)
+- [x] Trainer Workload monitoring
+- [x] Batch entity tracking (createdBy, createdByName)
+
+### Phase 3 — Assessment Enhancement ✅
+- [x] Admin Assessment Management (dashboard, analytics, student reports)
+- [x] Assessment card styling matching category pattern
+- [x] Compact KPI card layout (2x3 grid)
+- [x] Analytics chart optimization (fit on one screen)
+
+### Phase 4 — Event Management ✅
+- [x] Event CRUD with DateTimePicker, image upload
+- [x] Student event registration and cancellation
+- [x] Trainer event viewing
+- [x] Draft/Publish event workflow
+
+### Phase 5 — Infrastructure ✅
+- [x] Docker Compose orchestration (8 services)
+- [x] Bulk User creation API
+- [x] Sidebar navigation fixes (dedup, section-based filtering)
+- [x] CORS consolidation (single authority at gateway)
+
+### Phase 6 — Planned 🚧
+- [ ] JWT authentication and role-based access control
+- [ ] Real-time notifications via WebSocket
+- [ ] Course video streaming support
+- [ ] Comprehensive test suites
+- [ ] CI/CD pipeline
+- [ ] Render/Vercel deployment configuration
+- [ ] Mobile responsive optimization
+
+---
+
+## 🤝 Contributing
+
+### Branch Naming
+- `feature/<module-name>` — New features
+- `fix/<issue-description>` — Bug fixes
+- `refactor/<component>` — Code refactoring
+
+### Commit Messages
+```
+feat: Add Event Management module with admin CRUD
+fix: Sidebar duplication on dropdown toggle
+refactor: Replace MetricCard with KpiCard for consistent styling
+```
+
+### Pull Request Process
+1. Fork the repository
+2. Create a feature branch from `lms-integrate`
+3. Make your changes and test locally
+4. Ensure `npm run build` passes (frontend)
+5. Ensure Docker services build successfully (backend)
+6. Submit a PR with a clear description
+
+### Coding Standards
+- **Frontend**: ESLint + Prettier (pre-configured), Tailwind CSS for styling
+- **Backend**: Spring Boot conventions, `ddl-auto: update` for schema management
+- **Components**: Reuse existing shadcn/ui components, match the design system
+- **Color palette**: `#6C1D5F` (primary), `#84117C` (secondary), `#01AC9F` (teal), `#FF6200` (orange)
+
+---
+
+## 👥 Contributors
+
+| Name | Role | GitHub |
+|------|------|--------|
+| Mritunjai | Full-Stack Developer | [@mritunjai-prog](https://github.com/mritunjai-prog) |
+
+---
+
+## 📄 License
+
+This project is private and proprietary. License to be decided.
+
+---
+
+## 🙏 Acknowledgements
+
+- **[Lovable](https://lovable.dev)** — AI-powered full-stack development platform
+- **[shadcn/ui](https://ui.shadcn.com)** — Beautiful, accessible component library
+- **[TanStack](https://tanstack.com)** — Type-safe routing and data fetching
+- **[Recharts](https://recharts.org)** — Composable charting library
+- **[Framer Motion](https://www.framer.com/motion)** — Production-ready animation library
+- **[Spring Boot](https://spring.io/projects/spring-boot)** — Enterprise Java framework
+- **[Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway)** — API gateway for microservices
+- **[Xebia](https://xebia.com)** — Enterprise technology consultancy
