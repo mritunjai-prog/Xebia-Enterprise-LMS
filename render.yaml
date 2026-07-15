@@ -1,31 +1,35 @@
 services:
+  # ── API Gateway ──
   - type: web
     name: xebia-api-gateway-mritunjai
     env: docker
     plan: free
     dockerContext: backend
-    dockerfilePath: backend/api-gateway/Dockerfile
+    dockerfilePath: backend/Dockerfile
     envVars:
       - key: SERVER_PORT
         value: "8080"
-      - key: JWT_SECRET
-        generateValue: true
-      - key: REDIS_HOST
-        value: "YOUR_UPSTASH_REDIS_URL_HERE"
+      - key: SERVICES_USER
+        value: https://xebia-user-service-mritunjai.onrender.com
       - key: SERVICES_COURSE
-        value: http://xebia-course-service-mritunjai:8084
+        value: https://xebia-course-service-mritunjai.onrender.com
+      - key: SERVICES_BATCH
+        value: https://xebia-batch-service-mritunjai.onrender.com
+      - key: SERVICES_ASSESSMENT
+        value: https://xebia-assessment-service-mritunjai.onrender.com
+      - key: SERVICES_EVENT
+        value: https://xebia-event-service-mritunjai.onrender.com
 
+  # ── User Service ──
   - type: web
-    name: xebia-course-service-mritunjai
+    name: xebia-user-service-mritunjai
     env: docker
     plan: free
     dockerContext: backend
-    dockerfilePath: backend/course-service/Dockerfile
+    dockerfilePath: backend/Dockerfile
     envVars:
       - key: SERVER_PORT
-        value: "8084"
-      - key: JWT_SECRET
-        generateValue: true
+        value: "8081"
       - key: DB_HOST
         fromDatabase:
           name: xebia-postgres-mritunjai
@@ -42,8 +46,114 @@ services:
         fromDatabase:
           name: xebia-postgres-mritunjai
           property: password
-      - key: REDIS_HOST
-        value: "YOUR_UPSTASH_REDIS_URL_HERE"
+
+  # ── Course Service ──
+  - type: web
+    name: xebia-course-service-mritunjai
+    env: docker
+    plan: free
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: SERVER_PORT
+        value: "8084"
+      - key: DB_HOST
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: password
+
+  # ── Batch Service ──
+  - type: web
+    name: xebia-batch-service-mritunjai
+    env: docker
+    plan: free
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: SERVER_PORT
+        value: "8085"
+      - key: DB_HOST
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: password
+
+  # ── Assessment Service ──
+  - type: web
+    name: xebia-assessment-service-mritunjai
+    env: docker
+    plan: free
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: SERVER_PORT
+        value: "8086"
+      - key: DB_HOST
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: password
+
+  # ── Event Service ──
+  - type: web
+    name: xebia-event-service-mritunjai
+    env: docker
+    plan: free
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: SERVER_PORT
+        value: "8087"
+      - key: DB_HOST
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: xebia-postgres-mritunjai
+          property: password
 
 databases:
   - name: xebia-postgres-mritunjai
