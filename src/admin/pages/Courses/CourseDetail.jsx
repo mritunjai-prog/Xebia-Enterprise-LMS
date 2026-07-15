@@ -42,7 +42,7 @@ import {
   MoreVertical,
   EyeOff,
 } from "lucide-react";
-import { CourseService, CategoryService } from "../../../services/api";
+import { CourseService, CategoryService } from "@/services/api";
 import { Link, useParams, useNavigate } from "@tanstack/react-router";
 import { useAppStore } from "../../store/useAppStore";
 import CreateCourse from "./CreateCourse";
@@ -127,7 +127,7 @@ export default function CourseDetail() {
     try {
       await CourseService.deleteCourse(course.id);
       addToast("Course deleted successfully", "success");
-      navigate({ to: "/admin/courses" });
+      navigate({ to: "/courses" });
     } catch (err) {
       addToast("Failed to delete course", "error");
     }
@@ -245,12 +245,12 @@ export default function CourseDetail() {
                 {isPublished ? "PUBLISHED" : "DRAFT"}
               </span>
               <span
-                className={`text-[11px] font-bold px-3 py-1.5 rounded-full shadow-[0_0_10px_rgba(108,29,95,0.6)] tracking-wide ${isActive ? "bg-gradient-to-r from-accent-2 to-accent-2 text-white shadow-[0_0_12px_rgba(16,185,129,0.5)]" : "bg-gradient-to-r from-destructive to-destructive text-white shadow-[0_0_12px_rgba(239,68,68,0.5)]"}`}
+                className={`text-[11px] font-bold px-3 py-1.5 rounded-full shadow-[0_0_10px_rgba(108,29,95,0.6)] tracking-wide ${isActive ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-[0_0_12px_rgba(16,185,129,0.5)]" : "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-[0_0_12px_rgba(239,68,68,0.5)]"}`}
               >
                 {isActive ? "ACTIVE" : "INACTIVE"}
               </span>
-              <span className="flex items-center gap-1.5 text-[11px] font-bold text-accent-2 bg-accent-2/30 backdrop-blur-sm px-3 py-1.5 rounded-full border border-accent-2/50 shadow-[0_0_12px_rgba(59,130,246,0.6)] tracking-wide">
-                <Award className="w-3.5 h-3.5 text-accent-2" />
+              <span className="flex items-center gap-1.5 text-[11px] font-bold text-blue-100 bg-blue-500/30 backdrop-blur-sm px-3 py-1.5 rounded-full border border-blue-400/50 shadow-[0_0_12px_rgba(59,130,246,0.6)] tracking-wide">
+                <Award className="w-3.5 h-3.5 text-blue-300" />
                 {level}
               </span>
             </div>
@@ -268,7 +268,7 @@ export default function CourseDetail() {
               </button>
               <button
                 onClick={handleDeleteCourse}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-destructive hover:bg-destructive text-white text-sm font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(220,38,38,0.5)] hover:shadow-[0_0_20px_rgba(220,38,38,0.7)] hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(220,38,38,0.5)] hover:shadow-[0_0_20px_rgba(220,38,38,0.7)] hover:-translate-y-0.5"
               >
                 <Trash2 className="w-4 h-4" /> Delete Course
               </button>
@@ -276,17 +276,17 @@ export default function CourseDetail() {
                 onClick={handlePublishToggle}
                 className={`inline-flex items-center gap-2 px-5 py-2.5 backdrop-blur-md border text-white text-sm font-semibold rounded-xl transition-all hover:-translate-y-0.5 ${
                   isPublished
-                    ? "bg-destructive/20 border-destructive/30 hover:bg-destructive/30 shadow-[0_0_15px_rgba(245,158,11,0.4)] hover:shadow-[0_0_20px_rgba(245,158,11,0.6)]"
-                    : "bg-accent-2/20 border-accent-2/30 hover:bg-accent-2/30 shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]"
+                    ? "bg-amber-500/20 border-amber-400/30 hover:bg-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.4)] hover:shadow-[0_0_20px_rgba(245,158,11,0.6)]"
+                    : "bg-emerald-500/20 border-emerald-400/30 hover:bg-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]"
                 }`}
               >
                 {isPublished ? (
                   <>
-                    <EyeOff className="w-4 h-4 text-destructive" /> Unpublish
+                    <EyeOff className="w-4 h-4 text-amber-400" /> Unpublish
                   </>
                 ) : (
                   <>
-                    <Globe className="w-4 h-4 text-accent-2" /> Publish
+                    <Globe className="w-4 h-4 text-emerald-400" /> Publish
                   </>
                 )}
               </button>
@@ -294,17 +294,17 @@ export default function CourseDetail() {
                 onClick={handleActiveToggle}
                 className={`inline-flex items-center gap-2 px-5 py-2.5 backdrop-blur-md border text-white text-sm font-semibold rounded-xl transition-all hover:-translate-y-0.5 ${
                   isActive
-                    ? "bg-destructive/20 border-destructive/30 hover:bg-destructive/30 shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:shadow-[0_0_20px_rgba(239,68,68,0.6)]"
-                    : "bg-accent-2/20 border-accent-2/30 hover:bg-accent-2/30 shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]"
+                    ? "bg-red-500/20 border-red-400/30 hover:bg-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:shadow-[0_0_20px_rgba(239,68,68,0.6)]"
+                    : "bg-emerald-500/20 border-emerald-400/30 hover:bg-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]"
                 }`}
               >
                 {isActive ? (
                   <>
-                    <XCircle className="w-4 h-4 text-destructive" /> Deactivate
+                    <XCircle className="w-4 h-4 text-red-400" /> Deactivate
                   </>
                 ) : (
                   <>
-                    <CheckCircle className="w-4 h-4 text-accent-2" /> Activate
+                    <CheckCircle className="w-4 h-4 text-emerald-400" /> Activate
                   </>
                 )}
               </button>
@@ -331,13 +331,13 @@ export default function CourseDetail() {
             label: "LESSONS",
             value: course.lessonsCount || 0,
             icon: FileText,
-            color: "text-destructive bg-destructive/10",
+            color: "text-orange-500 bg-orange-500/10",
           },
           {
             label: "DURATION",
             value: duration,
             icon: Clock,
-            color: "text-primary-glow bg-primary-glow/10",
+            color: "text-pink-500 bg-pink-500/10",
           },
         ].map((stat, idx) => (
           <motion.div
@@ -525,7 +525,7 @@ export default function CourseDetail() {
                       Students can currently enroll in this course.
                     </p>
                   </div>
-                  <div className="w-12 h-6 bg-accent-2 rounded-full relative cursor-pointer">
+                  <div className="w-12 h-6 bg-emerald-500 rounded-full relative cursor-pointer">
                     <div className="absolute right-1 top-1 bg-white w-4 h-4 rounded-full shadow" />
                   </div>
                 </div>
@@ -555,13 +555,13 @@ export default function CourseDetail() {
                     action: "Course published",
                     date: "2 hours ago",
                     icon: Globe,
-                    color: "bg-accent-2",
+                    color: "bg-emerald-500",
                   },
                   {
                     action: "Module 1 updated",
                     date: "1 day ago",
                     icon: Edit3,
-                    color: "bg-accent-2",
+                    color: "bg-blue-500",
                   },
                   {
                     action: "Course created",
@@ -719,7 +719,7 @@ export default function CourseDetail() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium">
-                    <Star className="w-4 h-4 text-destructive" /> Avg. Rating
+                    <Star className="w-4 h-4 text-orange-400" /> Avg. Rating
                   </div>
                   <span className="font-bold text-[#6C1D5F] dark:text-[#84117C]">
                     {stats.rating}

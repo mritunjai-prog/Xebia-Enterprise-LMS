@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppStore } from "../../store/useAppStore";
-import { CourseService, CategoryService } from "../../../services/api";
+import { CourseService, CategoryService } from "@/services/api";
 import { useRouter } from "@tanstack/react-router";
 import {
   Search,
@@ -15,9 +15,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
 
 const LEVEL_COLORS = {
-  Beginner: "bg-accent-2 text-white",
-  Intermediate: "bg-primary text-white",
-  Advanced: "bg-destructive text-white",
+  Beginner: "bg-emerald-500 text-white",
+  Intermediate: "bg-purple-600 text-white",
+  Advanced: "bg-orange-500 text-white",
   Expert: "bg-gray-800 dark:bg-gray-700 text-white",
 };
 
@@ -87,15 +87,15 @@ export default function Curriculum() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 dark:bg-[#6C1D5F]/20 border border-primary/20 dark:border-[#6C1D5F]/30 rounded-full text-[12px] font-semibold text-primary dark:text-primary">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 dark:bg-[#6C1D5F]/20 border border-purple-200 dark:border-[#6C1D5F]/30 rounded-full text-[12px] font-semibold text-purple-700 dark:text-purple-300">
             <BookOpen className="w-3.5 h-3.5" />
             {courses.length} Courses
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-2/10 dark:bg-accent-2 border border-accent-2/20 dark:border-accent-2/50 rounded-full text-[12px] font-semibold text-accent-2 dark:text-accent-2">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700/50 rounded-full text-[12px] font-semibold text-blue-600 dark:text-blue-300">
             <Layers className="w-3.5 h-3.5" />
             {totalModules} Modules
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-2/10 dark:bg-[#01AC9F]/20 border border-accent-2/20 dark:border-[#01AC9F]/30 rounded-full text-[12px] font-semibold text-accent-2 dark:text-accent-2">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-50 dark:bg-[#01AC9F]/20 border border-teal-200 dark:border-[#01AC9F]/30 rounded-full text-[12px] font-semibold text-teal-600 dark:text-teal-300">
             <SlidersHorizontal className="w-3.5 h-3.5" />
             {totalBlocks} Blocks
           </div>
@@ -195,7 +195,7 @@ export default function Curriculum() {
 
                   {/* Featured dot */}
                   {isFeatured && (
-                    <div className="absolute top-3 right-3 w-6 h-6 bg-destructive rounded-full border-2 border-white shadow" />
+                    <div className="absolute top-3 right-3 w-6 h-6 bg-orange-400 rounded-full border-2 border-white shadow" />
                   )}
 
                   {/* Checkbox placeholder */}
@@ -261,14 +261,14 @@ export default function Curriculum() {
                         className={clsx(
                           "text-[11px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1",
                           active
-                            ? "bg-accent-2/10 dark:bg-[#01AC9F]/10 text-accent-2 dark:text-[#01AC9F]"
+                            ? "bg-teal-50 dark:bg-[#01AC9F]/10 text-teal-600 dark:text-[#01AC9F]"
                             : "bg-gray-100 dark:bg-[#252535] text-gray-500 dark:text-gray-400",
                         )}
                       >
                         <span
                           className={clsx(
                             "w-1.5 h-1.5 rounded-full",
-                            active ? "bg-accent-2 dark:bg-[#01AC9F]" : "bg-gray-400",
+                            active ? "bg-teal-400 dark:bg-[#01AC9F]" : "bg-gray-400",
                           )}
                         />
                         {active ? "Active" : "Inactive"}
@@ -277,14 +277,14 @@ export default function Curriculum() {
                         className={clsx(
                           "text-[11px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1",
                           isPublished
-                            ? "bg-primary/10 dark:bg-[#6C1D5F]/20 text-primary dark:text-primary"
+                            ? "bg-purple-50 dark:bg-[#6C1D5F]/20 text-purple-600 dark:text-purple-300"
                             : "bg-gray-100 dark:bg-[#252535] text-gray-500 dark:text-gray-400",
                         )}
                       >
                         <span
                           className={clsx(
                             "w-1.5 h-1.5 rounded-full",
-                            isPublished ? "bg-primary dark:bg-[#6C1D5F]" : "bg-gray-400",
+                            isPublished ? "bg-purple-400 dark:bg-[#6C1D5F]" : "bg-gray-400",
                           )}
                         />
                         {isPublished ? "Published" : "Draft"}

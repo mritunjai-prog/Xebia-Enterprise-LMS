@@ -1,4 +1,5 @@
 import { TrendingUp, Users, BookOpen, Award, Sparkles, Star } from "lucide-react";
+import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 
 const KpiCard = ({
   title,
@@ -48,80 +49,79 @@ const KpiCard = ({
 );
 
 export function ExecutiveKPIs() {
+  const { totalLearners, totalTrainers, totalBatches, totalAssessments, totalSubmissions, avgScore, passRate } = useAnalyticsData();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
-      {/* Learning Reach */}
       <KpiCard
         title="Learning Reach"
-        mainValue="82.4%"
-        mainLabel="Learning Coverage %"
+        mainValue={`${totalLearners > 0 ? Math.round((totalSubmissions / Math.max(totalLearners, 1)) * 100) : 0}%`}
+        mainLabel="Submission Rate"
         icon={Users}
         colorClass="text-[#6C1D5F] dark:text-[#FFACE8]"
         hoverBorderClass="hover:border-[#6C1D5F] dark:hover:border-[#FFACE8]"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-[#6C1D5F]/5 dark:hover:from-[#111] dark:hover:to-[#6C1D5F]/10"
         metrics={[
-          { label: "Total Employees", value: "12,500" },
-          { label: "Employees Nominated", value: "11,200" },
-          { label: "Employees Trained", value: "10,300" },
+          { label: "Total Learners", value: totalLearners.toLocaleString() },
+          { label: "Total Trainers", value: totalTrainers.toLocaleString() },
+          { label: "Total Submissions", value: totalSubmissions.toLocaleString() },
         ]}
       />
 
-      {/* Learning Delivery */}
       <KpiCard
-        title="Learning Delivery"
-        mainValue="142.5K"
-        mainLabel="Total Learning Hours"
+        title="Assessment Activity"
+        mainValue={totalAssessments.toLocaleString()}
+        mainLabel="Total Assessments"
         icon={BookOpen}
         colorClass="text-[#01AC9F]"
         hoverBorderClass="hover:border-[#01AC9F] dark:hover:border-[#01AC9F]"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-[#01AC9F]/5 dark:hover:from-[#111] dark:hover:to-[#01AC9F]/10"
         metrics={[
-          { label: "Total Sessions Conducted", value: "4,250" },
-          { label: "Total Attendees", value: "85,000" },
-          { label: "Total Nominations", value: "92,400" },
-          { label: "Average Hours per Session", value: "3.5 hrs" },
+          { label: "Total Batches", value: totalBatches.toLocaleString() },
+          { label: "Avg. Score", value: `${avgScore}%` },
+          { label: "Pass Rate", value: `${passRate}%` },
         ]}
       />
 
-      {/* Certifications */}
       <KpiCard
-        title="Certification Summary"
-        mainValue="3,482"
-        mainLabel="Total Certifications Completed"
+        title="Performance"
+        mainValue={`${avgScore}%`}
+        mainLabel="Average Score"
         icon={Award}
         colorClass="text-[#FF6200]"
         hoverBorderClass="hover:border-[#FF6200] dark:hover:border-[#FF6200]"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-[#FF6200]/5 dark:hover:from-[#111] dark:hover:to-[#FF6200]/10"
-        metrics={[{ label: "Certification Growth %", value: "24%", trend: "5%" }]}
+        metrics={[
+          { label: "Pass Rate", value: `${passRate}%` },
+          { label: "Evaluated Submissions", value: totalSubmissions.toLocaleString() },
+        ]}
       />
 
-      {/* AI Readiness */}
       <KpiCard
-        title="AI Readiness"
-        mainValue="2,450"
-        mainLabel="Employees Trained in AI"
+        title="Platform Overview"
+        mainValue={totalBatches.toLocaleString()}
+        mainLabel="Active Batches"
         icon={Sparkles}
         colorClass="text-[#84117C] dark:text-[#D3CCEC]"
         hoverBorderClass="hover:border-[#84117C] dark:hover:border-[#D3CCEC]"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-[#84117C]/5 dark:hover:from-[#111] dark:hover:to-[#84117C]/10"
         metrics={[
-          { label: "AI Certifications Achieved", value: "890" },
-          { label: "AI Learning Hours", value: "12,500" },
+          { label: "Total Assessments", value: totalAssessments.toLocaleString() },
+          { label: "Total Learners", value: totalLearners.toLocaleString() },
         ]}
       />
 
-      {/* Training Effectiveness */}
       <KpiCard
         title="Training Effectiveness"
-        mainValue="4.8/5"
-        mainLabel="Average Feedback Rating"
+        mainValue={`${passRate}%`}
+        mainLabel="Pass Rate"
         icon={Star}
         colorClass="text-yellow-500"
         hoverBorderClass="hover:border-yellow-500 dark:hover:border-yellow-500"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-yellow-500/5 dark:hover:from-[#111] dark:hover:to-yellow-500/10"
         metrics={[
-          { label: "Training Satisfaction Score", value: "96%" },
-          { label: "Recommendation %", value: "92%" },
+          { label: "Average Score", value: `${avgScore}%` },
+          { label: "Total Trainers", value: totalTrainers.toLocaleString() },
         ]}
       />
     </div>

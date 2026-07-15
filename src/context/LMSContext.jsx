@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-import { apiClient } from "../api/client";
+import {
+  UserService,
+  BatchService,
+  AssessmentService,
+  SubmissionService,
+} from "../services/api";
 
 const LMSContext = createContext(undefined);
 
@@ -31,10 +36,10 @@ export const LMSProvider = ({ children }) => {
   useEffect(() => {
     const fetchBackendData = async () => {
       try {
-        let users = await apiClient.getUsers();
+        let users = await UserService.getUsers();
         if (!Array.isArray(users)) users = [];
 
-        let b = await apiClient.getBatches();
+        let b = await BatchService.getBatches();
         if (!Array.isArray(b)) b = [];
 
         const enrichedUsers = users.map((u) => {
@@ -58,11 +63,11 @@ export const LMSProvider = ({ children }) => {
           return updated || null;
         });
 
-        let a = await apiClient.getAssessments();
+        let a = await AssessmentService.getAssessments();
         if (!Array.isArray(a)) a = [];
         setAssessments(a);
 
-        let s = await apiClient.getSubmissions();
+        let s = await SubmissionService.getSubmissions();
         if (!Array.isArray(s)) s = [];
         setSubmissions((current) => {
           // Preserve any in_progress submissions created locally before fetch completed
@@ -258,7 +263,7 @@ export const LMSProvider = ({ children }) => {
   };
 
   // Batch Operations
-  const createBatch = async (name, course, icon = "📦", status = "active") => {
+  const createBatch = async (name, course, icon = "📦", status = "active", courseId = null) => {
     // Check for duplicates
     if (batches.some((b) => b.name.toLowerCase() === name.toLowerCase())) {
       throw new Error(`A batch with the name "${name}" already exists.`);
@@ -272,10 +277,13 @@ export const LMSProvider = ({ children }) => {
       students: [],
       status,
       createdAt: new Date().toISOString().split("T")[0],
+      createdBy: currentUser?.id || null,
+      createdByName: currentUser?.name || null,
+      courseId: courseId || null,
     };
 
     try {
-      const savedBatch = await apiClient.createBatch(newBatch);
+      const savedBatch = await BatchService.createBatch(newBatch);
       setBatches((prev) => [...prev, savedBatch]);
       addNotification(
         "New Batch Created",
@@ -325,7 +333,7 @@ export const LMSProvider = ({ children }) => {
 
     // Persist to backend so it survives page refresh
     try {
-      await apiClient.updateBatch(id, updatedBatch);
+      await BatchService.updateBatch(id, updatedBatch);
     } catch (err) {
       console.error("Failed to persist batch update to backend:", err);
     }
@@ -343,7 +351,7 @@ export const LMSProvider = ({ children }) => {
     setBatches((prev) => prev.filter((b) => b.id !== id));
     // Persist to backend
     try {
-      await apiClient.deleteBatch(id);
+      await BatchService.deleteBatch(id);
     } catch (err) {
       console.error("Failed to delete batch from backend:", err);
     }
@@ -380,7 +388,7 @@ export const LMSProvider = ({ children }) => {
     };
 
     try {
-      const savedAssessment = await apiClient.createAssessment(newAssessment);
+      const savedAssessment = await AssessmentService.createAssessment(newAssessment);
       setAssessments((prev) => [savedAssessment, ...prev]);
 
       if (savedAssessment.status === "published") {
@@ -406,7 +414,7 @@ export const LMSProvider = ({ children }) => {
       if (!targetAs) return;
 
       const merged = { ...targetAs, ...updated };
-      const res = await apiClient.updateAssessment(id, merged);
+      const res = await AssessmentService.updateAssessment(id, merged);
 
       setAssessments((prev) =>
         prev.map((a) => {
@@ -445,7 +453,7 @@ export const LMSProvider = ({ children }) => {
 
   const deleteAssessment = async (id) => {
     try {
-      await apiClient.deleteAssessment(id);
+      await AssessmentService.deleteAssessment(id);
       setAssessments((prev) => prev.filter((a) => a.id !== id));
       setSubmissions((prev) => prev.filter((s) => s.assessmentId !== id));
     } catch (err) {
@@ -501,7 +509,7 @@ export const LMSProvider = ({ children }) => {
     };
 
     setSubmissions((prev) => [newSub, ...prev]);
-    apiClient.createSubmission(newSub).catch(console.error);
+    SubmissionService.createSubmission(newSub).catch(console.error);
     return newSub;
   };
 
@@ -604,7 +612,7 @@ export const LMSProvider = ({ children }) => {
     };
 
     // Make the API call OUTSIDE the setSubmissions updater function!
-    apiClient.updateSubmission(finalSubmission.id, finalSubmission).catch(console.error);
+    SubmissionService.updateSubmission(finalSubmission.id, finalSubmission).catch(console.error);
 
     setSubmissions((currentSubs) => {
       const idx = currentSubs.findIndex((s) => s.id === submissionId);

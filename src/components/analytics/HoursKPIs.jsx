@@ -1,4 +1,5 @@
 import { TrendingUp, Clock, UserCheck, Globe, FolderKanban, User } from "lucide-react";
+import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 
 const KpiCard = ({
   title,
@@ -48,82 +49,79 @@ const KpiCard = ({
 );
 
 export function HoursKPIs() {
+  const { totalSubmissions, avgTimeTaken, avgScore, totalLearners, totalBatches } = useAnalyticsData();
+
+  const avgPerLearner = totalLearners > 0 ? (totalSubmissions / totalLearners).toFixed(1) : "0";
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
-      {/* Total Learning Hours */}
       <KpiCard
-        title="Total Learning Hours"
-        mainValue="142.5K"
-        mainLabel="Total Hours Logged"
+        title="Total Submissions"
+        mainValue={totalSubmissions.toLocaleString()}
+        mainLabel="Assessment Submissions"
         icon={Clock}
         colorClass="text-[#FF6200]"
         hoverBorderClass="hover:border-[#FF6200] dark:hover:border-[#FF6200]"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-[#FF6200]/5 dark:hover:from-[#111] dark:hover:to-[#FF6200]/10"
         metrics={[
-          { label: "Target Hours", value: "150K" },
-          { label: "Completion vs Target", value: "95%", trend: "2%" },
-          { label: "Hours Pending", value: "7.5K" },
+          { label: "Total Learners", value: totalLearners.toLocaleString() },
+          { label: "Avg. Time Taken", value: `${avgTimeTaken}m` },
         ]}
       />
 
-      {/* Average Hours Per Employee */}
       <KpiCard
-        title="Avg. Hours / Employee"
-        mainValue="14.2"
-        mainLabel="Hours per Person"
+        title="Avg. Submissions / Learner"
+        mainValue={avgPerLearner}
+        mainLabel="Per Person"
         icon={UserCheck}
         colorClass="text-[#01AC9F]"
         hoverBorderClass="hover:border-[#01AC9F] dark:hover:border-[#01AC9F]"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-[#01AC9F]/5 dark:hover:from-[#111] dark:hover:to-[#01AC9F]/10"
         metrics={[
-          { label: "Company Benchmark", value: "12.0" },
-          { label: "Highest Avg BU", value: "18.5" },
-          { label: "Lowest Avg BU", value: "9.2" },
+          { label: "Total Submissions", value: totalSubmissions.toLocaleString() },
+          { label: "Active Batches", value: totalBatches.toLocaleString() },
         ]}
       />
 
-      {/* Required vs Elective */}
       <KpiCard
-        title="Required vs Elective"
-        mainValue="68 / 32"
-        mainLabel="Ratio Percentage"
+        title="Performance"
+        mainValue={`${avgScore}%`}
+        mainLabel="Average Score"
         icon={FolderKanban}
         colorClass="text-[#6C1D5F] dark:text-[#FFACE8]"
         hoverBorderClass="hover:border-[#6C1D5F] dark:hover:border-[#FFACE8]"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-[#6C1D5F]/5 dark:hover:from-[#111] dark:hover:to-[#6C1D5F]/10"
         metrics={[
-          { label: "Required Hours", value: "96.9K" },
-          { label: "Elective Hours", value: "45.6K" },
+          { label: "Avg. Time Taken", value: `${avgTimeTaken}m` },
+          { label: "Total Assessments", value: totalBatches.toLocaleString() },
         ]}
       />
 
-      {/* Top Region */}
       <KpiCard
-        title="Top Region by Hours"
-        mainValue="NA"
-        mainLabel="North America"
+        title="Active Batches"
+        mainValue={totalBatches.toLocaleString()}
+        mainLabel="Total Batches"
         icon={Globe}
         colorClass="text-[#84117C] dark:text-[#D3CCEC]"
         hoverBorderClass="hover:border-[#84117C] dark:hover:border-[#D3CCEC]"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-[#84117C]/5 dark:hover:from-[#111] dark:hover:to-[#84117C]/10"
         metrics={[
-          { label: "Total Region Hours", value: "62.4K" },
-          { label: "Avg per Person", value: "16.8" },
+          { label: "Total Learners", value: totalLearners.toLocaleString() },
+          { label: "Avg. Submissions", value: avgPerLearner },
         ]}
       />
 
-      {/* Engagement Status */}
       <KpiCard
-        title="Learner Engagement"
-        mainValue="High"
+        title="Engagement Status"
+        mainValue={totalSubmissions > 0 ? "Active" : "None"}
         mainLabel="Overall Status"
         icon={User}
         colorClass="text-accent-2"
         hoverBorderClass="hover:border-accent-2 dark:hover:border-accent-2"
         gradientClass="hover:bg-gradient-to-br hover:from-white hover:to-accent-2/5 dark:hover:from-[#111] dark:hover:to-accent-2/10"
         metrics={[
-          { label: "Active Learners", value: "85%" },
-          { label: "Dormant Learners", value: "15%" },
+          { label: "Total Submissions", value: totalSubmissions.toLocaleString() },
+          { label: "Avg. Score", value: `${avgScore}%` },
         ]}
       />
     </div>

@@ -30,3 +30,4 @@ public class Submission {
     @JoinColumn(name = "submission_id")
     private List<Answer> answers;
 }
+

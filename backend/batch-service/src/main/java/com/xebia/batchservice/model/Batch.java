@@ -24,4 +24,16 @@ public class Batch {
     
     @ElementCollection
     private List<String> students;
+
+    // Allocation fields
+    private String trainerId;
+    private String courseId;
+    private String academicSession;
+    private String startDate;
+    private String endDate;
+    private Integer maxStudents;
+
+    // Creator tracking
+    private String createdBy;
+    private String createdByName;
 }

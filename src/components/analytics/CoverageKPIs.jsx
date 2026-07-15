@@ -1,4 +1,5 @@
 import { Percent, Globe, MapPin, Briefcase, Layers, GraduationCap } from "lucide-react";
+import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 
 const KpiCard = ({ title, value, icon: Icon, colorClass, hoverBorderClass }) => (
   <div
@@ -19,38 +20,43 @@ const KpiCard = ({ title, value, icon: Icon, colorClass, hoverBorderClass }) => 
 );
 
 export function CoverageKPIs() {
+  const { totalLearners, totalSubmissions, totalAssessments, totalBatches, passRate } = useAnalyticsData();
+
+  const learnerCoverage = totalLearners > 0 ? Math.round((totalSubmissions / totalLearners) * 100) : 0;
+  const assessmentCoverage = totalAssessments > 0 ? Math.round((totalSubmissions / totalAssessments) * 100) : 0;
+
   const kpis = [
     {
-      title: "Coverage by Region",
-      value: "98%",
+      title: "Learner Coverage",
+      value: `${Math.min(learnerCoverage, 100)}%`,
       icon: Globe,
       colorClass: "text-[#01AC9F] dark:text-[#01AC9F]",
       hoverBorderClass: "hover:border-[#01AC9F] dark:hover:border-[#01AC9F]",
     },
     {
-      title: "Coverage by Location",
-      value: "94%",
+      title: "Assessment Coverage",
+      value: `${Math.min(assessmentCoverage, 100)}%`,
       icon: MapPin,
       colorClass: "text-[#6C1D5F] dark:text-[#FFACE8]",
       hoverBorderClass: "hover:border-[#6C1D5F] dark:hover:border-[#FFACE8]",
     },
     {
-      title: "Coverage by Project",
-      value: "85%",
+      title: "Batch Coverage",
+      value: totalBatches > 0 ? `${totalBatches} active` : "0%",
       icon: Briefcase,
       colorClass: "text-[#FF6200] dark:text-[#FF6200]",
       hoverBorderClass: "hover:border-[#FF6200] dark:hover:border-[#FF6200]",
     },
     {
-      title: "Coverage by BU",
-      value: "92%",
+      title: "Pass Rate",
+      value: `${passRate}%`,
       icon: Layers,
       colorClass: "text-[#84117C] dark:text-[#D3CCEC]",
       hoverBorderClass: "hover:border-[#84117C] dark:hover:border-[#D3CCEC]",
     },
     {
-      title: "Coverage by Grade",
-      value: "88%",
+      title: "Total Learners",
+      value: totalLearners.toLocaleString(),
       icon: GraduationCap,
       colorClass: "text-accent-2",
       hoverBorderClass: "hover:border-accent-2 dark:hover:border-accent-2",

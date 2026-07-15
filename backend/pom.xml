@@ -17,6 +17,7 @@
         <module>user-service</module>
         <module>batch-service</module>
         <module>assessment-service</module>
+        <module>event-service</module>
     </modules>
 
     <properties>

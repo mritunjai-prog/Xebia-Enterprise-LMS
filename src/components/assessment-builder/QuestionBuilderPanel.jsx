@@ -318,18 +318,6 @@ export const QuestionBuilderPanel = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto justify-start xl:justify-end">
-          <button
-            onClick={() => setIsDesktopConfigOpen(!isDesktopConfigOpen)}
-            className="hidden lg:flex items-center justify-center p-2 rounded-lg text-neutral-500 hover:text-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors"
-            title={isDesktopConfigOpen ? "Hide Assessment Details" : "Show Assessment Details"}
-          >
-            {isDesktopConfigOpen ? (
-              <PanelLeftClose className="w-5 h-5" />
-            ) : (
-              <PanelLeftOpen className="w-5 h-5" />
-            )}
-          </button>
-
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-[10px] uppercase font-bold text-neutral-400 bg-white dark:bg-neutral-800 px-2 py-1 rounded-md border border-neutral-200 dark:border-neutral-700">
               Marks: {questions.reduce((acc, q) => acc + (q.marks || 0), 0)}

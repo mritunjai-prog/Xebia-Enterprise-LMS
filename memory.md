@@ -1,4 +1,4 @@
-﻿# XEBIA ENTERPRISE LMS — PROJECT MEMORY
+# XEBIA ENTERPRISE LMS — PROJECT MEMORY
 
 > **Purpose**: Single source-of-truth context file. Loaded by AI assistants and new developers to gain full project understanding with zero prior knowledge.
 > **Last Updated**: 2026-07-14
@@ -598,7 +598,7 @@ session, settings, teachers, students, batches, assessments, submissions, coding
 | 2 | Admin role tab on login has no real admin user concept | Login.jsx |
 | 3 | TEMPORARY_STUDENT_ID hardcoded | src/config/student-identity.js:12 |
 | 4 | X-Tenant-Id hardcoded | src/services/api.js:11 |
-| 5 | 16 analytics pages use mock data, not live APIs | src/routes/admin/analytics/* |
+| 5 | ~~16 analytics pages use mock data~~ — FIXED: now uses useAnalyticsData() hook with real LMSContext data | src/routes/admin/analytics/* |
 | 6 | Coding test case execution is simulated | src/pages/TakeCoding.jsx |
 | 7 | EnrollmentController comment says auth not implemented | EnrollmentController.java:13 |
 | 8 | Kafka referenced in course-service but no Kafka container | docker-compose.yml |
@@ -607,6 +607,8 @@ session, settings, teachers, students, batches, assessments, submissions, coding
 | 11 | Empty Xebia LMS ghost folder exists (IDE lock) | d:\Xebia Integrated\Xebia LMS\ |
 | 12 | Student feedback form has no backend endpoint | /student/feedback |
 | 13 | Notifications are localStorage-only, no backend | /student/notifications |
+| 14 | ~~CORS duplicate headers~~ — FIXED: removed @CrossOrigin from all controllers | All controller files |
+| 15 | ~~Sidebar active state~~ — FIXED: exact match only, no prefix matching | unified-sidebar.jsx |
 
 ---
 
@@ -617,7 +619,7 @@ session, settings, teachers, students, batches, assessments, submissions, coding
 2. Replace TEMPORARY_STUDENT_ID with JWT-derived user ID
 
 ### High Priority (Backend)
-3. Wire 16 analytics pages to real aggregated data from backend
+3. ~~Wire 16 analytics pages to real aggregated data from backend~~ — DONE (2026-07-14)
 4. Implement real code execution engine for coding assessments (Judge0 or custom)
 5. Add missing services (user, batch, assessment) to render.yaml
 6. Add Kafka broker and implement enrollment/completion events
@@ -654,3 +656,226 @@ What was done:
 - Created memory.md (this file)
 
 Servers: Frontend npm run dev on :3000, Backend docker-compose up -d (7 containers healthy)
+
+### Session 2026-07-14 (Continued) — API Unification, Admin Integration, Analytics Real Data, UI Sync
+
+What was done:
+
+#### Phase 1: Unified API Layers (Observation #2)
+- Merged `src/api/client.js` methods into `src/services/api.js` using the proper `fetchApi` wrapper
+- Added new services: `UserService`, `AssessmentService`, `SubmissionService`, `DraftService`, `AIDescriptionService`
+- Expanded `BatchService` with `updateBatch` and `deleteBatch` methods
+- Updated `LMSContext.jsx` to import from unified `services/api.js` instead of `api/client.js`
+- Deleted `src/api/client.js` (only consumer was LMSContext.jsx)
+- URL path alignment: user/batch/assessment endpoints use `/v1/` prefix (gateway strips nothing), course endpoints use `/` (gateway strips `/api` prefix)
+
+#### Phase 2: Admin Integration (Observation #3)
+- Replaced `src/admin/services/api.js` mock data (226 lines of localStorage) with real API calls to `UserService`, `CourseService`, `CategoryService`, `BatchService`, `AssessmentService`
+- Deleted unused duplicate files: `Courses/Detail.jsx`, `Categories/Detail.jsx`
+- Standardized all admin page imports from `../../../services/api` to `@/services/api` (12 files updated)
+- `useAppStore.js` now receives real dashboard data from backend
+
+#### Phase 3: Real Analytics Data (Observation #5)
+- Created `src/hooks/useAnalyticsData.js` — central hook computing all metrics from LMSContext: learner/trainer counts, submission stats, scores, pass rates, difficulty distributions, batch performance, monthly trends, top students
+- Updated 11 analytics components to use `useAnalyticsData()` instead of hardcoded mock values:
+  - ExecutiveKPIs, ExecutiveCharts, ExecutiveInsights
+  - CoverageKPIs, CoverageCharts, CoverageInsights, CoverageActivity
+  - HoursKPIs, HoursCharts, HoursLeaderboards, HoursInsightsAndAlerts
+  - ActivityTimeline
+- All 16 analytics pages under `src/routes/admin/analytics/` now render real data
+
+#### Phase 4: UI Sync with Main Branch
+- Restored all course and category admin pages from the `main` branch to match its UI design
+- Files restored: Courses/index.jsx, Courses/CreateCourse.jsx, Courses/CourseDetail.jsx, Courses/HierarchyBuilder.jsx, Courses/ContentManager.jsx, Categories/index.jsx, Categories/CreateCategory.jsx, Categories/CategoryDetail.jsx, Dashboard/index.jsx, Curriculum/index.jsx, Analytics/index.jsx
+- Fixed import paths back to `@/services/api` in all restored files
+- Key UI differences reverted: hardcoded color tokens (text-purple-600, bg-green-50 etc.), 4-column grid, h-32 thumbnails, compact card layouts
+
+### Build Status
+- `npx vite build` succeeds (~10s client + ~6s SSR)
+- All 7 backend containers running healthy
+
+### Servers
+- Frontend: `npx vite dev --port 3000` (start in new cmd window)
+- Backend: `docker-compose up -d` in backend/ directory
+- API Gateway: localhost:8080
+- Frontend: localhost:3000
+
+### Key Architecture Decisions from This Session
+1. **Single API file**: All frontend API calls go through `src/services/api.js` — no more `src/api/client.js`
+2. **URL pattern**: Course endpoints use `/courses`, `/categories` etc. (gateway strips `/api`). User/batch/assessment use `/v1/users`, `/v1/batches` etc. (gateway strips nothing)
+3. **Admin pages live in `src/admin/`** and are imported by route files in `src/routes/admin/` via `@/admin/` alias
+4. **Analytics use `useAnalyticsData()` hook** that computes from LMSContext — no separate API calls needed
+5. **Main branch UI is the source of truth** for admin pages — `lms-integrate` branch should not deviate from main's UI design
+
+### Remaining Known Issues
+- Auth is still fake (email matching only, no JWT)
+- TEMPORARY_STUDENT_ID and X-Tenant-Id still hardcoded
+- 16 analytics pages under routes/admin/analytics/ use components from src/components/analytics/ which now compute real data
+- Coding test case execution is still simulated
+- Kafka referenced in docker-compose but no Kafka container
+- render.yaml only has 2 of 5 services
+
+### Session 2026-07-14 (Batch Management & Trainer Allocation Module)
+
+What was done:
+
+#### Backend Changes
+1. **Batch entity updated** (`backend/batch-service/.../model/Batch.java`):
+   - Added fields: `trainerId`, `courseId`, `university`, `academicSession`, `startDate`, `endDate`, `maxStudents`
+   - These fields replace the free-text `course` field for proper allocation tracking
+
+2. **New entity: TrainerAllocation** (`backend/batch-service/.../model/TrainerAllocation.java`):
+   - Fields: id, trainerId, batchId, courseId, university, academicSession, status, startDate, endDate, assignedBy, assignedAt, notes
+   - Indexes on trainerId, batchId, courseId, university
+   - Supports all 6 allocation rules (trainer→batches, trainer→courses, course→trainers, etc.)
+
+3. **New repository**: `TrainerAllocationRepository` with custom queries for dashboard summary and analytics
+
+4. **New service**: `TrainerAllocationService` with CRUD, bulk operations, dashboard summary, and analytics methods
+
+5. **New controller**: `TrainerAllocationController` (`/api/v1/allocations`) with 12 endpoints:
+   - GET /allocations (with filters), POST, PUT, DELETE
+   - POST /bulk, GET /dashboard, GET /analytics
+   - GET /trainer/{id}, /batch/{id}, /course/{id}, /university/{name}
+
+6. **Gateway route added** for `/api/v1/allocations/**` → batch-service
+
+7. **BatchService updated** with `updateBatchFields()` method for allocation-driven updates
+
+#### Frontend Changes
+1. **AllocationService added** to `src/services/api.js` with all allocation API methods
+
+2. **6 new route files** under `src/routes/admin/batches/`:
+   - Overview, Analytics, Allocations, Allocate, Trainers, $batchId
+
+3. **6 new page components** under `src/admin/pages/Batches/`:
+   - **Overview.jsx**: KPI dashboard with 6 cards (Total Trainers, Active Batches, Courses Assigned, etc.), quick actions, recent allocations list
+   - **Analytics.jsx**: Enterprise charts — trainer workload bar, university distribution pie, monthly trend area, status donut, course popularity horizontal bar
+   - **AllocationMatrix.jsx**: Enterprise data grid with search, filters, sort, pagination, bulk select, CSV export, context menu
+   - **AllocationWizard.jsx**: 5-step wizard (University → Batch → Trainer → Course → Review), multi-course selection, smart validation, bulk assignment
+   - **TrainerWorkload.jsx**: Trainer cards with utilization bars, stats grid, expandable detail panel
+   - **BatchDetailAdmin.jsx**: Batch detail with stats cards, course distribution pie chart, allocations list
+
+4. **Sidebar updated** (`src/components/layout/unified-sidebar.jsx`):
+   - Added "Batch Management" collapsible section with 5 nav items
+   - Collapsible state: `isBatchMgmtOpen` (default: true)
+
+### Build Status
+- `npx vite build` succeeds (~11s client + ~5s SSR)
+- All 7 backend containers running healthy
+
+### Session 2026-07-14 (Bug Fixes — CORS, Routing, Sidebar)
+
+What was done:
+
+#### CORS Fix
+- **Root cause**: API Gateway adds `Access-Control-Allow-Origin: *` AND individual services also had `@CrossOrigin(origins = "*")`, creating duplicate CORS headers that browsers reject.
+- **Fix**: Removed `@CrossOrigin(origins = "*")` from ALL controllers across user-service, batch-service, and assessment-service (7 controllers total). The API Gateway handles CORS for all routes.
+- **Files modified**: `backend/user-service/.../UserController.java`, `backend/assessment-service/.../AssessmentController.java`, `SubmissionController.java`, `DraftController.java`, `AIController.java`, `backend/batch-service/.../BatchController.java`, `TrainerAllocationController.java`
+
+#### Routing Fix
+- **Root cause**: `routeTree.gen.js` was stale (only had manager routes, no admin batch routes). The `.ts` route tree had the routes but the `.js` was being served.
+- **Fix**: Deleted stale `routeTree.gen.js`. Created `src/routes/admin/batches/index.jsx` as the overview index route. Changed `src/routes/admin/batches.jsx` from a page component to a layout route with `<Outlet />` so child routes can render.
+- **Route structure**: `/admin/batches` (layout) → `/admin/batches/` (overview index), `/admin/batches/analytics`, `/admin/batches/allocations`, `/admin/batches/allocate`, `/admin/batches/trainers`, `/admin/batches/$batchId`
+
+#### Sidebar Active State Fix
+- **Root cause**: TanStack Router's `Link` component has built-in active state detection that adds "active" class based on route prefix matching. This conflicted with manual active state logic, causing multiple sidebar items to highlight simultaneously.
+- **Fix 1**: Replaced `Link` with plain `div` + `useNavigate()` to eliminate TanStack Router's active class interference.
+- **Fix 2**: Changed active state logic to EXACT match only for all nav items (no prefix matching). Previously tried prefix matching for "layout routes" but the detection was unreliable.
+- **Key insight**: The `hasChildRoute` check was incorrectly treating "Overview" (`/admin/batches`) as a layout route because "Analytics" (`/admin/batches/analytics`) starts with the same prefix. But "Overview" is a leaf page, not a layout. Exact matching for all items solves this.
+
+#### CSS Reference
+- `.nav-item.active` in `src/admin/index.css` line 69: `background: var(--primary); color: #fff;`
+- `.sidebar-student .nav-item.active` line 95: `background: var(--white); color: var(--primary-dark);`
+- `.dark .nav-item.active` line 315: `background: #fff; color: #4A1E47;`
+
+### Key Architecture Decisions (Updated)
+1. **Single API file**: All frontend API calls go through `src/services/api.js` — no more `src/api/client.js`
+2. **URL pattern**: Course endpoints use `/courses`, `/categories` etc. (gateway strips `/api`). User/batch/assessment use `/v1/users`, `/v1/batches` etc. (gateway strips nothing)
+3. **Admin pages live in `src/admin/`** and are imported by route files in `src/routes/admin/` via `@/admin/` alias
+4. **Analytics use `useAnalyticsData()` hook** that computes from LMSContext — no separate API calls needed
+5. **Main branch UI is the source of truth** for admin pages — `lms-integrate` branch should not deviate from main's UI design
+6. **No `@CrossOrigin` on controllers** — API Gateway handles CORS for all routes
+7. **Sidebar uses exact match only** — no prefix matching to avoid false positives on parent routes
+8. **Layout routes use `<Outlet />`** — e.g., `batches.jsx` is a layout route, `batches/index.jsx` is the overview page
+9. **Route tree is auto-generated** — `routeTree.gen.ts` is the source of truth, `.js` is stale and should be deleted
+
+### Session 2026-07-14 (Allocation Wizard Rewrite + Trainer Portal Course Dropdown + Assessment Admin Module + UI Fixes)
+
+What was done:
+
+#### Allocation Wizard Rewrite (4-step flow)
+- Removed university selection step from Allocation Wizard
+- New flow: Select Batch → Select Trainer (auto from batch creator) → Select Course → Review & Assign
+- Added `createdBy`/`createdByName` fields to Batch entity to track which trainer created each batch
+- Removed `university` field from TrainerAllocation entity
+- Updated `LMSContext.jsx` `createBatch()` to pass `currentUser.id`/`currentUser.name` as `createdBy`/`createdByName`
+- Updated sidebar collapse logic for Assessment Management section
+
+#### Trainer Portal — Course Dropdown
+- Replaced free-text "Course / Core Focus" input in batch creation with dropdown
+- Trainers now select from admin-created courses (CourseService.getCourses())
+- Shows "No courses available" message if no courses exist
+- Updated `createBatch()` to accept and store `courseId`
+
+#### Admin Assessment Management Module (NEW)
+- **Backend**: Created `AdminAssessmentController`, `AdminAssessmentService`, 4 DTOs (AdminDashboardDto, AdminAnalyticsDto, AssessmentReportDto, StudentReportRowDto)
+- **Backend**: Added `batchId` field to Submission entity
+- **Backend**: Added gateway routes for admin assessment endpoints
+- **Frontend**: 3 new pages (Overview, Analytics, AssessmentDetailAdmin)
+- **Frontend**: 2 new reusable components (AssessmentCard, StudentReportTable)
+- **Frontend**: 4 new route files under `src/routes/admin/assessments/`
+- **Frontend**: Updated unified-sidebar.jsx with "Assessment Management" section
+- **Frontend**: Added `AdminAssessmentService` to `src/services/api.js`
+- **New API endpoints**: `/v1/assessments/dashboard`, `/v1/assessments/analytics`, `/v1/assessments/{id}/details`, `/v1/assessments/{id}/report`, `/v1/assessments/trainer-performance`, `/v1/assessments/batch-performance`
+
+#### UI Fixes
+- Fixed sidebar duplication bug — Assessment Management divider was duplicating items due to missing `section` marker check
+- Fixed AssessmentCard styling to match existing admin portal cards (Course/Category style)
+- Fixed Assessment Detail page layout (full-width, proper tab navigation)
+- Fixed Assessment Builder page (tab-based layout instead of cramped 50/50 split)
+- Removed Assessment Builder config panel toggle (no longer needed with tabs)
+- Fixed MetricCard import path from `charts/MetricCard` to `metrics/MetricCard`
+- Fixed `useParams` import in AssessmentDetailAdmin (was using `useRoute` which doesn't exist)
+
+#### Backend Build Fixes
+- Fixed BOM (Byte Order Mark) character issues in all Java files created via PowerShell
+- Used `[System.IO.File]::ReadAllBytes` + byte slicing to remove BOM (PowerShell's `Set-Content -Encoding UTF8` adds BOM)
+- Fixed missing `Stream` import in AdminAssessmentService.java
+- Rebuilt all backend containers successfully
+
+### Current Build Status
+- `npx vite build` succeeds
+- All 7 backend containers running healthy
+- Admin assessment endpoints verified: `/v1/assessments/dashboard` and `/v1/assessments/analytics` working
+
+### Servers
+- Frontend: `npx vite --port 3000` (start in separate terminal)
+- Backend: `docker-compose up -d` in backend/ directory
+
+### Files Modified in This Session
+**Backend (8 files)**:
+- `backend/batch-service/.../model/Batch.java` — Added createdBy/createdByName, removed university
+- `backend/batch-service/.../model/TrainerAllocation.java` — Removed university field
+- `backend/batch-service/.../controller/TrainerAllocationController.java` — Removed university parameter
+- `backend/batch-service/.../service/BatchService.java` — Removed university, added createdBy support
+- `backend/batch-service/.../service/TrainerAllocationService.java` — Removed university logic
+- `backend/batch-service/.../repository/TrainerAllocationRepository.java` — Removed university methods
+- `backend/assessment-service/.../dto/` — 4 new DTO files
+- `backend/assessment-service/.../service/AdminAssessmentService.java` — New admin service
+- `backend/assessment-service/.../controller/AdminAssessmentController.java` — New admin controller
+- `backend/assessment-service/.../model/Submission.java` — Added batchId field
+- `backend/api-gateway/.../config/RouteConfig.java` — Added admin assessment routes
+
+**Frontend (11 files)**:
+- `src/admin/pages/Batches/AllocationWizard.jsx` — Complete rewrite (4-step flow)
+- `src/context/LMSContext.jsx` — Added createdBy/createdByName to createBatch
+- `src/services/api.js` — Added AdminAssessmentService
+- `src/components/layout/unified-sidebar.jsx` — Added Assessment Management section, fixed collapse logic
+- `src/components/assessment-admin/AssessmentCard.jsx` — New reusable card component
+- `src/components/assessment-admin/StudentReportTable.jsx` — New enterprise table component
+- `src/admin/pages/Assessments/Overview.jsx` — New dashboard page
+- `src/admin/pages/Assessments/Analytics.jsx` — New analytics page with charts
+- `src/admin/pages/Assessments/AssessmentDetailAdmin.jsx` — New detail page with tabs
+- `src/pages/BatchManagement.jsx` — Course dropdown instead of free-text
+- Multiple admin pages — Updated MetricCard import path, removed university references

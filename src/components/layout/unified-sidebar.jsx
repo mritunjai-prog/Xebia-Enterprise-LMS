@@ -1,5 +1,5 @@
-import { Link, useLocation } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect, useMemo } from "react";
 import {
   LayoutDashboard,
   BookOpen,
@@ -39,49 +39,61 @@ import logoPurple from "@/assets/logo-purple.png";
 import logoWhite from "@/assets/logo-white.png";
 import { useDarkMode } from "@/features/student/hooks/use-dark-mode";
 
-const navConfig = {
-  student: [
+const navConfig = Object.freeze({
+  student: Object.freeze([
     { name: "Dashboard", href: "/student", icon: LayoutDashboard },
     { name: "My Courses", href: "/student/courses", icon: BookOpen },
     { name: "My Batches", href: "/student/batches", icon: CalendarDays },
+    { name: "Events", href: "/student/events", icon: CalendarDays },
     { name: "Assessments", href: "/student/assessments", icon: ClipboardCheck },
     { name: "Results", href: "/student/results", icon: Award },
     { name: "Notifications", href: "/student/notifications", icon: Bell },
     { name: "Feedback", href: "/student/feedback", icon: MessageSquare },
-  ],
-  trainer: [
+  ]),
+  trainer: Object.freeze([
     { name: "Dashboard", href: "/trainer", icon: LayoutDashboard },
     { name: "Batches", href: "/trainer/batches", icon: Users },
+    { name: "Events", href: "/trainer/events", icon: CalendarDays },
     { name: "Assessment Builder", href: "/trainer/assessment-builder", icon: Layers },
     { name: "Evaluation", href: "/trainer/evaluation", icon: ClipboardCheck },
     { name: "Leaderboard", href: "/trainer/leaderboard", icon: Award },
     { name: "Reports", href: "/trainer/reports", icon: PieChart },
     { name: "Settings", href: "/trainer/settings", icon: Settings },
-  ],
-  admin: [
-    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { name: "Categories", href: "/admin/categories", icon: Tag },
-    { name: "Courses", href: "/admin/courses", icon: BookOpen },
-    { name: "Curriculum", href: "/admin/curriculum", icon: Layers },
-    { isDivider: true, name: "Analytics Hub" },
-    { name: "Executive Overview", href: "/admin/analytics/executive", icon: LayoutDashboard },
-    { name: "Learning Coverage", href: "/admin/analytics/coverage", icon: Users },
-    { name: "Learning Hours", href: "/admin/analytics/hours", icon: Clock },
-    { name: "Learning Pillars", href: "/admin/analytics/pillars", icon: Briefcase },
-    { name: "AI Transformation", href: "/admin/analytics/ai", icon: Brain },
-    { name: "Certifications", href: "/admin/analytics/certifications", icon: ShieldCheck },
-    { name: "Flagship Programs", href: "/admin/analytics/programs", icon: AwardIcon },
-    { name: "Learning Trends", href: "/admin/analytics/trends", icon: TrendingUp },
-    { name: "Effectiveness", href: "/admin/analytics/effectiveness", icon: Activity },
-    { name: "Learning Champions", href: "/admin/analytics/champions", icon: AwardIcon },
-    { name: "Project Investment", href: "/admin/analytics/investment", icon: Wallet },
-    { name: "Apprentice Journey", href: "/admin/analytics/apprentice", icon: GraduationCap },
-    { isDivider: true, name: "Future Enhancements" },
-    { name: "Skill Gap", href: "/admin/analytics/skill-gap", icon: Target },
-    { name: "Recommendations", href: "/admin/analytics/recommendations", icon: Lightbulb },
-    { name: "Predictive Analytics", href: "/admin/analytics/predictive", icon: LineChart },
-  ],
-};
+  ]),
+  admin: Object.freeze([
+    Object.freeze({ name: "Dashboard", href: "/admin", icon: LayoutDashboard }),
+    Object.freeze({ name: "Categories", href: "/admin/categories", icon: Tag }),
+    Object.freeze({ name: "Courses", href: "/admin/courses", icon: BookOpen }),
+    Object.freeze({ name: "Curriculum", href: "/admin/curriculum", icon: Layers }),
+    Object.freeze({ name: "Events", href: "/admin/events", icon: CalendarDays }),
+    Object.freeze({ isDivider: true, name: "Batch Management" }),
+    Object.freeze({ name: "Overview", href: "/admin/batches", icon: LayoutDashboard, section: "batch" }),
+    Object.freeze({ name: "Analytics", href: "/admin/batches/analytics", icon: PieChart, section: "batch" }),
+    Object.freeze({ name: "Allocations", href: "/admin/batches/allocations", icon: ClipboardCheck, section: "batch" }),
+    Object.freeze({ name: "Allocate Course", href: "/admin/batches/allocate", icon: GraduationCap, section: "batch" }),
+    Object.freeze({ name: "Trainer Workload", href: "/admin/batches/trainers", icon: Users, section: "batch" }),
+    Object.freeze({ isDivider: true, name: "Assessment Management" }),
+    Object.freeze({ name: "Overview", href: "/admin/assessments", icon: ClipboardCheck, section: "assessment" }),
+    Object.freeze({ name: "Analytics", href: "/admin/assessments/analytics", icon: PieChart, section: "assessment" }),
+    Object.freeze({ isDivider: true, name: "Analytics Hub" }),
+    Object.freeze({ name: "Executive Overview", href: "/admin/analytics/executive", icon: LayoutDashboard, section: "analytics" }),
+    Object.freeze({ name: "Learning Coverage", href: "/admin/analytics/coverage", icon: Users, section: "analytics" }),
+    Object.freeze({ name: "Learning Hours", href: "/admin/analytics/hours", icon: Clock, section: "analytics" }),
+    Object.freeze({ name: "Learning Pillars", href: "/admin/analytics/pillars", icon: Briefcase, section: "analytics" }),
+    Object.freeze({ name: "AI Transformation", href: "/admin/analytics/ai", icon: Brain, section: "analytics" }),
+    Object.freeze({ name: "Certifications", href: "/admin/analytics/certifications", icon: ShieldCheck, section: "analytics" }),
+    Object.freeze({ name: "Flagship Programs", href: "/admin/analytics/programs", icon: AwardIcon, section: "analytics" }),
+    Object.freeze({ name: "Learning Trends", href: "/admin/analytics/trends", icon: TrendingUp, section: "analytics" }),
+    Object.freeze({ name: "Effectiveness", href: "/admin/analytics/effectiveness", icon: Activity, section: "analytics" }),
+    Object.freeze({ name: "Learning Champions", href: "/admin/analytics/champions", icon: AwardIcon, section: "analytics" }),
+    Object.freeze({ name: "Project Investment", href: "/admin/analytics/investment", icon: Wallet, section: "analytics" }),
+    Object.freeze({ name: "Apprentice Journey", href: "/admin/analytics/apprentice", icon: GraduationCap, section: "analytics" }),
+    Object.freeze({ isDivider: true, name: "Future Enhancements" }),
+    Object.freeze({ name: "Skill Gap", href: "/admin/analytics/skill-gap", icon: Target, section: "analytics" }),
+    Object.freeze({ name: "Recommendations", href: "/admin/analytics/recommendations", icon: Lightbulb, section: "analytics" }),
+    Object.freeze({ name: "Predictive Analytics", href: "/admin/analytics/predictive", icon: LineChart, section: "analytics" }),
+  ]),
+});
 
 const portalTitles = {
   student: "Student Portal",
@@ -94,11 +106,25 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
   const { isSidebarCollapsed, adminProfile, setActiveSidebarItem, setBreadcrumbs } = useAppStore();
   const { currentUser } = useLMS();
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+  const [isBatchMgmtOpen, setIsBatchMgmtOpen] = useState(true);
+  const [isAssessmentMgmtOpen, setIsAssessmentMgmtOpen] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
   const isDark = useDarkMode();
 
-  const navItems = navConfig[portalType] || navConfig.student;
+  // Deep clone navItems and deduplicate by href to prevent any rendering duplication
+  const navItems = useMemo(() => {
+    const source = navConfig[portalType] || navConfig.student;
+    const cloned = source.map((item) => ({ ...item }));
+    const seen = new Set();
+    return cloned.filter((item) => {
+      if (item.isDivider) return true;
+      if (seen.has(item.href)) return false;
+      seen.add(item.href);
+      return true;
+    });
+  }, [portalType]);
 
   const [mounted, setMounted] = useState(false);
 
@@ -109,7 +135,6 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
   useEffect(() => {
     let activeItem = null;
 
-    // Find the longest matching prefix for active item
     for (const item of navItems) {
       if (item.isDivider) continue;
 
@@ -157,7 +182,6 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
 
   const portalTitle = portalTitles[portalType] || "Portal";
 
-  // Use currentUser for all portals
   const profileName =
     portalType === "student"
       ? currentUser?.name || "Student"
@@ -181,7 +205,6 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
           style={{ textDecoration: "none" }}
         >
           <div className="w-10 h-10 flex items-center justify-center shrink-0">
-            {/* The user requested to automatically switch logos based on active theme */}
             <img
               src={isDark ? logoWhite : logoPurple}
               alt="Xebia Logo"
@@ -200,19 +223,71 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
         <div className="nav-section">Main Menu</div>
 
         {navItems.map((item, index) => {
-          // Hide analytics items if collapsed
-          if (item.href?.startsWith("/admin/analytics") && !isAnalyticsOpen) {
+          // Hide analytics section items if collapsed
+          if (item.section === "analytics" && !isAnalyticsOpen) {
             return null;
           }
           if (item.name === "Future Enhancements" && !isAnalyticsOpen) {
             return null;
           }
 
+          // Hide batch management items if collapsed
+          if (item.section === "batch" && !isBatchMgmtOpen) {
+            return null;
+          }
+
+          // Hide assessment management items if collapsed
+          if (item.section === "assessment" && !isAssessmentMgmtOpen) {
+            return null;
+          }
+
           if (item.isDivider) {
+            if (item.name === "Batch Management") {
+              return (
+                <div
+                  key={`divider-batch`}
+                  className="nav-section mt-6 mb-2 text-[11px] uppercase tracking-wider font-bold text-gray-900 dark:text-white opacity-90 cursor-pointer flex items-center justify-between hover:opacity-100 transition-opacity"
+                  onClick={() => setIsBatchMgmtOpen(!isBatchMgmtOpen)}
+                >
+                  <span className="flex items-center gap-2">
+                    <GraduationCap className="w-3.5 h-3.5" />
+                    {item.name}
+                  </span>
+                  <span>
+                    {isBatchMgmtOpen ? (
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    )}
+                  </span>
+                </div>
+              );
+            }
+            if (item.name === "Assessment Management") {
+              return (
+                <div
+                  key={`divider-assessment`}
+                  className="nav-section mt-6 mb-2 text-[11px] uppercase tracking-wider font-bold text-gray-900 dark:text-white opacity-90 cursor-pointer flex items-center justify-between hover:opacity-100 transition-opacity"
+                  onClick={() => setIsAssessmentMgmtOpen(!isAssessmentMgmtOpen)}
+                >
+                  <span className="flex items-center gap-2">
+                    <ClipboardCheck className="w-3.5 h-3.5" />
+                    {item.name}
+                  </span>
+                  <span>
+                    {isAssessmentMgmtOpen ? (
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    )}
+                  </span>
+                </div>
+              );
+            }
             if (item.name === "Analytics Hub") {
               return (
                 <div
-                  key={`divider-${index}`}
+                  key={`divider-analytics`}
                   className="nav-section mt-6 mb-2 text-[11px] uppercase tracking-wider font-bold text-gray-900 dark:text-white opacity-90 cursor-pointer flex items-center justify-between hover:opacity-100 transition-opacity"
                   onClick={() => setIsAnalyticsOpen(!isAnalyticsOpen)}
                 >
@@ -239,21 +314,24 @@ export function UnifiedSidebar({ isMobileOpen, setIsMobileOpen, portalType = "st
               </div>
             );
           }
+          const isPortalRoot = item.href === `/${portalType}` || item.href === `/${portalType}/`;
+          const isActive = isPortalRoot
+            ? currentPath === item.href || currentPath === item.href + "/"
+            : currentPath === item.href;
+
           return (
-            <Link
-              key={item.name}
-              to={item.href}
-              onClick={() => handleNavClick()}
-              className="nav-item"
-              activeProps={{ className: "active" }}
-              activeOptions={{
-                exact: item.href === `/${portalType}` || item.href === `/${portalType}/`,
+            <div
+              key={item.href}
+              onClick={() => {
+                navigate({ to: item.href });
+                handleNavClick();
               }}
-              style={{ textDecoration: "none" }}
+              className={clsx("nav-item", isActive && "active")}
+              style={{ textDecoration: "none", cursor: "pointer" }}
             >
               <item.icon className="nav-icon" />
               <span>{item.name}</span>
-            </Link>
+            </div>
           );
         })}
       </div>

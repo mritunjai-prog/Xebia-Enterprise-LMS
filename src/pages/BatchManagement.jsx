@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { useLMS } from "../context/LMSContext";
 import { toast } from "../components/Toast";
+import { CourseService } from "../services/api";
 import {
   Plus,
   Edit,
@@ -61,11 +62,27 @@ export const BatchManagement = () => {
   const [courseFilter, setCourseFilter] = useState("All");
   const [sortBy, setSortBy] = useState("Newest");
 
+  // Admin-created courses for dropdown
+  const [adminCourses, setAdminCourses] = useState([]);
+
   // Unique courses for filter
   const uniqueCourses = useMemo(() => {
     const courses = batches.map((b) => b.course).filter(Boolean);
     return [...new Set(courses)];
   }, [batches]);
+
+  // Fetch admin-created courses on mount
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const data = await CourseService.getCourses();
+        setAdminCourses(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Failed to load courses:", err);
+      }
+    };
+    fetchCourses();
+  }, []);
 
   // Modals
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -75,6 +92,7 @@ export const BatchManagement = () => {
   // Form fields
   const [batchName, setBatchName] = useState("");
   const [course, setCourse] = useState("");
+  const [selectedCourseId, setSelectedCourseId] = useState("");
 
   // Icon Uploader State
   const [iconTab, setIconTab] = useState("emoji"); // 'emoji', 'url', 'upload'
@@ -168,6 +186,7 @@ export const BatchManagement = () => {
   const handleOpenCreateModal = () => {
     setBatchName("");
     setCourse("");
+    setSelectedCourseId("");
     setBatchIconEmoji("📦");
     setBatchIconUrl("");
     setBatchIconUpload("");
@@ -184,7 +203,7 @@ export const BatchManagement = () => {
     }
     try {
       const finalIcon = getFinalIcon();
-      const created = await createBatch(batchName.trim(), course.trim(), finalIcon, batchStatus);
+      const created = await createBatch(batchName.trim(), course.trim(), finalIcon, batchStatus, selectedCourseId);
       toast.add(`Batch "${created.name}" created successfully!`, "success");
       setIsCreateModalOpen(false);
     } catch (error) {
@@ -375,7 +394,7 @@ export const BatchManagement = () => {
   return (
     <div className="space-y-6 w-full relative">
       {/* Advanced Toolbar */}
-      <div className="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
+      <div className="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800/50 shadow-md space-y-4">
         <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
           {/* Search */}
           <div className="relative flex-1 w-full group">
@@ -402,7 +421,7 @@ export const BatchManagement = () => {
         </div>
 
         {/* Filters Row */}
-        <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-brand-border/40 dark:border-neutral-800 mt-2">
+        <div className="flex flex-wrap items-center gap-3 pt-4 mt-2">
           <div className="flex items-center gap-2 text-sm font-semibold text-neutral-500">
             <Filter className="w-4 h-4" /> Filters:
           </div>
@@ -485,7 +504,7 @@ export const BatchManagement = () => {
 
       {/* Content Display */}
       {filteredBatches.length === 0 ? (
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border/60 dark:border-neutral-700/60 rounded-3xl p-16 text-center text-neutral-500 shadow-sm flex flex-col items-center justify-center space-y-4">
+        <div className="bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800/50 rounded-3xl p-16 text-center text-neutral-500 shadow-sm flex flex-col items-center justify-center space-y-4">
           <div className="p-4 bg-neutral-50 dark:bg-neutral-800/50 rounded-full">
             <Search className="w-8 h-8 text-neutral-400" />
           </div>
@@ -513,7 +532,7 @@ export const BatchManagement = () => {
               <div
                 key={batch.id || `batch-${index}`}
                 onClick={() => navigate(`/trainer/batches/${encodeURIComponent(batch.name)}`)}
-                className="relative group p-4 pt-8 bg-white dark:bg-neutral-900 border transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 rounded-xl border-neutral-200 dark:border-neutral-800 shadow-sm cursor-pointer overflow-hidden"
+                className="relative group p-4 pt-8 bg-white dark:bg-neutral-900 border border-transparent transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 rounded-xl hover:border-[#6C1D5F]/30 shadow-sm cursor-pointer overflow-hidden"
               >
                 {/* Absolute Status Badge */}
                 <div className="absolute top-3 right-3 z-10">
@@ -769,16 +788,26 @@ export const BatchManagement = () => {
 
                 <div className="space-y-2">
                   <label className="block font-bold text-neutral-600 dark:text-neutral-300">
-                    Course / Core Focus <span className="text-destructive">*</span>
+                    Course <span className="text-destructive">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <select
                     required
-                    value={course}
-                    onChange={(e) => setCourse(e.target.value)}
-                    placeholder="e.g. Advanced Cybersecurity Audits"
-                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-semibold"
-                  />
+                    value={selectedCourseId}
+                    onChange={(e) => {
+                      setSelectedCourseId(e.target.value);
+                      const selected = adminCourses.find((c) => c.id === e.target.value);
+                      setCourse(selected ? selected.title : "");
+                    }}
+                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-semibold cursor-pointer"
+                  >
+                    <option value="">Select a course</option>
+                    {adminCourses.map((c) => (
+                      <option key={c.id} value={c.id}>{c.title}</option>
+                    ))}
+                  </select>
+                  {adminCourses.length === 0 && (
+                    <p className="text-xs text-gray-400">No courses available. Ask admin to create courses first.</p>
+                  )}
                 </div>
 
                 {renderIconSelector()}

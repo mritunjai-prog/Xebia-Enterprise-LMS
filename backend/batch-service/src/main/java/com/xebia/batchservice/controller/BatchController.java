@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/batches")
-@CrossOrigin(origins = "*")
 public class BatchController {
 
     @Autowired

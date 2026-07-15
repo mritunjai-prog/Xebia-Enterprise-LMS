@@ -119,11 +119,90 @@ export const CourseService = {
     fetchApi(`/courses/content-items/${contentId}`, { method: "DELETE" }),
 };
 
+export const UserService = {
+  getUsers: (role) => fetchApi(`/v1/users${role ? "?role=" + role : ""}`),
+  createUser: (data) => fetchApi("/v1/users", { method: "POST", body: JSON.stringify(data) }),
+};
+
 export const BatchService = {
-  getBatches: () => fetchApi("/batches"),
-  createBatch: (data) => fetchApi("/batches", { method: "POST", body: JSON.stringify(data) }),
+  getBatches: () => fetchApi("/v1/batches"),
+  createBatch: (data) => fetchApi("/v1/batches", { method: "POST", body: JSON.stringify(data) }),
+  updateBatch: (id, data) =>
+    fetchApi(`/v1/batches/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteBatch: (id) => fetchApi(`/v1/batches/${id}`, { method: "DELETE" }),
   enrolStudent: (batchId, data) =>
-    fetchApi(`/batches/${batchId}/students`, { method: "POST", body: JSON.stringify(data) }),
+    fetchApi(`/v1/batches/${batchId}/students`, { method: "POST", body: JSON.stringify(data) }),
+};
+
+export const AssessmentService = {
+  getAssessments: () => fetchApi("/v1/assessments"),
+  createAssessment: (data) =>
+    fetchApi("/v1/assessments", { method: "POST", body: JSON.stringify(data) }),
+  updateAssessment: (id, data) =>
+    fetchApi(`/v1/assessments/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteAssessment: (id) => fetchApi(`/v1/assessments/${id}`, { method: "DELETE" }),
+};
+
+export const SubmissionService = {
+  getSubmissions: async (studentId) => {
+    const data = await fetchApi(
+      `/v1/submissions${studentId ? "?studentId=" + studentId : ""}`,
+    );
+    return (data || []).map((sub) => ({
+      ...sub,
+      answers: sub.answers?.map((a) => {
+        let parsed = a.answer;
+        try {
+          if (
+            parsed &&
+            typeof parsed === "string" &&
+            (parsed.startsWith("[") || parsed.startsWith("{"))
+          ) {
+            parsed = JSON.parse(parsed);
+          }
+        } catch (e) {}
+        return { ...a, answer: parsed };
+      }),
+    }));
+  },
+  createSubmission: (data) => {
+    const payload = {
+      ...data,
+      answers: data.answers?.map((a) => ({
+        ...a,
+        answer: typeof a.answer === "object" ? JSON.stringify(a.answer) : String(a.answer || ""),
+      })),
+    };
+    return fetchApi("/v1/submissions", { method: "POST", body: JSON.stringify(payload) });
+  },
+  updateSubmission: (id, data) => {
+    const payload = {
+      ...data,
+      answers: data.answers?.map((a) => ({
+        ...a,
+        answer: typeof a.answer === "object" ? JSON.stringify(a.answer) : String(a.answer || ""),
+      })),
+    };
+    return fetchApi(`/v1/submissions/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+  },
+};
+
+export const DraftService = {
+  saveDraft: (studentId, assessmentId, draftData) =>
+    fetchApi(`/v1/assessments/drafts/${studentId}/${assessmentId}`, {
+      method: "POST",
+      body: JSON.stringify(draftData),
+    }),
+  getDraft: (studentId, assessmentId) =>
+    fetchApi(`/v1/assessments/drafts/${studentId}/${assessmentId}`).catch(() => null),
+};
+
+export const AIDescriptionService = {
+  generateDescription: (topic) =>
+    fetchApi("/v1/assessments/ai/generate-description", {
+      method: "POST",
+      body: JSON.stringify({ topic }),
+    }),
 };
 
 export const AuthService = {
@@ -172,4 +251,56 @@ export const CategoryService = {
     await fetchApi(`/categories/${id}`, { method: "DELETE" });
     return true;
   },
+};
+
+export const AllocationService = {
+  getAllocations: (filters = {}) => {
+    const params = new URLSearchParams();
+    if (filters.trainerId) params.append("trainerId", filters.trainerId);
+    if (filters.batchId) params.append("batchId", filters.batchId);
+    if (filters.courseId) params.append("courseId", filters.courseId);
+    if (filters.university) params.append("university", filters.university);
+    if (filters.status) params.append("status", filters.status);
+    const qs = params.toString();
+    return fetchApi(`/v1/allocations${qs ? "?" + qs : ""}`);
+  },
+  getAllocationById: (id) => fetchApi(`/v1/allocations/${id}`),
+  createAllocation: (data) => fetchApi("/v1/allocations", { method: "POST", body: JSON.stringify(data) }),
+  updateAllocation: (id, data) => fetchApi(`/v1/allocations/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteAllocation: (id) => fetchApi(`/v1/allocations/${id}`, { method: "DELETE" }),
+  createBulkAllocations: (allocations) => fetchApi("/v1/allocations/bulk", { method: "POST", body: JSON.stringify(allocations) }),
+  getDashboardSummary: () => fetchApi("/v1/allocations/dashboard"),
+  getAnalytics: () => fetchApi("/v1/allocations/analytics"),
+  getTrainerAllocations: (trainerId) => fetchApi(`/v1/allocations/trainer/${trainerId}`),
+  getBatchAllocations: (batchId) => fetchApi(`/v1/allocations/batch/${batchId}`),
+  getCourseAllocations: (courseId) => fetchApi(`/v1/allocations/course/${courseId}`),
+  getUniversityAllocations: (university) => fetchApi(`/v1/allocations/university/${university}`),
+};
+
+// ============================================================
+// Admin Assessment Service
+// ============================================================
+export const AdminAssessmentService = {
+  getDashboard: () => fetchApi("/v1/assessments/dashboard"),
+  getAnalytics: () => fetchApi("/v1/assessments/analytics"),
+  getAssessmentDetails: (id) => fetchApi(`/v1/assessments/${id}/details`),
+  getStudentReport: (id) => fetchApi(`/v1/assessments/${id}/report`),
+  getTrainerPerformance: () => fetchApi("/v1/assessments/trainer-performance"),
+  getBatchPerformance: () => fetchApi("/v1/assessments/batch-performance"),
+};
+
+// ============================================================
+// Event Service
+// ============================================================
+export const EventService = {
+  getEvents: () => fetchApi("/v1/events"),
+  getEventById: (id) => fetchApi(`/v1/events/${id}`),
+  createEvent: (data) => fetchApi("/v1/events", { method: "POST", body: JSON.stringify(data) }),
+  updateEvent: (id, data) => fetchApi(`/v1/events/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteEvent: (id) => fetchApi(`/v1/events/${id}`, { method: "DELETE" }),
+  registerForEvent: (eventId) => fetchApi(`/v1/events/${eventId}/register`, { method: "POST" }),
+  cancelRegistration: (eventId) => fetchApi(`/v1/events/${eventId}/register`, { method: "DELETE" }),
+  getRegistrationStatus: (eventId) => fetchApi(`/v1/events/${eventId}/registration-status`),
+  getEventRegistrants: (eventId) => fetchApi(`/v1/events/${eventId}/registrations`),
+  getMyRegistrations: () => fetchApi("/v1/events/registrations/my"),
 };

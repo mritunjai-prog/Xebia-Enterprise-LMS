@@ -14,6 +14,8 @@ import {
   Check,
   CheckSquare,
   Settings,
+  FileText,
+  HelpCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ConfigPanel } from "./ConfigPanel";
@@ -27,8 +29,7 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
   const [saveState, setSaveState] = useState("saved"); // 'saved', 'saving', 'unsaved'
   const [questions, setQuestions] = useState(initialAssessment?.questions || []);
   const [showPublishModal, setShowPublishModal] = useState(false);
-  const [showConfigMobile, setShowConfigMobile] = useState(false);
-  const [isDesktopConfigOpen, setIsDesktopConfigOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState("details"); // 'details' | 'questions'
 
   const initialCourse =
     initialAssessment?.batches?.length > 0
@@ -68,80 +69,108 @@ export const EnterpriseBuilderLayout = ({ onBack, initialAssessment }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const isConfigComplete =
+    config.title && config.topic && config.course && config.difficulty && config.duration && config.marks;
+
   return (
     <div className="flex flex-col h-[calc(100vh-6rem)] -mt-6 -mx-6 bg-neutral-100 dark:bg-black overflow-hidden">
-      {/* Header Removed */}
+      {/* Tab Header */}
+      <div className="bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
+        <div className="flex items-center justify-between px-6 py-3">
+          {/* Back Button */}
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-sm font-bold text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to Assessments
+          </button>
 
-      {/* Main Workspace */}
-      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative bg-neutral-100 dark:bg-[#050505]">
-        {/* Desktop Config Panel */}
-        <AnimatePresence>
-          {isDesktopConfigOpen && (
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: "auto", opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ type: "tween", duration: 0.3 }}
-              className="hidden lg:block shrink-0 border-r border-neutral-200 dark:border-neutral-800 h-full overflow-hidden"
+          {/* Tabs */}
+          <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 rounded-xl p-1">
+            <button
+              onClick={() => setActiveTab("details")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                activeTab === "details"
+                  ? "bg-white dark:bg-neutral-700 text-[#6C1D5F] dark:text-white shadow-sm"
+                  : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+              }`}
             >
-              <div className="w-[550px] xl:w-[600px] 2xl:w-[650px] h-full">
+              <FileText className="w-4 h-4" />
+              Assessment Details
+              {isConfigComplete && (
+                <CheckCircle2 className="w-4 h-4 text-[#01AC9F]" />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("questions")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                activeTab === "questions"
+                  ? "bg-white dark:bg-neutral-700 text-[#6C1D5F] dark:text-white shadow-sm"
+                  : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+              }`}
+            >
+              <HelpCircle className="w-4 h-4" />
+              Question Builder
+              {questions.length > 0 && (
+                <span className="bg-[#6C1D5F] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                  {questions.length}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-1.5 text-neutral-500">
+              <span className="font-bold text-neutral-900 dark:text-white">{questions.length}</span>
+              <span>Questions</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-neutral-500">
+              <span className="font-bold text-neutral-900 dark:text-white">{config.marks || 0}</span>
+              <span>Marks</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content - Full Width */}
+      <main className="flex-1 overflow-hidden bg-neutral-100 dark:bg-[#050505]">
+        <AnimatePresence mode="wait">
+          {activeTab === "details" ? (
+            <motion.div
+              key="details"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+              className="h-full overflow-y-auto"
+            >
+              <div className="w-full p-6">
                 <ConfigPanel config={config} setConfig={setConfig} />
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Mobile Config Drawer */}
-        <AnimatePresence>
-          {showConfigMobile && (
-            <>
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setShowConfigMobile(false)}
-                className="fixed inset-0 bg-black z-40 lg:hidden"
+          ) : (
+            <motion.div
+              key="questions"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.2 }}
+              className="h-full"
+            >
+              <QuestionBuilderPanel
+                questions={questions}
+                setQuestions={setQuestions}
+                config={config}
+                isDesktopConfigOpen={false}
+                setIsDesktopConfigOpen={() => {}}
               />
-              {/* Drawer */}
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "-100%" }}
-                transition={{ type: "tween", duration: 0.25 }}
-                className="fixed inset-y-0 left-0 w-[85%] max-w-[400px] bg-white dark:bg-neutral-900 z-50 lg:hidden shadow-2xl flex flex-col h-full"
-              >
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center shrink-0">
-                  <h3 className="font-bold text-lg text-neutral-900 dark:text-white">
-                    Assessment Details
-                  </h3>
-                  <button
-                    onClick={() => setShowConfigMobile(false)}
-                    className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                <div className="flex-1 overflow-y-auto">
-                  <ConfigPanel config={config} setConfig={setConfig} />
-                </div>
-              </motion.div>
-            </>
+            </motion.div>
           )}
         </AnimatePresence>
-
-        <div className="flex-1 min-w-0 h-full flex flex-col">
-          <QuestionBuilderPanel
-            questions={questions}
-            setQuestions={setQuestions}
-            config={config}
-            isDesktopConfigOpen={isDesktopConfigOpen}
-            setIsDesktopConfigOpen={setIsDesktopConfigOpen}
-          />
-        </div>
       </main>
 
-      <footer className="h-16 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between lg:justify-end px-4 lg:px-6 shrink-0 z-20">
+      <footer className="h-12 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between lg:justify-end px-4 lg:px-6 shrink-0 z-20">
         <button
           onClick={() => setShowConfigMobile(true)}
           className="lg:hidden px-4 py-2 text-sm font-bold text-neutral-700 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 rounded-xl flex items-center gap-2 transition-colors"

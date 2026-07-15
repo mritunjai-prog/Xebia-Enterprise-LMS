@@ -13,7 +13,7 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { CourseService, CategoryService } from "../../../services/api";
+import { CourseService, CategoryService } from "@/services/api";
 import { useRouter, Link } from "@tanstack/react-router";
 import { clsx } from "clsx";
 

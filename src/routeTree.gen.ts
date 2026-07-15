@@ -20,22 +20,29 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as TrainerSettingsRouteImport } from './routes/trainer/settings'
 import { Route as TrainerReportsRouteImport } from './routes/trainer/reports'
 import { Route as TrainerLeaderboardRouteImport } from './routes/trainer/leaderboard'
+import { Route as TrainerEventsRouteImport } from './routes/trainer/events'
 import { Route as TrainerEvaluationRouteImport } from './routes/trainer/evaluation'
 import { Route as TrainerAssessmentBuilderRouteImport } from './routes/trainer/assessment-builder'
 import { Route as StudentProfileRouteImport } from './routes/student/profile'
 import { Route as StudentNotificationsRouteImport } from './routes/student/notifications'
 import { Route as StudentFeedbackRouteImport } from './routes/student/feedback'
+import { Route as StudentEventsRouteImport } from './routes/student/events'
 import { Route as StudentCoursesRouteImport } from './routes/student/courses'
 import { Route as StudentBatchesRouteImport } from './routes/student/batches'
 import { Route as StudentAssessmentsRouteImport } from './routes/student/assessments'
 import { Route as AdminTrainerRouteImport } from './routes/admin/trainer'
 import { Route as AdminOrganiserRouteImport } from './routes/admin/organiser'
 import { Route as AdminCurriculumRouteImport } from './routes/admin/curriculum'
+import { Route as AdminBatchesRouteImport } from './routes/admin/batches'
+import { Route as AdminAssessmentsRouteImport } from './routes/admin/assessments'
 import { Route as TrainerBatchesIndexRouteImport } from './routes/trainer/batches/index'
 import { Route as StudentResultsIndexRouteImport } from './routes/student/results/index'
+import { Route as AdminEventsIndexRouteImport } from './routes/admin/events/index'
 import { Route as AdminCurriculumIndexRouteImport } from './routes/admin/curriculum/index'
 import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
 import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categories/index'
+import { Route as AdminBatchesIndexRouteImport } from './routes/admin/batches/index'
+import { Route as AdminAssessmentsIndexRouteImport } from './routes/admin/assessments/index'
 import { Route as AdminAnalyticsIndexRouteImport } from './routes/admin/analytics/index'
 import { Route as TrainerBatchesIdRouteImport } from './routes/trainer/batches/$id'
 import { Route as StudentTakeSlugRouteImport } from './routes/student/take/$slug'
@@ -47,6 +54,13 @@ import { Route as AdminCurriculumCourseIdRouteImport } from './routes/admin/curr
 import { Route as AdminCoursesBuilderRouteImport } from './routes/admin/courses/builder'
 import { Route as AdminCoursesCourseSlugRouteImport } from './routes/admin/courses/$courseSlug'
 import { Route as AdminCategoriesCategorySlugRouteImport } from './routes/admin/categories/$categorySlug'
+import { Route as AdminBatchesTrainersRouteImport } from './routes/admin/batches/trainers'
+import { Route as AdminBatchesAnalyticsRouteImport } from './routes/admin/batches/analytics'
+import { Route as AdminBatchesAllocationsRouteImport } from './routes/admin/batches/allocations'
+import { Route as AdminBatchesAllocateRouteImport } from './routes/admin/batches/allocate'
+import { Route as AdminBatchesBatchIdRouteImport } from './routes/admin/batches/$batchId'
+import { Route as AdminAssessmentsAnalyticsRouteImport } from './routes/admin/assessments/analytics'
+import { Route as AdminAssessmentsAssessmentIdRouteImport } from './routes/admin/assessments/$assessmentId'
 import { Route as AdminAnalyticsTrendsRouteImport } from './routes/admin/analytics/trends'
 import { Route as AdminAnalyticsSkillGapRouteImport } from './routes/admin/analytics/skill-gap'
 import { Route as AdminAnalyticsRecommendationsRouteImport } from './routes/admin/analytics/recommendations'
@@ -121,6 +135,11 @@ const TrainerLeaderboardRoute = TrainerLeaderboardRouteImport.update({
   path: '/leaderboard',
   getParentRoute: () => TrainerRoute,
 } as any)
+const TrainerEventsRoute = TrainerEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => TrainerRoute,
+} as any)
 const TrainerEvaluationRoute = TrainerEvaluationRouteImport.update({
   id: '/evaluation',
   path: '/evaluation',
@@ -145,6 +164,11 @@ const StudentNotificationsRoute = StudentNotificationsRouteImport.update({
 const StudentFeedbackRoute = StudentFeedbackRouteImport.update({
   id: '/feedback',
   path: '/feedback',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentEventsRoute = StudentEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => StudentRoute,
 } as any)
 const StudentCoursesRoute = StudentCoursesRouteImport.update({
@@ -177,6 +201,16 @@ const AdminCurriculumRoute = AdminCurriculumRouteImport.update({
   path: '/curriculum',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminBatchesRoute = AdminBatchesRouteImport.update({
+  id: '/batches',
+  path: '/batches',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAssessmentsRoute = AdminAssessmentsRouteImport.update({
+  id: '/assessments',
+  path: '/assessments',
+  getParentRoute: () => AdminRoute,
+} as any)
 const TrainerBatchesIndexRoute = TrainerBatchesIndexRouteImport.update({
   id: '/batches/',
   path: '/batches/',
@@ -186,6 +220,11 @@ const StudentResultsIndexRoute = StudentResultsIndexRouteImport.update({
   id: '/results/',
   path: '/results/',
   getParentRoute: () => StudentRoute,
+} as any)
+const AdminEventsIndexRoute = AdminEventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminCurriculumIndexRoute = AdminCurriculumIndexRouteImport.update({
   id: '/',
@@ -201,6 +240,16 @@ const AdminCategoriesIndexRoute = AdminCategoriesIndexRouteImport.update({
   id: '/categories/',
   path: '/categories/',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminBatchesIndexRoute = AdminBatchesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminBatchesRoute,
+} as any)
+const AdminAssessmentsIndexRoute = AdminAssessmentsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminAssessmentsRoute,
 } as any)
 const AdminAnalyticsIndexRoute = AdminAnalyticsIndexRouteImport.update({
   id: '/analytics/',
@@ -259,6 +308,43 @@ const AdminCategoriesCategorySlugRoute =
     id: '/categories/$categorySlug',
     path: '/categories/$categorySlug',
     getParentRoute: () => AdminRoute,
+  } as any)
+const AdminBatchesTrainersRoute = AdminBatchesTrainersRouteImport.update({
+  id: '/trainers',
+  path: '/trainers',
+  getParentRoute: () => AdminBatchesRoute,
+} as any)
+const AdminBatchesAnalyticsRoute = AdminBatchesAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminBatchesRoute,
+} as any)
+const AdminBatchesAllocationsRoute = AdminBatchesAllocationsRouteImport.update({
+  id: '/allocations',
+  path: '/allocations',
+  getParentRoute: () => AdminBatchesRoute,
+} as any)
+const AdminBatchesAllocateRoute = AdminBatchesAllocateRouteImport.update({
+  id: '/allocate',
+  path: '/allocate',
+  getParentRoute: () => AdminBatchesRoute,
+} as any)
+const AdminBatchesBatchIdRoute = AdminBatchesBatchIdRouteImport.update({
+  id: '/$batchId',
+  path: '/$batchId',
+  getParentRoute: () => AdminBatchesRoute,
+} as any)
+const AdminAssessmentsAnalyticsRoute =
+  AdminAssessmentsAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AdminAssessmentsRoute,
+  } as any)
+const AdminAssessmentsAssessmentIdRoute =
+  AdminAssessmentsAssessmentIdRouteImport.update({
+    id: '/$assessmentId',
+    path: '/$assessmentId',
+    getParentRoute: () => AdminAssessmentsRoute,
   } as any)
 const AdminAnalyticsTrendsRoute = AdminAnalyticsTrendsRouteImport.update({
   id: '/analytics/trends',
@@ -365,17 +451,21 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AnalyticsRoute
   '/student': typeof StudentRouteWithChildren
   '/trainer': typeof TrainerRouteWithChildren
+  '/admin/assessments': typeof AdminAssessmentsRouteWithChildren
+  '/admin/batches': typeof AdminBatchesRouteWithChildren
   '/admin/curriculum': typeof AdminCurriculumRouteWithChildren
   '/admin/organiser': typeof AdminOrganiserRoute
   '/admin/trainer': typeof AdminTrainerRoute
   '/student/assessments': typeof StudentAssessmentsRoute
   '/student/batches': typeof StudentBatchesRoute
   '/student/courses': typeof StudentCoursesRoute
+  '/student/events': typeof StudentEventsRoute
   '/student/feedback': typeof StudentFeedbackRoute
   '/student/notifications': typeof StudentNotificationsRoute
   '/student/profile': typeof StudentProfileRoute
   '/trainer/assessment-builder': typeof TrainerAssessmentBuilderRoute
   '/trainer/evaluation': typeof TrainerEvaluationRoute
+  '/trainer/events': typeof TrainerEventsRoute
   '/trainer/leaderboard': typeof TrainerLeaderboardRoute
   '/trainer/reports': typeof TrainerReportsRoute
   '/trainer/settings': typeof TrainerSettingsRoute
@@ -397,6 +487,13 @@ export interface FileRoutesByFullPath {
   '/admin/analytics/recommendations': typeof AdminAnalyticsRecommendationsRoute
   '/admin/analytics/skill-gap': typeof AdminAnalyticsSkillGapRoute
   '/admin/analytics/trends': typeof AdminAnalyticsTrendsRoute
+  '/admin/assessments/$assessmentId': typeof AdminAssessmentsAssessmentIdRoute
+  '/admin/assessments/analytics': typeof AdminAssessmentsAnalyticsRoute
+  '/admin/batches/$batchId': typeof AdminBatchesBatchIdRoute
+  '/admin/batches/allocate': typeof AdminBatchesAllocateRoute
+  '/admin/batches/allocations': typeof AdminBatchesAllocationsRoute
+  '/admin/batches/analytics': typeof AdminBatchesAnalyticsRoute
+  '/admin/batches/trainers': typeof AdminBatchesTrainersRoute
   '/admin/categories/$categorySlug': typeof AdminCategoriesCategorySlugRoute
   '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
   '/admin/courses/builder': typeof AdminCoursesBuilderRoute
@@ -408,9 +505,12 @@ export interface FileRoutesByFullPath {
   '/student/take/$slug': typeof StudentTakeSlugRoute
   '/trainer/batches/$id': typeof TrainerBatchesIdRoute
   '/admin/analytics/': typeof AdminAnalyticsIndexRoute
+  '/admin/assessments/': typeof AdminAssessmentsIndexRoute
+  '/admin/batches/': typeof AdminBatchesIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
+  '/admin/events/': typeof AdminEventsIndexRoute
   '/student/results/': typeof StudentResultsIndexRoute
   '/trainer/batches/': typeof TrainerBatchesIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
@@ -425,11 +525,13 @@ export interface FileRoutesByTo {
   '/student/assessments': typeof StudentAssessmentsRoute
   '/student/batches': typeof StudentBatchesRoute
   '/student/courses': typeof StudentCoursesRoute
+  '/student/events': typeof StudentEventsRoute
   '/student/feedback': typeof StudentFeedbackRoute
   '/student/notifications': typeof StudentNotificationsRoute
   '/student/profile': typeof StudentProfileRoute
   '/trainer/assessment-builder': typeof TrainerAssessmentBuilderRoute
   '/trainer/evaluation': typeof TrainerEvaluationRoute
+  '/trainer/events': typeof TrainerEventsRoute
   '/trainer/leaderboard': typeof TrainerLeaderboardRoute
   '/trainer/reports': typeof TrainerReportsRoute
   '/trainer/settings': typeof TrainerSettingsRoute
@@ -451,6 +553,13 @@ export interface FileRoutesByTo {
   '/admin/analytics/recommendations': typeof AdminAnalyticsRecommendationsRoute
   '/admin/analytics/skill-gap': typeof AdminAnalyticsSkillGapRoute
   '/admin/analytics/trends': typeof AdminAnalyticsTrendsRoute
+  '/admin/assessments/$assessmentId': typeof AdminAssessmentsAssessmentIdRoute
+  '/admin/assessments/analytics': typeof AdminAssessmentsAnalyticsRoute
+  '/admin/batches/$batchId': typeof AdminBatchesBatchIdRoute
+  '/admin/batches/allocate': typeof AdminBatchesAllocateRoute
+  '/admin/batches/allocations': typeof AdminBatchesAllocationsRoute
+  '/admin/batches/analytics': typeof AdminBatchesAnalyticsRoute
+  '/admin/batches/trainers': typeof AdminBatchesTrainersRoute
   '/admin/categories/$categorySlug': typeof AdminCategoriesCategorySlugRoute
   '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
   '/admin/courses/builder': typeof AdminCoursesBuilderRoute
@@ -462,9 +571,12 @@ export interface FileRoutesByTo {
   '/student/take/$slug': typeof StudentTakeSlugRoute
   '/trainer/batches/$id': typeof TrainerBatchesIdRoute
   '/admin/analytics': typeof AdminAnalyticsIndexRoute
+  '/admin/assessments': typeof AdminAssessmentsIndexRoute
+  '/admin/batches': typeof AdminBatchesIndexRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/courses': typeof AdminCoursesIndexRoute
   '/admin/curriculum': typeof AdminCurriculumIndexRoute
+  '/admin/events': typeof AdminEventsIndexRoute
   '/student/results': typeof StudentResultsIndexRoute
   '/trainer/batches': typeof TrainerBatchesIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
@@ -478,17 +590,21 @@ export interface FileRoutesById {
   '/analytics': typeof AnalyticsRoute
   '/student': typeof StudentRouteWithChildren
   '/trainer': typeof TrainerRouteWithChildren
+  '/admin/assessments': typeof AdminAssessmentsRouteWithChildren
+  '/admin/batches': typeof AdminBatchesRouteWithChildren
   '/admin/curriculum': typeof AdminCurriculumRouteWithChildren
   '/admin/organiser': typeof AdminOrganiserRoute
   '/admin/trainer': typeof AdminTrainerRoute
   '/student/assessments': typeof StudentAssessmentsRoute
   '/student/batches': typeof StudentBatchesRoute
   '/student/courses': typeof StudentCoursesRoute
+  '/student/events': typeof StudentEventsRoute
   '/student/feedback': typeof StudentFeedbackRoute
   '/student/notifications': typeof StudentNotificationsRoute
   '/student/profile': typeof StudentProfileRoute
   '/trainer/assessment-builder': typeof TrainerAssessmentBuilderRoute
   '/trainer/evaluation': typeof TrainerEvaluationRoute
+  '/trainer/events': typeof TrainerEventsRoute
   '/trainer/leaderboard': typeof TrainerLeaderboardRoute
   '/trainer/reports': typeof TrainerReportsRoute
   '/trainer/settings': typeof TrainerSettingsRoute
@@ -510,6 +626,13 @@ export interface FileRoutesById {
   '/admin/analytics/recommendations': typeof AdminAnalyticsRecommendationsRoute
   '/admin/analytics/skill-gap': typeof AdminAnalyticsSkillGapRoute
   '/admin/analytics/trends': typeof AdminAnalyticsTrendsRoute
+  '/admin/assessments/$assessmentId': typeof AdminAssessmentsAssessmentIdRoute
+  '/admin/assessments/analytics': typeof AdminAssessmentsAnalyticsRoute
+  '/admin/batches/$batchId': typeof AdminBatchesBatchIdRoute
+  '/admin/batches/allocate': typeof AdminBatchesAllocateRoute
+  '/admin/batches/allocations': typeof AdminBatchesAllocationsRoute
+  '/admin/batches/analytics': typeof AdminBatchesAnalyticsRoute
+  '/admin/batches/trainers': typeof AdminBatchesTrainersRoute
   '/admin/categories/$categorySlug': typeof AdminCategoriesCategorySlugRoute
   '/admin/courses/$courseSlug': typeof AdminCoursesCourseSlugRoute
   '/admin/courses/builder': typeof AdminCoursesBuilderRoute
@@ -521,9 +644,12 @@ export interface FileRoutesById {
   '/student/take/$slug': typeof StudentTakeSlugRoute
   '/trainer/batches/$id': typeof TrainerBatchesIdRoute
   '/admin/analytics/': typeof AdminAnalyticsIndexRoute
+  '/admin/assessments/': typeof AdminAssessmentsIndexRoute
+  '/admin/batches/': typeof AdminBatchesIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/curriculum/': typeof AdminCurriculumIndexRoute
+  '/admin/events/': typeof AdminEventsIndexRoute
   '/student/results/': typeof StudentResultsIndexRoute
   '/trainer/batches/': typeof TrainerBatchesIndexRoute
   '/admin/submodules/$submoduleId/content': typeof AdminSubmodulesSubmoduleIdContentRoute
@@ -538,17 +664,21 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/student'
     | '/trainer'
+    | '/admin/assessments'
+    | '/admin/batches'
     | '/admin/curriculum'
     | '/admin/organiser'
     | '/admin/trainer'
     | '/student/assessments'
     | '/student/batches'
     | '/student/courses'
+    | '/student/events'
     | '/student/feedback'
     | '/student/notifications'
     | '/student/profile'
     | '/trainer/assessment-builder'
     | '/trainer/evaluation'
+    | '/trainer/events'
     | '/trainer/leaderboard'
     | '/trainer/reports'
     | '/trainer/settings'
@@ -570,6 +700,13 @@ export interface FileRouteTypes {
     | '/admin/analytics/recommendations'
     | '/admin/analytics/skill-gap'
     | '/admin/analytics/trends'
+    | '/admin/assessments/$assessmentId'
+    | '/admin/assessments/analytics'
+    | '/admin/batches/$batchId'
+    | '/admin/batches/allocate'
+    | '/admin/batches/allocations'
+    | '/admin/batches/analytics'
+    | '/admin/batches/trainers'
     | '/admin/categories/$categorySlug'
     | '/admin/courses/$courseSlug'
     | '/admin/courses/builder'
@@ -581,9 +718,12 @@ export interface FileRouteTypes {
     | '/student/take/$slug'
     | '/trainer/batches/$id'
     | '/admin/analytics/'
+    | '/admin/assessments/'
+    | '/admin/batches/'
     | '/admin/categories/'
     | '/admin/courses/'
     | '/admin/curriculum/'
+    | '/admin/events/'
     | '/student/results/'
     | '/trainer/batches/'
     | '/admin/submodules/$submoduleId/content'
@@ -598,11 +738,13 @@ export interface FileRouteTypes {
     | '/student/assessments'
     | '/student/batches'
     | '/student/courses'
+    | '/student/events'
     | '/student/feedback'
     | '/student/notifications'
     | '/student/profile'
     | '/trainer/assessment-builder'
     | '/trainer/evaluation'
+    | '/trainer/events'
     | '/trainer/leaderboard'
     | '/trainer/reports'
     | '/trainer/settings'
@@ -624,6 +766,13 @@ export interface FileRouteTypes {
     | '/admin/analytics/recommendations'
     | '/admin/analytics/skill-gap'
     | '/admin/analytics/trends'
+    | '/admin/assessments/$assessmentId'
+    | '/admin/assessments/analytics'
+    | '/admin/batches/$batchId'
+    | '/admin/batches/allocate'
+    | '/admin/batches/allocations'
+    | '/admin/batches/analytics'
+    | '/admin/batches/trainers'
     | '/admin/categories/$categorySlug'
     | '/admin/courses/$courseSlug'
     | '/admin/courses/builder'
@@ -635,9 +784,12 @@ export interface FileRouteTypes {
     | '/student/take/$slug'
     | '/trainer/batches/$id'
     | '/admin/analytics'
+    | '/admin/assessments'
+    | '/admin/batches'
     | '/admin/categories'
     | '/admin/courses'
     | '/admin/curriculum'
+    | '/admin/events'
     | '/student/results'
     | '/trainer/batches'
     | '/admin/submodules/$submoduleId/content'
@@ -650,17 +802,21 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/student'
     | '/trainer'
+    | '/admin/assessments'
+    | '/admin/batches'
     | '/admin/curriculum'
     | '/admin/organiser'
     | '/admin/trainer'
     | '/student/assessments'
     | '/student/batches'
     | '/student/courses'
+    | '/student/events'
     | '/student/feedback'
     | '/student/notifications'
     | '/student/profile'
     | '/trainer/assessment-builder'
     | '/trainer/evaluation'
+    | '/trainer/events'
     | '/trainer/leaderboard'
     | '/trainer/reports'
     | '/trainer/settings'
@@ -682,6 +838,13 @@ export interface FileRouteTypes {
     | '/admin/analytics/recommendations'
     | '/admin/analytics/skill-gap'
     | '/admin/analytics/trends'
+    | '/admin/assessments/$assessmentId'
+    | '/admin/assessments/analytics'
+    | '/admin/batches/$batchId'
+    | '/admin/batches/allocate'
+    | '/admin/batches/allocations'
+    | '/admin/batches/analytics'
+    | '/admin/batches/trainers'
     | '/admin/categories/$categorySlug'
     | '/admin/courses/$courseSlug'
     | '/admin/courses/builder'
@@ -693,9 +856,12 @@ export interface FileRouteTypes {
     | '/student/take/$slug'
     | '/trainer/batches/$id'
     | '/admin/analytics/'
+    | '/admin/assessments/'
+    | '/admin/batches/'
     | '/admin/categories/'
     | '/admin/courses/'
     | '/admin/curriculum/'
+    | '/admin/events/'
     | '/student/results/'
     | '/trainer/batches/'
     | '/admin/submodules/$submoduleId/content'
@@ -790,6 +956,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrainerLeaderboardRouteImport
       parentRoute: typeof TrainerRoute
     }
+    '/trainer/events': {
+      id: '/trainer/events'
+      path: '/events'
+      fullPath: '/trainer/events'
+      preLoaderRoute: typeof TrainerEventsRouteImport
+      parentRoute: typeof TrainerRoute
+    }
     '/trainer/evaluation': {
       id: '/trainer/evaluation'
       path: '/evaluation'
@@ -823,6 +996,13 @@ declare module '@tanstack/react-router' {
       path: '/feedback'
       fullPath: '/student/feedback'
       preLoaderRoute: typeof StudentFeedbackRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/events': {
+      id: '/student/events'
+      path: '/events'
+      fullPath: '/student/events'
+      preLoaderRoute: typeof StudentEventsRouteImport
       parentRoute: typeof StudentRoute
     }
     '/student/courses': {
@@ -867,6 +1047,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCurriculumRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/batches': {
+      id: '/admin/batches'
+      path: '/batches'
+      fullPath: '/admin/batches'
+      preLoaderRoute: typeof AdminBatchesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/assessments': {
+      id: '/admin/assessments'
+      path: '/assessments'
+      fullPath: '/admin/assessments'
+      preLoaderRoute: typeof AdminAssessmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/trainer/batches/': {
       id: '/trainer/batches/'
       path: '/batches'
@@ -880,6 +1074,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/results/'
       preLoaderRoute: typeof StudentResultsIndexRouteImport
       parentRoute: typeof StudentRoute
+    }
+    '/admin/events/': {
+      id: '/admin/events/'
+      path: '/events'
+      fullPath: '/admin/events/'
+      preLoaderRoute: typeof AdminEventsIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/curriculum/': {
       id: '/admin/curriculum/'
@@ -901,6 +1102,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/categories/'
       preLoaderRoute: typeof AdminCategoriesIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/admin/batches/': {
+      id: '/admin/batches/'
+      path: '/'
+      fullPath: '/admin/batches/'
+      preLoaderRoute: typeof AdminBatchesIndexRouteImport
+      parentRoute: typeof AdminBatchesRoute
+    }
+    '/admin/assessments/': {
+      id: '/admin/assessments/'
+      path: '/'
+      fullPath: '/admin/assessments/'
+      preLoaderRoute: typeof AdminAssessmentsIndexRouteImport
+      parentRoute: typeof AdminAssessmentsRoute
     }
     '/admin/analytics/': {
       id: '/admin/analytics/'
@@ -978,6 +1193,55 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/categories/$categorySlug'
       preLoaderRoute: typeof AdminCategoriesCategorySlugRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/admin/batches/trainers': {
+      id: '/admin/batches/trainers'
+      path: '/trainers'
+      fullPath: '/admin/batches/trainers'
+      preLoaderRoute: typeof AdminBatchesTrainersRouteImport
+      parentRoute: typeof AdminBatchesRoute
+    }
+    '/admin/batches/analytics': {
+      id: '/admin/batches/analytics'
+      path: '/analytics'
+      fullPath: '/admin/batches/analytics'
+      preLoaderRoute: typeof AdminBatchesAnalyticsRouteImport
+      parentRoute: typeof AdminBatchesRoute
+    }
+    '/admin/batches/allocations': {
+      id: '/admin/batches/allocations'
+      path: '/allocations'
+      fullPath: '/admin/batches/allocations'
+      preLoaderRoute: typeof AdminBatchesAllocationsRouteImport
+      parentRoute: typeof AdminBatchesRoute
+    }
+    '/admin/batches/allocate': {
+      id: '/admin/batches/allocate'
+      path: '/allocate'
+      fullPath: '/admin/batches/allocate'
+      preLoaderRoute: typeof AdminBatchesAllocateRouteImport
+      parentRoute: typeof AdminBatchesRoute
+    }
+    '/admin/batches/$batchId': {
+      id: '/admin/batches/$batchId'
+      path: '/$batchId'
+      fullPath: '/admin/batches/$batchId'
+      preLoaderRoute: typeof AdminBatchesBatchIdRouteImport
+      parentRoute: typeof AdminBatchesRoute
+    }
+    '/admin/assessments/analytics': {
+      id: '/admin/assessments/analytics'
+      path: '/analytics'
+      fullPath: '/admin/assessments/analytics'
+      preLoaderRoute: typeof AdminAssessmentsAnalyticsRouteImport
+      parentRoute: typeof AdminAssessmentsRoute
+    }
+    '/admin/assessments/$assessmentId': {
+      id: '/admin/assessments/$assessmentId'
+      path: '/$assessmentId'
+      fullPath: '/admin/assessments/$assessmentId'
+      preLoaderRoute: typeof AdminAssessmentsAssessmentIdRouteImport
+      parentRoute: typeof AdminAssessmentsRoute
     }
     '/admin/analytics/trends': {
       id: '/admin/analytics/trends'
@@ -1108,6 +1372,43 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminAssessmentsRouteChildren {
+  AdminAssessmentsAssessmentIdRoute: typeof AdminAssessmentsAssessmentIdRoute
+  AdminAssessmentsAnalyticsRoute: typeof AdminAssessmentsAnalyticsRoute
+  AdminAssessmentsIndexRoute: typeof AdminAssessmentsIndexRoute
+}
+
+const AdminAssessmentsRouteChildren: AdminAssessmentsRouteChildren = {
+  AdminAssessmentsAssessmentIdRoute: AdminAssessmentsAssessmentIdRoute,
+  AdminAssessmentsAnalyticsRoute: AdminAssessmentsAnalyticsRoute,
+  AdminAssessmentsIndexRoute: AdminAssessmentsIndexRoute,
+}
+
+const AdminAssessmentsRouteWithChildren =
+  AdminAssessmentsRoute._addFileChildren(AdminAssessmentsRouteChildren)
+
+interface AdminBatchesRouteChildren {
+  AdminBatchesBatchIdRoute: typeof AdminBatchesBatchIdRoute
+  AdminBatchesAllocateRoute: typeof AdminBatchesAllocateRoute
+  AdminBatchesAllocationsRoute: typeof AdminBatchesAllocationsRoute
+  AdminBatchesAnalyticsRoute: typeof AdminBatchesAnalyticsRoute
+  AdminBatchesTrainersRoute: typeof AdminBatchesTrainersRoute
+  AdminBatchesIndexRoute: typeof AdminBatchesIndexRoute
+}
+
+const AdminBatchesRouteChildren: AdminBatchesRouteChildren = {
+  AdminBatchesBatchIdRoute: AdminBatchesBatchIdRoute,
+  AdminBatchesAllocateRoute: AdminBatchesAllocateRoute,
+  AdminBatchesAllocationsRoute: AdminBatchesAllocationsRoute,
+  AdminBatchesAnalyticsRoute: AdminBatchesAnalyticsRoute,
+  AdminBatchesTrainersRoute: AdminBatchesTrainersRoute,
+  AdminBatchesIndexRoute: AdminBatchesIndexRoute,
+}
+
+const AdminBatchesRouteWithChildren = AdminBatchesRoute._addFileChildren(
+  AdminBatchesRouteChildren,
+)
+
 interface AdminCurriculumRouteChildren {
   AdminCurriculumCourseIdRoute: typeof AdminCurriculumCourseIdRoute
   AdminCurriculumIndexRoute: typeof AdminCurriculumIndexRoute
@@ -1123,6 +1424,8 @@ const AdminCurriculumRouteWithChildren = AdminCurriculumRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAssessmentsRoute: typeof AdminAssessmentsRouteWithChildren
+  AdminBatchesRoute: typeof AdminBatchesRouteWithChildren
   AdminCurriculumRoute: typeof AdminCurriculumRouteWithChildren
   AdminOrganiserRoute: typeof AdminOrganiserRoute
   AdminTrainerRoute: typeof AdminTrainerRoute
@@ -1148,11 +1451,14 @@ interface AdminRouteChildren {
   AdminAnalyticsIndexRoute: typeof AdminAnalyticsIndexRoute
   AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
   AdminCoursesIndexRoute: typeof AdminCoursesIndexRoute
+  AdminEventsIndexRoute: typeof AdminEventsIndexRoute
   AdminSubmodulesSubmoduleIdContentRoute: typeof AdminSubmodulesSubmoduleIdContentRoute
   AdminAnalyticsAnalyticsIndexRoute: typeof AdminAnalyticsAnalyticsIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAssessmentsRoute: AdminAssessmentsRouteWithChildren,
+  AdminBatchesRoute: AdminBatchesRouteWithChildren,
   AdminCurriculumRoute: AdminCurriculumRouteWithChildren,
   AdminOrganiserRoute: AdminOrganiserRoute,
   AdminTrainerRoute: AdminTrainerRoute,
@@ -1178,6 +1484,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsIndexRoute: AdminAnalyticsIndexRoute,
   AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
   AdminCoursesIndexRoute: AdminCoursesIndexRoute,
+  AdminEventsIndexRoute: AdminEventsIndexRoute,
   AdminSubmodulesSubmoduleIdContentRoute:
     AdminSubmodulesSubmoduleIdContentRoute,
   AdminAnalyticsAnalyticsIndexRoute: AdminAnalyticsAnalyticsIndexRoute,
@@ -1189,6 +1496,7 @@ interface StudentRouteChildren {
   StudentAssessmentsRoute: typeof StudentAssessmentsRoute
   StudentBatchesRoute: typeof StudentBatchesRoute
   StudentCoursesRoute: typeof StudentCoursesRoute
+  StudentEventsRoute: typeof StudentEventsRoute
   StudentFeedbackRoute: typeof StudentFeedbackRoute
   StudentNotificationsRoute: typeof StudentNotificationsRoute
   StudentProfileRoute: typeof StudentProfileRoute
@@ -1206,6 +1514,7 @@ const StudentRouteChildren: StudentRouteChildren = {
   StudentAssessmentsRoute: StudentAssessmentsRoute,
   StudentBatchesRoute: StudentBatchesRoute,
   StudentCoursesRoute: StudentCoursesRoute,
+  StudentEventsRoute: StudentEventsRoute,
   StudentFeedbackRoute: StudentFeedbackRoute,
   StudentNotificationsRoute: StudentNotificationsRoute,
   StudentProfileRoute: StudentProfileRoute,
@@ -1225,6 +1534,7 @@ const StudentRouteWithChildren =
 interface TrainerRouteChildren {
   TrainerAssessmentBuilderRoute: typeof TrainerAssessmentBuilderRoute
   TrainerEvaluationRoute: typeof TrainerEvaluationRoute
+  TrainerEventsRoute: typeof TrainerEventsRoute
   TrainerLeaderboardRoute: typeof TrainerLeaderboardRoute
   TrainerReportsRoute: typeof TrainerReportsRoute
   TrainerSettingsRoute: typeof TrainerSettingsRoute
@@ -1236,6 +1546,7 @@ interface TrainerRouteChildren {
 const TrainerRouteChildren: TrainerRouteChildren = {
   TrainerAssessmentBuilderRoute: TrainerAssessmentBuilderRoute,
   TrainerEvaluationRoute: TrainerEvaluationRoute,
+  TrainerEventsRoute: TrainerEventsRoute,
   TrainerLeaderboardRoute: TrainerLeaderboardRoute,
   TrainerReportsRoute: TrainerReportsRoute,
   TrainerSettingsRoute: TrainerSettingsRoute,
