@@ -4,6 +4,7 @@ public enum ContentType {
     NOTE,
     PDF,
     PPT,
-    COMPARISON_TABLE,
-    VIDEO_REFERENCE
+    VIDEO,
+    VIDEO_REFERENCE,
+    COMPARISON_TABLE
 }

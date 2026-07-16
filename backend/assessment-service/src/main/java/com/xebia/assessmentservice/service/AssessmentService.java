@@ -104,4 +104,24 @@ public class AssessmentService {
         assessmentRepository.deleteAll(assessments);
         return java.util.Map.of("assessments", assessmentCount, "submissions", submissionCount);
     }
+
+    @org.springframework.transaction.annotation.Transactional
+    public java.util.Map<String, Integer> deleteByBatchId(String batchId) {
+        java.util.List<Assessment> all = assessmentRepository.findAll();
+        java.util.List<Assessment> matching = new java.util.ArrayList<>();
+        for (Assessment a : all) {
+            if (a.getBatches() != null && a.getBatches().contains(batchId)) {
+                matching.add(a);
+            }
+        }
+        int assessmentCount = matching.size();
+        int submissionCount = 0;
+        for (Assessment a : matching) {
+            java.util.List<com.xebia.assessmentservice.model.Submission> subs = submissionRepository.findByAssessmentId(a.getId());
+            submissionCount += subs.size();
+            submissionRepository.deleteAll(subs);
+        }
+        assessmentRepository.deleteAll(matching);
+        return java.util.Map.of("assessments", assessmentCount, "submissions", submissionCount);
+    }
 }

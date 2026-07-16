@@ -138,7 +138,7 @@ export const BatchManagement = () => {
     // Sorting
     result.sort((a, b) => {
       if (sortBy === "Newest") return new Date(b.createdAt) - new Date(a.createdAt);
-      if (sortBy === "Oldest") return new Date(b.createdAt) - new Date(a.createdAt);
+      if (sortBy === "Oldest") return new Date(a.createdAt) - new Date(b.createdAt);
       if (sortBy === "A-Z") return a.name.localeCompare(b.name);
       if (sortBy === "Z-A") return b.name.localeCompare(a.name);
       if (sortBy === "Students") return b.studentCount - a.studentCount;
@@ -212,7 +212,9 @@ export const BatchManagement = () => {
     setIsSubmitting(true);
     try {
       const finalIcon = getFinalIcon();
-      const created = await createBatch(batchName.trim(), "", finalIcon, batchStatus, selectedCourseId, enrolledStudentIds);
+      const selectedCourse = adminCourses.find((c) => c.id === selectedCourseId);
+      const courseName = selectedCourse ? selectedCourse.title : "";
+      const created = await createBatch(batchName.trim(), courseName, finalIcon, batchStatus, selectedCourseId, enrolledStudentIds);
       toast.add(`Batch "${created.name}" created successfully!`, "success");
       setIsCreateModalOpen(false);
       setBatchName("");
@@ -243,10 +245,7 @@ export const BatchManagement = () => {
     }
 
     const finalIcon = getFinalIcon();
-    editBatch(
-      selectedBatch.id,
-      batchName.trim(),
-      "",
+    editBatch(selectedBatch.id, batchName.trim(), selectedBatch.course,
       enrolledStudentIds,
       finalIcon,
       batchStatus,
@@ -405,112 +404,82 @@ export const BatchManagement = () => {
 
   return (
     <div className="space-y-6 w-full relative">
-      {/* Advanced Toolbar */}
-      <div className="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800/50 shadow-md space-y-4">
-        <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-          {/* Search */}
-          <div className="relative flex-1 w-full group">
-            <Search className="w-5 h-5 text-neutral-500 absolute left-4 top-3.5 group-focus-within:text-[#6C1D5F] transition-colors" />
-            <input
-              type="text"
-              placeholder="Search batches, courses, or tags..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-2xl text-sm font-medium text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] focus:border-transparent transition-all shadow-sm"
-            />
-          </div>
+      {/* Toolbar — flat single row */}
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          onClick={handleOpenCreateModal}
+          className="py-2 px-4 bg-gradient-to-r from-[#6C1D5F] to-[#84117C] hover:from-[#84117C] hover:to-[#4A1E47] text-white rounded-lg text-sm font-bold transition-all flex items-center gap-2 cursor-pointer shadow-sm shrink-0"
+        >
+          <Plus className="w-4 h-4" />
+          <span>New Batch</span>
+        </button>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+        <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700 mx-1 hidden sm:block" />
+
+        <Filter className="w-4 h-4 text-neutral-400 shrink-0 hidden sm:block" />
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-semibold rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer"
+        >
+          <option value="All">Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+
+        <select
+          value={courseFilter}
+          onChange={(e) => setCourseFilter(e.target.value)}
+          className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-semibold rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer"
+        >
+          <option value="All">Course</option>
+          {uniqueCourses.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-semibold rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer"
+        >
+          <option value="Newest">Newest</option>
+          <option value="Oldest">Oldest</option>
+          <option value="A-Z">A-Z</option>
+          <option value="Z-A">Z-A</option>
+          <option value="Students">Most Students</option>
+        </select>
+
+        {(statusFilter !== "All" || courseFilter !== "All" || sortBy !== "Newest") && (
+          <button
+            onClick={handleClearFilters}
+            className="text-[11px] font-bold text-[#6C1D5F] dark:text-[#D4A0D0] hover:underline cursor-pointer flex items-center gap-1 bg-[#6C1D5F]/10 dark:bg-[#84117C]/20 px-2 py-1.5 rounded-md"
+          >
+            <X className="w-3 h-3" /> Clear
+          </button>
+        )}
+
+        <div className="ml-auto flex items-center gap-3">
+          <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 p-0.5 rounded-lg">
             <button
-              onClick={handleOpenCreateModal}
-              className="py-2.5 px-5 bg-gradient-to-r from-[#6C1D5F] to-[#84117C] hover:from-[#84117C] hover:to-[#4A1E47] text-white rounded-xl text-sm font-bold transition-all hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer shadow-md"
+              onClick={() => setViewMode("grid")}
+              className={`p-1.5 rounded-md transition-all ${viewMode === "grid" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"}`}
+              title="Grid View"
             >
-              <Plus className="w-4 h-4" />
-              <span>New Batch</span>
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode("table")}
+              className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"}`}
+              title="Table View"
+            >
+              <List className="w-4 h-4" />
             </button>
           </div>
-        </div>
-
-        {/* Filters Row */}
-        <div className="flex flex-wrap items-center gap-3 pt-4 mt-2">
-          <div className="flex items-center gap-2 text-sm font-semibold text-neutral-500">
-            <Filter className="w-4 h-4" /> Filters:
-          </div>
-
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[120px]"
-          >
-            <option value="All">Status: All</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-
-          <select
-            value={courseFilter}
-            onChange={(e) => setCourseFilter(e.target.value)}
-            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[150px] max-w-[200px]"
-          >
-            <option value="All">Course: All</option>
-            {uniqueCourses.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[160px]"
-          >
-            <option value="Newest">Sort: Newest First</option>
-            <option value="Oldest">Sort: Oldest First</option>
-            <option value="A-Z">Sort: A-Z</option>
-            <option value="Z-A">Sort: Z-A</option>
-            <option value="Students">Sort: Most Students</option>
-          </select>
-
-          {(searchQuery ||
-            statusFilter !== "All" ||
-            courseFilter !== "All" ||
-            sortBy !== "Newest") && (
-            <button
-              onClick={handleClearFilters}
-              className="text-xs font-bold text-[#6C1D5F] dark:text-primary hover:underline cursor-pointer flex items-center gap-1 bg-[#6C1D5F]/10 dark:bg-primary/10 px-2 py-1 rounded-md"
-            >
-              <X className="w-3 h-3" /> Clear Filters
-            </button>
-          )}
-
-          <div className="ml-auto flex items-center gap-4">
-            {/* View Toggle */}
-            <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === "grid" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
-                title="Grid View"
-              >
-                <LayoutGrid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === "table" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
-                title="Table View"
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2 text-sm text-neutral-400 font-medium">
-              <span className="font-mono bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded text-neutral-700 dark:text-neutral-200 font-bold">
-                {filteredBatches.length}
-              </span>{" "}
-              Batches Found
-            </div>
-          </div>
+          <span className="text-xs text-neutral-400 font-medium hidden sm:block">
+            <span className="font-mono bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-600 dark:text-neutral-300 font-bold">{filteredBatches.length}</span> found
+          </span>
         </div>
       </div>
 
@@ -537,18 +506,18 @@ export const BatchManagement = () => {
         </div>
       ) : viewMode === "grid" ? (
         /* GRID VIEW */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {filteredBatches.map((batch, index) => {
             const progress = getBatchProgress(batch.id);
             return (
               <div
                 key={batch.id || `batch-${index}`}
                 onClick={() => navigate(`/trainer/batches/${encodeURIComponent(batch.name)}`)}
-                className="relative group bg-white dark:bg-neutral-900 border border-transparent transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 rounded-xl hover:border-[#6C1D5F]/30 shadow-sm cursor-pointer overflow-hidden"
+                className="relative group bg-white dark:bg-neutral-900 border border-transparent transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 rounded-xl hover:border-[#6C1D5F]/30 shadow-sm cursor-pointer"
               >
                 {/* Cover Image or Gradient Header */}
                 {batch.icon && (batch.icon.startsWith("data:image") || batch.icon.startsWith("http")) ? (
-                  <div className="relative h-32 w-full overflow-hidden">
+                  <div className="relative h-32 w-full overflow-hidden rounded-t-xl">
                     <img
                       src={batch.icon}
                       alt={batch.name}
@@ -560,7 +529,7 @@ export const BatchManagement = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="h-32 w-full bg-gradient-to-br from-[#6C1D5F]/10 via-[#84117C]/5 to-[#01AC9F]/10 flex items-center justify-center">
+                  <div className="h-32 w-full bg-gradient-to-br from-[#6C1D5F]/10 via-[#84117C]/5 to-[#01AC9F]/10 flex items-center justify-center rounded-t-xl overflow-hidden">
                     <span className="text-4xl">{renderIcon(batch.icon)}</span>
                   </div>
                 )}
@@ -568,10 +537,10 @@ export const BatchManagement = () => {
                 {/* Absolute Status Badge */}
                 <div className="absolute top-3 right-3 z-10">
                   <span
-                    className={`inline-block px-2 py-0.5 font-bold rounded-md text-[9px] uppercase font-mono shadow-sm ${
+                    className={`inline-block px-2.5 py-1 font-bold rounded-lg text-[10px] uppercase font-mono shadow-lg backdrop-blur-sm ${
                       batch.status === "active"
-                        ? "bg-accent-2/10 text-accent-2 dark:bg-accent-2 dark:text-accent-2 border border-accent-2/20 dark:border-accent-2"
-                        : "bg-destructive/10 text-destructive dark:bg-destructive dark:text-destructive border border-destructive/20 dark:border-destructive"
+                        ? "bg-[#01AC9F] text-white dark:bg-[#01AC9F] dark:text-white"
+                        : "bg-[#FF6200] text-white dark:bg-[#FF6200] dark:text-white"
                     }`}
                   >
                     {batch.status}
@@ -584,7 +553,7 @@ export const BatchManagement = () => {
                       {batch.name}
                     </h3>
                     <div className="mt-1 text-xs font-semibold text-neutral-600 dark:text-neutral-400 truncate">
-                      {batch.course}
+                      {batch.course || adminCourses.find(c => c.id === batch.courseId)?.title || "—"}
                     </div>
                   </div>
 
@@ -649,105 +618,94 @@ export const BatchManagement = () => {
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="bg-white dark:bg-neutral-900 border border-brand-border/60 dark:border-neutral-700/60 rounded-3xl overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700/60 rounded-lg shadow-sm">
           <div className="overflow-x-auto">
-            <div className="overflow-x-auto w-full">
-              <table className="w-full text-left border-collapse text-sm whitespace-nowrap">
-                <thead className="bg-neutral-50/50 dark:bg-neutral-950/30 border-b border-brand-border/60 dark:border-neutral-700/60 text-xs font-bold uppercase tracking-wider text-neutral-500">
-                  <tr>
-                    <th className="px-6 py-4">Batch Name</th>
-                    <th className="px-6 py-4">Course</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4">Students</th>
-                    <th className="px-6 py-4">Progress</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-brand-border/40 dark:divide-neutral-800">
-                  {filteredBatches.map((batch, index) => {
-                    const progress = getBatchProgress(batch.id);
-                    return (
-                      <tr
-                        key={batch.id || `batch-tr-${index}`}
-                        className={`group hover:bg-neutral-50 dark:hover:bg-neutral-800/20 transition-colors cursor-pointer`}
-                        onClick={() =>
-                          navigate(`/trainer/batches/${encodeURIComponent(batch.name)}`)
-                        }
-                      >
-                        <td className="px-6 py-4">
-                          <div className="font-extrabold text-neutral-800 dark:text-white flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
-                              {renderIcon(batch.icon)}
-                            </div>
-                            {batch.name}
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="bg-neutral-50 dark:bg-neutral-800/50 border-b border-neutral-200 dark:border-neutral-700/60 text-[11px] font-bold uppercase tracking-wider text-neutral-500">
+                  <th className="px-4 py-3 text-left whitespace-nowrap">Batch Name</th>
+                  <th className="px-4 py-3 text-left whitespace-nowrap">Course</th>
+                  <th className="px-4 py-3 text-left whitespace-nowrap">Status</th>
+                  <th className="px-4 py-3 text-left whitespace-nowrap">Students</th>
+                  <th className="px-4 py-3 text-left whitespace-nowrap">Progress</th>
+                  <th className="px-4 py-3 text-left whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
+                {filteredBatches.map((batch, index) => {
+                  const progress = getBatchProgress(batch.id);
+                  return (
+                    <tr
+                      key={batch.id || `batch-tr-${index}`}
+                      className="hover:bg-neutral-50 dark:hover:bg-neutral-800/20 transition-colors cursor-pointer"
+                      onClick={() => navigate(`/trainer/batches/${encodeURIComponent(batch.name)}`)}
+                    >
+                      <td className="px-4 py-3">
+                        <div className="font-extrabold text-neutral-800 dark:text-white flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shrink-0">
+                            {renderIcon(batch.icon)}
                           </div>
-                        </td>
-                        <td className="px-6 py-4 font-bold text-neutral-600 dark:text-neutral-300">
-                          {batch.course}
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`inline-block px-2.5 py-0.5 font-bold rounded-lg text-[10px] uppercase font-mono ${
-                              batch.status === "active"
-                                ? "bg-accent-2/10 text-accent-2 dark:bg-accent-2 dark:text-accent-2 border border-accent-2/20 dark:border-accent-2"
-                                : "bg-destructive/10 text-destructive dark:bg-destructive dark:text-destructive border border-destructive/20 dark:border-destructive"
-                            }`}
+                          <span className="truncate">{batch.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 font-bold text-neutral-600 dark:text-neutral-300">
+                        {batch.course || adminCourses.find(c => c.id === batch.courseId)?.title || "—"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-block px-2.5 py-0.5 font-bold rounded-lg text-[10px] uppercase font-mono ${
+                          batch.status === "active"
+                            ? "bg-[#01AC9F]/10 text-[#01AC9F] dark:bg-[#01AC9F]/20 dark:text-[#5EDED4]"
+                            : "bg-[#FF6200]/10 text-[#FF6200] dark:bg-[#FF6200]/20 dark:text-[#FFB380]"
+                        }`}>
+                          {batch.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-1.5 font-bold text-neutral-600 dark:text-neutral-400">
+                          <Users className="w-4 h-4 text-[#01AC9F]" /> {batch.studentCount}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2 w-28">
+                          <div className="flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-full h-1.5">
+                            <div
+                              className="bg-gradient-to-r from-[#6C1D5F] to-[#84117C] h-full rounded-full"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                          <span className="font-mono font-bold text-[#6C1D5F] text-xs shrink-0">{progress}%</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={(e) => handleToggleStatus(e, batch)}
+                            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${batch.status === "active" ? "text-[#FF6200] dark:text-[#FFB380] hover:bg-[#FF6200]/10" : "text-[#01AC9F] dark:text-[#5EDED4] hover:bg-[#01AC9F]/10"}`}
+                            title="Toggle Status"
                           >
-                            {batch.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-neutral-600 dark:text-neutral-400">
-                          <div className="flex items-center gap-1.5 font-bold">
-                            <Users className="w-4 h-4 text-[#01AC9F]" /> {batch.studentCount}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2 w-32">
-                            <div className="w-full bg-neutral-100 dark:bg-neutral-800 rounded-full h-1.5">
-                              <div
-                                className="bg-gradient-to-r from-[#6C1D5F] to-[#84117C] h-full rounded-full"
-                                style={{ width: `${progress}%` }}
-                              ></div>
-                            </div>
-                            <span className="font-mono font-bold text-[#6C1D5F] text-xs">
-                              {progress}%
-                            </span>
-                          </div>
-                        </td>
-                        <td
-                          className="py-4 px-6 text-right pr-6 shrink-0"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <div className="flex items-center justify-end gap-1 transition-opacity">
-                            <button
-                              onClick={(e) => handleToggleStatus(e, batch)}
-                              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${batch.status === "active" ? "text-destructive hover:bg-destructive/10 dark:hover:bg-destructive" : "text-accent-2 hover:bg-accent-2/10 dark:hover:bg-accent-2"}`}
-                              title="Toggle Status"
-                            >
-                              <Power className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={(e) => handleOpenEditModal(e, batch)}
-                              className="p-1.5 text-[#01AC9F] hover:bg-[#01AC9F]/10 rounded-lg transition-colors cursor-pointer"
-                              title="Edit Batch"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={(e) => handleDeleteClick(e, batch.id, batch.name)}
-                              className="p-1.5 text-destructive hover:bg-destructive/10 dark:hover:bg-destructive rounded-lg transition-colors cursor-pointer"
-                              title="Delete Batch"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                            <Power className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={(e) => handleOpenEditModal(e, batch)}
+                            className="p-1.5 text-[#01AC9F] dark:text-[#5EDED4] hover:bg-[#01AC9F]/10 rounded-lg transition-colors cursor-pointer"
+                            title="Edit Batch"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={(e) => handleDeleteClick(e, batch.id, batch.name)}
+                            className="p-1.5 text-[#FF6200] dark:text-[#FFB380] hover:bg-[#FF6200]/10 rounded-lg transition-colors cursor-pointer"
+                            title="Delete Batch"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
@@ -782,34 +740,48 @@ export const BatchManagement = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Left Column */}
                   <div className="space-y-5">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="block font-bold text-neutral-600 dark:text-neutral-300">
-                          Title <span className="text-destructive">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={batchName}
-                          onChange={(e) => setBatchName(e.target.value)}
-                          placeholder="e.g. Batch-2026K"
-                          className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-semibold"
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <label className="block font-bold text-neutral-600 dark:text-neutral-300">
+                        Title <span className="text-destructive">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={batchName}
+                        onChange={(e) => setBatchName(e.target.value)}
+                        placeholder="e.g. Batch-2026K"
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-semibold"
+                      />
+                    </div>
 
-                      <div className="space-y-2">
-                        <label className="block font-bold text-neutral-600 dark:text-neutral-300">
-                          Status
-                        </label>
-                        <select
-                          value={batchStatus}
-                          onChange={(e) => setBatchStatus(e.target.value)}
-                          className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-bold cursor-pointer"
-                        >
-                          <option value="active">🟢 Active</option>
-                          <option value="inactive">🔴 Inactive</option>
-                        </select>
-                      </div>
+                    <div className="space-y-2">
+                      <label className="block font-bold text-neutral-600 dark:text-neutral-300">
+                        Course
+                      </label>
+                      <select
+                        value={selectedCourseId}
+                        onChange={(e) => setSelectedCourseId(e.target.value)}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-bold cursor-pointer"
+                      >
+                        <option value="">Select Course</option>
+                        {adminCourses.map((c) => (
+                          <option key={c.id} value={c.id}>{c.title}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block font-bold text-neutral-600 dark:text-neutral-300">
+                        Status
+                      </label>
+                      <select
+                        value={batchStatus}
+                        onChange={(e) => setBatchStatus(e.target.value)}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950/50 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] dark:text-white transition-all shadow-inner font-bold cursor-pointer"
+                      >
+                        <option value="active">🟢 Active</option>
+                        <option value="inactive">🔴 Inactive</option>
+                      </select>
                     </div>
 
                     {renderIconSelector()}

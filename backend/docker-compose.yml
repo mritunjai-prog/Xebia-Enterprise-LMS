@@ -53,7 +53,6 @@ services:
       DB_NAME: lms
       DB_USERNAME: lms
       DB_PASSWORD: lms
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       REDIS_HOST: redis
       JWT_SECRET: ${JWT_SECRET:-replace-with-at-least-32-characters}
     ports:

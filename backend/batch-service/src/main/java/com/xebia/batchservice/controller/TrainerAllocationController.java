@@ -56,6 +56,12 @@ public class TrainerAllocationController {
         return ResponseEntity.ok(Map.of("deleted", deleted));
     }
 
+    @DeleteMapping("/batch/{batchId}")
+    public ResponseEntity<Map<String, Object>> deleteAllocationsByBatch(@PathVariable String batchId) {
+        int deleted = allocationService.deleteAllocationsByBatchId(batchId);
+        return ResponseEntity.ok(Map.of("deleted", deleted));
+    }
+
     @PostMapping("/bulk")
     public List<TrainerAllocation> createBulkAllocations(@RequestBody List<TrainerAllocation> allocations) {
         return allocationService.createBulkAllocations(allocations);

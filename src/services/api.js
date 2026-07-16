@@ -153,6 +153,7 @@ export const AssessmentService = {
   updateAssessment: (id, data) =>
     fetchApi(`/v1/assessments/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   deleteAssessment: (id) => fetchApi(`/v1/assessments/${id}`, { method: "DELETE" }),
+  deleteByBatch: (batchId) => fetchApi(`/v1/assessments/batch/${batchId}`, { method: "DELETE" }),
 };
 
 export const SubmissionService = {
@@ -280,6 +281,7 @@ export const AllocationService = {
   createAllocation: (data) => fetchApi("/v1/allocations", { method: "POST", body: JSON.stringify(data) }),
   updateAllocation: (id, data) => fetchApi(`/v1/allocations/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   deleteAllocation: (id) => fetchApi(`/v1/allocations/${id}`, { method: "DELETE" }),
+  deleteAllocationsByBatch: (batchId) => fetchApi(`/v1/allocations/batch/${batchId}`, { method: "DELETE" }),
   createBulkAllocations: (allocations) => fetchApi("/v1/allocations/bulk", { method: "POST", body: JSON.stringify(allocations) }),
   getDashboardSummary: () => fetchApi("/v1/allocations/dashboard"),
   getAnalytics: () => fetchApi("/v1/allocations/analytics"),

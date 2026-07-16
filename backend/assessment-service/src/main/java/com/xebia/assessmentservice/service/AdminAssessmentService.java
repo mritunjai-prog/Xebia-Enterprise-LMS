@@ -233,4 +233,90 @@ public class AdminAssessmentService {
 
         return dto;
     }
+
+    public List<Map<String, Object>> getTrainerPerformance() {
+        List<Assessment> allAssessments = assessmentRepository.findAll();
+        List<Submission> allSubmissions = submissionRepository.findAll();
+
+        Map<String, List<Assessment>> byTrainer = new LinkedHashMap<>();
+        for (Assessment a : allAssessments) {
+            String trainerId = a.getCreatedBy() != null ? a.getCreatedBy() : "unknown";
+            byTrainer.computeIfAbsent(trainerId, k -> new ArrayList<>()).add(a);
+        }
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map.Entry<String, List<Assessment>> entry : byTrainer.entrySet()) {
+            String trainerId = entry.getKey();
+            List<Assessment> trainerAssessments = entry.getValue();
+            Set<String> trainerAssessmentIds = trainerAssessments.stream().map(Assessment::getId).collect(Collectors.toSet());
+
+            List<Submission> trainerSubs = allSubmissions.stream()
+                .filter(s -> trainerAssessmentIds.contains(s.getAssessmentId()))
+                .filter(s -> "submitted".equals(s.getStatus()))
+                .collect(Collectors.toList());
+
+            List<Submission> evaluated = trainerSubs.stream()
+                .filter(s -> s.getIsEvaluated() != null && s.getIsEvaluated())
+                .collect(Collectors.toList());
+
+            double avgScore = evaluated.isEmpty() ? 0 :
+                evaluated.stream().mapToInt(s -> s.getPercentage() != null ? s.getPercentage() : 0).average().orElse(0);
+            long passed = evaluated.stream().filter(s -> s.getPercentage() != null && s.getPercentage() >= 60).count();
+
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("trainerId", trainerId);
+            row.put("totalAssessments", trainerAssessments.size());
+            row.put("publishedAssessments", trainerAssessments.stream().filter(a -> "published".equals(a.getStatus())).count());
+            row.put("totalSubmissions", trainerSubs.size());
+            row.put("averageScore", Math.round(avgScore));
+            row.put("passRate", evaluated.isEmpty() ? 0 : Math.round((double) passed / evaluated.size() * 100));
+            result.add(row);
+        }
+        return result;
+    }
+
+    public List<Map<String, Object>> getBatchPerformance() {
+        List<Assessment> allAssessments = assessmentRepository.findAll();
+        List<Submission> allSubmissions = submissionRepository.findAll();
+
+        Map<String, List<Assessment>> byBatch = new LinkedHashMap<>();
+        for (Assessment a : allAssessments) {
+            if (a.getBatches() != null) {
+                for (String batchId : a.getBatches()) {
+                    byBatch.computeIfAbsent(batchId, k -> new ArrayList<>()).add(a);
+                }
+            }
+        }
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map.Entry<String, List<Assessment>> entry : byBatch.entrySet()) {
+            String batchId = entry.getKey();
+            List<Assessment> batchAssessments = entry.getValue();
+            Set<String> batchAssessmentIds = batchAssessments.stream().map(Assessment::getId).collect(Collectors.toSet());
+
+            List<Submission> batchSubs = allSubmissions.stream()
+                .filter(s -> batchAssessmentIds.contains(s.getAssessmentId()))
+                .filter(s -> "submitted".equals(s.getStatus()))
+                .collect(Collectors.toList());
+
+            List<Submission> evaluated = batchSubs.stream()
+                .filter(s -> s.getIsEvaluated() != null && s.getIsEvaluated())
+                .collect(Collectors.toList());
+
+            Set<String> uniqueStudents = batchSubs.stream().map(Submission::getStudentId).filter(Objects::nonNull).collect(Collectors.toSet());
+            double avgScore = evaluated.isEmpty() ? 0 :
+                evaluated.stream().mapToInt(s -> s.getPercentage() != null ? s.getPercentage() : 0).average().orElse(0);
+            long passed = evaluated.stream().filter(s -> s.getPercentage() != null && s.getPercentage() >= 60).count();
+
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("batchId", batchId);
+            row.put("totalAssessments", batchAssessments.size());
+            row.put("totalSubmissions", batchSubs.size());
+            row.put("uniqueStudents", uniqueStudents.size());
+            row.put("averageScore", Math.round(avgScore));
+            row.put("passRate", evaluated.isEmpty() ? 0 : Math.round((double) passed / evaluated.size() * 100));
+            result.add(row);
+        }
+        return result;
+    }
 }

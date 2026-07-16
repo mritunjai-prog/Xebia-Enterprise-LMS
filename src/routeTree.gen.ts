@@ -32,6 +32,7 @@ import { Route as StudentBatchesRouteImport } from './routes/student/batches'
 import { Route as StudentAssessmentsRouteImport } from './routes/student/assessments'
 import { Route as AdminTrainerRouteImport } from './routes/admin/trainer'
 import { Route as AdminOrganiserRouteImport } from './routes/admin/organiser'
+import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminCurriculumRouteImport } from './routes/admin/curriculum'
 import { Route as AdminBatchesRouteImport } from './routes/admin/batches'
 import { Route as AdminAssessmentsRouteImport } from './routes/admin/assessments'
@@ -196,6 +197,11 @@ const AdminTrainerRoute = AdminTrainerRouteImport.update({
 const AdminOrganiserRoute = AdminOrganiserRouteImport.update({
   id: '/organiser',
   path: '/organiser',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminCurriculumRoute = AdminCurriculumRouteImport.update({
@@ -467,6 +473,7 @@ export interface FileRoutesByFullPath {
   '/admin/assessments': typeof AdminAssessmentsRouteWithChildren
   '/admin/batches': typeof AdminBatchesRouteWithChildren
   '/admin/curriculum': typeof AdminCurriculumRouteWithChildren
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/organiser': typeof AdminOrganiserRoute
   '/admin/trainer': typeof AdminTrainerRoute
   '/student/assessments': typeof StudentAssessmentsRoute
@@ -535,6 +542,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/organiser': typeof AdminOrganiserRoute
   '/admin/trainer': typeof AdminTrainerRoute
   '/student/assessments': typeof StudentAssessmentsRoute
@@ -610,6 +618,7 @@ export interface FileRoutesById {
   '/admin/assessments': typeof AdminAssessmentsRouteWithChildren
   '/admin/batches': typeof AdminBatchesRouteWithChildren
   '/admin/curriculum': typeof AdminCurriculumRouteWithChildren
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/organiser': typeof AdminOrganiserRoute
   '/admin/trainer': typeof AdminTrainerRoute
   '/student/assessments': typeof StudentAssessmentsRoute
@@ -686,6 +695,7 @@ export interface FileRouteTypes {
     | '/admin/assessments'
     | '/admin/batches'
     | '/admin/curriculum'
+    | '/admin/notifications'
     | '/admin/organiser'
     | '/admin/trainer'
     | '/student/assessments'
@@ -754,6 +764,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/analytics'
+    | '/admin/notifications'
     | '/admin/organiser'
     | '/admin/trainer'
     | '/student/assessments'
@@ -828,6 +839,7 @@ export interface FileRouteTypes {
     | '/admin/assessments'
     | '/admin/batches'
     | '/admin/curriculum'
+    | '/admin/notifications'
     | '/admin/organiser'
     | '/admin/trainer'
     | '/student/assessments'
@@ -1063,6 +1075,13 @@ declare module '@tanstack/react-router' {
       path: '/organiser'
       fullPath: '/admin/organiser'
       preLoaderRoute: typeof AdminOrganiserRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/curriculum': {
@@ -1466,6 +1485,7 @@ interface AdminRouteChildren {
   AdminAssessmentsRoute: typeof AdminAssessmentsRouteWithChildren
   AdminBatchesRoute: typeof AdminBatchesRouteWithChildren
   AdminCurriculumRoute: typeof AdminCurriculumRouteWithChildren
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminOrganiserRoute: typeof AdminOrganiserRoute
   AdminTrainerRoute: typeof AdminTrainerRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -1500,6 +1520,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAssessmentsRoute: AdminAssessmentsRouteWithChildren,
   AdminBatchesRoute: AdminBatchesRouteWithChildren,
   AdminCurriculumRoute: AdminCurriculumRouteWithChildren,
+  AdminNotificationsRoute: AdminNotificationsRoute,
   AdminOrganiserRoute: AdminOrganiserRoute,
   AdminTrainerRoute: AdminTrainerRoute,
   AdminIndexRoute: AdminIndexRoute,

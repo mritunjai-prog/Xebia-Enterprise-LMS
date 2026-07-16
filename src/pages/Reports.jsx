@@ -365,8 +365,8 @@ export const Reports = () => {
                 <th className="px-5 py-3">#</th>
                 <th className="px-5 py-3">Student</th>
                 <th className="px-5 py-3">Batch</th>
-                <th className="px-5 py-3">Assessments</th>
-                <th className="px-5 py-3 text-right">Avg Score</th>
+                <th className="px-5 py-3">Assessments Attempted</th>
+                <th className="px-5 py-3">Avg Score</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-[#2e2e3e]/50">
@@ -381,7 +381,12 @@ export const Reports = () => {
               ) : (
                 filteredStudents.slice(0, 15).map((stud, idx) => {
                   const bName = batches.find((b) => (stud.batches || []).includes(b.id))?.name || "—";
-                  const score = stud.averageScore || 0;
+                  const studSubs = submissions.filter((s) => s.studentId === stud.id && s.status === "submitted");
+                  const studEvaluated = studSubs.filter((s) => s.isEvaluated);
+                  const assessmentsDone = studSubs.length;
+                  const score = studEvaluated.length > 0
+                    ? Math.round(studEvaluated.reduce((sum, s) => sum + (s.percentage || 0), 0) / studEvaluated.length)
+                    : 0;
                   return (
                     <tr key={stud.id} className="hover:bg-gray-50/50 dark:hover:bg-[#1a1a2e]/30 transition-colors">
                       <td className="px-5 py-3 font-mono text-gray-400">#{idx + 1}</td>
@@ -395,8 +400,8 @@ export const Reports = () => {
                         </div>
                       </td>
                       <td className="px-5 py-3 text-gray-500 dark:text-gray-400 font-medium">{bName}</td>
-                      <td className="px-5 py-3 text-gray-500 dark:text-gray-400 font-mono">{stud.assessmentsCompleted || 0}</td>
-                      <td className="px-5 py-3 text-right">
+                      <td className="px-5 py-3 text-gray-500 dark:text-gray-400 font-mono">{assessmentsDone}</td>
+                      <td className="px-5 py-3">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-[11px] font-bold ${
                           score >= 85 ? "bg-[#01AC9F]/10 text-[#01AC9F]"
                             : score >= 60 ? "bg-[#6C1D5F]/10 text-[#6C1D5F]"

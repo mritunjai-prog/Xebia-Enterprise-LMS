@@ -56,7 +56,7 @@ export const Login = () => {
 
   return (
     <div
-      className={`min-h-screen w-full relative overflow-hidden transition-colors duration-500 ${theme === "dark" ? "dark bg-neutral-950" : "bg-[#f8f9fb]"}`}
+      className={`min-h-screen w-full relative overflow-hidden transition-colors duration-500 ${theme === "dark" ? "dark bg-[#0a0510]" : "bg-[#f8f9fb]"}`}
     >
       {/* 3D Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -103,7 +103,7 @@ export const Login = () => {
         </AnimatePresence>
       </motion.button>
 
-      <div className="container mx-auto min-h-screen flex items-center justify-center p-6 relative z-10 perspective-[1000px]">
+      <div className="container mx-auto min-h-screen flex items-center justify-center p-4 relative z-10 perspective-[1000px]">
         {/* Animated Border Light Layer */}
         <div
           className="absolute inset-[-3px] bg-gradient-to-r from-accent-2 via-primary to-[#01AC9F] rounded-[2.6rem] opacity-30 dark:opacity-50 blur-sm animate-spin"
@@ -119,10 +119,10 @@ export const Login = () => {
           initial={{ opacity: 0, y: 40, rotateX: 10 }}
           animate={{ opacity: 1, y: 0, rotateX: 0 }}
           transition={{ duration: 0.35, type: "spring", bounce: 0.3 }}
-          className="w-full max-w-5xl flex flex-col md:flex-row bg-white/60 dark:bg-neutral-900/60 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl dark:shadow-purple-900/10 border border-white/60 dark:border-white/10 overflow-hidden transform-gpu relative z-10"
+          className="w-full max-w-6xl flex flex-col md:flex-row bg-white/60 dark:bg-[#0d0815]/80 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl dark:shadow-purple-900/20 border border-white/60 dark:border-[#6C1D5F]/20 overflow-hidden transform-gpu relative z-10"
         >
           {/* Branding Column with 3D Depth */}
-          <div className="md:w-5/12 bg-gradient-to-br from-[#4A1E47] via-[#6C1D5F] to-[#84117C] text-white p-6 sm:p-10 md:p-14 relative overflow-hidden flex flex-col justify-between shadow-[inset_-20px_0_40px_rgba(0,0,0,0.1)] gap-16 md:gap-0">
+          <div className="md:w-5/12 bg-gradient-to-br from-[#4A1E47] via-[#6C1D5F] to-[#84117C] text-white p-6 sm:p-8 md:p-10 relative overflow-hidden flex flex-col justify-between shadow-[inset_-20px_0_40px_rgba(0,0,0,0.1)] gap-8 md:gap-0">
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#01AC9F]/30 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none" />
 
@@ -141,9 +141,6 @@ export const Login = () => {
                 <h1 className="font-display font-extrabold text-2xl tracking-tight leading-none text-white drop-shadow-md">
                   Xebia LMS
                 </h1>
-                <p className="text-[10px] text-primary mt-1 uppercase font-mono tracking-wider font-bold">
-                  Assessment System
-                </p>
               </div>
             </motion.div>
 
@@ -153,13 +150,13 @@ export const Login = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
               >
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black leading-[1.1] tracking-tight drop-shadow-xl mt-8">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black leading-[1.1] tracking-tight drop-shadow-xl mt-4">
                   Evaluate. Learn. <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-2 to-accent-2">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#01AC9F] to-[#01AC9F] dark:from-white dark:to-white">
                     Excel.
                   </span>
                 </h2>
-                <p className="text-purple-200 mt-6 max-w-sm leading-relaxed text-sm md:text-base font-medium">
+                <p className="text-purple-200 mt-4 max-w-sm leading-relaxed text-sm md:text-base font-medium">
                   Deliver secure, scalable, and intelligent assessments with automated grading,
                   real-time analytics, and seamless learning experiences—all from one enterprise
                   platform.
@@ -169,8 +166,8 @@ export const Login = () => {
           </div>
 
           {/* Login Interaction Column */}
-          <div className="md:w-7/12 p-8 md:p-14 flex items-center justify-center relative">
-            <div className="w-full max-w-md space-y-8 relative z-10">
+          <div className="md:w-7/12 p-6 md:p-10 flex items-center justify-center relative">
+            <div className="w-full max-w-md space-y-6 relative z-10">
               <div className="text-center md:text-left">
                 <h3 className="text-3xl md:text-4xl font-display font-black text-neutral-900 dark:text-white tracking-tight">
                   Welcome Back
@@ -180,14 +177,14 @@ export const Login = () => {
                 </p>
               </div>
 
-              <form onSubmit={handleLoginSubmit} className="space-y-6">
+              <form onSubmit={handleLoginSubmit} className="space-y-5">
                 {/* Role Switcher */}
-                <div className="grid grid-cols-3 gap-2 p-1.5 bg-neutral-200/50 dark:bg-black/30 backdrop-blur-md rounded-2xl border border-white/50 dark:border-neutral-800 shadow-inner">
+                <div className="grid grid-cols-3 gap-2 p-1.5 bg-neutral-200/50 dark:bg-[#1a1020]/60 backdrop-blur-md rounded-2xl border border-white/50 dark:border-[#6C1D5F]/30 shadow-inner">
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     type="button"
                     onClick={() => setRole("teacher")}
-                    className={`flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-extrabold transition-all duration-300 cursor-pointer relative overflow-hidden ${role === "teacher" ? "text-[#6C1D5F] dark:text-primary shadow-md ring-1 ring-neutral-300 dark:ring-neutral-700 bg-white dark:bg-neutral-800" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-white/40 dark:hover:bg-neutral-800/40"}`}
+                    className={`flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-extrabold transition-all duration-300 cursor-pointer relative overflow-hidden ${role === "teacher" ? "text-[#6C1D5F] dark:text-[#D4A0D0] shadow-md ring-1 ring-neutral-300 dark:ring-[#6C1D5F]/50 bg-white dark:bg-[#2a1a2e]" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-white/40 dark:hover:bg-[#2a1a2e]/40"}`}
                   >
                     <ShieldCheck className="w-5 h-5 relative z-10" />
                     <span className="relative z-10 hidden sm:inline">Trainer</span>
@@ -197,7 +194,7 @@ export const Login = () => {
                     whileTap={{ scale: 0.97 }}
                     type="button"
                     onClick={() => setRole("student")}
-                    className={`flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-extrabold transition-all duration-300 cursor-pointer relative overflow-hidden ${role === "student" ? "text-[#01AC9F] dark:text-accent-2 shadow-md ring-1 ring-neutral-300 dark:ring-neutral-700 bg-white dark:bg-neutral-800" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-white/40 dark:hover:bg-neutral-800/40"}`}
+                    className={`flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-extrabold transition-all duration-300 cursor-pointer relative overflow-hidden ${role === "student" ? "text-[#01AC9F] dark:text-[#5EDED4] shadow-md ring-1 ring-neutral-300 dark:ring-[#01AC9F]/50 bg-white dark:bg-[#1a2a28]" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-white/40 dark:hover:bg-[#1a2a28]/40"}`}
                   >
                     <GraduationCap className="w-5 h-5 relative z-10" />
                     <span className="relative z-10 hidden sm:inline">Student</span>
@@ -207,7 +204,7 @@ export const Login = () => {
                     whileTap={{ scale: 0.97 }}
                     type="button"
                     onClick={() => setRole("admin")}
-                    className={`flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-extrabold transition-all duration-300 cursor-pointer relative overflow-hidden ${role === "admin" ? "text-[#84117C] dark:text-[#FFACE8] shadow-md ring-1 ring-neutral-300 dark:ring-neutral-700 bg-white dark:bg-neutral-800" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-white/40 dark:hover:bg-neutral-800/40"}`}
+                    className={`flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-extrabold transition-all duration-300 cursor-pointer relative overflow-hidden ${role === "admin" ? "text-[#84117C] dark:text-[#FFACE8] shadow-md ring-1 ring-neutral-300 dark:ring-[#84117C]/50 bg-white dark:bg-[#2a1a30]" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-white/40 dark:hover:bg-[#2a1a30]/40"}`}
                   >
                     <Layers className="w-5 h-5 relative z-10" />
                     <span className="relative z-10 hidden sm:inline">Admin</span>
@@ -216,7 +213,7 @@ export const Login = () => {
 
                 {/* Email Input */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-bold text-neutral-700 dark:text-neutral-300 ml-1">
+                  <label className="block text-sm font-bold text-neutral-700 dark:text-neutral-200 ml-1">
                     Institutional Email
                   </label>
                   <div className="relative group">
@@ -231,7 +228,7 @@ export const Login = () => {
                             ? "admin@xebia.com"
                             : "student.name@xebia-student.com"
                       }
-                      className="w-full px-5 py-4 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md border border-neutral-300/80 dark:border-neutral-700 rounded-2xl text-base focus:outline-none focus:ring-4 focus:ring-[#6C1D5F]/20 dark:focus:ring-primary/20 focus:border-[#6C1D5F] dark:focus:border-primary dark:text-white transition-all shadow-sm placeholder:text-neutral-400 dark:placeholder:text-neutral-600 font-medium"
+                      className="w-full px-5 py-4 bg-white/70 dark:bg-[#1a1020]/50 backdrop-blur-md border border-neutral-300/80 dark:border-[#6C1D5F]/30 rounded-2xl text-base focus:outline-none focus:ring-4 focus:ring-[#6C1D5F]/20 dark:focus:ring-[#84117C]/30 focus:border-[#6C1D5F] dark:focus:border-[#84117C] dark:text-white transition-all shadow-sm placeholder:text-neutral-400 dark:placeholder:text-neutral-500 font-medium"
                     />
                   </div>
                 </div>
@@ -250,17 +247,17 @@ export const Login = () => {
               </form>
 
               {/* Demo Accounts Slider */}
-              <div className="pt-8 space-y-4">
-                <h4 className="text-[10px] font-black text-neutral-400 dark:text-neutral-500 flex items-center gap-3 uppercase tracking-[0.2em]">
-                  <div className="h-px bg-neutral-300 dark:bg-neutral-800 flex-1"></div>
+              <div className="pt-6 space-y-3">
+                <h4 className="text-[10px] font-black text-neutral-400 dark:text-neutral-400 flex items-center gap-3 uppercase tracking-[0.2em]">
+                  <div className="h-px bg-neutral-300 dark:bg-[#6C1D5F]/40 flex-1"></div>
                   Quick Access
-                  <div className="h-px bg-neutral-300 dark:bg-neutral-800 flex-1"></div>
+                  <div className="h-px bg-neutral-300 dark:bg-[#6C1D5F]/40 flex-1"></div>
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {/* Teachers Column */}
                   <div className="space-y-2">
-                    <p className="text-[10px] text-neutral-500 dark:text-neutral-500 font-extrabold uppercase tracking-wider ml-1">
+                    <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-extrabold uppercase tracking-wider ml-1">
                       Trainers
                     </p>
                     {demoTeachers.map((t, idx) => (
@@ -271,7 +268,7 @@ export const Login = () => {
                         key={t.id}
                         type="button"
                         onClick={() => handleQuickLogin(t.email, "teacher")}
-                        className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-white/60 dark:border-neutral-700/50 hover:bg-white dark:hover:bg-neutral-800 hover:border-[#6C1D5F] dark:hover:border-primary hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
+                        className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-[#2a1a2e]/60 backdrop-blur-sm border border-white/60 dark:border-[#6C1D5F]/30 hover:bg-white dark:hover:bg-[#3a2240] hover:border-[#6C1D5F] dark:hover:border-[#84117C] hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
                       >
                         <img
                           src={t.avatar}
@@ -280,11 +277,11 @@ export const Login = () => {
                           referrerPolicy="no-referrer"
                         />
                         <div className="truncate flex-1">
-                          <p className="font-extrabold text-neutral-800 dark:text-neutral-200 truncate group-hover:text-[#6C1D5F] dark:group-hover:text-primary transition-colors">
-                            {t.name.split(" ")[1]}
+                          <p className="font-extrabold text-neutral-800 dark:text-white truncate group-hover:text-[#6C1D5F] dark:group-hover:text-[#D4A0D0] transition-colors">
+                            {t.name.split(" ")[1] || t.name.split(" ")[0]}
                           </p>
-                          <p className="text-[10px] text-neutral-500 dark:text-neutral-500 truncate font-medium">
-                            {t.department}
+                          <p className="text-[10px] text-neutral-500 dark:text-[#b0a0b0] truncate font-medium">
+                            Trainer
                           </p>
                         </div>
                       </motion.button>
@@ -293,7 +290,7 @@ export const Login = () => {
 
                   {/* Students Column */}
                   <div className="space-y-2">
-                    <p className="text-[10px] text-neutral-500 dark:text-neutral-500 font-extrabold uppercase tracking-wider ml-1">
+                    <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-extrabold uppercase tracking-wider ml-1">
                       Students
                     </p>
                     {demoStudents.map((s, idx) => (
@@ -304,7 +301,7 @@ export const Login = () => {
                         key={s.id}
                         type="button"
                         onClick={() => handleQuickLogin(s.email, "student")}
-                        className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-white/60 dark:border-neutral-700/50 hover:bg-white dark:hover:bg-neutral-800 hover:border-[#01AC9F] dark:hover:border-accent-2 hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
+                        className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-[#1a2a28]/60 backdrop-blur-sm border border-white/60 dark:border-[#01AC9F]/30 hover:bg-white dark:hover:bg-[#1e3532] hover:border-[#01AC9F] dark:hover:border-[#01AC9F] hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
                       >
                         <img
                           src={s.avatar}
@@ -313,10 +310,10 @@ export const Login = () => {
                           referrerPolicy="no-referrer"
                         />
                         <div className="truncate flex-1">
-                          <p className="font-extrabold text-neutral-800 dark:text-neutral-200 truncate group-hover:text-[#01AC9F] dark:group-hover:text-accent-2 transition-colors">
+                          <p className="font-extrabold text-neutral-800 dark:text-white truncate group-hover:text-[#01AC9F] dark:group-hover:text-[#5EDED4] transition-colors">
                             {s.name.split(" ")[0]}
                           </p>
-                          <p className="text-[10px] text-neutral-500 dark:text-neutral-500 truncate font-medium">
+                          <p className="text-[10px] text-neutral-500 dark:text-[#a0c0bc] truncate font-medium">
                             Batch {(s.batches && s.batches[0]) || "B1"}
                           </p>
                         </div>
@@ -326,7 +323,7 @@ export const Login = () => {
 
                   {/* Admins Column */}
                   <div className="space-y-2">
-                    <p className="text-[10px] text-neutral-500 dark:text-neutral-500 font-extrabold uppercase tracking-wider ml-1">
+                    <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-extrabold uppercase tracking-wider ml-1">
                       Admins
                     </p>
                     <motion.button
@@ -335,16 +332,16 @@ export const Login = () => {
                       transition={{ delay: 0.25 }}
                       type="button"
                       onClick={() => handleQuickLogin("admin@xebia.com", "admin")}
-                      className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm border border-white/60 dark:border-neutral-700/50 hover:bg-white dark:hover:bg-neutral-800 hover:border-[#84117C] dark:hover:border-[#FFACE8] hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
+                      className="w-full text-left p-2.5 rounded-2xl bg-white/50 dark:bg-[#2a1a30]/60 backdrop-blur-sm border border-white/60 dark:border-[#84117C]/30 hover:bg-white dark:hover:bg-[#3a2240] hover:border-[#84117C] dark:hover:border-[#FFACE8] hover:shadow-md transition-all duration-300 text-xs cursor-pointer flex items-center gap-3 group"
                     >
                       <div className="w-8 h-8 rounded-full shadow-sm bg-gradient-to-br from-[#84117C] to-[#6C1D5F] flex items-center justify-center text-white font-bold text-[10px]">
                         A
                       </div>
                       <div className="truncate flex-1">
-                        <p className="font-extrabold text-neutral-800 dark:text-neutral-200 truncate group-hover:text-[#84117C] dark:group-hover:text-[#FFACE8] transition-colors">
+                        <p className="font-extrabold text-neutral-800 dark:text-white truncate group-hover:text-[#84117C] dark:group-hover:text-[#FFACE8] transition-colors">
                           Admin User
                         </p>
-                        <p className="text-[10px] text-neutral-500 dark:text-neutral-500 truncate font-medium">
+                        <p className="text-[10px] text-neutral-500 dark:text-[#c0a0c0] truncate font-medium">
                           System Admin
                         </p>
                       </div>

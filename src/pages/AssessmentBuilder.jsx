@@ -483,124 +483,97 @@ export const AssessmentBuilder = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="space-y-4"
+            className="space-y-6"
           >
-            {/* Toolbar - Redesigned to match BatchManagement */}
-            <div className="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm flex flex-col gap-4">
-              <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-                {/* Search */}
-                <div className="relative flex-1 min-w-[300px] group">
-                  <Search className="w-5 h-5 text-neutral-500 absolute left-4 top-3.5 group-focus-within:text-[#6C1D5F] transition-colors" />
-                  <input
-                    type="text"
-                    placeholder="Search assessments by title or type..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-2xl text-sm font-medium text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] focus:border-transparent transition-all shadow-sm"
-                  />
-                </div>
+            {/* Toolbar — flat single row */}
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={handleOpenCreate}
+                className="py-2 px-4 bg-gradient-to-r from-[#6C1D5F] to-[#84117C] hover:from-[#84117C] hover:to-[#4A1E47] text-white rounded-lg text-sm font-bold transition-all flex items-center gap-2 cursor-pointer shadow-sm shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create Assessment</span>
+              </button>
 
-                {/* Create Assessment Button */}
+              <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700 mx-1 hidden sm:block" />
+
+              <Filter className="w-4 h-4 text-neutral-400 shrink-0 hidden sm:block" />
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-semibold rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer"
+              >
+                <option value="All">Status</option>
+                <option value="published">Published</option>
+                <option value="draft">Drafts</option>
+              </select>
+
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-semibold rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer"
+              >
+                <option value="All">Type</option>
+                <option value="mcq">MCQ</option>
+                <option value="coding">Coding</option>
+                <option value="true_false">True / False</option>
+                <option value="multi_select">Multi Select</option>
+                <option value="short_answer">Short Answer</option>
+                <option value="file_upload">File Upload</option>
+              </select>
+
+              <select
+                value={difficultyFilter}
+                onChange={(e) => setDifficultyFilter(e.target.value)}
+                className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-semibold rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer"
+              >
+                <option value="All">Difficulty</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
+
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-semibold rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer"
+              >
+                <option value="Newest">Newest</option>
+                <option value="Oldest">Oldest</option>
+                <option value="A-Z">A-Z</option>
+                <option value="Z-A">Z-A</option>
+              </select>
+
+              {(statusFilter !== "All" || typeFilter !== "All" || difficultyFilter !== "All" || sortBy !== "Newest") && (
                 <button
-                  onClick={handleOpenCreate}
-                  className="py-3 px-6 bg-gradient-to-r from-[#6C1D5F] to-[#84117C] hover:from-[#84117C] hover:to-[#4A1E47] text-white rounded-2xl text-sm font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer shrink-0"
+                  onClick={handleClearFilters}
+                  className="text-[11px] font-bold text-[#6C1D5F] dark:text-[#D4A0D0] hover:underline cursor-pointer flex items-center gap-1 bg-[#6C1D5F]/10 dark:bg-[#84117C]/20 px-2 py-1.5 rounded-md"
                 >
-                  <Plus className="w-4 h-4" />
-                  <span>Create Assessment</span>
+                  <X className="w-3 h-3" /> Clear
                 </button>
-              </div>
+              )}
 
-              {/* Filters Row */}
-              <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800 mt-2">
-                <div className="flex items-center gap-2 text-sm font-semibold text-neutral-500">
-                  <Filter className="w-4 h-4" /> Filters:
-                </div>
-
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[120px]"
-                >
-                  <option value="All">Status: All</option>
-                  <option value="published">Published</option>
-                  <option value="draft">Drafts</option>
-                </select>
-
-                <select
-                  value={typeFilter}
-                  onChange={(e) => setTypeFilter(e.target.value)}
-                  className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[150px]"
-                >
-                  <option value="All">Type: All</option>
-                  <option value="mcq">MCQ</option>
-                  <option value="coding">Coding</option>
-                  <option value="true_false">True / False</option>
-                  <option value="multi_select">Multi Select</option>
-                  <option value="short_answer">Short Answer</option>
-                  <option value="file_upload">File Upload</option>
-                </select>
-
-                <select
-                  value={difficultyFilter}
-                  onChange={(e) => setDifficultyFilter(e.target.value)}
-                  className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[150px]"
-                >
-                  <option value="All">Difficulty: All</option>
-                  <option value="Easy">Easy</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Hard">Hard</option>
-                </select>
-
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C1D5F] cursor-pointer shadow-sm min-w-[160px]"
-                >
-                  <option value="Newest">Sort: Newest First</option>
-                  <option value="Oldest">Sort: Oldest First</option>
-                  <option value="A-Z">Sort: A-Z</option>
-                  <option value="Z-A">Sort: Z-A</option>
-                </select>
-
-                {(searchQuery ||
-                  statusFilter !== "All" ||
-                  typeFilter !== "All" ||
-                  difficultyFilter !== "All" ||
-                  sortBy !== "Newest") && (
+              <div className="ml-auto flex items-center gap-3">
+                <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 p-0.5 rounded-lg">
                   <button
-                    onClick={handleClearFilters}
-                    className="text-xs font-bold text-[#6C1D5F] dark:text-primary hover:underline cursor-pointer flex items-center gap-1 bg-[#6C1D5F]/10 dark:bg-primary/10 px-2 py-1 rounded-md"
+                    onClick={() => setViewMode("grid")}
+                    className={`p-1.5 rounded-md transition-all ${viewMode === "grid" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"}`}
+                    title="Grid View"
                   >
-                    <X className="w-3 h-3" /> Clear Filters
+                    <LayoutGrid className="w-4 h-4" />
                   </button>
-                )}
-
-                <div className="ml-auto flex items-center gap-4">
-                  {/* View Toggle */}
-                  <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl">
-                    <button
-                      onClick={() => setViewMode("grid")}
-                      className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === "grid" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
-                      title="Grid View"
-                    >
-                      <LayoutGrid className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewMode("table")}
-                      className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === "table" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
-                      title="Table View"
-                    >
-                      <List className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-sm text-neutral-400 font-medium">
-                    <span className="font-mono bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded text-neutral-700 dark:text-neutral-200 font-bold">
-                      {filteredAssessments.length}
-                    </span>{" "}
-                    Assessments
-                  </div>
+                  <button
+                    onClick={() => setViewMode("table")}
+                    className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-800 dark:text-white" : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"}`}
+                    title="Table View"
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
                 </div>
+                <span className="text-xs text-neutral-400 font-medium hidden sm:block">
+                  <span className="font-mono bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-600 dark:text-neutral-300 font-bold">{filteredAssessments.length}</span> found
+                </span>
               </div>
             </div>
 
@@ -618,156 +591,147 @@ export const AssessmentBuilder = () => {
                 </div>
               </div>
             ) : viewMode === "table" ? (
-              <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden shadow-sm">
+              <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden shadow-sm">
                 <div className="overflow-x-auto max-h-[60vh]">
-                  <table className="w-full text-left border-collapse text-sm whitespace-nowrap">
+                  <table className="w-full text-sm border-collapse">
                     <thead className="sticky top-0 z-10 bg-neutral-100 dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-sm">
                       <tr className="text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider text-[11px]">
-                        <th className="py-4 px-6 font-bold">Title & Batches</th>
-                        <th className="py-4 px-6 font-bold">Type</th>
-                        <th className="py-4 px-6 font-bold">Difficulty</th>
-                        <th className="py-4 px-6 font-bold text-right">Marks / Duration</th>
-                        <th className="py-4 px-6 font-bold text-center">Status</th>
-                        <th className="py-4 px-6 text-right pr-6 font-bold">Actions</th>
+                        <th className="py-3 px-6 text-left whitespace-nowrap">Title & Batches</th>
+                        <th className="py-3 px-4 text-left whitespace-nowrap">Type</th>
+                        <th className="py-3 px-4 text-left whitespace-nowrap">Difficulty</th>
+                        <th className="py-3 px-4 text-left whitespace-nowrap">Marks / Duration</th>
+                        <th className="py-3 px-4 text-left whitespace-nowrap">Status</th>
+                        <th className="py-3 px-4 text-left whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/60 bg-white dark:bg-neutral-900">
-                      {filteredAssessments.length === 0 ? (
-                        <tr>
-                          <td
-                            colSpan={6}
-                            className="py-16 text-center text-neutral-500 dark:text-neutral-400 font-medium bg-neutral-50/50 dark:bg-neutral-900/50"
+                      {filteredAssessments.map((as) => {
+                        const batchInfo = (as.batches || [])
+                          .map((bId) => {
+                            const batch = batches.find((b) => b.id === bId);
+                            if (!batch) return bId;
+                            const course = batch.course || batch.courseName || "—";
+                            return `${batch.name} (${course})`;
+                          })
+                          .join(", ");
+
+                        const statusColor = {
+                          published:
+                            "bg-accent-2/10 text-accent-2 dark:bg-[#01AC9F]/20 dark:text-[#5EDED4] border-accent-2/20 dark:border-[#01AC9F]/40",
+                          draft:
+                            "bg-destructive/10 text-destructive dark:bg-[#FF6200]/20 dark:text-[#FFB380] border-destructive/20 dark:border-[#FF6200]/40",
+                          archived:
+                            "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700",
+                        }[as.status];
+
+                        const difficultyColor = {
+                          Easy: "text-[#01AC9F] dark:text-[#5EDED4] bg-[#01AC9F]/10 dark:bg-[#01AC9F]/20 border-[#01AC9F]/20 dark:border-[#01AC9F]/40",
+                          Medium:
+                            "text-[#FF6200] dark:text-[#FFB380] bg-[#FF6200]/10 dark:bg-[#FF6200]/20 border-[#FF6200]/20 dark:border-[#FF6200]/40",
+                          Hard: "text-[#FF6200] dark:text-[#FFB380] bg-[#FF6200]/10 dark:bg-[#FF6200]/20 border-[#FF6200]/20 dark:border-[#FF6200]/40",
+                        }[as.difficulty];
+
+                        return (
+                          <tr
+                            key={as.id}
+                            onClick={() => navigate(`/trainer/assessment-builder/${as.id}`)}
+                            className="even:bg-neutral-50/50 dark:even:bg-neutral-800/20 hover:bg-neutral-100 dark:hover:bg-neutral-800/40 transition-colors group cursor-pointer"
                           >
-                            No assessments match your filters.
-                          </td>
-                        </tr>
-                      ) : (
-                        filteredAssessments.map((as) => {
-                          const batchNames = as.batches
-                            .map((bId) => batches.find((b) => b.id === bId)?.name || bId)
-                            .join(", ");
-
-                          const statusColor = {
-                            published:
-                              "bg-accent-2/10 text-accent-2 dark:bg-accent-2 dark:text-accent-2 border-accent-2/20 dark:border-accent-2",
-                            draft:
-                              "bg-destructive/10 text-destructive dark:bg-destructive dark:text-destructive border-destructive/20 dark:border-destructive",
-                            archived:
-                              "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700",
-                          }[as.status];
-
-                          const difficultyColor = {
-                            Easy: "text-accent-2 dark:text-accent-2 bg-accent-2/10 dark:bg-accent-2 border-accent-2/20 dark:border-accent-2",
-                            Medium:
-                              "text-destructive dark:text-destructive bg-destructive/10 dark:bg-destructive border-destructive/20 dark:border-destructive",
-                            Hard: "text-destructive dark:text-destructive bg-destructive/10 dark:bg-destructive border-destructive/20 dark:border-destructive",
-                          }[as.difficulty];
-
-                          return (
-                            <tr
-                              key={as.id}
-                              onClick={() => navigate(`/trainer/assessment-builder/${as.id}`)}
-                              className="even:bg-neutral-50/50 dark:even:bg-neutral-800/20 hover:bg-neutral-100 dark:hover:bg-neutral-800/40 transition-colors group cursor-pointer"
-                            >
-                              <td className="py-4 px-6">
-                                <div className="font-bold text-neutral-900 dark:text-white truncate max-w-[250px]">
-                                  {as.title}
-                                </div>
-                                <div className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 mt-1 truncate max-w-[250px]">
-                                  {batchNames ? `Assigned to: ${batchNames}` : "Not assigned"}
-                                </div>
-                              </td>
-                              <td className="py-4 px-6 capitalize font-semibold text-neutral-600 dark:text-neutral-300">
-                                {as.type.replace("_", " ")}
-                              </td>
-                              <td className="py-4 px-6">
-                                <span
-                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border ${difficultyColor}`}
+                            <td className="py-3 px-6">
+                              <div className="font-bold text-neutral-900 dark:text-white truncate max-w-[250px]">
+                                {as.title}
+                              </div>
+                              <div className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 mt-1 truncate max-w-[250px]">
+                                {batchInfo ? batchInfo : "Not assigned"}
+                              </div>
+                            </td>
+                            <td className="py-3 px-4 capitalize font-semibold text-neutral-600 dark:text-neutral-300">
+                              {as.type.replace("_", " ")}
+                            </td>
+                            <td className="py-3 px-4">
+                              <span className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border ${difficultyColor}`}>
+                                {as.difficulty}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono font-bold text-[#6C1D5F] dark:text-[#D4A0D0] text-xs">{as.marks} pts</span>
+                                <span className="text-neutral-300 dark:text-neutral-600">·</span>
+                                <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">{as.duration} min</span>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border shadow-sm ${statusColor}`}>
+                                {as.status}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4" onClick={(e) => e.stopPropagation()}>
+                              <div className="flex items-center gap-1">
+                                {as.status === "draft" && (
+                                  <button
+                                    onClick={(e) => handlePublishNow(e, as.id, as.title)}
+                                    className="p-1.5 text-[#01AC9F] dark:text-[#5EDED4] hover:bg-[#01AC9F]/10 rounded-lg transition-colors cursor-pointer"
+                                    title="Publish Now"
+                                  >
+                                    <Send className="w-4 h-4" />
+                                  </button>
+                                )}
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); handleOpenEdit(as); }}
+                                  className="p-1.5 text-[#01AC9F] dark:text-[#5EDED4] hover:bg-[#01AC9F]/10 rounded-lg transition-colors cursor-pointer"
+                                  title="Edit Assessment"
                                 >
-                                  {as.difficulty}
-                                </span>
-                              </td>
-                              <td className="py-4 px-6 text-right">
-                                <div className="font-mono font-black text-[#6C1D5F] dark:text-primary">
-                                  {as.marks} pts
-                                </div>
-                                <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 mt-0.5">
-                                  {as.duration} min
-                                </div>
-                              </td>
-                              <td className="py-4 px-6 text-center">
-                                <span
-                                  className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border shadow-sm ${statusColor}`}
+                                  <FileEdit className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={(e) => handleDuplicate(e, as.id, as.title)}
+                                  className="p-1.5 text-[#01AC9F] dark:text-[#5EDED4] hover:bg-[#01AC9F]/10 rounded-lg transition-colors cursor-pointer"
+                                  title="Duplicate"
                                 >
-                                  {as.status}
-                                </span>
-                              </td>
-                              <td className="py-4 px-6 text-right pr-6 shrink-0">
-                                <div className="flex items-center justify-end gap-1 opacity-100 transition-opacity">
-                                  {as.status === "draft" && (
-                                    <button
-                                      onClick={(e) => handlePublishNow(e, as.id, as.title)}
-                                      className="p-1.5 text-accent-2 hover:bg-accent-2/10 dark:hover:bg-accent-2 rounded-lg transition-colors cursor-pointer"
-                                      title="Publish Now"
-                                    >
-                                      <Send className="w-4 h-4" />
-                                    </button>
-                                  )}
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleOpenEdit(as);
-                                    }}
-                                    className="p-1.5 text-[#01AC9F] hover:bg-[#01AC9F]/10 rounded-lg transition-colors cursor-pointer"
-                                    title="Edit Assessment"
-                                  >
-                                    <FileEdit className="w-4 h-4" />
-                                  </button>
-                                  <button
-                                    onClick={(e) => handleDuplicate(e, as.id, as.title)}
-                                    className="p-1.5 text-accent-2 hover:bg-accent-2/10 dark:hover:bg-accent-2 rounded-lg transition-colors cursor-pointer"
-                                    title="Duplicate"
-                                  >
-                                    <Copy className="w-4 h-4" />
-                                  </button>
-                                  <button
-                                    onClick={(e) => handleDelete(e, as.id, as.title)}
-                                    className="p-1.5 text-destructive hover:bg-destructive/10 dark:hover:bg-destructive rounded-lg transition-colors cursor-pointer"
-                                    title="Delete"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
+                                  <Copy className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={(e) => handleDelete(e, as.id, as.title)}
+                                  className="p-1.5 text-[#FF6200] dark:text-[#FFB380] hover:bg-[#FF6200]/10 rounded-lg transition-colors cursor-pointer"
+                                  title="Delete"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {filteredAssessments.map((as) => {
-                  const batchNames = (as.batches || [])
-                    .map((bId) => batches.find((b) => b.id === bId)?.name || bId)
+                  const batchInfo = (as.batches || [])
+                    .map((bId) => {
+                      const batch = batches.find((b) => b.id === bId);
+                      if (!batch) return bId;
+                      const course = batch.course || batch.courseName || "—";
+                      return `${batch.name} (${course})`;
+                    })
                     .join(", ");
 
                   const statusColor = {
                     published:
-                      "bg-accent-2/10 text-accent-2 dark:bg-accent-2 dark:text-accent-2 border-accent-2/20 dark:border-accent-2",
+                      "bg-accent-2/10 text-accent-2 dark:bg-[#01AC9F]/20 dark:text-[#5EDED4] border-accent-2/20 dark:border-[#01AC9F]/40",
                     draft:
-                      "bg-destructive/10 text-destructive dark:bg-destructive dark:text-destructive border-destructive/20 dark:border-destructive",
+                      "bg-destructive/10 text-destructive dark:bg-[#FF6200]/20 dark:text-[#FFB380] border-destructive/20 dark:border-[#FF6200]/40",
                     archived:
                       "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700",
                   }[as.status];
 
                   const difficultyColor = {
-                    Easy: "text-accent-2 dark:text-accent-2 bg-accent-2/10 dark:bg-accent-2 border-accent-2/20 dark:border-accent-2",
+                    Easy: "text-[#01AC9F] dark:text-[#5EDED4] bg-[#01AC9F]/10 dark:bg-[#01AC9F]/20 border-[#01AC9F]/20 dark:border-[#01AC9F]/40",
                     Medium:
-                      "text-destructive dark:text-destructive bg-destructive/10 dark:bg-destructive border-destructive/20 dark:border-destructive",
-                    Hard: "text-destructive dark:text-destructive bg-destructive/10 dark:bg-destructive border-destructive/20 dark:border-destructive",
+                      "text-[#FF6200] dark:text-[#FFB380] bg-[#FF6200]/10 dark:bg-[#FF6200]/20 border-[#FF6200]/20 dark:border-[#FF6200]/40",
+                    Hard: "text-[#FF6200] dark:text-[#FFB380] bg-[#FF6200]/10 dark:bg-[#FF6200]/20 border-[#FF6200]/20 dark:border-[#FF6200]/40",
                   }[as.difficulty];
 
                   return (
@@ -778,39 +742,32 @@ export const AssessmentBuilder = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       onClick={() => navigate(`/trainer/assessment-builder/${as.id}`)}
-                      className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden relative cursor-pointer"
+                      className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col group cursor-pointer"
                     >
-                      {/* Decorative Background Element */}
-                      <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-gradient-to-br from-[#6C1D5F]/5 to-transparent blur-2xl group-hover:bg-[#6C1D5F]/10 transition-colors pointer-events-none" />
-
-                      {/* Header Section */}
-                      <div className="flex justify-between items-start gap-3 mb-4">
+                      {/* Header */}
+                      <div className="flex justify-between items-start gap-3 mb-3">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-display font-black text-sm md:text-base text-neutral-800 dark:text-white leading-tight mb-1 truncate">
+                          <h3 className="font-display font-black text-sm md:text-base text-neutral-800 dark:text-white leading-tight truncate">
                             {as.title}
                           </h3>
-                          <div className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 truncate w-full">
-                            {batchNames ? `Batches: ${batchNames}` : "Not assigned"}
+                          <div className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 mt-1 truncate">
+                            {batchInfo ? batchInfo : "Not assigned"}
                           </div>
                         </div>
-                        <span
-                          className={`inline-block px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wide border shadow-sm ${statusColor} shrink-0`}
-                        >
+                        <span className={`inline-block px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wide border shadow-sm ${statusColor} shrink-0`}>
                           {as.status}
                         </span>
                       </div>
 
                       {/* Info Chips */}
-                      <div className="flex flex-wrap items-center gap-1.5 mb-4 mt-2">
+                      <div className="flex flex-wrap items-center gap-1.5 mb-4">
                         <span className="px-1.5 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 rounded text-[10px] font-bold capitalize">
                           {(as.type || "").replace("_", " ")}
                         </span>
-                        <span
-                          className={`px-1.5 py-0.5 rounded text-[10px] font-bold border ${difficultyColor}`}
-                        >
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold border ${difficultyColor}`}>
                           {as.difficulty}
                         </span>
-                        <span className="px-1.5 py-0.5 bg-primary/10 dark:bg-primary text-[#6C1D5F] dark:text-primary rounded text-[10px] font-bold font-mono">
+                        <span className="px-1.5 py-0.5 bg-primary/10 dark:bg-[#84117C]/20 text-[#6C1D5F] dark:text-[#D4A0D0] rounded text-[10px] font-bold font-mono">
                           {as.marks} pts
                         </span>
                         <span className="px-1.5 py-0.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-500 rounded text-[10px] font-bold">
@@ -818,39 +775,41 @@ export const AssessmentBuilder = () => {
                         </span>
                       </div>
 
-                      <div className="mt-auto pt-4 border-t border-neutral-100 dark:border-neutral-800">
-                        {/* Actions Row */}
-                        <div className="flex items-center gap-1.5 w-full">
+                      {/* Spacer */}
+                      <div className="flex-1" />
+
+                      {/* Actions */}
+                      <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800">
+                        <div className="flex items-center gap-2">
                           {as.status === "draft" && (
                             <button
                               onClick={(e) => handlePublishNow(e, as.id, as.title)}
-                              className="flex-1 px-2.5 py-1.5 bg-accent-2/10 hover:bg-accent-2/10 dark:bg-accent-2 dark:hover:bg-accent-2 text-accent-2 border border-accent-2/20 rounded-lg transition-colors font-bold text-[11px] flex items-center justify-center gap-1"
+                              className="p-2 text-[#01AC9F] dark:text-[#5EDED4] hover:bg-[#01AC9F]/10 rounded-lg transition-colors"
+                              title="Publish Now"
                             >
-                              <Send className="w-3 h-3" /> Publish
+                              <Send className="w-4 h-4" />
                             </button>
                           )}
                           <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleOpenEdit(as);
-                            }}
-                            className="flex-1 px-2.5 py-1.5 bg-[#01AC9F]/10 hover:bg-[#01AC9F]/20 text-[#01AC9F] border border-[#01AC9F]/20 rounded-lg transition-colors font-bold text-[11px] flex items-center justify-center gap-1"
+                            onClick={(e) => { e.stopPropagation(); handleOpenEdit(as); }}
+                            className="p-2 text-[#01AC9F] dark:text-[#5EDED4] hover:bg-[#01AC9F]/10 rounded-lg transition-colors"
+                            title="Edit"
                           >
-                            <FileEdit className="w-3 h-3" /> Edit
+                            <FileEdit className="w-4 h-4" />
                           </button>
                           <button
                             onClick={(e) => handleDuplicate(e, as.id, as.title)}
-                            className="p-1.5 text-accent-2 bg-accent-2/10 hover:bg-accent-2/10 dark:bg-accent-2 dark:hover:bg-accent-2 rounded-lg transition-colors border border-accent-2/20 shrink-0"
+                            className="p-2 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                             title="Duplicate"
                           >
-                            <Copy className="w-3.5 h-3.5" />
+                            <Copy className="w-4 h-4" />
                           </button>
                           <button
                             onClick={(e) => handleDelete(e, as.id, as.title)}
-                            className="p-1.5 text-destructive bg-destructive/10 hover:bg-destructive/10 dark:bg-destructive dark:hover:bg-destructive rounded-lg transition-colors border border-destructive/20 shrink-0"
+                            className="p-2 text-[#FF6200] dark:text-[#FFB380] hover:bg-[#FF6200]/10 rounded-lg transition-colors"
                             title="Delete"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </div>

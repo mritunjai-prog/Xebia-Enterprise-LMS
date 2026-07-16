@@ -42,6 +42,12 @@ public class TrainerAllocationService {
     public TrainerAllocation createAllocation(TrainerAllocation allocation) {
         validateTrainerIsBatchCreator(allocation);
         allocation.setStatus(allocation.getStatus() != null ? allocation.getStatus() : "active");
+
+        if (allocationRepository.existsByBatchIdAndCourseIdAndStatus(
+                allocation.getBatchId(), allocation.getCourseId(), "active")) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                "Course " + allocation.getCourseId() + " is already allocated to batch " + allocation.getBatchId());
+        }
         allocation.setAssignedAt(Instant.now().toString());
         TrainerAllocation saved = allocationRepository.save(allocation);
 
@@ -86,10 +92,25 @@ public class TrainerAllocationService {
         return count;
     }
 
+    @org.springframework.transaction.annotation.Transactional
+    public int deleteAllocationsByBatchId(String batchId) {
+        List<TrainerAllocation> allocs = allocationRepository.findByBatchId(batchId);
+        int count = allocs.size();
+        allocationRepository.deleteByBatchId(batchId);
+        return count;
+    }
+
     public List<TrainerAllocation> createBulkAllocations(List<TrainerAllocation> allocations) {
         for (TrainerAllocation allocation : allocations) {
             validateTrainerIsBatchCreator(allocation);
             allocation.setStatus(allocation.getStatus() != null ? allocation.getStatus() : "active");
+
+            if (allocationRepository.existsByBatchIdAndCourseIdAndStatus(
+                    allocation.getBatchId(), allocation.getCourseId(), "active")) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Course " + allocation.getCourseId() + " is already allocated to batch " + allocation.getBatchId());
+            }
+
             allocation.setAssignedAt(Instant.now().toString());
         }
         return allocationRepository.saveAll(allocations);

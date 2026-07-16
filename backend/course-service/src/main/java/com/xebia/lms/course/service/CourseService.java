@@ -258,4 +258,8 @@ public class CourseService {
         
         return new com.xebia.lms.course.dto.CourseHierarchyDto(course, moduleDtos);
     }
+
+    public boolean courseExists(UUID courseId) {
+        return courseRepository.existsById(courseId);
+    }
 }

@@ -5,6 +5,7 @@ import {
   BatchService,
   AssessmentService,
   SubmissionService,
+  AllocationService,
 } from "../services/api";
 
 const LMSContext = createContext(undefined);
@@ -369,6 +370,54 @@ export const LMSProvider = ({ children }) => {
     // Delete from local state
     setBatches((prev) => prev.filter((b) => b.id !== id));
     // Persist to backend
+    try {
+      await BatchService.deleteBatch(id);
+    } catch (err) {
+      console.error("Failed to delete batch from backend:", err);
+    }
+  };
+
+  const deleteBatchCascade = async (id) => {
+    const batch = batches.find((b) => b.id === id);
+    if (!batch) return;
+
+    // 1. Delete allocations for this batch
+    try {
+      await AllocationService.deleteAllocationsByBatch(id);
+    } catch (err) {
+      console.error("Failed to delete allocations:", err);
+    }
+
+    // 2. Delete assessments and submissions for this batch
+    try {
+      await AssessmentService.deleteByBatch(id);
+    } catch (err) {
+      console.error("Failed to delete assessments:", err);
+    }
+
+    // 3. Remove batch from all students in local state
+    setStudents((prev) =>
+      prev.map((s) => ({
+        ...s,
+        batches: s.batches ? s.batches.filter((bid) => bid !== id) : [],
+      })),
+    );
+
+    // 4. Remove assessments that reference this batch from local state
+    setAssessments((prev) =>
+      prev.filter((a) => !(a.batches || []).includes(id)),
+    );
+
+    // 5. Remove submissions for assessments that referenced this batch
+    const removedAssessIds = assessments
+      .filter((a) => (a.batches || []).includes(id))
+      .map((a) => a.id);
+    setSubmissions((prev) =>
+      prev.filter((s) => !removedAssessIds.includes(s.assessmentId)),
+    );
+
+    // 6. Delete the batch itself
+    setBatches((prev) => prev.filter((b) => b.id !== id));
     try {
       await BatchService.deleteBatch(id);
     } catch (err) {
@@ -778,21 +827,23 @@ export const LMSProvider = ({ children }) => {
   const getLeaderboard = () => {
     // Generate leaderboard based on student avgScore and completed count
     const entries = students.map((s) => {
-      // Find matching submissions for student points calculation
       const studentSubs = submissions.filter(
         (sub) => sub.studentId === s.id && sub.status === "submitted",
       );
-      const totalPoints = studentSubs.reduce((sum, sub) => sum + sub.score, 0);
+      const totalPoints = studentSubs.reduce((sum, sub) => sum + (sub.score || 0), 0);
+      const evaluatedSubs = studentSubs.filter((sub) => sub.isEvaluated);
+      const avg = evaluatedSubs.length > 0
+        ? Math.round(evaluatedSubs.reduce((sum, sub) => sum + (sub.percentage || 0), 0) / evaluatedSubs.length)
+        : 0;
 
       return {
-        rank: 1, // calculated below
+        rank: 1,
         studentId: s.id,
         studentName: s.name,
         avatar: s.avatar,
-        score:
-          totalPoints || Math.round((s.averageScore || 80) * 0.8 * (s.assessmentsCompleted || 1)), // estimation for filler
-        average: s.averageScore || 80,
-        completedAssessments: s.assessmentsCompleted || 10,
+        score: totalPoints,
+        average: avg,
+        completedAssessments: studentSubs.length,
         topPerformer: false,
       };
     });
@@ -883,6 +934,7 @@ export const LMSProvider = ({ children }) => {
         createBatch,
         editBatch,
         deleteBatch,
+        deleteBatchCascade,
         getBatchProgress,
         createAssessment,
         editAssessment,

@@ -13,10 +13,12 @@ import {
   BarChart3,
   ArrowRight,
   RefreshCw,
+  Trash2,
 } from "lucide-react";
 import { AllocationService, UserService, BatchService, CourseService } from "@/services/api";
 import { useRouter } from "@tanstack/react-router";
 import { clsx } from "clsx";
+import { useLMS } from "@/context/LMSContext";
 
 const KpiCard = ({ title, value, icon: Icon, color, bg, trend, trendValue, delay = 0 }) => (
   <motion.div
@@ -75,6 +77,7 @@ const QuickAction = ({ title, description, icon: Icon, color, onClick, delay = 0
 
 export default function BatchesOverview() {
   const router = useRouter();
+  const { deleteBatchCascade } = useLMS();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalTrainers: 0,
@@ -127,6 +130,17 @@ export default function BatchesOverview() {
       console.error("Failed to load batch overview:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteBatch = async (e, batch) => {
+    e.stopPropagation();
+    if (!confirm(`Permanently delete batch "${batch.name}"? This will also delete all associated assessments, submissions, and allocations. This cannot be undone.`)) return;
+    try {
+      await deleteBatchCascade(batch.id);
+      setBatches((prev) => prev.filter((b) => b.id !== batch.id));
+    } catch (err) {
+      console.error("Failed to delete batch:", err);
     }
   };
 
@@ -271,7 +285,7 @@ export default function BatchesOverview() {
                   )}
 
                   {/* Status Badge */}
-                  <div className="absolute top-3 right-3 z-10">
+                  <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5">
                     <span className={clsx(
                       "inline-block px-2 py-0.5 font-bold rounded-md text-xs uppercase font-mono shadow-sm",
                       batch.status === "active"
@@ -280,6 +294,13 @@ export default function BatchesOverview() {
                     )}>
                       {batch.status === "active" ? "Active" : batch.status || "Draft"}
                     </span>
+                    <button
+                      onClick={(e) => handleDeleteBatch(e, batch)}
+                      className="p-1 rounded-md bg-white/80 dark:bg-[#15151f]/80 hover:bg-red-50 dark:hover:bg-red-900/30 text-gray-400 hover:text-red-500 transition-colors shadow-sm cursor-pointer backdrop-blur-sm"
+                      title="Delete batch and all associated data"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
 
                   <div className="p-4">

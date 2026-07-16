@@ -83,6 +83,12 @@ public class ProgressTrackingService {
     @Transactional
     public void updateLastAccessed(UUID courseId, UUID submoduleId, UUID contentId, String studentId) {
         UUID tenantId = TenantContext.tenantId();
+
+        // Verify course exists before creating progress record
+        if (!courseService.courseExists(courseId)) {
+            throw new IllegalArgumentException("Course not found: " + courseId);
+        }
+
         CourseProgress cp = courseProgressRepository
             .findByTenantIdAndStudentIdAndCourseId(tenantId, studentId, courseId)
             .orElseGet(() -> {

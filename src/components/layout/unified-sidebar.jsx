@@ -59,10 +59,10 @@ const navConfig = Object.freeze({
     { name: "Leaderboard", href: "/trainer/leaderboard", icon: Award },
     { name: "Reports", href: "/trainer/reports", icon: PieChart },
     { name: "Notifications", href: "/trainer/notifications", icon: Bell },
-    { name: "Settings", href: "/trainer/settings", icon: Settings },
   ]),
   admin: Object.freeze([
     Object.freeze({ name: "Dashboard", href: "/admin", icon: LayoutDashboard }),
+    Object.freeze({ name: "Notifications", href: "/admin/notifications", icon: Bell }),
     Object.freeze({ name: "Categories", href: "/admin/categories", icon: Tag }),
     Object.freeze({ name: "Courses", href: "/admin/courses", icon: BookOpen }),
     Object.freeze({ name: "Curriculum", href: "/admin/curriculum", icon: Layers }),

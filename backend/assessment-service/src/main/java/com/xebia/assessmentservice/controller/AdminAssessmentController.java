@@ -41,12 +41,12 @@ public class AdminAssessmentController {
     }
 
     @GetMapping("/trainer-performance")
-    public ResponseEntity<Map<String, Object>> getTrainerPerformance() {
-        return ResponseEntity.ok(Map.of("message", "Trainer performance data"));
+    public ResponseEntity<List<Map<String, Object>>> getTrainerPerformance() {
+        return ResponseEntity.ok(adminAssessmentService.getTrainerPerformance());
     }
 
     @GetMapping("/batch-performance")
-    public ResponseEntity<Map<String, Object>> getBatchPerformance() {
-        return ResponseEntity.ok(Map.of("message", "Batch performance data"));
+    public ResponseEntity<List<Map<String, Object>>> getBatchPerformance() {
+        return ResponseEntity.ok(adminAssessmentService.getBatchPerformance());
     }
 }

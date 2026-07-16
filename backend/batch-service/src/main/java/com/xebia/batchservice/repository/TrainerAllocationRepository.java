@@ -22,6 +22,8 @@ public interface TrainerAllocationRepository extends JpaRepository<TrainerAlloca
 
     List<TrainerAllocation> findByBatchIdAndStatus(String batchId, String status);
 
+    boolean existsByBatchIdAndCourseIdAndStatus(String batchId, String courseId, String status);
+
     @Query("SELECT COUNT(a) FROM TrainerAllocation a WHERE a.status = :status")
     long countByStatus(@Param("status") String status);
 
@@ -37,4 +39,8 @@ public interface TrainerAllocationRepository extends JpaRepository<TrainerAlloca
     @Modifying
     @Query("DELETE FROM TrainerAllocation a WHERE a.trainerId = :trainerId")
     void deleteByTrainerId(@Param("trainerId") String trainerId);
+
+    @Modifying
+    @Query("DELETE FROM TrainerAllocation a WHERE a.batchId = :batchId")
+    void deleteByBatchId(@Param("batchId") String batchId);
 }

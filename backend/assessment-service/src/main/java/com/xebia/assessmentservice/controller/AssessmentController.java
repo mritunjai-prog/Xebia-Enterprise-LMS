@@ -39,4 +39,9 @@ public class AssessmentController {
     public ResponseEntity<java.util.Map<String, Integer>> deleteByCreator(@PathVariable String createdBy) {
         return ResponseEntity.ok(assessmentService.deleteAssessmentsByCreatedBy(createdBy));
     }
+
+    @DeleteMapping("/batch/{batchId}")
+    public ResponseEntity<java.util.Map<String, Integer>> deleteByBatchId(@PathVariable String batchId) {
+        return ResponseEntity.ok(assessmentService.deleteByBatchId(batchId));
+    }
 }

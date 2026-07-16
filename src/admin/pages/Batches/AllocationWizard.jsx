@@ -31,6 +31,7 @@ export default function AllocationWizard() {
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [selectedTrainer, setSelectedTrainer] = useState(null);
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [allocatedCourseIds, setAllocatedCourseIds] = useState(new Set());
   const [academicSession, setAcademicSession] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -75,6 +76,7 @@ export default function AllocationWizard() {
   });
 
   const filteredCourses = courses.filter((c) => {
+    if (allocatedCourseIds.has(c.id)) return false;
     if (search) return (c.title || "").toLowerCase().includes(search.toLowerCase());
     return true;
   });
@@ -90,6 +92,21 @@ export default function AllocationWizard() {
       setSelectedTrainer(batchCreatorTrainer);
     }
   }, [currentStep, batchCreatorTrainer]);
+
+  // Fetch existing allocations for selected batch to filter out already-allocated courses
+  useEffect(() => {
+    if (!selectedBatch) return;
+    AllocationService.getAllocations({ batchId: selectedBatch.id })
+      .then((allocs) => {
+        const ids = new Set(
+          (Array.isArray(allocs) ? allocs : [])
+            .filter((a) => a.status === "active")
+            .map((a) => a.courseId)
+        );
+        setAllocatedCourseIds(ids);
+      })
+      .catch(() => setAllocatedCourseIds(new Set()));
+  }, [selectedBatch]);
 
   const toggleCourseSelection = (course) => {
     setSelectedCourses((prev) => {

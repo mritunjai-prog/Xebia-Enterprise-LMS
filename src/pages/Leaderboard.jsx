@@ -16,7 +16,7 @@ export const Leaderboard = () => {
 
   // Split into Top 3 podium performers and other performers
   const podiumEntries = leaderboardEntries.slice(0, 3);
-  const tableEntries = filteredEntries.slice(3); // display filtered list in table below
+  const tableEntries = filteredEntries;
 
   // Medal configurations for 1st, 2nd, 3rd
   const medalStyles = {
@@ -210,8 +210,8 @@ export const Leaderboard = () => {
                   <th className="pb-3 pl-2">Rank</th>
                   <th className="pb-3">Student Name</th>
                   <th className="pb-3">Total Points</th>
-                  <th className="pb-3">Assessments Done</th>
-                  <th className="pb-3 text-right pr-2">Avg Grade</th>
+                  <th className="pb-3">Assessments Attempted</th>
+                  <th className="pb-3">Avg Grade</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/40">
@@ -244,9 +244,9 @@ export const Leaderboard = () => {
                       </td>
                       <td className="py-3.5 text-neutral-500 dark:text-neutral-500 dark:text-neutral-400 flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5 text-accent-2 shrink-0" />{" "}
-                        {entry.completedAssessments} exams
+                        {entry.completedAssessments} attempts
                       </td>
-                      <td className="py-3.5 text-right font-mono font-bold text-neutral-800 dark:text-white pr-2">
+                      <td className="py-3.5 font-mono font-bold text-neutral-800 dark:text-white pr-2">
                         {entry.average}%
                       </td>
                     </tr>
