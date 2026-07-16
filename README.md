@@ -587,7 +587,7 @@ The full API suite was **load tested with 50 concurrent requests** per endpoint 
 
 > Event Service enforces `registrationDeadline < startDateTime`. Sending an invalid payload returns `HTTP 400 Bad Request` with a clear error message — proving backend validation works correctly under load.
 
-📄 **[View Full API Testing Report](./Xebia_LMS_API_Documentation.html)** — Open in browser for the complete load test documentation with sample payloads, error analysis, and CRUD matrices.
+📄 **[View Full API Testing Report (Web View)](https://htmlpreview.github.io/?https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/blob/main/Xebia_LMS_API_Documentation.html)** — Open in browser for the complete load test documentation with sample payloads, error analysis, and CRUD matrices.
 
 ---
 
