@@ -10,6 +10,9 @@ spring:
       port: ${REDIS_PORT:6379}
   cloud:
     gateway:
+      httpclient:
+        pool:
+          max-connections: 500
       default-filters:
         - AddResponseHeader=X-Gateway, enterprise-lms
       globalcors:
