@@ -260,6 +260,6 @@ public class CourseService {
     }
 
     public boolean courseExists(UUID courseId) {
-        return courseRepository.existsById(courseId);
+        return courses.existsById(courseId);
     }
 }
