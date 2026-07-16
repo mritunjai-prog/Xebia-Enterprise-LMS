@@ -2,22 +2,32 @@
 
 # 🎓 Xebia Enterprise LMS
 
-**A full-stack, enterprise-grade Learning Management System for managing courses, assessments, batches, events, and trainer allocations at scale.**
+> **Enterprise-grade Learning Management System** — Built with React 19 + 6 Spring Boot Microservices + PostgreSQL
 
-![License](https://img.shields.io/badge/license-MIT-blue)
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.6-6DB33F?logo=springboot)
-![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)
-![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
-![Tailwind](https://img.shields.io/badge/Tailwind_CSS-4.2-06B6D4?logo=tailwindcss)
+[![Live Frontend](https://img.shields.io/badge/🌐_Live_Frontend-Vercel-black?style=for-the-badge)](https://xebia-lms-portal-three.vercel.app)
+[![API Gateway](https://img.shields.io/badge/⚙️_API_Gateway-Render-46E3B7?style=for-the-badge)](https://xebia-api-gateway-mritunjai.onrender.com)
+[![Load Tested](https://img.shields.io/badge/🔥_Load_Tested-50_Concurrent-FF6200?style=for-the-badge)](#-load-testing--performance)
+
+<br/>
+
+![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.6-6DB33F?logo=springboot&logoColor=white)
+![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-4.2-06B6D4?logo=tailwindcss&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue)
 ![Last Commit](https://img.shields.io/github/last-commit/mritunjai-prog/Xebia-Enterprise-LMS)
 
-An enterprise LMS featuring three portal roles (Admin, Trainer, Student), a microservices backend with 6 Spring Boot services, a React 19 frontend with TanStack Router, and a Docker-based development environment. Built for Xebia to deliver structured learning with assessments, course management, batch allocation, event hosting, and rich analytics dashboards.
+<br/>
 
-[**Live Demo**](#) · [**Report Bug**](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues) · [**Request Feature**](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues)
+An enterprise LMS featuring **three portal roles** (Admin, Trainer, Student), a microservices backend with **6 Spring Boot services**, a React 19 frontend with TanStack Router, and a Docker-based development environment. Built for Xebia to deliver structured learning with assessments, course management, batch allocation, event hosting, and rich analytics dashboards.
+
+**[🚀 Live Demo](https://xebia-lms-portal-three.vercel.app)** &nbsp;·&nbsp; **[🐛 Report Bug](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues)** &nbsp;·&nbsp; **[✨ Request Feature](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues)**
 
 </div>
+
 
 ---
 
@@ -46,6 +56,7 @@ An enterprise LMS featuring three portal roles (Admin, Trainer, Student), a micr
 - [Database Schema](#-database-schema)
 - [Folder Structure](#-folder-structure)
 - [Deployment](#-deployment)
+- [🔥 Load Testing & Performance](#-load-testing--performance)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -548,6 +559,38 @@ All backend services are deployed on Render using `render.yaml`:
 
 ---
 
+## 🔥 Load Testing & Performance
+
+The full API suite was **load tested with 50 concurrent requests** per endpoint using a Node.js `Promise.all()` harness — simulating 50 students hitting the system simultaneously.
+
+### Infrastructure Configuration
+
+| Component | Setting | Value |
+|---|---|---|
+| API Gateway | `max-connections` | `500` |
+| Each Microservice | `hikari.maximum-pool-size` | `10` |
+| Total DB Connections | 5 services × 10 | `50` (Render free-tier cap) |
+
+### CRUD Load Test Results
+
+| Service | POST (50) | GET (50) | PUT (50) | DELETE (50) | Status |
+|---|---|---|---|---|---|
+| **User Service** | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | 🟢 PASS |
+| **Batch Service** | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | 🟢 PASS |
+| **Assessment Service** | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | 🟢 PASS |
+| **Course Service** | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | 🟢 PASS |
+| **Event Service** | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | ✅ 50/50 | 🟢 PASS |
+
+> **Total: 1,000 records tested** — 50 concurrent × 4 CRUD phases × 5 services. Zero failures after infrastructure tuning.
+
+### Key Business Rule Validated
+
+> Event Service enforces `registrationDeadline < startDateTime`. Sending an invalid payload returns `HTTP 400 Bad Request` with a clear error message — proving backend validation works correctly under load.
+
+📄 **[View Full API Testing Report](./Xebia_LMS_API_Documentation.html)** — Open in browser for the complete load test documentation with sample payloads, error analysis, and CRUD matrices.
+
+---
+
 ## 📋 Roadmap
 
 ### Phase 1 — Core Platform ✅
@@ -583,6 +626,13 @@ All backend services are deployed on Render using `render.yaml`:
 ### Phase 6 — Infrastructure ✅
 - [x] Render.com deployment (6 microservices + PostgreSQL)
 - [x] Docker Compose orchestration (8 services)
+
+### Phase 7 — Load Testing & Documentation ✅
+- [x] 50-concurrent CRUD load test across all 5 services (1,000 total requests)
+- [x] HikariCP connection pool tuning (`maximum-pool-size: 10` per service)
+- [x] API Gateway concurrency raised to 500 connections
+- [x] Comprehensive HTML API Testing Report (`Xebia_LMS_API_Documentation.html`)
+- [x] Production databases cleaned post-testing (clean state)
 
 ---
 
