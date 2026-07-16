@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAppStore } from "../../store/useAppStore";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { IconSearch, IconProfile } from "../Icons";
 import {
   Sun,
@@ -18,6 +19,7 @@ import { useRouter, Link } from "@tanstack/react-router";
 import { clsx } from "clsx";
 
 export function Header({ setIsMobileOpen }) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const { breadcrumbs, addToast, toggleSidebar, isSidebarCollapsed } = useAppStore();
   const router = useRouter();
 
@@ -189,9 +191,10 @@ export function Header({ setIsMobileOpen }) {
       {/* Left: Menu + Breadcrumb */}
       <div className="header-left">
         <button onClick={() => {
-          if (setIsMobileOpen) {
+          if (isMobile) {
             setIsMobileOpen(true);
           } else {
+            setIsMobileOpen(false);
             toggleSidebar();
           }
         }} className="header-btn" aria-label="Toggle Sidebar">
