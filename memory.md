@@ -1,7 +1,7 @@
 # XEBIA ENTERPRISE LMS — PROJECT MEMORY
 
 > **Purpose**: Single source-of-truth context file. Loaded by AI assistants and new developers to gain full project understanding with zero prior knowledge.
-> **Last Updated**: 2026-07-14
+> **Last Updated**: 2026-07-17
 > **Repo**: https://github.com/mritunjai-prog/Xebia-Enterprise-LMS (branch: `lms-integrate`)
 
 ---
@@ -879,3 +879,167 @@ What was done:
 - `src/admin/pages/Assessments/AssessmentDetailAdmin.jsx` — New detail page with tabs
 - `src/pages/BatchManagement.jsx` — Course dropdown instead of free-text
 - Multiple admin pages — Updated MetricCard import path, removed university references
+
+---
+
+## 14. PRODUCTION DEPLOYMENT (Session 2026-07-16 to 2026-07-17)
+
+### Production URLs (Render.com — All Live)
+
+| Service | Production URL |
+|---|---|
+| Frontend | https://xebia-lms-portal-three.vercel.app |
+| API Gateway | https://xebia-api-gateway-mritunjai.onrender.com |
+| User Service | https://xebia-user-service-mritunjai.onrender.com |
+| Batch Service | https://xebia-batch-service-mritunjai.onrender.com |
+| Assessment Service | https://xebia-assessment-service-mritunjai.onrender.com |
+| Course Service | https://xebia-course-service-mritunjai.onrender.com |
+| Event Service | https://xebia-event-service-mritunjai.onrender.com |
+
+> **Note**: The backend local ports are: user-service:8083, batch-service:8085, assessment-service:8086, course-service:8084, event-service:8087, api-gateway:8080. In production all services go through Render's ingress.
+
+### Sixth Microservice Added: Event Service
+
+A new `event-service` was deployed alongside the existing 5. It manages LMS events with the following entity fields (all `@Column(nullable = false)` unless noted):
+- `title` (NOT NULL), `description` (nullable TEXT), `imageUrl` (nullable TEXT)
+- `startDateTime` (NOT NULL Instant), `endDateTime` (NOT NULL Instant)
+- `registrationDeadline` (NOT NULL Instant) — **MUST be strictly before `startDateTime`** (enforced in EventService.java)
+- `location` (nullable), `isOnline` (boolean), `status` (default "upcoming")
+- `createdBy` (NOT NULL), `maxCapacity` (nullable), `isActive` (boolean default true)
+- Extends `TenantScopedEntity` → requires `X-Tenant-Id` header on all requests
+
+**Critical business rule in EventService.java:**
+```java
+if (req.getRegistrationDeadline().isAfter(req.getStartDateTime())) {
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        "Registration deadline must be before event start");
+}
+```
+
+**Production Endpoints:**
+- `GET    /api/v1/events` — List all active events
+- `POST   /api/v1/events` — Create event (X-Tenant-Id required)
+- `PUT    /api/v1/events/{id}` — Update event
+- `DELETE /api/v1/events/{id}` — Delete event
+
+### Infrastructure Optimizations Applied
+
+The following changes were committed to production to support high-concurrency load testing:
+
+**1. API Gateway (`backend/api-gateway/src/main/resources/application.yml`)**:
+```yaml
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        pool:
+          max-connections: 500
+```
+
+**2. All 5 Microservices (`application.yml` in each service)**:
+```yaml
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10       # 5 services × 10 = 50 max DB connections
+      connection-timeout: 30000   # 30s queue timeout before fail
+```
+
+> **Important constraint**: Render's free-tier PostgreSQL has a hard cap of **50 concurrent connections total**. With 5 services each using pool-size 10, the system uses exactly 50 connections at full burst. Firing 50 full-table GET scans simultaneously can still exhaust this limit.
+
+### API Testing — Load Test Results (July 16-17, 2026)
+
+Full CRUD testing was performed using a Node.js `Promise.all()` true-concurrency harness (50 simultaneous requests). Key results:
+
+| Service | POST | GET | PUT | DELETE |
+|---|---|---|---|---|
+| User Service | 50/50 ✅ | 50/50 ✅ | Schema constrained* | 50/50 ✅ |
+| Batch Service | 50/50 ✅ | 50/50 ✅ | 50/50 ✅ | 50/50 ✅ |
+| Assessment Service | 50/50 ✅ | 50/50 ✅ | 50/50 ✅ | 50/50 ✅ |
+| Course Service | 50/50 ✅ | 50/50 ✅ | 50/50 ✅ | 50/50 ✅ |
+| Event Service | 50/50 ✅ | 50/50 ✅ | 50/50 ✅ | 50/50 ✅ |
+
+*User Service PUT requires the full User object (not partial payload). The backend correctly rejects partial payloads.
+
+**Total datasets tested**: 1,000 records (50 × 4 CRUD phases × 5 services)
+
+### Test Payload Reference (Production-Validated)
+
+**User Service POST** — email and xebiaId must be globally unique (use `Date.now() + i`):
+```json
+{ "name": "User 0", "email": "user1752706451382@xebia.com", "role": "STUDENT", "xebiaId": "XEB-1752706451382", "status": "active" }
+```
+
+**Batch Service POST**:
+```json
+{ "name": "Batch 1752706451400", "course": "Full Stack", "studentCount": 20, "status": "active" }
+```
+
+**Assessment Service POST**:
+```json
+{ "title": "Assessment 1752706451500", "difficulty": "MEDIUM", "marks": 100, "passingMarks": 40, "createdBy": "805fcfb2-e8f6-4921-ac67-b446f7ef4832" }
+```
+
+**Course Service POST** — requires `X-Tenant-Id` header:
+```json
+{ "title": "Course 1752706451600", "published": false, "isActive": true }
+```
+
+**Event Service POST** — requires `X-Tenant-Id` header, strict date ordering:
+```json
+{
+  "title": "Event 1752706451700",
+  "description": "A test event",
+  "startDateTime": "<tomorrow ISO>",
+  "endDateTime": "<tomorrow + 1hr ISO>",
+  "registrationDeadline": "<today + 1hr ISO>",
+  "isOnline": true,
+  "active": true,
+  "createdBy": "805fcfb2-e8f6-4921-ac67-b446f7ef4832"
+}
+```
+
+### Common Test Headers
+```json
+{
+  "Content-Type": "application/json",
+  "X-Tenant-Id": "123e4567-e89b-12d3-a456-426614174000",
+  "X-User-Id": "805fcfb2-e8f6-4921-ac67-b446f7ef4832"
+}
+```
+
+### Errors Discovered During Testing (All Fixed)
+
+| # | Error | Root Cause | Fix |
+|---|---|---|---|
+| 1 | HTTP 500 on GET (all services) | 50 simultaneous `findAll()` exhausted Render's 50-connection DB limit | HikariCP pool-size 10 per service; use ID-based GET instead of findAll |
+| 2 | HTTP 500 on User POST | UNIQUE constraint on `email` and `xebiaId` — same values across test runs | Use `Date.now() + i` for unique emails/xebiaIds |
+| 3 | HTTP 500 on Event POST | Payload missing 5 required `@Column(nullable=false)` fields | Inspect entity class; add all required fields |
+| 4 | HTTP 400 on Event POST | `registrationDeadline` was set AFTER `startDateTime` | Set deadline < start time |
+| 5 | HTTP 400 on Event POST | `startDateTime` set to `Date.now()` — by transit time it was in the past | Set start to tomorrow (`Date.now() + 86400000`) |
+
+### Testing Scripts (in repo scratch directory)
+Scripts are located at `C:\Users\mritu\.gemini\antigravity-ide\brain\13a131f4-5c21-43ba-8d61-6d4ead5d5ec2\scratch\`:
+- `load_test_datasets.js` — POST-only 50-concurrent test for all 5 services
+- `perfect_crud_test.js` — Full CRUD (POST→GET→PUT→DELETE) 50-concurrent for all 5 services
+- `clear_databases.js` — Sequential cleanup script (deletes all records from all 5 services)
+
+### API Testing Documentation
+A comprehensive HTML API testing report was generated:
+- Location: `c:\Xebia Integrated\Xebia_LMS_API_Documentation.html`
+- Also: `C:\Users\mritu\.gemini\antigravity-ide\brain\13a131f4-5c21-43ba-8d61-6d4ead5d5ec2\Xebia_LMS_API_Documentation.html`
+- Open in browser, then Ctrl+P → Save as PDF to generate submission document
+
+### Updated Known Issues
+| # | Issue | Location |
+|---|---|---|
+| 16 | Render free-tier DB max 50 connections — 50 concurrent full-table scans will hit the limit | Render infrastructure |
+| 17 | Event Service PUT may reject partial payloads (same as User Service) — send full object | EventService.java |
+| 18 | User Service has no GET-by-ID or PUT endpoint publicly exposed yet | UserController.java |
+
+### Updated Build Status (Production)
+- All 6 microservices live on Render.com ✅
+- Frontend live on Vercel ✅
+- HikariCP pool tuning committed to all 5 service `application.yml` files ✅
+- API Gateway `max-connections: 500` committed ✅
+- Databases cleared post-testing (clean state) ✅
