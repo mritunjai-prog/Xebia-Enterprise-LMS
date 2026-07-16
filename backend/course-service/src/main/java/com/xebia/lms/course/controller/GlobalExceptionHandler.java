@@ -13,21 +13,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> handleJsonParseError(HttpMessageNotReadableException ex) {
-        String message = "Invalid request body. Expected a JSON object, not an array or other format.";
-        if (ex.getMostSpecificCause() != null) {
-            message = "JSON parse error: " + ex.getMostSpecificCause().getMessage();
-        }
         return ResponseEntity.badRequest().body(Map.of(
             "status", 400,
             "error", "Bad Request",
-            "message", message
+            "message", "Invalid request body: " + ex.getMessage()
         ));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
         String message = ex.getMessage() != null ? ex.getMessage() : "Invalid request";
-        if (message.contains("not found") || message.contains("Not found")) {
+        if (message.toLowerCase().contains("not found")) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
                 "status", 404,
                 "error", "Not Found",
@@ -38,15 +34,6 @@ public class GlobalExceptionHandler {
             "status", 400,
             "error", "Bad Request",
             "message", message
-        ));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-            "status", 500,
-            "error", "Internal Server Error",
-            "message", "Unexpected error: " + (ex.getMessage() != null ? ex.getMessage() : "Unknown error")
         ));
     }
 }
