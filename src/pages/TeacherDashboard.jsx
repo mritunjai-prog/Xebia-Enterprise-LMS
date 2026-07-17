@@ -32,15 +32,16 @@ export const TeacherDashboard = () => {
   
   const totalStudents = students.length;
   const totalBatches = myBatches.length;
-  const totalAssessments = assessments.length;
+  const myAssessments = assessments.filter((a) => a.createdBy === currentUser?.id);
+  const totalAssessments = myAssessments.length;
 
-  const activeAssessments = assessments.filter((a) => {
+  const activeAssessments = myAssessments.filter((a) => {
     if (a.status !== "published") return false;
     const nowStr = new Date().toISOString().split("T")[0];
     return a.startDate <= nowStr && a.endDate >= nowStr;
   }).length;
 
-  const completedAssessments = assessments.filter((a) => {
+  const completedAssessments = myAssessments.filter((a) => {
     if (a.status !== "published") return false;
     const nowStr = new Date().toISOString().split("T")[0];
     return a.endDate < nowStr;
@@ -48,7 +49,7 @@ export const TeacherDashboard = () => {
 
   // Submissions requiring evaluation (submitted status, manualGrade = true, and not yet evaluated)
   const pendingEvaluations = submissions.filter((sub) => {
-    const as = assessments.find((a) => a.id === sub.assessmentId);
+    const as = myAssessments.find((a) => a.id === sub.assessmentId);
     return sub.status === "submitted" && as?.manualGrade && !sub.isEvaluated;
   }).length;
 
@@ -69,7 +70,7 @@ export const TeacherDashboard = () => {
 
   // 2. Average Scores per Top 5 Assessments (Auto or Manual Evaluated)
   const evaluatedSubs = submissions.filter((s) => s.status === "submitted" && s.isEvaluated);
-  const assessmentsScores = assessments.slice(0, 5).map((a) => {
+  const assessmentsScores = myAssessments.slice(0, 5).map((a) => {
     const subs = evaluatedSubs.filter((s) => s.assessmentId === a.id);
     const avg =
       subs.length > 0
@@ -105,7 +106,7 @@ export const TeacherDashboard = () => {
     .slice(0, 4)
     .map((s) => {
       const student = students.find((stud) => stud.id === s.studentId);
-      const assessment = assessments.find((a) => a.id === s.assessmentId);
+      const assessment = myAssessments.find((a) => a.id === s.assessmentId);
       return {
         id: s.id,
         studentName: student?.name || "Unknown Student",
@@ -120,7 +121,7 @@ export const TeacherDashboard = () => {
     });
 
   // Upcoming Assessments (Published but start date is in the future)
-  const upcomingAssessments = assessments
+  const upcomingAssessments = myAssessments
     .filter((a) => a.status === "published" && a.startDate > new Date().toISOString().split("T")[0])
     .slice(0, 3);
 
