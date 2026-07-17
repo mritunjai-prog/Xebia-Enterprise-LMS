@@ -25,11 +25,13 @@ import {
 import { Link } from "@tanstack/react-router";
 
 export const TeacherDashboard = () => {
-  const { students, batches, assessments, submissions, notifications } = useLMS();
+  const { students, batches, assessments, submissions, notifications, currentUser } = useLMS();
 
   // Metrics Calculations
+  const myBatches = batches.filter((b) => b.createdBy === currentUser?.id);
+  
   const totalStudents = students.length;
-  const totalBatches = batches.length;
+  const totalBatches = myBatches.length;
   const totalAssessments = assessments.length;
 
   const activeAssessments = assessments.filter((a) => {
@@ -81,7 +83,7 @@ export const TeacherDashboard = () => {
   });
 
   // 3. Batch Student count & Performance
-  const batchPerformanceData = batches.slice(0, 5).map((b) => {
+  const batchPerformanceData = myBatches.slice(0, 5).map((b) => {
     // find all students of this batch
     const bStudents = students.filter((s) => (s.batches || []).includes(b.id));
     const avgScore =
