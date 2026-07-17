@@ -4,7 +4,7 @@
 
 > **Enterprise-grade Learning Management System** — Built with React 19 + 6 Spring Boot Microservices + PostgreSQL
 
-[![Live Frontend](https://img.shields.io/badge/🌐_Live_Frontend-Vercel-black?style=for-the-badge)](https://xebia-lms-portal-three.vercel.app)
+[![Live Frontend](https://img.shields.io/badge/🌐_Live_Frontend-Vercel-black?style=for-the-badge)](https://xebia-enterprise-lms.vercel.app)
 [![API Gateway](https://img.shields.io/badge/⚙️_API_Gateway-Render-46E3B7?style=for-the-badge)](https://xebia-api-gateway-mritunjai.onrender.com)
 [![Load Tested](https://img.shields.io/badge/🔥_Load_Tested-50_Concurrent-FF6200?style=for-the-badge)](#-load-testing--performance)
 
@@ -24,7 +24,7 @@
 
 An enterprise LMS featuring **three portal roles** (Admin, Trainer, Student), a microservices backend with **6 Spring Boot services**, a React 19 frontend with TanStack Router, and a Docker-based development environment. Built for Xebia to deliver structured learning with assessments, course management, batch allocation, event hosting, and rich analytics dashboards.
 
-**[🚀 Live Demo](https://xebia-lms-portal-three.vercel.app)** &nbsp;·&nbsp; **[🐛 Report Bug](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues)** &nbsp;·&nbsp; **[✨ Request Feature](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues)**
+**[🚀 Live Demo](https://xebia-enterprise-lms.vercel.app)** &nbsp;·&nbsp; **[🐛 Report Bug](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues)** &nbsp;·&nbsp; **[✨ Request Feature](https://github.com/mritunjai-prog/Xebia-Enterprise-LMS/issues)**
 
 </div>
 
@@ -35,7 +35,7 @@ An enterprise LMS featuring **three portal roles** (Admin, Trainer, Student), a 
 
 | Service | URL |
 |---------|-----|
-| Frontend (Vercel) | [xebia-lms-portal-three.vercel.app](https://xebia-lms-portal-three.vercel.app) |
+| Frontend (Vercel) | [xebia-enterprise-lms.vercel.app](https://xebia-enterprise-lms.vercel.app) |
 | API Gateway | [xebia-api-gateway-mritunjai.onrender.com](https://xebia-api-gateway-mritunjai.onrender.com) |
 | Course Service | [xebia-course-service-mritunjai.onrender.com](https://xebia-course-service-mritunjai.onrender.com) |
 | User Service | [xebia-user-service-mritunjai.onrender.com](https://xebia-user-service-mritunjai.onrender.com) |

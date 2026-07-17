@@ -888,7 +888,7 @@ What was done:
 
 | Service | Production URL |
 |---|---|
-| Frontend | https://xebia-lms-portal-three.vercel.app |
+| Frontend | https://xebia-enterprise-lms.vercel.app |
 | API Gateway | https://xebia-api-gateway-mritunjai.onrender.com |
 | User Service | https://xebia-user-service-mritunjai.onrender.com |
 | Batch Service | https://xebia-batch-service-mritunjai.onrender.com |
