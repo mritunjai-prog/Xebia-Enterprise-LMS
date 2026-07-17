@@ -35,7 +35,7 @@ An enterprise LMS featuring **three portal roles** (Admin, Trainer, Student), a 
 
 | Service | URL |
 |---------|-----|
-| Frontend (Vercel) | [xebia-enterprise-lms.vercel.app](https://xebia-enterprise-lms.vercel.app) |
+| Frontend (Vercel) | [xebia-lms-portal-three.vercel.app](https://xebia-lms-portal-three.vercel.app) |
 | API Gateway | [xebia-api-gateway-mritunjai.onrender.com](https://xebia-api-gateway-mritunjai.onrender.com) |
 | Course Service | [xebia-course-service-mritunjai.onrender.com](https://xebia-course-service-mritunjai.onrender.com) |
 | User Service | [xebia-user-service-mritunjai.onrender.com](https://xebia-user-service-mritunjai.onrender.com) |
