@@ -427,7 +427,11 @@ export const AssessmentBuilder = () => {
   };
 
   const filteredAssessments = useMemo(() => {
-    let result = [...assessments]; // copy to allow sorting
+    let result = [...assessments];
+
+    if (currentUser?.id) {
+      result = result.filter((a) => a.createdBy === currentUser.id);
+    }
 
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
